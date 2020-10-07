@@ -1,0 +1,224 @@
+<template>
+  <div style="position:relative;min-height:757px;">
+    <bsTop></bsTop>
+
+    <!-- 搜索头部 -->
+    <div class="searchBox">
+      <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <el-form-item label="货物编号">
+          <el-input
+            v-model="searchForm.code"
+            placeholder="输入货物编号"
+            style="width: 90%;"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item label="关键字查询">
+          <el-input
+            v-model="searchForm.keyWord"
+            placeholder="输入关键字"
+            style="width: 90%;"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="btnList">
+          <el-button type="primary" @click="search">查询</el-button>
+          <el-button type="primary" @click="openAddNewProd">新增</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <template v-if="!dataList || dataList.length === 0">
+      <div class="zanwuchanpin"></div>
+    </template>
+    <!-- 列表 -->
+    <div class="tableContent" v-else>
+      <el-table
+        :data="dataList"
+        style="width: 100%"
+        :default-sort="{ prop: 'date', order: 'descending' }"
+      >
+        <el-table-column prop="productNumber" label="货号"></el-table-column>
+        <el-table-column prop="exhibitionName" label="公司"></el-table-column>
+        <el-table-column prop="isOpen" label="开放状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isOpen">开放</el-tag>
+            <el-tag v-else>待开放</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="collecTime" label="时间">
+          <template slot-scope="scope">
+            {{
+              scope.row.collecTime && scope.row.collecTime.replace(/t/i, " ")
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="amount" label="底价">
+          <template slot-scope="scope">
+            <span style="color:red;">
+              {{ scope.row.cu_de + scope.row.amount.toFixed(2) }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="250">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" @click="handleEdit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleShenhe(scope.row)"
+              >审核</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <center style="margin-top:20px;" v-show="totalCount > 10">
+        <el-pagination
+          layout="prev, pager, next"
+          background
+          :total="totalCount"
+          :page-size="pageSize"
+          @current-change="currentChange"
+        ></el-pagination>
+      </center>
+    </div>
+    <!-- 新增新品推荐 -->
+    <!-- 授权dialog -->
+    <el-dialog
+      :title="editNewProdTitle"
+      :visible.sync="showEditNewProd"
+      width="30%"
+    >
+      <el-form label-width="100px" :model="editNewProd">
+        <el-form-item label="新品名称" prop="arrivalsName">
+          <el-input v-model.number="editNewProd.arrivalsName"></el-input>
+        </el-form-item>
+        <el-form-item label="新品货号" prop="productData">
+          <el-input
+            v-model.number="editNewProd.productData"
+            placeholder="请输入P0396434,P0396435类型的货号"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleEditProd">提 交</el-button>
+          <el-button type="danger" @click="showEditNewProd = false"
+            >取 消</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import bsTop from '@/components/BsTop'
+export default {
+  components: { bsTop },
+  data () {
+    return {
+      editNewProd: {
+        arrivalsName: null,
+        companyID: this.$store.state.userInfo.commparnyList[0].commparnyId,
+        userID: this.$store.state.userInfo.userInfo.id,
+        productData: null,
+        auditStatus: '0',
+        isDelete: false
+      },
+      editNewProdTitle: '新增新品推荐',
+      showEditNewProd: false,
+      searchForm: {},
+      currentPage: 1,
+      pageSize: 10,
+      totalCount: 100,
+      dataList: []
+    }
+  },
+  methods: {
+    // 获取新品推荐
+    async getNewArrivalsPage () {
+      const res = await this.$http.post('/api/GetNewArrivalsPage', {
+        skipCount: this.currentPage,
+        maxResultCount: this.pageSize,
+        AuditStatus: 0
+      })
+      if (res.data.result.code === 200) {
+        this.dataList = res.data.result.item.items
+        this.totalCount = res.data.result.item.totalCount
+      }
+    },
+    // 打开新增
+    openAddNewProd () {
+      this.editNewProdTitle = '新增新品推荐'
+      this.editNewProd = {
+        arrivalsName: null,
+        companyID: this.$store.state.userInfo.commparnyList[0].commparnyId,
+        userID: this.$store.state.userInfo.userInfo.id,
+        productData: null,
+        auditStatus: '0',
+        isDelete: false
+      }
+      this.showEditNewProd = true
+    },
+    // 新增/编辑
+    async handleEditProd () {
+      console.log(this.editNewProd)
+      const res = await this.$http.post(
+        '/api/CreateNewArrivals',
+        this.editNewProd
+      )
+      if (res.data.result.code === 200) {
+        this.$message.success('新增新品成功')
+        this.getNewArrivalsPage()
+        this.showEditNewProd = false
+      }
+    },
+    // 查询
+    search () {
+      console.log(this.searchForm)
+    },
+    handleEdit (row) {
+      // console.log(row.exhibitionName,row.productNumber);
+      this.editNewProd.arrivalsName = row.exhibitionName
+      this.editNewProd.productData = row.productNumber
+      this.showEditNewProd = true
+    },
+    handleDelete (index, row) {
+      console.log(index, row)
+    },
+    currentChange (page) {
+      this.currentPage = page
+    }
+  },
+  mounted () {
+    this.getNewArrivalsPage()
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.searchBox {
+  margin-top: 50px;
+  box-sizing: border-box;
+  .btnList {
+    float: right;
+  }
+  &::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    clear: both;
+  }
+}
+.tableContent {
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+</style>
