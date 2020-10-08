@@ -4,7 +4,7 @@
       <el-input
         placeholder="请输入内容"
         class="input-with-select"
-        v-model="search"
+        v-model="$store.state.searchValue"
         @input="changge"
         style="width:300px;"
         @keyup.enter.native="toSearchIndex"
@@ -127,14 +127,6 @@ export default {
     }
   },
   computed: {
-    search: {
-      get () {
-        return this.$store.state.searchValue
-      },
-      set (v) {
-        this.$store.commit('searchTxtValues', v)
-      }
-    }
   },
   methods: {
     // 确定裁剪图片
@@ -211,7 +203,6 @@ export default {
       })
     },
     toSearchIndex () {
-      // this.$store.commit("handlerBeforeSearch",this.search);
       this.$root.eventHub.$emit('toSearchIndex')
       this.$router.push({ path: '/searchIndex' })
     },

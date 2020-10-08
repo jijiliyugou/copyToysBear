@@ -484,7 +484,7 @@ export default {
       this.loading = true
       try {
         const res = await this.$http.post('/api/SearchBearProductPage', {
-          name: this.$store.state.beforeSearch,
+          name: this.$store.state.searchValue,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
         })
@@ -546,7 +546,7 @@ export default {
       this.pageSize = 60
       this.totalCount = 0
       this.dataList = []
-      this.search = this.$store.state.beforeSearch
+      this.search = this.$store.state.searchValues
       this.getProduct(true)
     })
     if (this.$route.query.id) {

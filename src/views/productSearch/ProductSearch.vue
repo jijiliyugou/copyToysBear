@@ -96,7 +96,7 @@ export default {
       })
     },
     async toSearchIndex (val) {
-      this.$store.commit('handlerBeforeSearch', val)
+      this.$store.commit('searchTxtValues', val)
       this.$router.push({ path: '/searchIndex' })
     },
     // 获取搜索热词

@@ -5,7 +5,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-            v-model="formInline.CompanyName"
+            v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%"
           ></el-input>
@@ -62,7 +62,7 @@
         <el-table-column label="级别">
           <template slot-scope="scope">
             <el-tag>{{
-              scope.row.parentId === 0 ? "一级菜单" : "二级菜单"
+              Number(scope.row.parentId) === 0 ? "一级菜单" : "二级菜单"
             }}</el-tag>
           </template>
         </el-table-column>
@@ -128,7 +128,7 @@
           <el-select
             v-model="addMenuForm.parentId"
             placeholder="请选择"
-            :disabled="addType  !==  2"
+            :disabled="Number(addType) !==  2"
           >
             <el-option
               v-for="item in allAuthList"
@@ -245,7 +245,7 @@ export default {
       },
       formInline: {
         // 查询角色表单
-        CompanyName: '',
+        keyword: '',
         state: null,
         dateTile: null
       }
@@ -270,7 +270,6 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.totalCount = res.data.result.item.totalCount
-        console.log(res.data.result.item.items)
         this.allAuthList = res.data.result.item.items.map((val) => {
           return {
             ...val.parent,
@@ -285,7 +284,6 @@ export default {
               })
           }
         })
-        console.log(this.allAuthList)
       } else {
         this.$message.error('获取权限列表失败，请检查网络')
       }

@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "prod": "vue-cli-service build --mode=production",
+    "test": "vue-cli-service build --mode=test",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint --fix"
   },
   "dependencies": {
     "agora-rtm-sdk": "^1.4.0",
