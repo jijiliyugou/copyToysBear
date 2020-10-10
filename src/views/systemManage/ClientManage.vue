@@ -249,7 +249,7 @@
             :disabled="dialogTitle === '审核'"
           ></el-input>
         </el-form-item>
-        <el-form-item label="公司简称" prop="companyName">
+        <el-form-item label="简称" prop="companyNickName">
           <el-input
             v-model="addClientForm.companyName"
             :disabled="dialogTitle === '审核'"
@@ -1005,6 +1005,7 @@ export default {
       addClientForm: {
         // 新增客户表单
         companyName: '',
+        companyNickName: '',
         contactsMan: '',
         address: '深圳',
         e_mail: '',
@@ -1215,25 +1216,6 @@ export default {
     },
     // 取消新增员工
     resetForm () {
-      this.addEmployeeForm = {
-        // 新增员工表单
-        personnelNo: null,
-        phoneNumber: '',
-        password: '',
-        sex: 1,
-        isMain: 2,
-        enabled: 2,
-        remark: '',
-        birthday: '',
-        userImage: '',
-        linkman: null,
-        weCharUserJson: null,
-        wecharName: null,
-        wecharNo: null,
-        wecharOpenID: null,
-        CompanyId: null,
-        newPassword: null // 编辑时的密码
-      }
       this.innerVisible = false
     },
     // 打开新增员工
@@ -1331,6 +1313,7 @@ export default {
       this.addClientForm = {
         // 新增客户表单
         companyName: '',
+        companyNickName: '',
         contactsMan: '',
         address: '',
         e_mail: '',
@@ -1416,6 +1399,7 @@ export default {
               // 新增客户表单
               companyName: '',
               contactsMan: '',
+              companyNickName: '',
               address: '',
               e_mail: '',
               fax: '',
@@ -1611,6 +1595,7 @@ export default {
           this.addClientForm = {
             // 新增客户表单
             companyName: '',
+            companyNickName: '',
             contactsMan: '',
             address: '',
             e_mail: '',
