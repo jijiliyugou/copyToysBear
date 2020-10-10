@@ -283,7 +283,86 @@ export default {
     search () {
       console.log('查询')
     },
-    // 打开父级新增类目列表窗口
+    // 编辑产品
+    async updateBearProduct () {
+      const res = await this.$http.post('/api/UpdateBearProduct', this.addProductForm)
+      if (res.data.result.code === 200) {
+        console.log(res)
+      }
+    },
+    // 新增产品
+    async createProduct () {
+      const obj = {
+        companyNumber: 'string',
+        productNumber: 'string',
+        productID: 0,
+        number: 'string',
+        unit: 'string',
+        name: 'string',
+        ename: 'string',
+        supplierID: 'string',
+        supplierNumber: 'string',
+        ma_ID: 'string',
+        ma_nu: 'string',
+        categoryNumber: 'string',
+        categoryName: 'string',
+        cl_nu: 'string',
+        cl_na: 'string',
+        pa_nu: 'string',
+        price: 0,
+        cost: 0,
+        ch_pa: 'string',
+        en_pa: 'string',
+        pr_le: 0,
+        pr_wi: 0,
+        pr_hi: 0,
+        ou_le: 0,
+        ou_wi: 0,
+        ou_hi: 0,
+        bulk_feet: 0,
+        bulk_stere: 0,
+        in_en: 0,
+        ou_lo: 0,
+        gr_we: 0,
+        ne_we: 0,
+        in_le: 0,
+        in_wi: 0,
+        in_hi: 0,
+        remark: 'string',
+        hits: 0,
+        fa_no: 'string',
+        attestation: 'string',
+        cloud_platform_date: '2020-10-10T05:37:46.158Z',
+        showMicroWeb: 0,
+        isUpLoadFromMember: 0,
+        is_Confirm: 0,
+        isStop: 0,
+        pr_Language: 'string',
+        keyword_ch_na: 'string',
+        keyword_en_na: 'string',
+        keyword_ch_pa: 'string',
+        isTort: 0,
+        isOpen: true,
+        keyGuid: 'string',
+        makeyGuid: 'string',
+        isUpInsetImg: true,
+        certificateAddress: 'string',
+        videoAddress: 'string',
+        createdBy: 'string',
+        createdOn: '2020-10-10T05:37:46.158Z',
+        modifyBy: 'string',
+        modifyOn: '2020-10-10T05:37:46.158Z',
+        isDelete: true,
+        deleteBy: 'string',
+        deleteTime: '2020-10-10T05:37:46.158Z',
+        id: 'string'
+      }
+      const res = await this.$http.post('/api/CreateBearProduct', this.addProductForm)
+      if (res.data.result.code === 200) {
+        console.log(res)
+      }
+    },
+    // 打开父级新增产品列表窗口
     openAdd () {
       this.addCateForm = {
         name: '',
