@@ -288,11 +288,11 @@
             id="suggestId"
             name="address_detail"
             v-model="addClientForm.address"
-            @keyup.enter.native="selectMapAttrs(addClientForm.address)"
+            @keyup.enter.native="selectMapAttrs($event, false)"
             :disabled="dialogTitle === '审核'"
           ></el-input>
-          <div class="housingList" v-show="isShowAttrsList">
-            <div v-for="(item, index) in attrsList" :key="index" @click="selectMapAttrs(item.city+item.district+item.street+item.business)">{{item.city+item.district+item.street+item.business}}</div>
+          <div class="housingList" v-show="isShowAttrsList && attrsList.length">
+            <div v-for="(item, index) in attrsList" :key="index" @click="selectMapAttrs($event, item.city+item.district+item.street+item.business)">{{item.city+item.district+item.street+item.business}}</div>
           </div>
         </el-form-item>
         <div class="threeBox">
@@ -1070,12 +1070,23 @@ export default {
     }
   },
   methods: {
-    selectMapAttrs (attr) {
-      this.addClientForm.address = (attr || this.addClientForm.address)
-      this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
-      this.$nextTick(() => {
-        this.isShowAttrsList = false
-      })
+    selectMapAttrs (e, attr) {
+      switch (e.type) {
+        case 'click':
+          this.addClientForm.address = e.target.innerText
+          this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+          this.$nextTick(() => {
+            this.isShowAttrsList = false
+          })
+          break
+        default:
+          this.addClientForm.address = e.target.value
+          this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+          this.$nextTick(() => {
+            this.isShowAttrsList = false
+          })
+          break
+      }
     },
     // 删除员工
     async deleteEmployees (row) {
