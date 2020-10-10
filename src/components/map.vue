@@ -82,7 +82,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scpoed lang="less">
 /* 去掉地图左下角的百度LOGO */
 .anchorBL {
   display: none;

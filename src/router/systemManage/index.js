@@ -2,7 +2,6 @@ const SystemParams = () => import('@/views/systemManage/SystemParams.vue')
 const RoleManage = () => import('@/views/systemManage/RoleManage.vue')
 const MenuManage = () => import('@/views/systemManage/MenuManage.vue')
 const ClientManage = () => import('@/views/systemManage/ClientManage.vue')
-const ProductMan = () => import('@/views/systemManage/productMan.vue')
 const CategoryMan = () => import('@/views/systemManage/categoryMan.vue')
 const ReportReview = () => import('@/views/systemManage/reportReview.vue')
 const AppVersion = () => import('@/views/systemManage/appVersion.vue')
@@ -27,11 +26,6 @@ export default [
     path: '/clientManage',
     name: 'ClientManage',
     component: ClientManage
-  },
-  {
-    path: '/productMan',
-    name: 'productMan',
-    component: ProductMan
   },
   {
     path: '/categoryMan',

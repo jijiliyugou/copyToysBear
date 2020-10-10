@@ -179,7 +179,7 @@
     <el-dialog
       :title="dialogTitle"
       :visible.sync="clientDialog"
-      top="20px"
+      top="0px"
       width="50%"
     >
       <el-form
@@ -278,11 +278,22 @@
             <img width="100%" :src="companyLogoUrl" alt />
           </el-dialog>
         </el-form-item>
-        <el-form-item label="联系地址" prop="address">
+        <el-form-item>
+          <div class="myMap">
+            <BMapComponent @clickMap="clickMap" @attrItems="attrItems" ref="mapBaiduMap" :isMapClick="dialogTitle" :address="addClientForm.address"></BMapComponent>
+          </div>
+        </el-form-item>
+        <el-form-item label="联系地址" class="attrsForItem" prop="address">
           <el-input
+            id="suggestId"
+            name="address_detail"
             v-model="addClientForm.address"
+            @keyup.enter.native="selectMapAttrs(addClientForm.address)"
             :disabled="dialogTitle === '审核'"
           ></el-input>
+          <div class="housingList" v-show="isShowAttrsList">
+            <div v-for="(item, index) in attrsList" :key="index" @click="selectMapAttrs(item.city+item.district+item.street+item.business)">{{item.city+item.district+item.street+item.business}}</div>
+          </div>
         </el-form-item>
         <div class="threeBox">
           <el-form-item label="手机" prop="phoneNumber">
@@ -748,11 +759,12 @@
               @click="editEmployees(scope.row)"
               >编辑</el-button
             >
-            <el-popconfirm style="margin-left:10px;" title="确定要删除该员工吗？" @onConfirm="deleteEmployees(scope.row)">
-              <el-button
-                size="mini"
-                type="danger"
-                slot="reference"
+            <el-popconfirm
+              style="margin-left: 10px"
+              title="确定要删除该员工吗？"
+              @onConfirm="deleteEmployees(scope.row)"
+            >
+              <el-button size="mini" type="danger" slot="reference"
                 >删除</el-button
               >
             </el-popconfirm>
@@ -855,10 +867,13 @@
 
 <script>
 import bsTop from '@/components/BsTop'
+import BMapComponent from '@/components/attrsMap.vue'
 export default {
-  components: { bsTop },
+  components: { bsTop, BMapComponent },
   data () {
     return {
+      isShowAttrsList: false,
+      attrsList: [],
       relatedConfig: {
         title: '员工绑定',
         relatedDialog: false,
@@ -991,7 +1006,7 @@ export default {
         // 新增客户表单
         companyName: '',
         contactsMan: '',
-        address: '',
+        address: '深圳',
         e_mail: '',
         fax: '',
         qq: '',
@@ -1055,6 +1070,13 @@ export default {
     }
   },
   methods: {
+    selectMapAttrs (attr) {
+      this.addClientForm.address = (attr || this.addClientForm.address)
+      this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+      this.$nextTick(() => {
+        this.isShowAttrsList = false
+      })
+    },
     // 删除员工
     async deleteEmployees (row) {
       const res = await this.$http.post('/api/DeleteCompanyUser', {
@@ -1277,11 +1299,24 @@ export default {
       }
       this.clientDialog = false
     },
-    // 打开新增面板
+    // 获取只能搜索地址列表
+    attrItems (attrs) {
+      this.attrsList = attrs
+    },
+    // 点击地图获取地址
+    clickMap (attr) {
+      console.log(attr, this.addClientForm.address)
+      this.addClientForm.address = attr || this.addClientForm.address
+      this.$nextTick(() => {
+        this.isShowAttrsList = false
+      })
+    },
+    // 打开新增客户面板
     openAddClient () {
       this.clientDialog = true
       this.dialogTitle = '新增客户'
       this.editImages = []
+      console.log(this.addClientForm.address)
       this.addClientForm = {
         // 新增客户表单
         companyName: '',
@@ -1451,6 +1486,10 @@ export default {
       for (const key in row) {
         this.addClientForm[key] = row[key]
       }
+      this.$refs.mapBaiduMap && this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+      this.$nextTick(() => {
+        this.isShowAttrsList = false
+      })
     },
     currentChange (currentPage) {
       this.currentPage = currentPage
@@ -1460,7 +1499,7 @@ export default {
     errorHandler () {
       return true
     },
-    // 打开用户管理
+    // 打开绑定公司
     openUserMan (row) {
       // this.UserManConfig.CompantNumber = null;
       this.UserManConfig.userManDialog = true
@@ -1525,13 +1564,17 @@ export default {
     },
     // 打开编辑客户列表
     openEdit (row) {
+      this.clientDialog = true
       this.editImages = []
       this.dialogTitle = '用户编辑'
       for (const key in row) {
         this.addClientForm[key] = row[key]
       }
+      this.$refs.mapBaiduMap && this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
       this.editImages[0] = { url: row.companyLogo }
-      this.clientDialog = true
+      this.$nextTick(() => {
+        this.isShowAttrsList = false
+      })
     },
     // 编辑客户列表
     async handlerEdit () {
@@ -1602,7 +1645,6 @@ export default {
           companyNumber: null,
           id: row.id
         })
-        console.log(res)
         if (res.data.result.code === 200) {
           this.$message.success('取消关联成功')
         } else {
@@ -1616,6 +1658,11 @@ export default {
     this.getClientList()
     this.getClientTypeList('CompanyType')
     this.getClientTypeList('ExecutionWay')
+  },
+  watch: {
+    'addClientForm.address' (val) {
+      this.isShowAttrsList = !!val
+    }
   }
 }
 </script>
@@ -1673,12 +1720,35 @@ export default {
     color: #ff6600;
   }
 }
-.clientDialog{
-   @{deep} .el-form-item{
-     margin-bottom: 10px;
-     .el-form-item__error{
-       z-index: 1;
-     }
-   }
+.clientDialog {
+  @{deep} .el-form-item {
+    margin-bottom: 10px;
+    .el-form-item__error {
+      z-index: 1;
+    }
+  }
+}
+.myMap {
+    height: 150px;
+  }
+.attrsForItem {
+  position: relative;
+  .housingList{
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 2;
+    max-height: 370px;
+    overflow: auto;
+    div{
+      cursor: pointer;
+      padding: 0 15px;
+      &:hover{
+        background-color: #ecf5ff;
+      }
+    }
+  }
 }
 </style>

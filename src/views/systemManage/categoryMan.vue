@@ -32,7 +32,7 @@
       <el-table :data="allCateList" style="width: 100%">
         <el-table-tree-column
           treeKey="id"
-          parentKey="parentId"
+          parentKey="parentID"
           prop="name"
           label="分类名称"
           levelKey="level"
@@ -40,21 +40,15 @@
           :indentSize="50"
           folder-icon="icon icon-folder"
         ></el-table-tree-column>
+        <el-table-column
+          prop="ename"
+          label="英文名称"
+        ></el-table-column>
         <el-table-column label="级别">
           <template slot-scope="scope">
             <el-tag>{{
-              Number(scope.row.parentId) === 0 ? "一级菜单" : "二级菜单"
+              scope.row.level === 0 ? "一级类目" : scope.row.level === 1 ? "二级类目" : scope.row.level === 2 ? "三级类目" : "四级类目"
             }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="是否激活">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.enabled"
-              @click.native="switchStatus(scope.row.id)"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-            ></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -63,14 +57,15 @@
               size="mini"
               style="margin-right: 10px"
               type="success"
-              @click="openAdd(scope.row)"
+              @click="openAdd(scope.row,true)"
+              :disabled="scope.row.level === 3"
               >新增子级</el-button
             >
             <el-button
               size="mini"
               style="margin-right: 10px"
               type="primary"
-              @click="handleEdit(scope.row)"
+              @click="openAdd(scope.row)"
               >编辑</el-button
             >
             <el-popconfirm
@@ -84,7 +79,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <center style="margin-top: 20px" v-show="totalCount > pageSize">
+      <center style="margin-top: 20px" v-show="totalCount > 10">
         <el-pagination
           layout="prev, pager, next"
           background
@@ -105,19 +100,10 @@
           <el-input v-model="addCateForm.name"></el-input>
         </el-form-item>
         <el-form-item label="英文名称">
-          <el-input v-model="addCateForm.eName"></el-input>
-        </el-form-item>
-        <el-form-item label="层级">
-          <el-input v-model="addCateForm.level"></el-input>
+          <el-input v-model="addCateForm.ename"></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="addCateForm.orderSort"></el-input>
-        </el-form-item>
-        <el-form-item label="是否激活">
-          <el-radio-group v-model="addCateForm.enabled">
-            <el-radio label="true">是</el-radio>
-            <el-radio label="false">否</el-radio>
-          </el-radio-group>
+          <el-input v-model="addCateForm.orders"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="addcates">确认</el-button>
@@ -136,6 +122,10 @@ export default {
   components: { bsTop },
   data () {
     return {
+      addCateFormItem: null,
+      cateTotalCount: 0,
+      cateCurrentPage: 1,
+      catePageSize: 10,
       currentPage: 1,
       totalCount: 0,
       pageSize: 10,
@@ -151,12 +141,11 @@ export default {
         openCateDialog: false
       },
       addCateForm: {
-        parentId: 0,
+        parentID: 0,
         name: '',
-        eName: '',
-        enabled: 'false',
-        level: null,
-        orderSort: ''
+        ename: '',
+        level: 0,
+        orders: 0
       },
       pickerOptions: {
         shortcuts: [
@@ -193,11 +182,41 @@ export default {
         name: [
           { required: true, message: '请输入类目名称', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+        ],
+        level: [
+          { required: true, message: '请输入层级', trigger: 'blur' },
+          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
+    // 删除类目
+    async handleDelete (row) {
+      const res = await this.$http.post('/api/DeleteProductCategory', {
+        id: row.id
+      })
+      if (res.data.result.code === 200) {
+        this.$message.success('删除类目成功')
+        this.getCategoryPage()
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 获取类目列表
+    async getCategoryPage () {
+      const res = await this.$http.post('/api/ProductCategoryPage', {
+        skipCount: this.cateCurrentPage,
+        maxResultCount: this.catePageSize
+      })
+      if (res.data.result.code === 200) {
+        this.allCateList = res.data.result.item.items
+        this.cateTotalCount = res.data.result.item.totalCount
+        console.log(this.allCateList)
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     currentChange (page) {
       this.currentPage = page
     },
@@ -205,31 +224,68 @@ export default {
       console.log('查询')
     },
     // 打开父级新增类目列表窗口
-    openAdd (row) {
-      this.addCateForm = {
-        parentId: 0,
-        name: '',
-        eName: '',
-        enabled: 'false',
-        level: null,
-        orderSort: ''
+    openAdd (row, flag) {
+      if (row && !flag) {
+        for (const key in this.addCateForm) {
+          this.addCateForm[key] = row[key]
+        }
+        this.addCateForm.level = row.level
+        this.addCateFormItem = row || null
+        this.cateDialogOptions.cateDialogTitle = '编辑'
+        this.cateDialogOptions.openCateDialog = true
+      } else if (row && flag) {
+        this.addCateForm = {
+          parentID: row.id,
+          name: '',
+          ename: '',
+          level: (row.level + 1),
+          orders: 0
+        }
+        this.addCateForm.parentID = row.id
+        this.addCateFormItem = row || null
+        this.cateDialogOptions.cateDialogTitle = '新增'
+        this.cateDialogOptions.openCateDialog = true
+      } else {
+        this.addCateForm = {
+          parentID: 0,
+          name: '',
+          ename: '',
+          level: 0,
+          orders: 0
+        }
+        this.addCateFormItem = row || null
+        this.cateDialogOptions.cateDialogTitle = '新增'
+        this.cateDialogOptions.openCateDialog = true
       }
-      this.addCateForm.parentId = row ? row.id : 0
-      this.cateDialogOptions.cateDialogTitle = '新增'
-      this.cateDialogOptions.openCateDialog = true
     },
     // 确认新增
     async addcates () {
-      const res = await this.$http.post('api/CreateProductCategory', {
-        ...this.addCateForm,
-        skipCount: this.currentPage,
-        maxResultCount: this.pageSize
-      })
-      console.log(res)
+      let api, msg, obj
+      if (this.cateDialogOptions.cateDialogTitle === '新增') {
+        api = '/api/CreateProductCategory'
+        msg = '新增成功'
+        obj = this.addCateForm
+      } else {
+        api = '/api/UpdateProductCategory'
+        msg = '编辑成功'
+        obj = {
+          ...this.addCateForm, id: this.addCateFormItem.id
+        }
+      }
+      const res = await this.$http.post(api, obj)
+      if (res.data.result.code === 200) {
+        this.$message.success(msg)
+        this.getCategoryPage()
+        this.cateDialogOptions.openCateDialog = false
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
     }
   },
   created () {},
-  mounted () {}
+  mounted () {
+    this.getCategoryPage()
+  }
 }
 </script>
 <style scoped lang='less'>

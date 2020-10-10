@@ -214,6 +214,8 @@ export default {
       })
       if (res.data.result.code === 200) {
         return res.data.result.item.items
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     // 获取新品推荐
@@ -225,6 +227,8 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.list = res.data.result.item.items
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     // 获取公告
@@ -236,6 +240,8 @@ export default {
       })
       if (res.data.result.code === 200) {
         return res.data.result.item.result.items
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     boxEnter () {
