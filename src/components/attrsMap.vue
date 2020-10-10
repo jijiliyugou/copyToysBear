@@ -86,7 +86,7 @@ export default {
             if (e) _that.$emit('attrItems', e.Hr)
           }
         })
-        ac.setInputValue(this.attr)
+        ac.setInputValue(this.address)
       })
     }
   }

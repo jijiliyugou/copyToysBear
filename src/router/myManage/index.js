@@ -1,6 +1,6 @@
 const MyCustomer = () => import('@/views/myManage/myCustomer.vue')
 const MyProduct = () => import('@/views/myManage/myProduct.vue')
-const ProductMan = () => import('@/views/systemManage/productMan.vue')
+const ProductMan = () => import('@/views/myManage/productMan.vue')
 export default [
   {
     path: '/myCustomer',
