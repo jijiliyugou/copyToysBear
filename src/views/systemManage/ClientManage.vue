@@ -1602,6 +1602,7 @@ export default {
     },
     // 打开编辑客户列表
     openEdit (row) {
+      console.log(row)
       this.clientDialog = true
       this.editImages = []
       this.dialogTitle = '用户编辑'
@@ -1609,8 +1610,8 @@ export default {
         this.addClientForm[key] = row[key]
       }
       this.$refs.mapBaiduMap &&
-        this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
-      this.editImages[0] = row.companyLogo ? { url: row.companyLogo } : ''
+      this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+      row.companyLogo && (this.editImages[0] = { url: row.companyLogo })
       this.$nextTick(() => {
         this.isShowAttrsList = false
       })

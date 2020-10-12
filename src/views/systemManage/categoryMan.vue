@@ -93,6 +93,7 @@
     <el-dialog
       :title="cateDialogOptions.cateDialogTitle + '类目'"
       :visible.sync="cateDialogOptions.openCateDialog"
+      v-if="cateDialogOptions.openCateDialog"
       width="50%"
     >
       <el-form :model="addCateForm" :rules="addCateRules" ref="addCateRulesForm" label-width="100px">

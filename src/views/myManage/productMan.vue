@@ -100,7 +100,9 @@
     <el-dialog
       :title="productDialogOptions.productDialogTitle + '产品'"
       :visible.sync="productDialogOptions.openProductDialog"
+      v-if="productDialogOptions.openProductDialog"
       class="productDialog"
+      width="40%"
     >
       <el-form
         :inline="true"
@@ -110,25 +112,12 @@
         ref="addProductRulesForm"
         label-width="100px"
       >
-          <el-form-item class="productName" label="产品名称" prop="name">
+          <el-form-item label="产品图片：" prop="img" v-show="productDialogOptions.productDialogTitle === '编辑'">
+            <el-image :src='addProductForm.img' :preview-src-list="[addProductForm.img && addProductForm.img.replace(/_MiddlePic/, '_Photo')]"></el-image>
+        </el-form-item>
+          <el-form-item class="productName" label="产品名称：" prop="name">
           <el-input v-model="addProductForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="报价" class="productCu_de">
-          <el-input v-model="addProductForm.price">
-            <el-select v-model="addProductForm.cu_de" slot="append" placeholder="请选择">
-            <el-option label="美元" value="$"></el-option>
-            <el-option label="人民币" value="￥"></el-option>
-            <el-option label="欧元" value="€"></el-option>
-            <el-option label="英镑" value="￡"></el-option>
-            <el-option label="新加坡元" value="S$"></el-option>
-            <el-option label="日元" value="J￥"></el-option>
-            <el-option label="阿根廷比索" value="ARS$"></el-option>
-            <el-option label="越南盾" value="₫"></el-option>
-            <el-option label="泰铢" value="৴"></el-option>
-            <el-option label="其他" value="¤"></el-option>
-          </el-select>
-          </el-input>
-          </el-form-item>
         <!-- <el-form-item class="productName" label="产品图片" prop="img">
           <el-upload
               :action="baseAPI + '/api/File/InsertPic'"
@@ -146,21 +135,42 @@
               <img width="100%" :src="LogoUrl" alt />
             </el-dialog>
         </el-form-item> -->
+        <div class="formItems">
+          <el-form-item label="出厂货号：" prop="fa_no">
+          <el-input v-model="addProductForm.fa_no"></el-input>
+        </el-form-item>
+          <el-form-item label="公司编号：" prop="number" v-show="productDialogOptions.productDialogTitle === '编辑'">
+          <el-input v-model="addProductForm.number" disabled></el-input>
+        </el-form-item>
+        </div>
        <div class="formItems">
-        <el-form-item  label="产品分类" prop="categoryNumber">
+        <el-form-item  label="产品分类：" prop="categoryNumber">
           <el-cascader
           v-model="addProductForm.categoryNumber"
           @change="changeCate"
           :options="categoryList" :props="{label: 'name',children: 'children'}">
           </el-cascader>
         </el-form-item>
-        <el-form-item label="出厂货号" prop="fa_no">
-          <el-input v-model="addProductForm.fa_no"></el-input>
-        </el-form-item>
+        <el-form-item label="单价：" class="productCu_de">
+          <el-input v-model="addProductForm.price">
+            <el-select v-model="addProductForm.cu_de" slot="append" placeholder="请选择">
+            <el-option label="美元" value="$"></el-option>
+            <el-option label="人民币" value="￥"></el-option>
+            <el-option label="欧元" value="€"></el-option>
+            <el-option label="英镑" value="￡"></el-option>
+            <el-option label="新加坡元" value="S$"></el-option>
+            <el-option label="日元" value="J￥"></el-option>
+            <el-option label="阿根廷比索" value="ARS$"></el-option>
+            <el-option label="越南盾" value="₫"></el-option>
+            <el-option label="泰铢" value="৴"></el-option>
+            <el-option label="其他" value="¤"></el-option>
+          </el-select>
+          </el-input>
+          </el-form-item>
        </div>
         <div class="formItems formItemSan">
           <div>
-            <el-form-item label="装箱量">
+            <el-form-item label="装箱量：">
               <el-input v-model="addProductForm.in_en"></el-input
               ><span class="itemX">/</span></el-form-item
             ><el-form-item
@@ -168,14 +178,14 @@
             ></el-form-item>
           </div>
            <div class="productCh_pa">
-             <el-form-item label="包装">
+             <el-form-item label="包装：">
             <el-input v-model="addProductForm.ch_pa"></el-input>
           </el-form-item>
           </div>
         </div>
         <div class="formItems formItemSan">
           <div>
-            <el-form-item label="外箱规格">
+            <el-form-item label="外箱规格：">
               <el-input v-model="addProductForm.ou_le"></el-input
               ><span class="itemX">X</span></el-form-item
             >
@@ -187,7 +197,7 @@
             ></el-form-item>
           </div>
           <div>
-            <el-form-item label="体积/材积">
+            <el-form-item label="体积/材积：">
               <el-input v-model="addProductForm.bulk_stere"></el-input
               ><span class="itemX">/</span></el-form-item
             ><el-form-item
@@ -197,7 +207,7 @@
         </div>
         <div class="formItems formItemSan">
           <div>
-            <el-form-item label="样品规格">
+            <el-form-item label="样品规格：">
               <el-input v-model="addProductForm.pr_le"></el-input
               ><span class="itemX">X</span> </el-form-item
             ><el-form-item>
@@ -208,7 +218,7 @@
             </el-form-item>
           </div>
           <div>
-            <el-form-item label="毛重/净重">
+            <el-form-item label="毛重/净重：">
               <el-input v-model="addProductForm.ne_we"></el-input
               ><span class="itemX">/</span></el-form-item
             ><el-form-item
@@ -216,7 +226,7 @@
             ></el-form-item>
           </div>
         </div>
-         <el-form-item class="productName" label="产品说明">
+         <el-form-item class="productName" label="产品说明：">
            <el-input
             type="textarea"
             v-model="addProductForm.remark"
@@ -278,6 +288,7 @@ export default {
         supplierId: this.$store.state.currentComparnyId,
         supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
         name: '',
+        number: null,
         price: null,
         img: '',
         ch_pa: null,
@@ -467,6 +478,7 @@ export default {
         name: '',
         img: '',
         price: null,
+        number: null,
         ch_pa: null,
         fa_no: null,
         pr_le: null,
@@ -509,6 +521,10 @@ export default {
   }
 }
 .addProductDialog {
+  .el-image{
+    width: 100px;
+    height: 100px;
+  }
   .formItems {
     display: flex;
     justify-content: space-between;
@@ -558,9 +574,13 @@ export default {
   }
 }
 .productCu_de{
-   @{deep} .el-select .el-input {
+  @{deep} .el-input__inner {
+    width: 70px;
+  }
+   @{deep} .el-select {
     width: 120px;
     .el-input__inner{
+      width: 120px;
         text-align: center;
       }
     }
