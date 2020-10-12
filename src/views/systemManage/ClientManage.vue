@@ -3,52 +3,73 @@
     <bsTop></bsTop>
     <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="关键字查询" size="mini">
-          <el-input
-            @keyup.enter.native="search"
-            v-model="formInline.CompanyName"
-            placeholder="输入关键字"
-            style="width: 90%"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="类型查询" size="mini">
-          <el-select
-            clearable
-            v-model="formInline.CompanyType"
-            placeholder="请选择"
-            style="width: 90%"
-          >
-            <el-option
-              v-for="item in [
-                { itemCode: null, itemText: '全部' },
-                ...clientTypeList,
-              ]"
-              :key="item.itemCode"
-              :label="item.itemText"
-              :value="item.itemCode"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="时间段搜索" size="mini">
-          <el-date-picker
-            v-model="formInline.dateTile"
-            value-format="yyyy-MM-ddTHH:mm:ss"
-            type="datetimerange"
-            :picker-options="pickerOptions"
-            range-separator="—"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="right"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item class="btnList" size="mini">
-          <el-button type="primary" size="small" @click="search"
-            >查询</el-button
-          >
-          <el-button type="primary" size="small" @click="openAddClient"
-            >新增</el-button
-          >
-        </el-form-item>
+          <el-form-item label="关键字查询" size="mini">
+            <el-input
+              @keyup.enter.native="search"
+              v-model="formInline.CompanyName"
+              placeholder="输入关键字"
+              style="width: 90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="类型查询" size="mini">
+            <el-select
+              clearable
+              v-model="formInline.CompanyType"
+              placeholder="请选择"
+              style="width: 90%"
+            >
+              <el-option
+                v-for="item in [
+                  { itemCode: null, itemText: '全部' },
+                  ...clientTypeList,
+                ]"
+                :key="item.itemCode"
+                :label="item.itemText"
+                :value="item.itemCode"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+            <el-form-item label="状态查询" size="mini">
+            <el-select
+              clearable
+              v-model="formInline.Audit_state"
+              placeholder="请选择"
+              style="width: 90%"
+            >
+              <el-option
+                v-for="(item, index) in [
+                  { value: '', label: '全部' },
+                  { value: '0', label: '未审核' },
+                  { value: '1', label: '已审核' },
+                  { value: '2', label: '拒绝' }
+                ]"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="时间段搜索" size="mini">
+            <el-date-picker
+              v-model="formInline.dateTile"
+              width="100"
+              value-format="yyyy-MM-ddTHH:mm:ss"
+              type="datetimerange"
+              :picker-options="pickerOptions"
+              range-separator="—"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item class="btnList" size="mini">
+            <el-button type="primary" size="small" @click="search"
+              >查询</el-button
+            >
+            <el-button type="primary" size="small" @click="openAddClient"
+              >新增</el-button
+            >
+          </el-form-item>
       </el-form>
     </div>
     <div class="tableContent">
@@ -115,12 +136,12 @@
             >
           </template>
         </el-table-column>
-        <el-table-column prop="audit_state" label="审核状态">
+        <el-table-column prop="audit_state" label="审核状态" align="center">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.audit_state === 1" type="success"
+            <el-tag v-if="scope.row.audit_state === '1'" type="success"
               >已审核</el-tag
             >
-            <el-tag v-else-if="scope.row.audit_state === 2" type="danger"
+            <el-tag v-else-if="scope.row.audit_state === '2'" type="danger"
               >拒绝</el-tag
             >
             <el-tag v-else>未审核</el-tag>
@@ -281,7 +302,13 @@
         </el-form-item>
         <el-form-item>
           <div class="myMap">
-            <BMapComponent @clickMap="clickMap" @attrItems="attrItems" ref="mapBaiduMap" :isMapClick="dialogTitle" :address="addClientForm.address"></BMapComponent>
+            <BMapComponent
+              @clickMap="clickMap"
+              @attrItems="attrItems"
+              ref="mapBaiduMap"
+              :isMapClick="dialogTitle"
+              :address="addClientForm.address"
+            ></BMapComponent>
           </div>
         </el-form-item>
         <el-form-item label="联系地址" class="attrsForItem" prop="address">
@@ -293,7 +320,18 @@
             :disabled="dialogTitle === '审核'"
           ></el-input>
           <div class="housingList" v-show="isShowAttrsList && attrsList.length">
-            <div v-for="(item, index) in attrsList" :key="index" @click="selectMapAttrs($event, item.city+item.district+item.street+item.business)">{{item.city+item.district+item.street+item.business}}</div>
+            <div
+              v-for="(item, index) in attrsList"
+              :key="index"
+              @click="
+                selectMapAttrs(
+                  $event,
+                  item.city + item.district + item.street + item.business
+                )
+              "
+            >
+              {{ item.city + item.district + item.street + item.business }}
+            </div>
           </div>
         </el-form-item>
         <div class="threeBox">
@@ -1032,6 +1070,7 @@ export default {
         // 搜索表单
         CompanyName: null,
         CompanyType: null,
+        Audit_state: '',
         dateTile: null
       },
       clientDialog: false,
@@ -1283,10 +1322,9 @@ export default {
     // 审核
     async byAudit (id) {
       this.addClientForm.audit_state = id
+      console.log(this.addClientForm)
       const res = await this.$http.post(
-        '/api/UpdateCompanyStatus',
-        this.addClientForm.audit_state
-      )
+        '/api/UpdateCompanyStatus', { companyNumber: this.addClientForm.companyNumber, audit_state: id })
       if (res.data.result.code === 200) {
         this.getClientList()
         this.$message.success('审核成功')
@@ -1442,6 +1480,7 @@ export default {
         maxResultCount: this.pageSize,
         CompanyName: this.formInline.CompanyName,
         CompanyType: this.formInline.CompanyType,
+        Audit_state: this.formInline.Audit_state,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
@@ -1484,7 +1523,8 @@ export default {
       for (const key in row) {
         this.addClientForm[key] = row[key]
       }
-      this.$refs.mapBaiduMap && this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+      this.$refs.mapBaiduMap &&
+        this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
       this.$nextTick(() => {
         this.isShowAttrsList = false
       })
@@ -1568,7 +1608,8 @@ export default {
       for (const key in row) {
         this.addClientForm[key] = row[key]
       }
-      this.$refs.mapBaiduMap && this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+      this.$refs.mapBaiduMap &&
+        this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
       this.editImages[0] = row.companyLogo ? { url: row.companyLogo } : ''
       this.$nextTick(() => {
         this.isShowAttrsList = false
@@ -1671,8 +1712,9 @@ export default {
 @deep: ~">>>";
 .searchBox {
   padding-top: 50px;
-  .btnList {
+    .btnList {
     float: right;
+    margin-left: 50px;
   }
 }
 .companyLogoDiv {
@@ -1730,11 +1772,11 @@ export default {
   }
 }
 .myMap {
-    height: 150px;
-  }
+  height: 150px;
+}
 .attrsForItem {
   position: relative;
-  .housingList{
+  .housingList {
     position: absolute;
     width: 100%;
     box-sizing: border-box;
@@ -1743,21 +1785,21 @@ export default {
     z-index: 2;
     max-height: 370px;
     overflow: auto;
-    div{
+    div {
       cursor: pointer;
       padding: 0 15px;
-      &:hover{
+      &:hover {
         background-color: #ecf5ff;
       }
     }
   }
 }
-.addClientDialog{
-  @{deep} .el-dialog__body{
-  padding-top: 5px;
-  input{
-    height: 30px;
+.addClientDialog {
+  @{deep} .el-dialog__body {
+    padding-top: 5px;
+    input {
+      height: 30px;
+    }
   }
-}
 }
 </style>
