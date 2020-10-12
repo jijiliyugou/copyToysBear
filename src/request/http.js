@@ -22,7 +22,7 @@ switch (env) {
     break
 }
 const createLogRecord = async function (obj) {
-  const res = await axios.post('api/CreateLogRecord', { Message: obj.msg, LogType: obj.type, Title: obj.url + obj.code, Url: obj.url })
+  const res = await axios.post('api/CreateLogRecord', obj)
   if (res.data.result.code !== 200) {
     Message.error('api/CreateLogRecord报错code=' + res.data.result.code + ',' + res.data.result.message)
   }
@@ -110,7 +110,7 @@ myAxios.install = function (Vue) {
             Message.closeAll()
             $Store.commit('updateAppLoading', false)
             Message.error('登录过期，请重新登录')
-            createLogRecord({ Message: '登录过期' + error.response.statusText, LogType: 2, Title: error.response.config.url + error.response.status, Url: error.response.config.url })
+            createLogRecord({ Message: '登录过期' + error.response.statusText, LogType: 2, Title: '接口' + error.response.config.url + '，报' + error.response.status, Url: error.response.config.url })
             router.push({
               path: '/beforeIndex/login?id=signOut'
             })
@@ -118,7 +118,7 @@ myAxios.install = function (Vue) {
           default:
             Message.closeAll()
             $Store.commit('updateAppLoading', false)
-            createLogRecord({ Message: '请求失败' + error.response.statusText, LogType: 2, Title: error.response.config.url + error.response.status, Url: error.response.config.url })
+            createLogRecord({ Message: '请求失败' + error.response.statusText, LogType: 2, Title: '接口' + error.response.config.url + '，报' + error.response.status, Url: error.response.config.url })
             Message.error(`请求失败${error.response.statusText},${error.response.status}，请联系管理员`)
             break
         }
@@ -135,7 +135,8 @@ myAxios.install = function (Vue) {
         // Check if we've maxed out the total number of retries
         if (config.__retryCount >= axios.defaults.retry) {
           $Store.commit('updateAppLoading', false)
-          createLogRecord({ Message: '请求超时', LogType: 1, Title: config.url + error.response.status, Url: error.response.config.url })
+          console.log(123)
+          createLogRecord({ Message: '请求超时', LogType: 1, Title: '接口：' + config.url + '，超时时长为=' + config.timeout, Url: config.url })
           Message.error('请求超时，请检查网络')
           // Reject with the error
           return Promise.reject(error)
