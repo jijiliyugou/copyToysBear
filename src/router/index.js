@@ -12,7 +12,8 @@ const getToken = () => {
   return new Promise((result, reject) => {
     axios
       .post('/api/GetToken', {
-        companyNum: 'LittleBearWeb'
+        companyNum: 'LittleBearWeb',
+        platForm: 'PC'
       })
       .then(res => {
         if (res.data.result.code === 200) {

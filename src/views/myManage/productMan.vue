@@ -5,7 +5,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-            v-model="formInline.keyword"
+            v-model="formInline.Name"
             placeholder="输入关键字"
             style="width: 90%"
           ></el-input>
@@ -24,50 +24,48 @@
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="primary" @click="openAdd"
-            >新增产品</el-button
-          >
+          <el-button type="primary" @click="openAdd">新增产品</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="tableContent">
-      <el-table :data="allCateList" style="width: 100%">
-        <el-table-column class="productName" label="产品图片" prop="img">
+      <el-table :data="productList" style="width: 100%">
+        <el-table-column class="productImg" label="产品图片" prop="img">
           <template slot-scope="scope">
-            <el-image class="img" :src="scope.img" fit="cover">
+            <el-image class="img" :src="scope.row.img" fit="cover">
               <div
                 slot="placeholder"
                 class="image-slot"
-                style="width: 150px; margin: 0 auto"
+                style="width: 50px; height: 50px; margin: 0 auto"
               >
-                <img class="errorImg" src="~@/assets/images/暂无图片.png" alt />
+                <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
               </div>
               <div
                 slot="error"
                 class="image-slot"
-                style="width: 150px; margin: 0 auto"
+                style="width: 50px; height: 50px; margin: 0 auto"
               >
                 <img
                   class="errorImg"
-                  src="~@/assets/images/图片加载失败.png"
+                  src="~@/assets/images/imgError.jpg"
                   alt
                 />
               </div>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="orderType" label="产品名称"></el-table-column>
-        <el-table-column prop="orderNumber" label="产品编号"></el-table-column>
-        <el-table-column prop="hall_na" label="来源"></el-table-column>
+        <el-table-column prop="name" label="产品名称"></el-table-column>
+        <el-table-column prop="categoryName" label="产品类目"></el-table-column>
         <el-table-column
-          prop="toCompanyName"
-          label="公司名称"
+          prop="fa_no"
+          label="出厂货号"
         ></el-table-column>
         <el-table-column prop="createdOn" label="发布时间" sortable>
           <template slot-scope="scope">{{
             scope.row.createdOn.replace(/t/gi, " ")
           }}</template>
         </el-table-column>
+        <el-table-column prop="remark" label="产品说明"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -100,7 +98,7 @@
     </div>
     <!-- 新增产品dialog -->
     <el-dialog
-      :title="productDialogOptions.productDialogTitle + '类目'"
+      :title="productDialogOptions.productDialogTitle + '产品'"
       :visible.sync="productDialogOptions.openProductDialog"
       class="productDialog"
     >
@@ -112,30 +110,55 @@
         ref="addProductRulesForm"
         label-width="100px"
       >
-        <el-form-item class="productName" label="产品名称" prop="name">
+          <el-form-item class="productName" label="产品名称" prop="name">
           <el-input v-model="addProductForm.name"></el-input>
         </el-form-item>
-        <div class="formItems">
-          <el-form-item label="出厂货号">
-            <el-input v-model="addProductForm.fa_no"></el-input>
+        <el-form-item label="报价" class="productCu_de">
+          <el-input v-model="addProductForm.price">
+            <el-select v-model="addProductForm.cu_de" slot="append" placeholder="请选择">
+            <el-option label="美元" value="$"></el-option>
+            <el-option label="人民币" value="￥"></el-option>
+            <el-option label="欧元" value="€"></el-option>
+            <el-option label="英镑" value="￡"></el-option>
+            <el-option label="新加坡元" value="S$"></el-option>
+            <el-option label="日元" value="J￥"></el-option>
+            <el-option label="阿根廷比索" value="ARS$"></el-option>
+            <el-option label="越南盾" value="₫"></el-option>
+            <el-option label="泰铢" value="৴"></el-option>
+            <el-option label="其他" value="¤"></el-option>
+          </el-select>
+          </el-input>
           </el-form-item>
-          <el-form-item label="包装">
-            <el-input v-model="addProductForm.ch_pa"></el-input>
-          </el-form-item>
-        </div>
-
+        <!-- <el-form-item class="productName" label="产品图片" prop="img">
+          <el-upload
+              :action="baseAPI + '/api/File/InsertPic'"
+              list-type="picture-card"
+              ref="upload"
+              :auto-upload="false"
+              :on-preview="handlePicProductPreview"
+              :http-request="successUpload"
+              :limit="7"
+              accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
+            >
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogUpload" :modal="false">
+              <img width="100%" :src="LogoUrl" alt />
+            </el-dialog>
+        </el-form-item> -->
+       <div class="formItems">
+        <el-form-item  label="产品分类" prop="categoryNumber">
+          <el-cascader
+          v-model="addProductForm.categoryNumber"
+          @change="changeCate"
+          :options="categoryList" :props="{label: 'name',children: 'children'}">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="出厂货号" prop="fa_no">
+          <el-input v-model="addProductForm.fa_no"></el-input>
+        </el-form-item>
+       </div>
         <div class="formItems formItemSan">
-          <div>
-            <el-form-item label="样品规格">
-              <el-input v-model="addProductForm.pr_le"></el-input
-              ><span class="itemX">X</span> </el-form-item
-            ><el-form-item>
-              <el-input v-model="addProductForm.pr_wi"></el-input
-              ><span class="itemX">X</span> </el-form-item
-            ><el-form-item>
-              <el-input v-model="addProductForm.pr_hi"></el-input>
-            </el-form-item>
-          </div>
           <div>
             <el-form-item label="装箱量">
               <el-input v-model="addProductForm.in_en"></el-input
@@ -144,8 +167,12 @@
               ><el-input v-model="addProductForm.ou_lo"></el-input
             ></el-form-item>
           </div>
+           <div class="productCh_pa">
+             <el-form-item label="包装">
+            <el-input v-model="addProductForm.ch_pa"></el-input>
+          </el-form-item>
+          </div>
         </div>
-
         <div class="formItems formItemSan">
           <div>
             <el-form-item label="外箱规格">
@@ -169,12 +196,17 @@
           </div>
         </div>
         <div class="formItems formItemSan">
-          <el-form-item label="来源">
-            <el-input
-              class="laiyuan"
-              v-model="addProductForm.supplierName"
-            ></el-input>
-          </el-form-item>
+          <div>
+            <el-form-item label="样品规格">
+              <el-input v-model="addProductForm.pr_le"></el-input
+              ><span class="itemX">X</span> </el-form-item
+            ><el-form-item>
+              <el-input v-model="addProductForm.pr_wi"></el-input
+              ><span class="itemX">X</span> </el-form-item
+            ><el-form-item>
+              <el-input v-model="addProductForm.pr_hi"></el-input>
+            </el-form-item>
+          </div>
           <div>
             <el-form-item label="毛重/净重">
               <el-input v-model="addProductForm.ne_we"></el-input
@@ -184,6 +216,28 @@
             ></el-form-item>
           </div>
         </div>
+         <el-form-item class="productName" label="产品说明">
+           <el-input
+            type="textarea"
+            v-model="addProductForm.remark"
+            :maxlength="
+              $store.state.globalJson.Json.UserRestrictions[0].itemCode
+            "
+          ></el-input>
+          <p class="textareaLength">
+            最多可输入
+            <span>{{
+              $store.state.globalJson.Json.UserRestrictions[0].itemCode
+            }}</span
+            >字，当前输入
+            <span>
+              {{ addProductForm.remark ? addProductForm.remark.length : 0 }} </span>，还可输入
+            <span>{{
+              $store.state.globalJson.Json.UserRestrictions[0].itemCode -
+              (addProductForm.remark && addProductForm.remark.length)
+            }}</span>
+          </p>
+         </el-form-item>
       </el-form>
       <center>
         <el-button type="primary" @click="subAddProduct">确认</el-button>
@@ -201,13 +255,17 @@ export default {
   components: { bsTop },
   data () {
     return {
+      cateId: null,
+      dialogUpload: false,
+      LogoUrl: '',
+      categoryList: [],
       currentPage: 1,
       totalCount: 0,
       pageSize: 10,
-      allCateList: [],
+      productList: [],
       formInline: {
         // 查询角色表单
-        keyword: '',
+        Name: '',
         state: null,
         dateTile: null
       },
@@ -216,10 +274,14 @@ export default {
         openProductDialog: false
       },
       addProductForm: {
+        categoryNumber: '',
+        supplierId: this.$store.state.currentComparnyId,
+        supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
         name: '',
+        price: null,
         img: '',
-        fa_no: null,
         ch_pa: null,
+        fa_no: null,
         pr_le: null,
         pr_wi: null,
         pr_hi: null,
@@ -228,9 +290,9 @@ export default {
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
-        bulk_stere: null,
-        feet: null,
-        supplierName: null
+        cu_de: '￥',
+        remark: '',
+        bulk_stere: null
       },
       pickerOptions: {
         shortcuts: [
@@ -277,98 +339,136 @@ export default {
     }
   },
   methods: {
+    // 级联选择
+    changeCate (id) {
+      this.cateId = id[id.length - 1]
+    },
+    // 上传产品图片
+    async successUpload () {
+      const fd = new FormData()
+      fd.append('BusinessType', 'Logo')
+      fd.append('file', this.file)
+      if (!this.file) {
+        return {
+          data: {
+            result: {
+              code: 400,
+              message: '请选择图片'
+            }
+          }
+        }
+      }
+      return await this.$http.post('/api/File/InsertPic', fd)
+    },
+    // 递归分类
+    traverseCateList (list) {
+      for (let i = 0; i < list.length; i++) {
+        list[i].value = JSON.stringify(list[i])
+        if (list[i].children && list[i].children.length === 0) {
+          delete list[i].children
+        } else {
+          this.traverseCateList(list[i].children)
+        }
+      }
+    },
+    // 获取产品分类列表
+    async getProductCategoryList () {
+      const res = await this.$http.post('/api/ProductCategoryList', {})
+      if (res.data.result.code === 200) {
+        this.traverseCateList(res.data.result.item)
+        this.categoryList = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     currentChange (page) {
       this.currentPage = page
+      this.getProductList()
     },
     search () {
       console.log('查询')
     },
+    // 新增产品预览头像
+    handlePicProductPreview (file, fileList) {
+      this.LogoUrl = file.url
+    },
+    // 获取产品列表
+    async getProductList () {
+      const res = await this.$http.post('/api/BroductMessagePage', {
+        skipCount: this.currentPage,
+        maxResultCount: this.pageSize,
+        Name: this.formInline.Name
+      })
+      if (res.data.result.code === 200) {
+        this.productList = res.data.result.item.items || []
+        this.totalCount = res.data.result.item.totalCount
+      } else {
+        this.$message.error(res.data.result.item.msg)
+      }
+    },
     // 编辑产品
     async updateBearProduct () {
-      const res = await this.$http.post('/api/UpdateBearProduct', this.addProductForm)
+      if (this.cateId) {
+        this.addProductForm.categoryName = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).name
+        this.addProductForm.categoryNumber = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).id
+      }
+      const res = await this.$http.post(
+        '/api/UpdateBearProduct',
+        this.addProductForm
+      )
       if (res.data.result.code === 200) {
-        console.log(res)
+        this.$message.success('编辑产品成功')
+        this.productDialogOptions.openProductDialog = false
+        this.getProductList()
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     // 新增产品
     async createProduct () {
-      const obj = {
-        companyNumber: 'string',
-        productNumber: 'string',
-        productID: 0,
-        number: 'string',
-        unit: 'string',
-        name: 'string',
-        ename: 'string',
-        supplierID: 'string',
-        supplierNumber: 'string',
-        ma_ID: 'string',
-        ma_nu: 'string',
-        categoryNumber: 'string',
-        categoryName: 'string',
-        cl_nu: 'string',
-        cl_na: 'string',
-        pa_nu: 'string',
-        price: 0,
-        cost: 0,
-        ch_pa: 'string',
-        en_pa: 'string',
-        pr_le: 0,
-        pr_wi: 0,
-        pr_hi: 0,
-        ou_le: 0,
-        ou_wi: 0,
-        ou_hi: 0,
-        bulk_feet: 0,
-        bulk_stere: 0,
-        in_en: 0,
-        ou_lo: 0,
-        gr_we: 0,
-        ne_we: 0,
-        in_le: 0,
-        in_wi: 0,
-        in_hi: 0,
-        remark: 'string',
-        hits: 0,
-        fa_no: 'string',
-        attestation: 'string',
-        cloud_platform_date: '2020-10-10T05:37:46.158Z',
-        showMicroWeb: 0,
-        isUpLoadFromMember: 0,
-        is_Confirm: 0,
-        isStop: 0,
-        pr_Language: 'string',
-        keyword_ch_na: 'string',
-        keyword_en_na: 'string',
-        keyword_ch_pa: 'string',
-        isTort: 0,
-        isOpen: true,
-        keyGuid: 'string',
-        makeyGuid: 'string',
-        isUpInsetImg: true,
-        certificateAddress: 'string',
-        videoAddress: 'string',
-        createdBy: 'string',
-        createdOn: '2020-10-10T05:37:46.158Z',
-        modifyBy: 'string',
-        modifyOn: '2020-10-10T05:37:46.158Z',
-        isDelete: true,
-        deleteBy: 'string',
-        deleteTime: '2020-10-10T05:37:46.158Z',
-        id: 'string'
-      }
+      this.addProductForm.categoryName = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).name
+      this.addProductForm.categoryNumber = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).id
       const res = await this.$http.post('/api/CreateBearProduct', this.addProductForm)
       if (res.data.result.code === 200) {
-        console.log(res)
+        this.$message.success('新增产品成功')
+        this.productDialogOptions.openProductDialog = false
+        this.getProductList()
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
-    // 打开父级新增产品列表窗口
+    // 删除产品
+    async handleDelete (row) {
+      const res = await this.$http.post('/api/DeleteProductMessage', { productNumber: row.productNumber })
+      if (res.data.result.code === 200) {
+        this.$message.success('删除产品成功')
+        this.getProductList()
+      } else {
+        this.$message.success(res.data.result.msg)
+      }
+    },
+    // 打开编辑产品
+    handleEdit (row) {
+      for (const key in this.addProductForm) {
+        this.addProductForm[key] = row[key]
+      }
+      this.cateId = null
+      this.addProductForm.id = row.id
+      this.productDialogOptions.productDialogTitle = '编辑'
+      this.productDialogOptions.openProductDialog = true
+    },
+    // 打开新增产品列表窗口
     openAdd () {
-      this.addCateForm = {
+      this.addProductForm = {
+        categoryName: '',
+        categoryNumber: [],
+        supplierId: this.$store.state.currentComparnyId,
+        supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
         name: '',
         img: '',
-        fa_no: null,
+        price: null,
         ch_pa: null,
+        fa_no: null,
         pr_le: null,
         pr_wi: null,
         pr_hi: null,
@@ -377,25 +477,27 @@ export default {
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
-        bulk_stere: null,
-        feet: null,
-        supplierName: null
+        remark: '',
+        cu_de: '￥',
+        bulk_stere: null
       }
       this.productDialogOptions.productDialogTitle = '新增'
       this.productDialogOptions.openProductDialog = true
     },
     // 确认新增产品
-    async subAddProduct () {
-      // const res = await this.$http.post('api/CreateProductCategory', {
-      //   ...this.addCateForm,
-      //   skipCount: this.currentPage,
-      //   maxResultCount: this.pageSize
-      // })
-      // console.log(res)
+    subAddProduct () {
+      if (this.productDialogOptions.productDialogTitle === '新增') {
+        this.createProduct()
+      } else {
+        this.updateBearProduct()
+      }
     }
   },
   created () {},
-  mounted () {}
+  mounted () {
+    this.getProductList()
+    this.getProductCategoryList()
+  }
 }
 </script>
 <style scoped lang='less'>
@@ -429,13 +531,47 @@ export default {
     }
   }
 }
+.tableContent {
+  @{deep} .img {
+    width: 50px;
+    height: 50px;
+  }
+  img{
+    width: 50px;
+    height: 50px;
+  }
+}
+.textareaLength {
+  font-size: 12px;
+  height: 30px;
+  span {
+    color: #ff6600;
+  }
+}
+.productCh_pa{
+  width:300px;
+  @{deep} .el-input {
+    width:200px;
+    .el-input__inner{
+      width:200px;
+    }
+  }
+}
+.productCu_de{
+   @{deep} .el-select .el-input {
+    width: 120px;
+    .el-input__inner{
+        text-align: center;
+      }
+    }
+}
 @media screen and (max-width: 1300px) {
-  body{
+  body {
     background-color: red;
   }
-  .productDialog{
-  @{deep} .el-dialog{
-    width:80%;
+  .productDialog {
+    @{deep} .el-dialog {
+      width: 80%;
     }
   }
 }

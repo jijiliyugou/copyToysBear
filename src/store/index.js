@@ -81,7 +81,8 @@ export default new Vuex.Store({
   actions: {
     async getToken ({ commit }) {
       const res = await axios.post('/api/GetToken', {
-        companyNum: 'LittleBearWeb'
+        companyNum: 'LittleBearWeb',
+        platForm: 'PC'
       })
       if (res.data.result.code === 200) {
         const obj = { accessToken: res.data.result.item }
