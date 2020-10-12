@@ -210,8 +210,8 @@ export default {
         )
         // 测试
         // this.ws = new WebSocket(
-        //   "ws://139.9.71.135:8090/ws?UserId=" + (this.$store.state.userInfo.userInfo && this.$store.state.userInfo.userInfo.id)
-        // );
+        //   'ws://139.9.71.135:8090/ws?UserId=' + (this.$store.state.userInfo.userInfo && this.$store.state.userInfo.userInfo.id)
+        // )
         // 监听webSocket连接
         this.ws.onopen = this.websocketonopen
         // 监听webSocket错误信息

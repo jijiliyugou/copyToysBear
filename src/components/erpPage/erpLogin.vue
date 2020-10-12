@@ -253,8 +253,8 @@ export default {
         // 初始化weosocket
         // 测试
         // this.ws = new WebSocket(
-        //   "ws://139.9.71.135:8090/ws?UserId=" + this.randomCode
-        // );
+        //   'ws://139.9.71.135:8090/ws?UserId=' + this.randomCode
+        // )
         // 正式
         this.ws = new WebSocket(
           'wss://impush.toysbear.com/ws?UserId=' + this.randomCode

@@ -3,7 +3,7 @@ import store from '@/store'
 
 const wsConnection = {
   $ws: null,
-  // baseUrl: "ws://139.9.71.135:8090/ws?UserId=", // 测试
+  // baseUrl: 'ws://139.9.71.135:8090/ws?UserId=', // 测试
   baseUrl: 'wss://impush.toysbear.com/ws?UserId=', // 正式
   lockReturn: false,
   timeout: 280000,
