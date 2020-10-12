@@ -133,7 +133,6 @@ export default {
       formInline: {
         // 查询角色表单
         keyword: '',
-        state: null,
         dateTile: null
       },
       cateDialogOptions: {
@@ -205,10 +204,18 @@ export default {
     },
     // 获取类目列表
     async getCategoryPage () {
-      const res = await this.$http.post('/api/ProductCategoryPage', {
+      const fd = {
         skipCount: this.cateCurrentPage,
-        maxResultCount: this.catePageSize
-      })
+        maxResultCount: this.catePageSize,
+        keyword: this.formInline.keyword,
+        StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
+        EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
+      }
+      if (!this.formInline.dateTile) {
+        delete fd.StartTime
+        delete fd.EndTime
+      }
+      const res = await this.$http.post('/api/ProductCategoryPage', fd)
       if (res.data.result.code === 200) {
         this.allCateList = res.data.result.item.items
         this.cateTotalCount = res.data.result.item.totalCount
@@ -221,7 +228,7 @@ export default {
       this.currentPage = page
     },
     search () {
-      console.log('查询')
+      this.getCategoryPage()
     },
     // 打开父级新增类目列表窗口
     openAdd (row, flag) {

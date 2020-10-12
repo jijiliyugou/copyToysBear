@@ -21,10 +21,16 @@ switch (env) {
     target = devEnv.hosturl
     break
 }
+const createLogRecord = async function (obj) {
+  const res = await axios.post('api/CreateLogRecord', { Message: obj.msg, LogType: obj.type, Title: obj.url + obj.code, Url: obj.url })
+  if (res.data.result.code !== 200) {
+    Message.error('api/CreateLogRecord报错code=' + res.data.result.code + ',' + res.data.result.message)
+  }
+}
 const myAxios = {}
 myAxios.install = function (Vue) {
   axios.defaults.timeout = 10000 // 超时时间
-  axios.defaults.retry = 2 // 请求次数
+  axios.defaults.retry = 1 // 请求次数
   axios.defaults.retryDelay = 1000 // 请求间隙
   // 统一设置初始API
   // axios.defaults.baseURL = target;
@@ -104,6 +110,7 @@ myAxios.install = function (Vue) {
             Message.closeAll()
             $Store.commit('updateAppLoading', false)
             Message.error('登录过期，请重新登录')
+            createLogRecord({ Message: '登录过期' + error.response.statusText, LogType: 2, Title: error.response.config.url + error.response.status, Url: error.response.config.url })
             router.push({
               path: '/beforeIndex/login?id=signOut'
             })
@@ -111,13 +118,15 @@ myAxios.install = function (Vue) {
           default:
             Message.closeAll()
             $Store.commit('updateAppLoading', false)
-            Message.error(`请求失败${error.response.status}，请联系管理员`)
+            createLogRecord({ Message: '请求失败' + error.response.statusText, LogType: 2, Title: error.response.config.url + error.response.status, Url: error.response.config.url })
+            Message.error(`请求失败${error.response.statusText},${error.response.status}，请联系管理员`)
             break
         }
         return Promise.reject(error)
       } else {
         // 请求超时， 重新请求
         var config = error.config
+        console.log(config)
         // If config does not exist or the retry option is not set, reject
         if (!config || !axios.defaults.retry) return Promise.reject(error)
 
@@ -126,6 +135,7 @@ myAxios.install = function (Vue) {
         // Check if we've maxed out the total number of retries
         if (config.__retryCount >= axios.defaults.retry) {
           $Store.commit('updateAppLoading', false)
+          createLogRecord({ Message: '请求超时', LogType: 1, Title: config.url + error.response.status, Url: error.response.config.url })
           Message.error('请求超时，请检查网络')
           // Reject with the error
           return Promise.reject(error)

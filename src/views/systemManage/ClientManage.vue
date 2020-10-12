@@ -180,6 +180,7 @@
       :title="dialogTitle"
       :visible.sync="clientDialog"
       top="0px"
+      class="addClientDialog"
       width="50%"
     >
       <el-form
@@ -990,7 +991,9 @@ export default {
         phoneNumber: [
           { required: true, message: '请输入联系手机', trigger: 'blur' },
           {
-            pattern: /^1[2,3,4,5,6,7,8,9][0-9]{9}$/,
+            // pattern: /^1[2,3,4,5,6,7,8,9][0-9]{9}$/,
+            min: 11,
+            max: 11,
             message: '手机格式不正确',
             trigger: 'blur'
           }
@@ -1281,8 +1284,8 @@ export default {
     async byAudit (id) {
       this.addClientForm.audit_state = id
       const res = await this.$http.post(
-        '/api/UpdateOrgCompany',
-        this.addClientForm
+        '/api/UpdateCompanyStatus',
+        this.addClientForm.audit_state
       )
       if (res.data.result.code === 200) {
         this.getClientList()
@@ -1566,7 +1569,7 @@ export default {
         this.addClientForm[key] = row[key]
       }
       this.$refs.mapBaiduMap && this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
-      this.editImages[0] = { url: row.companyLogo }
+      this.editImages[0] = row.companyLogo ? { url: row.companyLogo } : ''
       this.$nextTick(() => {
         this.isShowAttrsList = false
       })
@@ -1579,6 +1582,7 @@ export default {
           ? imgRes.data.result.object[0].filePath
           : this.addClientForm.companyLogo
       }
+      console.log(this.addClientForm)
       this.$refs.ClientForm.validate(async (valid) => {
         if (valid) {
           this.andClientIcon = 'el-icon-loading'
@@ -1712,13 +1716,14 @@ export default {
 }
 .textareaLength {
   font-size: 12px;
+  height: 30px;
   span {
     color: #ff6600;
   }
 }
 .clientDialog {
   @{deep} .el-form-item {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     .el-form-item__error {
       z-index: 1;
     }
@@ -1746,5 +1751,13 @@ export default {
       }
     }
   }
+}
+.addClientDialog{
+  @{deep} .el-dialog__body{
+  padding-top: 5px;
+  input{
+    height: 30px;
+  }
+}
 }
 </style>
