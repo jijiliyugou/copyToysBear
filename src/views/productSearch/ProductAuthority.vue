@@ -43,12 +43,14 @@
         </el-table>
         <center style="margin-top:20px;">
           <el-pagination
-            layout="prev, pager, next"
-            background
-            :total="total"
-            :page-size="pageSize"
-            @current-change="currentChange"
-          ></el-pagination>
+              layout="total, sizes, prev, pager, next, jumper"
+              :page-sizes="[10, 20, 30, 60]"
+              background
+              :total="total"
+              :page-size="pageSize"
+              @current-change="currentChange"
+              @size-change="handleSizeChange"
+            ></el-pagination>
         </center>
       </div>
     </template>
@@ -104,8 +106,13 @@ export default {
     handleDelete (index, row) {
       console.log(index, row)
     },
+    // 修改当前页
     currentChange (currentPage) {
       console.log(currentPage)
+    },
+    // 修改当前页条数
+    handleSizeChange (pageSize) {
+      console.log(pageSize)
     }
   }
 }

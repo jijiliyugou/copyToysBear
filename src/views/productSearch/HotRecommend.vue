@@ -180,14 +180,16 @@
           </div>
           <center
             style="margin:20px auto 0 auto;"
-            v-show="totalCount >= 10 && !isDetail"
+            v-show="totalCount > 10 && !isDetail"
           >
             <el-pagination
-              layout="prev, pager, next"
+              layout="total, sizes, prev, pager, next, jumper"
+              :page-sizes="[10, 20, 30, 60]"
               background
               :total="totalCount"
               :page-size="pageSize"
               @current-change="changePage"
+              @size-change="handleSizeChange"
             ></el-pagination>
           </center>
         </div>
@@ -501,8 +503,15 @@ export default {
         this.$store.commit('clearSearch')
       }
     },
+    // 修改热门产品当前页
     changePage (page) {
       this.currentPage = page
+      this.getProduct()
+    },
+    // 修改热门产品当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getProduct()
     }
   },

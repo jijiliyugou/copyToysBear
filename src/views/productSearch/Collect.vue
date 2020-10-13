@@ -113,11 +113,13 @@
       </el-table>
       <center style="margin-top:20px;" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="[10, 20, 30, 60]"
           background
           :total="totalCount"
           :page-size="pageSize"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
       </center>
     </div>
@@ -202,8 +204,15 @@ export default {
         this.getCollectList()
       }
     },
+    // 修改当前页
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
+      this.getCollectList()
+    },
+    // 修改当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getCollectList()
     }
   },

@@ -188,10 +188,12 @@
       </el-table>
       <center style="margin-top: 20px" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           background
+          :page-sizes="[10, 20, 30, 50]"
           :total="totalCount"
           :page-size="pageSize"
+          @size-change="handleSizeChange"
           @current-change="currentChange"
         ></el-pagination>
       </center>
@@ -810,13 +812,15 @@
           </template>
         </el-table-column>
       </el-table>
-      <center style="margin-top: 20px" v-if="employeeList.length > 10">
+      <center style="margin-top: 20px" v-if="employeeMan.totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           background
+          :page-sizes="[10, 20, 30, 50]"
           :page-size="employeeMan.pageSize"
-          :total="employeeMan.employeeManTotalCount"
+          :total="employeeMan.totalCount"
           @current-change="employeeManCurrentChange"
+          @size-change="employeeManSizeChange"
         ></el-pagination>
       </center>
       <!-- 嵌套员工关联dialog -->
@@ -947,8 +951,8 @@ export default {
       employeeMan: {
         title: '员工管理',
         dialog: false,
-        employeeManTotalCount: 100,
-        employeeManCurrentPage: 1,
+        totalCount: 100,
+        currentPage: 1,
         pageSize: 10,
         companyNumber: null,
         phoneNumber: null,
@@ -1296,13 +1300,12 @@ export default {
       try {
         const res = await this.$http.post('/api/CompanyUserPage', {
           orgCompanyID: id,
-          skipCount: this.employeeMan.employeeManCurrentPage,
+          skipCount: this.employeeMan.currentPage,
           maxResultCount: this.employeeMan.pageSize
         })
         if (res.data.result.code === 200) {
           this.employeeList = res.data.result.item.items || []
-          this.employeeMan.employeeManTotalCount =
-            res.data.result.item.totalCount
+          this.employeeMan.totalCount = res.data.result.item.totalCount
         } else {
           this.$message.error(res.data.result.msg)
         }
@@ -1529,8 +1532,15 @@ export default {
         this.isShowAttrsList = false
       })
     },
+    // 客户管理列表分页
     currentChange (currentPage) {
       this.currentPage = currentPage
+      this.getClientList()
+    },
+    // 客户管理列表调整每页几条
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getClientList()
     },
     // 头像加载失败
@@ -1599,6 +1609,16 @@ export default {
     userManCurrentChange (currentPage) {
       this.userManCurrentPage = currentPage
       this.getUserMan(this.UserManConfig.CompantNumber)
+    },
+    // 员工管理分页
+    employeeManCurrentChange (page) {
+      this.employeeMan.currentPage = page
+      this.getEmployeeList(this.employeeMan.id)
+    },
+    // 员工管理修改每页条数
+    employeeManSizeChange (pageSize) {
+      this.employeeMan.pageSize = pageSize
+      this.getEmployeeList(this.employeeMan.id)
     },
     // 打开编辑客户列表
     openEdit (row) {

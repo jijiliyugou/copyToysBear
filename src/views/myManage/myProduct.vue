@@ -83,12 +83,14 @@
       </el-table>
       <center style="margin-top:20px;" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
-          background
-          :total="totalCount"
-          :page-size="pageSize"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
+              layout="total, sizes, prev, pager, next, jumper"
+              :page-sizes="[10, 20, 30, 60]"
+              background
+              :total="totalCount"
+              :page-size="pageSize"
+              @current-change="handleCurrentChange"
+              @size-change="handleSizeChange"
+            ></el-pagination>
       </center>
     </div>
     <div class="zanwuchanpin" v-else></div>
@@ -165,8 +167,15 @@ export default {
       this.currentPage = 1
       this.getSupplierProduct()
     },
+    // 修改当前页
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
+      this.getSupplierProduct()
+    },
+    // 修改当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getSupplierProduct()
     }
   },

@@ -81,11 +81,13 @@
       </el-table>
       <center style="margin-top: 20px" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           background
-          :total="totalCount"
+          :page-sizes="[10, 20, 30, 50]"
           :page-size="pageSize"
+          :total="totalCount"
           @current-change="currentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
       </center>
     </div>
@@ -124,9 +126,6 @@ export default {
   data () {
     return {
       addCateFormItem: null,
-      cateTotalCount: 0,
-      cateCurrentPage: 1,
-      catePageSize: 10,
       currentPage: 1,
       totalCount: 0,
       pageSize: 10,
@@ -206,8 +205,8 @@ export default {
     // 获取类目列表
     async getCategoryPage () {
       const fd = {
-        skipCount: this.cateCurrentPage,
-        maxResultCount: this.catePageSize,
+        skipCount: this.currentPage,
+        maxResultCount: this.pageSize,
         keyword: this.formInline.keyword,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
@@ -219,14 +218,22 @@ export default {
       const res = await this.$http.post('/api/ProductCategoryPage', fd)
       if (res.data.result.code === 200) {
         this.allCateList = res.data.result.item.items
-        this.cateTotalCount = res.data.result.item.totalCount
-        console.log(this.allCateList)
+        this.totalCount = res.data.result.item.totalCount
+        console.log(res.data.result.item)
       } else {
         this.$message.error(res.data.result.msg)
       }
     },
+    // 修改当前页
     currentChange (page) {
       this.currentPage = page
+      this.getCategoryPage()
+    },
+    // 修改当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
+      this.getCategoryPage()
     },
     search () {
       this.getCategoryPage()

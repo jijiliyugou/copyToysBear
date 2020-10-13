@@ -105,11 +105,13 @@
         </el-table>
         <center style="margin-top:20px;" v-show="totalPage > 10">
           <el-pagination
-            layout="prev, pager, next"
+            layout="total, sizes, prev, pager, next, jumper"
             background
+            :page-sizes="[10, 20, 30, 50]"
             :total="totalPage"
             :page-size="pageSize"
             @current-change="currentChange"
+            @size-change="handleSizeChange"
           ></el-pagination>
         </center>
       </div>
@@ -200,6 +202,11 @@ export default {
     // 切换当前页
     currentChange (currentPage) {
       this.currentPage = currentPage
+      this.getOrderManList()
+    },
+    // 切换当前页条数
+    handleSizeChange (pageSize) {
+      this.pageSize = pageSize
       this.getOrderManList()
     }
   },

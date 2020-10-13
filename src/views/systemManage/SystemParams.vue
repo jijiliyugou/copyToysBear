@@ -69,11 +69,13 @@
       </el-table>
       <center style="margin-top:20px;" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           background
-          :total="totalCount"
+          :page-sizes="[10, 20, 30, 50]"
           :page-size="pageSize"
+          :total="totalCount"
           @current-change="currentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
       </center>
     </div>
@@ -386,6 +388,11 @@ export default {
     },
     currentChange (currentPage) {
       this.currentPage = currentPage
+      this.getSysList()
+    },
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getSysList()
     }
   },

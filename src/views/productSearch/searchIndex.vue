@@ -186,11 +186,13 @@
               v-show="totalCount > 10 && !isDetail"
             >
               <el-pagination
-                layout="prev, pager, next"
+                layout="total, sizes, prev, pager, next, jumper"
                 background
                 :total="totalCount"
                 :page-size="pageSize"
+                :page-sizes="[10, 20, 30, 60]"
                 @current-change="changePage"
+                @size-change="handleSizeChange"
               ></el-pagination>
             </center>
           </div>
@@ -511,8 +513,15 @@ export default {
     changeIsDetail (val) {
       this.isDetail = val
     },
+    // 修改产品当前页
     changePage (page) {
       this.currentPage = page
+      this.getProduct()
+    },
+    // 修改产品当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getProduct()
     }
   },

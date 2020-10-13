@@ -79,13 +79,15 @@
         </el-table-column>
       </el-table>
       <center style="margin-top:20px;" v-show="totalCount > 10">
-        <el-pagination
-          layout="prev, pager, next"
-          background
-          :total="totalCount"
-          :page-size="pageSize"
-          @current-change="currentChange"
-        ></el-pagination>
+         <el-pagination
+              layout="total, sizes, prev, pager, next, jumper"
+              :page-sizes="[10, 20, 30, 60]"
+              background
+              :total="totalCount"
+              :page-size="pageSize"
+              @current-change="currentChange"
+              @size-change="handleSizeChange"
+            ></el-pagination>
       </center>
     </div>
     <!-- 新增新品推荐 -->
@@ -191,8 +193,16 @@ export default {
     handleDelete (index, row) {
       console.log(index, row)
     },
+    // 修改当前页
     currentChange (page) {
       this.currentPage = page
+      this.getNewArrivalsPage()
+    },
+    // 修改当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
+      this.getNewArrivalsPage()
     }
   },
   mounted () {

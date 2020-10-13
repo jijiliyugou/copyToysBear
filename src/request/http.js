@@ -22,7 +22,8 @@ switch (env) {
     break
 }
 const createLogRecord = async function (obj) {
-  if (obj.Url === 'api/CreateLogRecord') {
+  if (obj.Url.includes('CreateLogRecord')) {
+    Message.closeAll()
     Message.error(obj.Title)
     return false
   }
@@ -33,8 +34,8 @@ const createLogRecord = async function (obj) {
 }
 const myAxios = {}
 myAxios.install = function (Vue) {
-  axios.defaults.timeout = 10000 // 超时时间
-  axios.defaults.retry = 1 // 请求次数
+  axios.defaults.timeout = 20000 // 超时时间
+  axios.defaults.retry = 0 // 请求次数
   axios.defaults.retryDelay = 1000 // 请求间隙
   // 统一设置初始API
   // axios.defaults.baseURL = target;
@@ -140,8 +141,9 @@ myAxios.install = function (Vue) {
         // Check if we've maxed out the total number of retries
         if (config.__retryCount >= axios.defaults.retry) {
           $Store.commit('updateAppLoading', false)
-          createLogRecord({ Message: '请求超时', LogType: 1, Title: '接口：' + config.url + '，超时时长为=' + config.timeout + '，超时次数为=' + (axios.defaults.retry + 1) + '次', Url: config.url })
-          Message.error('请求超时，请检查网络')
+          createLogRecord({ Message: '请求超时', LogType: 1, Title: '接口：' + config.url + '超时时长为=' + config.timeout + '毫秒，超时次数为=' + (axios.defaults.retry + 1) + '次', Url: config.url })
+          Message.closeAll()
+          Message.error('接口：' + config.url + '，超时时长为=' + config.timeout + '毫秒，超时次数为=' + (axios.defaults.retry + 1) + '次')
           // Reject with the error
           return Promise.reject(error)
         }

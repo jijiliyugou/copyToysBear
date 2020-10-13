@@ -100,13 +100,15 @@
           </template>
         </el-table-column>
       </el-table>
-      <center style="margin-top: 20px" v-show="totalCount > pageSize">
+      <center style="margin-top: 20px" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           background
+          :page-sizes="[10, 20, 30, 50]"
           :total="totalCount"
           :page-size="pageSize"
           @current-change="currentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
       </center>
     </div>
@@ -415,8 +417,15 @@ export default {
         this.$message.error(res.data.result.msg)
       }
     },
+    // 修改当前页
     currentChange (page) {
       this.currentPage = page
+      this.getProductList()
+    },
+    // 修改当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getProductList()
     },
     search () {

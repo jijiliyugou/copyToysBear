@@ -151,11 +151,13 @@
       </el-table>
       <center style="margin-top:20px;" v-show="totalCount > 10">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           background
-          :total="totalCount"
+          :page-sizes="[10, 20, 30, 50]"
           :page-size="pageSize"
+          :total="totalCount"
           @current-change="currentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
       </center>
     </div>
@@ -297,6 +299,12 @@ export default {
     // 切换当前页
     currentChange (page) {
       this.currentPage = page
+      this.getMessageReportPage()
+    },
+    // 切换当前页条数
+    handleSizeChange (pageSize) {
+      this.currentPage = 1
+      this.pageSize = pageSize
       this.getMessageReportPage()
     },
     // 打开审核
