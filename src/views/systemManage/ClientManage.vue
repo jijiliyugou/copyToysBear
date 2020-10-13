@@ -1044,7 +1044,7 @@ export default {
           { required: true, message: '请输入联系手机', trigger: 'blur' },
           {
             validator: (rule, value, cb) => {
-              if (/^\s*\d{10}\s*$/.test(value)) {
+              if (/^\s*\d{11}\s*$/.test(value)) {
                 cb()
               } else {
                 cb(new Error('手机号格式错误'))
