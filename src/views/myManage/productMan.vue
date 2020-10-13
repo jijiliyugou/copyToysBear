@@ -5,7 +5,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-            v-model="formInline.Name"
+            v-model="formInline.name"
             placeholder="输入关键字"
             style="width: 90%"
           ></el-input>
@@ -32,7 +32,7 @@
       <el-table :data="productList" style="width: 100%">
         <el-table-column class="productImg" label="产品图片" prop="img">
           <template slot-scope="scope">
-            <el-image class="img" :src="scope.row.img" fit="cover">
+            <el-image class="img" :src="scope.row.img" fit="cover" :preview-src-list="[scope.row.img]">
               <div
                 slot="placeholder"
                 class="image-slot"
@@ -102,7 +102,6 @@
       :visible.sync="productDialogOptions.openProductDialog"
       v-if="productDialogOptions.openProductDialog"
       class="productDialog"
-      width="40%"
     >
       <el-form
         :inline="true"
@@ -168,8 +167,8 @@
           </el-input>
           </el-form-item>
        </div>
-        <div class="formItems formItemSan">
-          <div>
+        <div class="formItems">
+          <div class="formItemSan">
             <el-form-item label="装箱量：">
               <el-input v-model="addProductForm.in_en"></el-input
               ><span class="itemX">/</span></el-form-item
@@ -177,7 +176,7 @@
               ><el-input v-model="addProductForm.ou_lo"></el-input
             ></el-form-item>
           </div>
-           <div class="productCh_pa">
+           <div class="formItems">
              <el-form-item label="包装：">
             <el-input v-model="addProductForm.ch_pa"></el-input>
           </el-form-item>
@@ -275,7 +274,7 @@ export default {
       productList: [],
       formInline: {
         // 查询角色表单
-        Name: '',
+        name: '',
         state: null,
         dateTile: null
       },
@@ -284,6 +283,7 @@ export default {
         openProductDialog: false
       },
       addProductForm: {
+        categoryName: '',
         categoryNumber: '',
         supplierId: this.$store.state.currentComparnyId,
         supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
@@ -397,7 +397,8 @@ export default {
       this.getProductList()
     },
     search () {
-      console.log('查询')
+      this.currentPage = 1
+      this.getProductList()
     },
     // 新增产品预览头像
     handlePicProductPreview (file, fileList) {
@@ -408,7 +409,7 @@ export default {
       const res = await this.$http.post('/api/BroductMessagePage', {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
-        Name: this.formInline.Name
+        name: this.formInline.name
       })
       if (res.data.result.code === 200) {
         this.productList = res.data.result.item.items || []
@@ -463,6 +464,7 @@ export default {
       for (const key in this.addProductForm) {
         this.addProductForm[key] = row[key]
       }
+      console.log(this.addProductForm, row)
       this.cateId = null
       this.addProductForm.id = row.id
       this.productDialogOptions.productDialogTitle = '编辑'
@@ -564,15 +566,7 @@ export default {
     color: #ff6600;
   }
 }
-.productCh_pa{
-  width:300px;
-  @{deep} .el-input {
-    width:200px;
-    .el-input__inner{
-      width:200px;
-    }
-  }
-}
+
 .productCu_de{
   @{deep} .el-input__inner {
     width: 70px;
@@ -585,13 +579,22 @@ export default {
       }
     }
 }
-@media screen and (max-width: 1300px) {
-  body {
-    background-color: red;
+.productDialog {
+    @{deep} .el-dialog {
+      width: 40%;
+    }
   }
+@media screen and (max-width: 1700px) {
   .productDialog {
     @{deep} .el-dialog {
-      width: 80%;
+      width: 50%;
+    }
+  }
+}
+@media screen and (max-width: 1400px) {
+  .productDialog {
+    @{deep} .el-dialog {
+      width: 60%;
     }
   }
 }

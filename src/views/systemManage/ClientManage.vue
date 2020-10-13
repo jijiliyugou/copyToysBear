@@ -54,7 +54,7 @@
               v-model="formInline.dateTile"
               width="100"
               value-format="yyyy-MM-ddTHH:mm:ss"
-              type="datetimerange"
+              type="daterange"
               :picker-options="pickerOptions"
               range-separator="—"
               start-placeholder="开始日期"
@@ -1713,9 +1713,17 @@ export default {
 @deep: ~">>>";
 .searchBox {
   padding-top: 50px;
+  .el-form-item{
+    @{deep} .el-form-item__content{
+      width:110px;
+    }
+  }
     .btnList {
     float: right;
     margin-left: 50px;
+    @{deep} .el-form-item__content{
+      width:130px;
+    }
   }
 }
 .companyLogoDiv {

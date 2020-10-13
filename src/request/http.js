@@ -22,6 +22,10 @@ switch (env) {
     break
 }
 const createLogRecord = async function (obj) {
+  if (obj.Url === 'api/CreateLogRecord') {
+    Message.error(obj.Title)
+    return false
+  }
   const res = await axios.post('api/CreateLogRecord', obj)
   if (res.data.result.code !== 200) {
     Message.error('api/CreateLogRecord报错code=' + res.data.result.code + ',' + res.data.result.message)
@@ -135,7 +139,6 @@ myAxios.install = function (Vue) {
         // Check if we've maxed out the total number of retries
         if (config.__retryCount >= axios.defaults.retry) {
           $Store.commit('updateAppLoading', false)
-          console.log(123)
           createLogRecord({ Message: '请求超时', LogType: 1, Title: '接口：' + config.url + '，超时时长为=' + config.timeout, Url: config.url })
           Message.error('请求超时，请检查网络')
           // Reject with the error
