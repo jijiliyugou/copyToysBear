@@ -57,7 +57,7 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="productNumber"
+          prop="number"
           label="收藏货号"
         ></el-table-column>
         <el-table-column prop="name" label="产品名称"></el-table-column>

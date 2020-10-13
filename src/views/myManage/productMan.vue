@@ -303,6 +303,9 @@ export default {
         ou_hi: null,
         cu_de: '￥',
         remark: '',
+        ne_we: null,
+        gr_we: null,
+        bulk_feet: '',
         bulk_stere: null
       },
       pickerOptions: {
@@ -490,6 +493,9 @@ export default {
         ou_lo: null,
         ou_le: null,
         ou_wi: null,
+        ne_we: null,
+        gr_we: null,
+        bulk_feet: '',
         ou_hi: null,
         remark: '',
         cu_de: '￥',
@@ -509,8 +515,8 @@ export default {
   },
   created () {},
   mounted () {
-    this.getProductList()
     this.getProductCategoryList()
+    this.getProductList()
   }
 }
 </script>

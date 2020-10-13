@@ -36,7 +36,7 @@
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="productNumber" label="货号"></el-table-column>
+        <el-table-column prop="number" label="产品编号"></el-table-column>
         <el-table-column prop="exhibitionName" label="公司"></el-table-column>
         <el-table-column prop="isOpen" label="开放状态">
           <template slot-scope="scope">

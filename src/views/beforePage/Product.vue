@@ -431,6 +431,10 @@ export default {
       console.log(data)
     },
     toProductDetail (item) {
+      if (!item.productNumber) {
+        this.$message.error('该产品没有产品编号')
+        return false
+      }
       this.$router.push({
         name: 'ProductDetail',
         params: { id: item.productNumber }

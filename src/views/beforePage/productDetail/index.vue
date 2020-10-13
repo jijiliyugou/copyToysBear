@@ -5,7 +5,7 @@
         <div class="swiperList">
           <el-image
             fit="contain"
-            :src="productDetail.imglist && productDetail.imglist[0].imgUrl"
+            :src="productDetail.imglist && productDetail.imglist[0] && productDetail.imglist[0].imgUrl"
             :preview-src-list="
               productDetail.imglist &&
                 productDetail.imglist.map(
@@ -42,38 +42,38 @@
         </p>
         <div class="priceInfo">
           <div class="productName">
-            <h2>{{ productDetail.bearProduct.name }}</h2>
+            <h2>{{ productDetail.bearProduct && productDetail.bearProduct.name }}</h2>
             <div class="createDate">
               发布时间：
-              <span>{{ productDetail.bearProduct.createdOn | createdOn }}</span>
+              <span>{{ productDetail.bearProduct && productDetail.bearProduct.createdOn | createdOn }}</span>
             </div>
           </div>
           <div class="price">
             报价：{{ productDetail.cu_de }}
             <span>{{
-              productDetail.bearProduct.price === 0
+              (productDetail.bearProduct && productDetail.bearProduct.price) === 0
                 ? "???"
-                : productDetail.bearProduct.price
+                : (productDetail.bearProduct && productDetail.bearProduct.price)
             }}</span>
           </div>
           <ul class="productParams">
             <li>
               出厂货号：{{
-                productDetail.bearProduct.fa_no === 0
+                (productDetail.bearProduct && productDetail.bearProduct.fa_no) === 0
                   ? "???"
-                  : productDetail.bearProduct.fa_no
+                  : (productDetail.bearProduct && productDetail.bearProduct.fa_no)
               }}
             </li>
             <li>
               包装：{{
-                productDetail.bearProduct.fa_no === 0
+                (productDetail.bearProduct && productDetail.bearProduct.fa_no) === 0
                   ? "???"
-                  : productDetail.bearProduct.ch_pa
+                  : (productDetail.bearProduct && productDetail.bearProduct.ch_pa)
               }}
             </li>
             <li>
               样品规格：{{
-                productDetail.bearProduct.fa_no === 0
+                (productDetail.bearProduct && productDetail.bearProduct.fa_no) === 0
                   ? "???"
                   : productDetail.bearProduct.pr_le +
                     " X " +
@@ -85,7 +85,7 @@
             </li>
             <li>
               外箱规格：{{
-                productDetail.bearProduct.fa_no === 0
+                (productDetail.bearProduct && productDetail.bearProduct.fa_no) === 0
                   ? "???"
                   : productDetail.bearProduct.ou_le +
                     " X " +
@@ -97,7 +97,7 @@
             </li>
             <li>
               装箱量：{{
-                productDetail.bearProduct.fa_no === 0
+                (productDetail.bearProduct && productDetail.bearProduct.fa_no) === 0
                   ? "???"
                   : productDetail.bearProduct.in_en +
                     "/" +
@@ -239,6 +239,7 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productDetail = res.data.result.item
+        console.log(res)
         this.imagesList = res.data.result.item.imglist
           ? res.data.result.item.imglist
           : []
@@ -271,7 +272,7 @@ export default {
   },
   filters: {
     createdOn (val) {
-      return val.split('.')[0].replace(/t/gi, ' ')
+      if (val) return val.split('.')[0].replace(/t/gi, ' ')
     }
   },
   mounted () {

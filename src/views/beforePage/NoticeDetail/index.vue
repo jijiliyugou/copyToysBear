@@ -28,9 +28,10 @@
               >
                 <el-image
                   fit="contain"
+                  style="cursor: pointer;"
                   :src="item"
                   :key="i"
-                  :preview-src-list="noticeData.imgList"
+                  @click="uploadImg(item)"
                 >
                   <div slot="placeholder" class="image-slot">
                     <img
@@ -71,6 +72,9 @@
             </template>
           </el-carousel>
         </div>
+        <el-dialog :visible.sync="dialogImgUpload">
+          <img width="100%" :src="imgUrl" alt />
+        </el-dialog>
         <!-- 小幻灯片 -->
         <div
           class="jiantou"
@@ -196,6 +200,8 @@
 export default {
   data () {
     return {
+      dialogImgUpload: false,
+      imgUrl: null,
       activeIndex: 0,
       hoverActive: false,
       myMargin: 0,
@@ -203,8 +209,13 @@ export default {
     }
   },
   methods: {
+    uploadImg (img) {
+      this.imgUrl = img
+      this.dialogImgUpload = true
+    },
     changeIndex (i) {
       this.activeIndex = i
+      this.imgUrl = this.noticeData.imgList[i]
     },
     leftmove () {
       const _that = this

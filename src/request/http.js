@@ -99,6 +99,7 @@ myAxios.install = function (Vue) {
         // 不需要loading的请求
         !res.config.url.includes('GetHotWord') ||
         !res.config.url.includes('UserConfirm') ||
+        !res.config.url.includes('ProductCategoryList') ||
         !res.config.url.includes('SampleOrderTotal')
       ) {
         $Store.commit('updateAppLoading', false)
