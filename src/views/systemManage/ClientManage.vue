@@ -78,7 +78,7 @@
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="companyNumber" label="客户头像">
+        <el-table-column prop="companyNumber" label="客户头像" width="80">
           <template slot-scope="scope">
             <el-image class="img" :src="scope.row.companyLogo" fit="cover">
               <div
@@ -98,7 +98,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="companyNumber" label="客户编码">
+        <el-table-column prop="companyNumber" label="客户编码" width="180">
           <template slot-scope="scope">
             <el-link type="primary" @click="openEdit(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px"></i>
@@ -106,7 +106,7 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column prop="companyName" label="公司名称"></el-table-column>
+        <el-table-column prop="companyName" label="公司名称" width="180"></el-table-column>
         <!-- <el-table-column prop="e_mail" label="邮箱"></el-table-column> -->
         <el-table-column prop="phoneNumber" label="联系电话"></el-table-column>
         <el-table-column prop="companyType" label="公司类型" align="center">
@@ -155,7 +155,7 @@
         >
           <template slot-scope="scope">
             {{
-              scope.row.createdOn ? scope.row.createdOn.replace(/T/gi, " ") : ""
+              scope.row.createdOn ? scope.row.createdOn.split(/T/)[0] : ""
             }}
           </template>
         </el-table-column>
@@ -1044,10 +1044,9 @@ export default {
           { required: true, message: '请输入联系手机', trigger: 'blur' },
           {
             validator: (rule, value, cb) => {
-              if (/^\s*\d{11}\s*$/.test(value)) {
+              if (/^\s*\d{10}\s*$/.test(value)) {
                 cb()
               } else {
-                this.$message.error('手机号格式错误')
                 cb(new Error('手机号格式错误'))
               }
             }
