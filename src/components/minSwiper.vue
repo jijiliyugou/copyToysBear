@@ -24,7 +24,7 @@
           </el-image>
           <div class="item-content">
             <p class="item-title">{{ item.name }}</p>
-            <div class="item-detail line-2">{{ item.productNumber }}</div>
+            <div class="item-detail line-2">{{ item.number }}</div>
             <p class="item-price">
               <span>{{
                 item.cu_de + (item.price === 0 ? "???" : item.price.toFixed(2))
