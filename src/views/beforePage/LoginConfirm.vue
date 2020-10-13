@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height:370px;width: 1200px;margin: 0 auto;">
+  <div style="min-height:395px;width: 1200px;margin: 0 auto;">
     <ul>
       <li
         @click.prevent="toMeInfo(item)"

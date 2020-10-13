@@ -253,7 +253,6 @@ export default {
     },
     // 切换当前页条数
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getAppVersionPage()
     },

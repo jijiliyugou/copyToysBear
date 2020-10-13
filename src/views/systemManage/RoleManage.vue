@@ -395,7 +395,6 @@ export default {
     },
     // 修改页码当前页
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getRoleList()
     }

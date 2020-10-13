@@ -1539,7 +1539,6 @@ export default {
     },
     // 客户管理列表调整每页几条
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getClientList()
     },

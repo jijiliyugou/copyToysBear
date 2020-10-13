@@ -179,7 +179,6 @@ export default {
     },
     // 分页条数
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getContactsCompanyListByID()
     }

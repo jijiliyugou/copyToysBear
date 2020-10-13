@@ -391,7 +391,6 @@ export default {
       this.getSysList()
     },
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getSysList()
     }

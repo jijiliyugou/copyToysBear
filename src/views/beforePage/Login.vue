@@ -1,5 +1,5 @@
 <template>
-  <div class="login" style="min-height: 569px;">
+  <div class="login" style="min-height: 395px;">
     <div class="miaddle">
       <img class="logoImg" src="~@/assets/images/toysbao.jpg" alt />
       <div class="form">

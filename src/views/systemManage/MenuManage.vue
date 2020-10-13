@@ -354,7 +354,6 @@ export default {
     },
     // 修改当前页条数
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getAuth()
     }

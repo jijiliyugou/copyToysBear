@@ -102,7 +102,7 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .buyersListBox {
-  min-height: 569px;
+  min-height: 395px;
   .navBar {
     background: linear-gradient(#fff, #e8e8e8, #e8e8e8, #c5c5c5);
     .navBarTitle {

@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height: 569px;">
+  <div style="min-height: 395px;">
     <div class="navBar">
       <div class="navBarTitle">
         找样信息

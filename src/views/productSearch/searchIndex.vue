@@ -520,7 +520,6 @@ export default {
     },
     // 修改产品当前页条数
     handleSizeChange (pageSize) {
-      this.currentPage = 1
       this.pageSize = pageSize
       this.getProduct()
     }
