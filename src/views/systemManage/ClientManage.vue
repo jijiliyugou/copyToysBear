@@ -339,7 +339,7 @@
         <div class="threeBox">
           <el-form-item label="手机" prop="phoneNumber">
             <el-input
-              v-model="addClientForm.phoneNumber"
+              v-model.trim="addClientForm.phoneNumber"
               :disabled="dialogTitle === '审核' || dialogTitle === '用户编辑'"
             ></el-input>
           </el-form-item>
@@ -1024,7 +1024,17 @@ export default {
           { required: true, message: '请选择公司类型', trigger: 'change' }
         ],
         companyLogo: [
-          { required: true, message: '请选择公司头像', trigger: 'change' }
+          {
+            required: true,
+            validator: (rule, value, cb) => {
+              if (value) {
+                cb()
+              } else {
+                this.$message.error('请选择公司logo')
+                cb(new Error('请选择公司logo'))
+              }
+            }
+          }
         ],
         address: [
           { required: true, message: '请输入公司地址', trigger: 'blur' },
@@ -1033,12 +1043,22 @@ export default {
         phoneNumber: [
           { required: true, message: '请输入联系手机', trigger: 'blur' },
           {
-            // pattern: /^1[2,3,4,5,6,7,8,9][0-9]{9}$/,
-            min: 11,
-            max: 11,
-            message: '手机格式不正确',
-            trigger: 'blur'
+            validator: (rule, value, cb) => {
+              if (/^\s*\d{11}\s*$/.test(value)) {
+                cb()
+              } else {
+                this.$message.error('手机号格式错误')
+                cb(new Error('手机号格式错误'))
+              }
+            }
           }
+          // {
+          //   // pattern: /^1[2,3,4,5,6,7,8,9][0-9]{9}$/,
+          //   min: 11,
+          //   max: 11,
+          //   message: '手机格式不正确',
+          //   trigger: 'blur'
+          // }
         ]
       },
       yearMonthDayList: [],
@@ -1353,7 +1373,6 @@ export default {
       this.clientDialog = true
       this.dialogTitle = '新增客户'
       this.editImages = []
-      console.log(this.addClientForm.address)
       this.addClientForm = {
         // 新增客户表单
         companyName: '',
@@ -1439,29 +1458,6 @@ export default {
           if (res.data.result.code === 200) {
             this.$message.success('新增客户成功')
             this.andClientIcon = ''
-            this.addClientForm = {
-              // 新增客户表单
-              companyName: '',
-              contactsMan: '',
-              companyNickName: '',
-              address: '',
-              e_mail: '',
-              fax: '',
-              qq: '',
-              msn: '',
-              skype: '',
-              homepage: '',
-              phoneNumber: '',
-              telephoneNumber: '',
-              companyAPI: '',
-              companyKeyCode: '',
-              remark: '',
-              companyType: '',
-              companyLogo: '',
-              audit_state: 0,
-              appLoginCount: 0,
-              erpLoginCount: 0
-            }
             this.file = null
             this.clientDialog = false
             this.getClientList()

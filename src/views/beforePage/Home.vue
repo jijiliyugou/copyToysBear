@@ -334,7 +334,6 @@ export default {
         }
       }
     }
-
     .mySwiper {
       border: 1px solid #ccc;
     }
