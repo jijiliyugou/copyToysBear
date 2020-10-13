@@ -3356,7 +3356,6 @@ export default {
     // 打开订单详情-----------------------------------------------------------------------------------------------------------------
     async openOrderDetail (item) {
       this.orderOptions = item
-      console.log(12, item)
       this.activeName = item.messageExt === '0' ? 'first' : 'last'
       const res = await this.getOrderDetail(item) // 获取订单详情
       this.getOrderDetailTotal(item) // 获取订单详情合计

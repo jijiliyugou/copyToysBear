@@ -140,7 +140,7 @@ myAxios.install = function (Vue) {
         // Check if we've maxed out the total number of retries
         if (config.__retryCount >= axios.defaults.retry) {
           $Store.commit('updateAppLoading', false)
-          createLogRecord({ Message: '请求超时', LogType: 1, Title: '接口：' + config.url + '，超时时长为=' + config.timeout, Url: config.url })
+          createLogRecord({ Message: '请求超时', LogType: 1, Title: '接口：' + config.url + '，超时时长为=' + config.timeout + '，超时次数为=' + (axios.defaults.retry + 1) + '次', Url: config.url })
           Message.error('请求超时，请检查网络')
           // Reject with the error
           return Promise.reject(error)

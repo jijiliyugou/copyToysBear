@@ -5,16 +5,30 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
+            size="mini"
             v-model="formInline.name"
             placeholder="输入关键字"
             style="width: 90%"
           ></el-input>
         </el-form-item>
+        <el-form-item label="类目查询">
+          <el-cascader
+          size="mini"
+          clearable
+          style="width: 90%"
+          v-model="formInline.categoryId"
+          @change="changeFormInlineCate"
+          :options="categoryList" :props="{label: 'name',children: 'children', checkStrictly: true}">
+          </el-cascader>
+        </el-form-item>
         <el-form-item label="时间段搜索">
           <el-date-picker
+          size="mini"
+          :clearable='false'
+          :unlink-panels='true'
             v-model="formInline.dateTile"
             value-format="yyyy-MM-ddTHH:mm:ss"
-            type="datetimerange"
+            type="daterange"
             :picker-options="pickerOptions"
             range-separator="—"
             start-placeholder="开始日期"
@@ -23,8 +37,8 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item class="btnList">
-          <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="primary" @click="openAdd">新增产品</el-button>
+          <el-button type="primary" size="mini" @click="search">查询</el-button>
+          <el-button type="primary" size="mini" @click="openAdd">新增产品</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -145,9 +159,10 @@
        <div class="formItems">
         <el-form-item  label="产品分类：" prop="categoryNumber">
           <el-cascader
+          clearable
           v-model="addProductForm.categoryNumber"
           @change="changeCate"
-          :options="categoryList" :props="{label: 'name',children: 'children'}">
+          :options="categoryList" :props="{label: 'name',children: 'children', checkStrictly: true}">
           </el-cascader>
         </el-form-item>
         <el-form-item label="单价：" class="productCu_de">
@@ -273,6 +288,7 @@ export default {
       pageSize: 10,
       productList: [],
       formInline: {
+        categoryId: null,
         // 查询角色表单
         name: '',
         state: null,
@@ -353,6 +369,10 @@ export default {
     }
   },
   methods: {
+    // 搜索级联选择
+    changeFormInlineCate () {
+      console.log(this.formInline)
+    },
     // 级联选择
     changeCate (id) {
       this.cateId = id[id.length - 1]
@@ -409,11 +429,20 @@ export default {
     },
     // 获取产品列表
     async getProductList () {
-      const res = await this.$http.post('/api/BroductMessagePage', {
+      const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
-        name: this.formInline.name
-      })
+        name: this.formInline.name,
+        categoryId: (this.formInline.categoryId && this.formInline.categoryId.length && JSON.parse(this.formInline.categoryId[this.formInline.categoryId.length - 1]).id),
+        StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
+        EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
+      }
+      for (const key in fd) {
+        if (!fd[key]) {
+          delete fd[key]
+        }
+      }
+      const res = await this.$http.post('/api/BroductMessagePage', fd)
       if (res.data.result.code === 200) {
         this.productList = res.data.result.item.items || []
         this.totalCount = res.data.result.item.totalCount
@@ -511,12 +540,48 @@ export default {
       } else {
         this.updateBearProduct()
       }
+    },
+    // 获取一年的时间
+    /* 获取过去时间，并传值给现在时间 */
+    getPassYearFormatDate () {
+      var nowDate = new Date()
+      var date = new Date(nowDate)
+      date.setDate(date.getDate() - 365)
+      var seperator1 = '-'
+      var year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var strDate = date.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      var formatDate = year + seperator1 + month + seperator1 + strDate + 'T00:00:00'
+      this.getNowFormatDate(formatDate)
+    },
+    /* 获取现在时间，并接受过去时间的值 */
+    getNowFormatDate (formatDate) {
+      var date = new Date()
+      var seperator1 = '-'
+      var year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var strDate = date.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      var nowData = year + seperator1 + month + seperator1 + strDate + 'T00:00:00'
+      this.formInline.dateTile = [formatDate, nowData] // 默认赋值一年时间
     }
   },
   created () {},
   mounted () {
     this.getProductCategoryList()
     this.getProductList()
+    this.getPassYearFormatDate()
   }
 }
 </script>

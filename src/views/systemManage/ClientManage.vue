@@ -1700,6 +1700,10 @@ export default {
     this.getClientList()
     this.getClientTypeList('CompanyType')
     this.getClientTypeList('ExecutionWay')
+    document.oncontextmenu = () => {
+      this.isShowAttrsList = false
+      return false
+    }
   },
   watch: {
     'addClientForm.address' (val) {
