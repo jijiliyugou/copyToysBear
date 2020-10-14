@@ -96,7 +96,7 @@
       :title="cateDialogOptions.cateDialogTitle + '类目'"
       :visible.sync="cateDialogOptions.openCateDialog"
       v-if="cateDialogOptions.openCateDialog"
-      width="50%"
+      width="30%"
     >
       <el-form :model="addCateForm" :rules="addCateRules" ref="addCateRulesForm" label-width="100px">
         <el-form-item label="中文名称" prop="name">

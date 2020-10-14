@@ -1256,9 +1256,11 @@
             <div class="ContactItem">
               <div class="title">地址</div>
               <div class="text">
-                <template v-if="CompanyDetail && CompanyDetail.address">
-                  {{ CompanyDetail.address }}
-                </template>
+                 <template  v-if="CompanyDetail && CompanyDetail.address">
+                  <div class="address el-icon-location-information" @click="openMap(CompanyDetail)">
+                    {{ CompanyDetail.address }}
+                    </div>
+                  </template>
               </div>
             </div>
             <center class="send">
@@ -1459,14 +1461,11 @@
             <div class="ContactItem">
               <div class="title">地址</div>
               <div class="text">
-                <template
-                  v-if="
-                    CompanyDetail &&
-                      CompanyDetail.orgCompany &&
-                      CompanyDetail.orgCompany.address
-                  "
-                  >{{ CompanyDetail.orgCompany.address }}</template
-                >
+                <template  v-if="CompanyDetail && CompanyDetail.orgCompany && CompanyDetail.orgCompany.address">
+                   <div class="address el-icon-location-information"  @click="openMap(CompanyDetail.orgCompany)">
+                     {{ CompanyDetail.orgCompany.address }}
+                     </div>
+                  </template>
               </div>
             </div>
             <center class="send">
@@ -2409,21 +2408,34 @@
         <el-button type="primary" @click="sendSelectPush">发 送</el-button>
       </center>
     </el-dialog>
+    <!-- 公司地址定位地图 -->
+    <el-dialog
+      title="定位"
+      :visible.sync="companyAddrMapDialog"
+      v-if="companyAddrMapDialog"
+      width="50%">
+      <div class="companyAddrMapBox" v-if="companyAddr">
+        <BMapComponent :addr="companyAddr"></BMapComponent>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import bsTop from '@/components/BsTop.vue'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import Recorder from 'recorder-core/recorder.mp3.min'
+import BMapComponent from '@/components/map.vue'
 export default {
   directives: {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   components: {
-    bsTop
+    bsTop, BMapComponent
   },
   data () {
     return {
+      companyAddr: '',
+      companyAddrMapDialog: false,
       orderItemOptions: null,
       orderDetailTotalCount: null,
       orderDetailCurrentPage: 1,
@@ -4480,6 +4492,11 @@ export default {
       } else {
         return item.unreadCout
       }
+    },
+    // 点击公司地址打开定位
+    openMap(addr){
+      this.companyAddr = addr
+      this.companyAddrMapDialog = true
     }
   },
   mounted () {
@@ -4900,7 +4917,15 @@ export default {
             }
             .text {
               padding: 10px 0;
+              width:100%;
               border-bottom: 1px solid #8d8d8e;
+              .address{
+                width:100%;
+                cursor: pointer;
+                &:hover{
+                  color:#165af7;
+                }
+              }
             }
           }
           center {
@@ -5132,6 +5157,14 @@ export default {
             .text {
               padding: 10px 0;
               border-bottom: 1px solid #8d8d8e;
+              width:100%;
+              .address{
+                width:100%;
+                cursor: pointer;
+                &:hover{
+                  color:#165af7;
+                }
+              }
             }
           }
           center {
@@ -7147,5 +7180,8 @@ export default {
       color: white;
     }
   }
+}
+.companyAddrMapBox{
+  height:500px;
 }
 </style>

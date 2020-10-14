@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height:721px;">
+  <div style="min-height:755px;">
     <bsTop></bsTop>
     <productSearchTop></productSearchTop>
     <ul class="hotSearch">
@@ -140,7 +140,7 @@ export default {
 }
 .lunbo {
   width: 1200px;
-  margin: 100px auto 10px auto;
+  margin: 200px auto 10px auto;
   padding: 10px;
   box-sizing: border-box;
   box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);

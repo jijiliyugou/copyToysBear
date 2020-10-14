@@ -59,11 +59,8 @@
       <div class="map">
         <h2 class="contactTitleTxt">展厅地址：</h2>
         <div class="contactTitleLine"></div>
-        <div class="mapItem" v-if="noticeData && myAttress">
-          <BMapComponent
-            :attr="noticeData"
-            :location="myAttress"
-          ></BMapComponent>
+        <div class="mapItem" v-if="noticeData">
+          <BMapComponent :addr="noticeData"></BMapComponent>
         </div>
       </div>
     </div>
@@ -76,8 +73,7 @@ export default {
   components: { BMapComponent },
   data () {
     return {
-      noticeData: null,
-      myAttress: null
+      noticeData: null
     }
   },
   methods: {
@@ -88,37 +84,6 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.noticeData = res.data.result.item
-        console.log(this.noticeData)
-        this.getAttrs()
-      }
-    },
-    async getAttrs () {
-      // 需要城市字段作为搜索
-      // let re = await $.ajax({
-      //   type: "get",
-      //   url: "https://api.map.baidu.com/place/v2/search/",
-      //   data: {
-      //     query: this.noticeData.address,
-      //     region: "深圳",
-      //     output: "json",
-      //     ak: "rUWcCk2v5nZCx864jziBKuy1klV2YtrK"
-      //   },
-      //   dataType: "jsonp"
-      // });
-      // console.log("re=",re.results[0].location);
-      const res = await $.ajax({
-        type: 'get',
-        url: 'https://api.map.baidu.com/geocoding/v3/',
-        data: {
-          address: this.noticeData.address,
-          output: 'json',
-          ak: 'rUWcCk2v5nZCx864jziBKuy1klV2YtrK'
-        },
-        dataType: 'jsonp'
-      })
-      console.log('地址=', res)
-      if (res.status === 0) {
-        this.myAttress = res.result.location
       }
     }
   },

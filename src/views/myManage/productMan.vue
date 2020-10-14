@@ -585,11 +585,12 @@ export default {
       this.formInline.dateTile = [formatDate, nowData] // 默认赋值一年时间
     }
   },
-  created () {},
+  created () {
+    this.getPassYearFormatDate()
+  },
   mounted () {
     this.getProductCategoryList()
     this.getProductList()
-    this.getPassYearFormatDate()
   }
 }
 </script>
