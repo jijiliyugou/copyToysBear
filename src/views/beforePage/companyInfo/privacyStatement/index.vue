@@ -8,6 +8,7 @@
       scrolling="no"
       @load="changeFrameHeight"
       width="100%"
+      height="100%"
     ></iframe>
     <el-button icon="el-icon-caret-top" @click="toTop" circle></el-button>
   </div>
@@ -37,6 +38,8 @@ export default {
 @deep: ~">>>";
 .iframeBox {
   position: relative;
+  width: 100%;
+  height: 100%;
   .el-button {
     position: absolute;
     right: 0;

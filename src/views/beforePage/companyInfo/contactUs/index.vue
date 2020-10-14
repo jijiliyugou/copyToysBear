@@ -41,9 +41,8 @@
     </header>
     <footer>
       <BMapComponent
-        :attr="noticeData"
-        :location="myAttress"
-        v-if="myAttress"
+        :addr="noticeData"
+        v-if="noticeData"
       ></BMapComponent>
     </footer>
     <el-button icon="el-icon-caret-top" @click="toTop" circle></el-button>
@@ -62,8 +61,7 @@ export default {
         audit_state: '1',
         companyAPI: null,
         companyKeyCode: null,
-        companyLogo:
-          'http://139.9.71.135:8087/Logo/Picture//2020-09-04/新悦翔-1_2020090420394698.png',
+        companyLogo: require('@/assets/images/imgError.jpg'),
         companyName: '深圳宏煌网络科技有限公司',
         companyNumber: 'HS0010552',
         companyType: 'Exhibition',

@@ -3,11 +3,15 @@
     <div
     id="allmap"
     style="width: 100%; height: 100%; overflow: hidden"
-    v-show="!showNav"
   ></div>
-  <div v-show="showNav" style="width: 100%; height: 100%; overflow: hidden">
-    <iframe frameborder="0" name="Iframe1" :src="mapAttr" width="100%" height="104%">您的浏览器不支持嵌入式框架，或者当前配置为不显示嵌入式框架。</iframe>
-  </div>
+  <!-- <div v-show="showNav" id="viewDiv" style="width: 100%; height: 100%; overflow: hidden">
+    <iframe frameborder="0" name="Iframe1" :src="mapAttr" width="100%" height="104%">
+      <head>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+      </head>
+      <body>您的浏览器不支持嵌入式框架，或者当前配置为不显示嵌入式框架。</body>
+    </iframe>
+  </div> -->
   </div>
 </template>
 <script>
@@ -73,20 +77,10 @@ export default {
               map.setCurrentCity('深圳') // 设置地图显示的城市 此项是必须设置的
               map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
               window.openMap = function () {
-                _that.showNav = true
+                // _that.showNav = true
+                // document.getElementById('viewDiv').innerHTML = '<object type="text/html" codebase="https" data=' + 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=' + _that.addr.companyName + ' width="100%" height="102%"></object>'
                 _that.mapAttr = 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=' + _that.addr.companyName
-                // window.open(
-                //   'https://api.map.baidu.com/marker?location=' +
-                //     point.lat +
-                //     ',' +
-                //     point.lng +
-                //     '&title=' +
-                //     _that.addr.companyName +
-                //     '&content=' +
-                //     _that.addr.address +
-                //     '&output=html&src=' +
-                //     _that.addr.companyName
-                // )
+                window.open(_that.mapAttr)
               }
               var content =
                 "<img style='width:100px;height:100px;float:right;margin-left:5px;vertical-align:top;' src='" +
@@ -95,7 +89,7 @@ export default {
                 '<table>'
               content =
                 content +
-                '<tr style="line-height:40px;"><td> 公司名称：' +
+                '<tr style="line-height:30px;"><td> 公司名称：' +
                 _that.addr.companyName +
                 '</td></tr>'
               content =
