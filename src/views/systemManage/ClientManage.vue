@@ -95,7 +95,7 @@
                   overflow: hidden;
                 "
               >
-                <span style="display: -webkit-box;-webkit-line-clamp:2;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical;">{{ scope.row.companyName }}</span>
+                <span>{{ scope.row.companyName }}</span>
               </div>
             </el-image>
           </template>

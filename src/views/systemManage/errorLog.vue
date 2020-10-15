@@ -105,16 +105,16 @@
         ></el-pagination>
       </center>
     </div>
-    <!-- 新增编辑版本 -->
-    <el-dialog :title="versionTitle" :visible.sync="versionDialog" width="50%">
+    <!-- 处理错误日记dialog -->
+    <el-dialog title="处理错误日记" :visible.sync="errorLogDialog" width="50%">
       <el-form
         ref="addVersionForm"
         label-width="100px"
-        :rules="addVersionRules"
-        :model="versionFormData"
+        :rules="editLogRules"
+        :model="errorLogFormData"
       >
         <el-form-item label="平台" prop="platForm">
-          <el-select v-model="versionFormData.platForm" placeholder="请选择">
+          <el-select v-model="errorLogFormData.platForm" placeholder="请选择">
             <el-option
               v-for="item in $store.state.globalJson.Json.PlatForm"
               :key="item.id"
@@ -124,12 +124,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="版本号" prop="vesion">
-          <el-input v-model="versionFormData.vesion"></el-input>
+          <el-input v-model="errorLogFormData.vesion"></el-input>
         </el-form-item>
         <el-form-item label="链接地址" prop="fileUrl">
           <el-input
-            v-model="versionFormData.fileUrl"
-            :disabled="versionFormData.versionFile  !==  ''"
+            v-model="errorLogFormData.fileUrl"
+            :disabled="errorLogFormData.versionFile  !==  ''"
           ></el-input>
         </el-form-item>
         <el-form-item label="上传文件">
@@ -157,7 +157,7 @@
               <i :class="{ 'el-icon-loading': isUpLoad }"></i>
               {{ isUpLoad ? "文件上传中" : "提 交" }}
             </el-button>
-            <el-button type="danger" @click="versionDialog = false"
+            <el-button type="danger" @click="errorLogDialog = false"
               >取 消</el-button
             >
           </template>
@@ -174,21 +174,24 @@ export default {
   data () {
     return {
       isUpLoad: false,
-      versionDialog: false,
-      versionTitle: '新增版本',
-      versionFormData: {
+      errorLogDialog: false,
+      errorLogFormData: {
         platForm: null,
-        vesion: null,
-        fileUrl: '',
-        versionFile: ''
+        logType: null,
+        title: null,
+        message: null,
+        url: null,
+        parameters: null,
+        state: null,
+        remark: null
       },
       totalCount: 0,
       currentPage: 1,
       pageSize: 10,
       tableData: [],
-      addVersionRules: {
+      editLogRules: {
         platForm: [
-          { required: true, message: '请选择手机平台', trigger: 'change' }
+          { required: true, message: '请选择终端', trigger: 'change' }
         ],
         vesion: [
           { required: true, message: '请输入版本号', trigger: 'blur' },
@@ -242,7 +245,7 @@ export default {
     search () {
       this.getLogErrorPage()
     },
-    // 获取所有app版本
+    // 获取错误日志列表
     async getLogErrorPage () {
       const fd = {
         startTime: this.dateTile && this.dateTile[0],
@@ -273,48 +276,31 @@ export default {
       this.pageSize = pageSize
       this.getLogErrorPage()
     },
-    // 打开编辑窗口
+    // 打开处理日志窗口
     openEdit (row) {
-      console.log(row, this.versionFormData)
-      this.versionTitle = '处理错误日记'
-      for (const key in this.versionFormData) {
-        this.versionFormData[key] = row[key]
+      console.log(row, this.errorLogFormData)
+      for (const key in this.errorLogFormData) {
+        this.errorLogFormData[key] = row[key]
       }
-      this.versionFormData.id = row.id
-      this.versionDialog = true
+      this.errorLogFormData.id = row.id
+      this.errorLogDialog = true
     },
-    // 打开新增版本
-    // openAddVersion () {
-    //   this.versionTitle = '版本新增'
-    //   this.versionFormData = {
-    //     vesion: null,
-    //     fileUrl: '',
-    //     versionFile: ''
-    //   }
-    //   this.versionDialog = true
-    // },
-    // 编辑/新增
+    // 处理错误日志
     async handleEdit () {
       this.$refs.addVersionForm.validate(async valid => {
         if (valid) {
-          const res = await this.$http.post(
-            this.versionTitle === '版本新增'
-              ? '/api/CreateBearVesion'
-              : '/api/UpdateBearVesion',
-            this.versionFormData
-          )
+          this.errorLogFormData.state = true
+          const res = await this.$http.post('/api/UpdateLogRecord', this.errorLogFormData)
           if (res.data.result.code === 200) {
-            this.$message.success(
-              this.versionTitle === '版本新增' ? '新增成功' : '处理成功'
-            )
+            this.$message.success('处理成功')
             this.getLogErrorPage()
-            this.versionDialog = false
+            this.errorLogDialog = false
           } else {
-            this.$message.error('编辑失败,请检查网络！')
+            this.$message.error('处理失败,请检查网络！')
           }
         }
       })
-    },
+    }
     // 删除
     // async handleDelete (row) {
     //   const res = await this.$http.post('/api/UpdateBearVesion', {
@@ -328,30 +314,8 @@ export default {
     //     this.$message.error('删除失败,请检查网络！')
     //   }
     // },
-    // 选择文件
-    async changeUpload (e) {
-      this.isUpLoad = true
-      this.versionFormData.versionFile = e.target.files[0]
-      const fd = new FormData()
-      fd.append('BusinessType', 'package')
-      fd.append('file', this.versionFormData.versionFile)
-      const res = await this.$http.post('/api/File/InsertPic', fd)
-      if (res.data.result.code === 200) {
-        this.versionFormData.fileUrl = res.data.result.object[0].filePath
-        this.$message.success('上传文件成功')
-      } else {
-        this.$message.success('上传文件失败，请检查网络')
-      }
-      this.isUpLoad = false
-      console.log(this.versionFormData.versionFile)
-    }
   },
   watch: {
-    versionDialog (val) {
-      if (!val) {
-        this.$refs.installFile.value = ''
-      }
-    }
   },
   mounted () {
     this.getLogErrorPage()
@@ -370,12 +334,5 @@ export default {
 }
 .tableContent {
   padding: 20px 0;
-}
-.txtWrap {
-  padding: 0 0 13px 0;
-  line-height: 0;
-  @{deep} .el-input__count {
-    line-height: 15px;
-  }
 }
 </style>
