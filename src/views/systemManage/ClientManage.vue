@@ -1173,10 +1173,10 @@ export default {
       this.innerVisible = true
       for (const key in this.addEmployeeForm) {
         this.addEmployeeForm[key] = row[key]
-        this.addEmployeeForm.newPassword = row.password
-        this.addEmployeeForm.password = null
       }
-      this.editImages[0] = { url: row.userImage }
+      this.addEmployeeForm.newPassword = row.password
+      this.addEmployeeForm.password = null
+      row.userImage && (this.editImages[0] = { url: row.userImage })
       this.addEmployeeForm.id = row.id
       this.addEmployeeForm.weCharUserJson = row.weCharUserJson
       this.addEmployeeForm.wecharName = row.wecharName
@@ -1247,6 +1247,7 @@ export default {
             if (res.data.result.code === 200) {
               this.getCurrentDate()
               this.innerVisible = false
+              this.$message.closeAll()
               this.$message.success('员工编辑成功')
               this.getEmployeeList(this.employeeMan.id)
             } else {

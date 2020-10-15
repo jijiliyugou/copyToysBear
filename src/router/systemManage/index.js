@@ -5,6 +5,7 @@ const ClientManage = () => import('@/views/systemManage/ClientManage.vue')
 const CategoryMan = () => import('@/views/systemManage/categoryMan.vue')
 const ReportReview = () => import('@/views/systemManage/reportReview.vue')
 const AppVersion = () => import('@/views/systemManage/appVersion.vue')
+const ErrorLog = () => import('@/views/systemManage/errorLog.vue')
 
 export default [
   {
@@ -41,5 +42,10 @@ export default [
     path: '/appVersion',
     name: 'appVersion',
     component: AppVersion
+  },
+  {
+    path: '/errorLog',
+    name: 'errorLog',
+    component: ErrorLog
   }
 ]
