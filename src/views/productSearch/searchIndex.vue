@@ -7,8 +7,9 @@
         <h4 class="title el-icon-menu">产品目录</h4>
         <div class="treeContent">
           <el-tree
-            :data="data"
+            :data="categoryList"
             :props="defaultProps"
+            accordion
             @node-click="handleNodeClick"
           ></el-tree>
         </div>
@@ -220,235 +221,11 @@ export default {
       totalCount: 0,
       dataList: [],
       count: 0,
-      data: [
-        {
-          label: '电动玩具(38888)',
-          id: 1,
-          children: [
-            {
-              label: '二级 1-1',
-              id: '1-1',
-              children: [
-                {
-                  label: '三级 1-1-1',
-                  id: '1-1-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 2',
-          id: 2,
-          children: [
-            {
-              label: '二级 2-1',
-              id: '2-1',
-              children: [
-                {
-                  label: '三级 2-1-1',
-                  id: '2-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 2-2',
-              d: '2-2',
-              children: [
-                {
-                  label: '三级 2-2-1',
-                  id: '2-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          id: '3',
-          children: [
-            {
-              label: '二级 3-1',
-              id: '3-1',
-              children: [
-                {
-                  label: '三级 3-1-1',
-                  id: '3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              id: '3-2',
-              children: [
-                {
-                  label: '三级 3-2-1',
-                  id: '3-2-1'
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      categoryList: [],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'name',
+        value: 'id'
       }
     }
   },
@@ -522,6 +299,15 @@ export default {
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
       this.getProduct()
+    },
+    // 获取产品类目列表
+    async getProductCategoryList () {
+      const res = await this.$http.post('/api/ProductCategoryList', {})
+      if (res.data.result.code === 200) {
+        this.categoryList = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
     }
   },
   watch: {
@@ -539,6 +325,9 @@ export default {
     '$store.state.beforeSearch' (newval) {
       this.search = newval
     }
+  },
+  created () {
+    this.getProductCategoryList()
   },
   mounted () {
     if (this.$store.state.imageSearchValue instanceof Array) {

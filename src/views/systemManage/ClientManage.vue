@@ -90,10 +90,12 @@
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  white-space: nowrap;
+                  padding:0 5px;
+                  text-align:center;
+                  overflow: hidden;
                 "
               >
-                {{ scope.row.companyName }}
+                <span>{{ scope.row.companyName }}</span>
               </div>
             </el-image>
           </template>

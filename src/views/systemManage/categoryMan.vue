@@ -24,7 +24,9 @@
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="primary" @click="openAdd(undefined)">新增类目</el-button>
+          <el-button type="primary" @click="openAdd(undefined)"
+            >新增类目</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -40,24 +42,32 @@
           :indentSize="50"
           folder-icon="icon icon-folder"
         ></el-table-tree-column>
+        <el-table-column prop="ename" label="英文名称"></el-table-column>
         <el-table-column
-          prop="ename"
-          label="英文名称"
+          align="center"
+          prop="number"
+          label="编号"
         ></el-table-column>
         <el-table-column label="级别">
           <template slot-scope="scope">
             <el-tag>{{
-              scope.row.level === 0 ? "一级类目" : scope.row.level === 1 ? "二级类目" : scope.row.level === 2 ? "三级类目" : "四级类目"
+              scope.row.level === 0
+                ? "一级类目"
+                : scope.row.level === 1
+                ? "二级类目"
+                : scope.row.level === 2
+                ? "三级类目"
+                : "四级类目"
             }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="300">
           <template slot-scope="scope">
             <el-button
               size="mini"
               style="margin-right: 10px"
               type="success"
-              @click="openAdd(scope.row,true)"
+              @click="openAdd(scope.row, true)"
               :disabled="scope.row.level === 3"
               >新增子级</el-button
             >
@@ -98,12 +108,20 @@
       v-if="cateDialogOptions.openCateDialog"
       width="30%"
     >
-      <el-form :model="addCateForm" :rules="addCateRules" ref="addCateRulesForm" label-width="100px">
+      <el-form
+        :model="addCateForm"
+        :rules="addCateRules"
+        ref="addCateRulesForm"
+        label-width="100px"
+      >
         <el-form-item label="中文名称" prop="name">
           <el-input v-model="addCateForm.name"></el-input>
         </el-form-item>
         <el-form-item label="英文名称">
           <el-input v-model="addCateForm.ename"></el-input>
+        </el-form-item>
+        <el-form-item label="编号" prop="number">
+          <el-input v-model="addCateForm.number"></el-input>
         </el-form-item>
         <el-form-item label="排序">
           <el-input v-model="addCateForm.orders"></el-input>
@@ -143,6 +161,7 @@ export default {
         parentID: 0,
         name: '',
         ename: '',
+        number: '',
         level: 0,
         orders: 0
       },
@@ -180,12 +199,14 @@ export default {
       addCateRules: {
         name: [
           { required: true, message: '请输入类目名称', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          {
+            min: 1,
+            max: 20,
+            message: '长度在 1 到 20 个字符',
+            trigger: 'blur'
+          }
         ],
-        level: [
-          { required: true, message: '请输入层级', trigger: 'blur' },
-          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
-        ]
+        number: [{ required: true, message: '请输入编号', trigger: 'blur' }]
       }
     }
   },
@@ -252,7 +273,8 @@ export default {
           parentID: row.id,
           name: '',
           ename: '',
-          level: (row.level + 1),
+          number: '',
+          level: row.level + 1,
           orders: 0
         }
         this.addCateForm.parentID = row.id
@@ -264,6 +286,7 @@ export default {
           parentID: 0,
           name: '',
           ename: '',
+          number: '',
           level: 0,
           orders: 0
         }
@@ -274,26 +297,31 @@ export default {
     },
     // 确认新增
     async addcates () {
-      let api, msg, obj
-      if (this.cateDialogOptions.cateDialogTitle === '新增') {
-        api = '/api/CreateProductCategory'
-        msg = '新增成功'
-        obj = this.addCateForm
-      } else {
-        api = '/api/UpdateProductCategory'
-        msg = '编辑成功'
-        obj = {
-          ...this.addCateForm, id: this.addCateFormItem.id
+      this.$refs.addCateRulesForm.validate(async (valid) => {
+        if (valid) {
+          let api, msg, obj
+          if (this.cateDialogOptions.cateDialogTitle === '新增') {
+            api = '/api/CreateProductCategory'
+            msg = '新增成功'
+            obj = this.addCateForm
+          } else {
+            api = '/api/UpdateProductCategory'
+            msg = '编辑成功'
+            obj = {
+              ...this.addCateForm,
+              id: this.addCateFormItem.id
+            }
+          }
+          const res = await this.$http.post(api, obj)
+          if (res.data.result.code === 200) {
+            this.$message.success(msg)
+            this.getCategoryPage()
+            this.cateDialogOptions.openCateDialog = false
+          } else {
+            this.$message.error(res.data.result.msg)
+          }
         }
-      }
-      const res = await this.$http.post(api, obj)
-      if (res.data.result.code === 200) {
-        this.$message.success(msg)
-        this.getCategoryPage()
-        this.cateDialogOptions.openCateDialog = false
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
+      })
     }
   },
   created () {},

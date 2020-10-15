@@ -85,14 +85,14 @@ export default {
                 _that.addr.companyLogo +
                 "' />" +
                 '<table>'
+              // content =
+              //   content +
+              //   '<tr><td style="padding:5px 0 0 0 ;"> 公司简称：' +
+              //   _that.addr.companyNickName +
+              //   '</td></tr>'
               content =
                 content +
-                '<tr style="line-height:30px;"><td> 公司名称：' +
-                _that.addr.companyName +
-                '</td></tr>'
-              content =
-                content +
-                '<tr style="line-height:30px;"><td> 公司地址：' +
+                '<tr style="line-height: 30px;"><td style="padding:5px 0 0 0 ;"> 公司地址：' +
                 _that.addr.address +
                 '</td></tr>'
               content =
@@ -122,7 +122,41 @@ export default {
 </script>
 <style scpoed lang="less">
 /* 去掉地图左下角的百度LOGO */
-.anchorBL {
-  display: none;
+#allmap {
+  font-size: 14px;
+      .anchorBL{
+        display:none;
+    }
+    .BMap_bubble_title{
+        color:black;
+        font-size:13px;
+        font-weight: bold;
+        text-align:left;
+    }
+    .BMap_pop div:nth-child(1){
+        border-radius:10px 0 0 0;
+    }
+    .BMap_pop div:nth-child(3){
+        border-radius:0 10px 0 0;background:#ABABAB;;
+        /*background: #ABABAB;*/
+        // width:23px;
+        // width:0px;
+        // height:0px;
+    }
+    .BMap_pop div:nth-child(3) div{
+        border-radius:10px;
+    }
+    .BMap_pop div:nth-child(5){
+        border-radius:0 0 0 10px;
+    }
+    .BMap_pop div:nth-child(5) div{
+        border-radius:10px;
+    }
+    .BMap_pop div:nth-child(7){
+        border-radius:0 0 10px 0 ;
+    }
+    .BMap_bubble_title{
+      font-size: 18px;
+    }
 }
 </style>

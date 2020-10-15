@@ -18,7 +18,7 @@
           style="width: 90%"
           v-model="formInline.categoryId"
           @change="changeFormInlineCate"
-          :options="categoryList" :props="{label: 'name',children: 'children', checkStrictly: true}">
+          :options="[{ name: '全部', id: null }, ...categoryList]" :props="{label: 'name',children: 'children', checkStrictly: true}">
           </el-cascader>
         </el-form-item>
         <el-form-item label="时间段搜索">
@@ -46,7 +46,7 @@
       <el-table :data="productList" style="width: 100%">
         <el-table-column class="productImg" label="产品图片" prop="img">
           <template slot-scope="scope">
-            <el-image class="img" :src="scope.row.img" fit="cover" :preview-src-list="[scope.row.img]">
+            <el-image class="img" :src="scope.row.img" fit="cover" :preview-src-list="[scope.row.img && scope.row.img.replace(/_MiddlePic/gi, '_Photo')]">
               <div
                 slot="placeholder"
                 class="image-slot"
@@ -128,9 +128,9 @@
         label-width="100px"
       >
           <el-form-item label="产品图片：" prop="img" v-show="productDialogOptions.productDialogTitle === '编辑'">
-            <el-image :src='addProductForm.img' :preview-src-list="[addProductForm.img && addProductForm.img.replace(/_MiddlePic/, '_Photo')]"></el-image>
+            <el-image :src='addProductForm.img' :preview-src-list="[addProductForm.img && addProductForm.img.replace(/_MiddlePic/gi, '_Photo')]"></el-image>
         </el-form-item>
-          <el-form-item class="productName" label="产品名称：" prop="name">
+          <el-form-item class="productName" label="产品名称" prop="name">
           <el-input v-model="addProductForm.name"></el-input>
         </el-form-item>
         <!-- <el-form-item class="productName" label="产品图片" prop="img">
@@ -437,11 +437,12 @@ export default {
     },
     // 获取产品列表
     async getProductList () {
+      console.log(this.formInline.categoryId && this.formInline.categoryId.length)
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         name: this.formInline.name,
-        categoryId: (this.formInline.categoryId && this.formInline.categoryId.length && JSON.parse(this.formInline.categoryId[this.formInline.categoryId.length - 1]).id),
+        categoryId: (this.formInline.categoryId && this.formInline.categoryId[0]) ? (this.formInline.categoryId && this.formInline.categoryId.length && JSON.parse(this.formInline.categoryId[this.formInline.categoryId.length - 1]).id) : null,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
@@ -630,6 +631,7 @@ export default {
   }
 }
 .tableContent {
+  margin-bottom: 20px;
   @{deep} .img {
     width: 50px;
     height: 50px;
