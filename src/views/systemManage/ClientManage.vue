@@ -95,7 +95,7 @@
                   overflow: hidden;
                 "
               >
-                <span>{{ scope.row.companyName }}</span>
+                <span style="display: -webkit-box;-webkit-line-clamp:2;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical;">{{ scope.row.companyName }}</span>
               </div>
             </el-image>
           </template>
@@ -277,7 +277,7 @@
         </el-form-item>
         <el-form-item label="简称" prop="companyNickName">
           <el-input
-            v-model="addClientForm.companyName"
+            v-model="addClientForm.companyNickName"
             :disabled="dialogTitle === '审核'"
           ></el-input>
         </el-form-item>
@@ -294,6 +294,7 @@
             :auto-upload="false"
             :on-change="changeUpload"
             :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemoveImg"
             :http-request="successUpload"
             :file-list="editImages"
             accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
@@ -445,7 +446,7 @@
         <center>
           <template v-if="dialogTitle === '新增客户'">
             <el-button type="primary" @click="addClient" :icon="andClientIcon"
-              >确认</el-button
+              ><i :class="{'el-icon-loading':isShowLoading}"></i>确认</el-button
             >
             <el-button @click="clientDialog = false">取消</el-button>
           </template>
@@ -454,7 +455,7 @@
             <el-button @click="byAudit(2)" type="danger">审核不通过</el-button>
           </template>
           <template v-else-if="dialogTitle === '用户编辑'">
-            <el-button type="primary" @click="handlerEdit">保存</el-button>
+            <el-button type="primary" @click="handlerEdit"><i :class="{'el-icon-loading':isShowLoading}"></i> 保存</el-button>
             <el-button @click="clientDialog = false">取消</el-button>
           </template>
         </center>
@@ -703,7 +704,7 @@
           </el-form-item>
         </el-form>
         <center>
-          <el-button type="primary" @click="addEmployee">保存</el-button>
+          <el-button type="primary" @click="addEmployee"><i :class="{'el-icon-loading':isShowLoading}"></i> 保存</el-button>
           <el-button type="danger" @click="resetForm">取消</el-button>
         </center>
       </el-dialog>
@@ -917,6 +918,7 @@ export default {
   components: { bsTop, BMapComponent },
   data () {
     return {
+      isShowLoading: false,
       isShowAttrsList: false,
       attrsList: [],
       relatedConfig: {
@@ -1226,6 +1228,7 @@ export default {
     },
     // 新增员工
     async addEmployee () {
+      this.isShowLoading = true
       this.addEmployeeForm.CompanyId = this.employeeMan.id
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200) {
@@ -1252,9 +1255,11 @@ export default {
               this.$message.closeAll()
               this.$message.success('员工编辑成功')
               this.getEmployeeList(this.employeeMan.id)
+              this.isShowLoading = false
             } else {
               this.$message.error(res.data.result.msg)
               this.addEmployeeForm.password = null
+              this.isShowLoading = false
             }
           }
         })
@@ -1274,9 +1279,11 @@ export default {
               this.innerVisible = false
               this.$message.success('员工编辑成功')
               this.getEmployeeList(this.employeeMan.id)
+              this.isShowLoading = false
             } else {
               this.$message.error(res.data.result.msg)
               this.addEmployeeForm.password = ''
+              this.isShowLoading = false
             }
           }
         })
@@ -1316,6 +1323,12 @@ export default {
     // 员工管理预览头像
     handlePicEmployeePreview (file, fileList) {
       this.LogoUrl = file.url
+    },
+    // 删除图片
+    handleRemoveImg (file) {
+      if (file) {
+        this.addClientForm.companyLogo = ''
+      }
     },
     // 获取员工列表
     async getEmployeeList (id) {
@@ -1444,6 +1457,7 @@ export default {
     },
     // 提交新增用户
     async addClient () {
+      this.isShowLoading = true
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200 && imgRes.data.result.object[0]) {
         this.addClientForm.companyLogo = imgRes.data.result.object[0].filePath
@@ -1468,6 +1482,7 @@ export default {
           }
         }
       })
+      this.isShowLoading = false
     },
     search () {
       this.currentPage = 1
@@ -1635,6 +1650,8 @@ export default {
     },
     // 编辑客户列表
     async handlerEdit () {
+      this.isShowLoading = true
+      console.log(123)
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200 && imgRes.data.result.object[0]) {
         this.addClientForm.companyLogo = imgRes.data.result.object[0]
@@ -1651,35 +1668,15 @@ export default {
           )
           if (res.data.result.code === 200) {
             this.$message.success('编辑客户成功')
+            this.isShowLoading = false
           } else {
             this.$message.error(res.data.result.msg)
+            this.isShowLoading = false
           }
           this.andClientIcon = ''
-          this.addClientForm = {
-            // 新增客户表单
-            companyName: '',
-            companyNickName: '',
-            contactsMan: '',
-            address: '',
-            e_mail: '',
-            fax: '',
-            qq: '',
-            msn: '',
-            skype: '',
-            homepage: '',
-            phoneNumber: '',
-            telephoneNumber: '',
-            companyAPI: '',
-            companyKeyCode: '',
-            remark: '',
-            companyType: '',
-            companyLogo: '',
-            audit_state: 0,
-            appLoginCount: 0,
-            erpLoginCount: 0
-          }
           this.file = null
           this.clientDialog = false
+          this.isShowLoading = false
           this.getClientList()
         }
       })
