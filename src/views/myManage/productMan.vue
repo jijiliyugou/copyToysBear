@@ -582,7 +582,7 @@ export default {
       if (strDate >= 0 && strDate <= 9) {
         strDate = '0' + strDate
       }
-      var nowData = year + seperator1 + month + seperator1 + strDate + 'T00:00:00'
+      var nowData = year + seperator1 + month + seperator1 + strDate + 'T23:59:59'
       this.formInline.dateTile = [formatDate, nowData] // 默认赋值一年时间
     }
   },

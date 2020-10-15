@@ -71,18 +71,23 @@
             </div>
           </div>
           <div class="floor">
-            <div class="title">性别</div>
+            <div class="title">性别：</div>
             <p>{{ personalDetail.sex === 1 ? "男" : "女" }}</p>
           </div>
           <div class="floor">
-            <div class="title">生日</div>
+            <div class="title">生日：</div>
             <p v-if="personalDetail.birthday">
               {{ personalDetail.birthday.replace(/T[\s\S]*/gi, "") }}
             </p>
           </div>
           <div class="floor">
-            <div class="title">电话</div>
+            <div class="title">电话：</div>
             <p>{{ personalDetail.phoneNumber }}</p>
+          </div>
+          <div class="floor">
+            <div class="title">备注：</div>
+            <div style="position: relative;"><el-input type="textarea" autosize class="companyRemark" v-model="personalDetail.remark" placeholder="请输入备注">
+            </el-input><el-button class="subRemark" type="success" size="mini" icon="el-icon-check" @click="editUserRemark(personalDetail)" circle></el-button></div>
           </div>
           <center class="send">
             <el-button
@@ -3709,6 +3714,16 @@ export default {
         this.dialogVisibleImg = true
       }
     },
+    // 给员工打备注
+    async editUserRemark(item){
+      const result = await this.$http.post('/api/UpdateOrgPersonnel', item)
+      if (result.data.result.code === 200) {
+        this.getPersonalDetails(result.data.result.item.id)
+        this.$message.success('修改成功')
+      }else {
+        this.$message.success('修改失败')
+      }
+    },
     // 下载图片或视频
     handleDownload (file) {
       console.log(file)
@@ -4102,6 +4117,8 @@ export default {
     openEdit (id) {
       if (this.userInfo.userInfo.id === id) {
         this.active2 = 2
+      }else {
+        this.$message.error("不能修改别人的资料哦")
       }
     },
     // 获取个人详情页
@@ -4817,6 +4834,29 @@ export default {
           }
         }
         .floor {
+          .companyRemark {
+             @{deep} .el-textarea__inner {
+               border:none;
+               outline:none;
+               padding-left: 0;
+               padding-right: 21px;
+               resize: none;
+               box-sizing: border-box;
+             }
+          }
+          .subRemark{
+            position: absolute;
+            width:21px;
+            height:21px;
+            right:0;
+            bottom:5px;
+             @{deep} .el-icon-check{
+              position: absolute;
+              left:50%;
+              top:50%;
+              transform: translate(-50%,-50%);
+            }
+          }
           .title {
             color: #7e7e81;
             font-size: 14px;

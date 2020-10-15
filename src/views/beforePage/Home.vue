@@ -24,7 +24,7 @@
     </div>
     <!-- 公告 -->
     <div class="announcement">
-      <ul>
+      <ul class="noticeItens">
         <template v-for="(item, i) in NoticeObj">
           <li
             class="items"
@@ -340,10 +340,14 @@ export default {
   }
   .announcement {
     margin: 20px 0;
-    ul {
+    .noticeItens {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      &::after{
+        width: 390px;
+        box-sizing: border-box;
+      }
       li.items {
         width: 390px;
         font-size: 14px;
