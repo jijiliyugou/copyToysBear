@@ -55,14 +55,20 @@
         size="medium"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="platForm" label="手机平台"></el-table-column>
-        <el-table-column prop="vesion" label="版本号"></el-table-column>
-        <el-table-column
-          prop="fileUrl"
-          label="版本地址"
-          align="center"
-          width="400"
-        ></el-table-column>
+        <el-table-column prop="platForm" label="终端"></el-table-column>
+        <el-table-column prop="title" label="日志标题"></el-table-column>
+        <el-table-column prop="logType" label="日志类型">
+          <template slot-scope="scope">
+           <el-tag :type="scope.row.logType===0?'danger':scope.row.logType===1?'warning':''" effect="dark">{{scope.row.logType===0?'接口闪退':scope.row.logType===1?'接口超时':'请求失败'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="message" label="错误信息"></el-table-column>
+        <el-table-column prop="url" label="地址"></el-table-column>
+        <el-table-column prop="state" label="处理状态">
+          <template slot-scope="scope">
+           <el-tag :type="scope.row.state?'success':'danger'" effect="plain">{{scope.row.state?'已处理':'未处理'}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="createdOn"
           label="新增日期"
@@ -73,6 +79,7 @@
             {{ scope.row.createdOn && scope.row.createdOn.replace(/T/g, " ") }}
           </template>
         </el-table-column>
+        <el-table-column prop="remark" label="处理意见"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button

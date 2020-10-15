@@ -240,7 +240,6 @@ export default {
       if (res.data.result.code === 200) {
         this.allCateList = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
-        console.log(res.data.result.item)
       } else {
         this.$message.error(res.data.result.msg)
       }
