@@ -29,6 +29,7 @@ const createLogRecord = async function (obj) {
   }
   const res = await axios.post('api/CreateLogRecord', obj)
   if (res.data.result.code !== 200) {
+    Message.closeAll()
     Message.error('api/CreateLogRecord报错code=' + res.data.result.code + ',' + res.data.result.message)
   }
 }

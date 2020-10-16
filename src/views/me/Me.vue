@@ -12,7 +12,7 @@
             <div
               slot="error"
               class="image-slot"
-              style="width:100%;height:100%;display:flex;align-items:center;justify-content:left;white-space: nowrap;"
+              style="width:100%;height:100%;backgroundColor:#165af7;color:#fff;display:flex;align-items:center;justify-content:center;white-space: nowrap;"
             >
               {{ meInfo.companyName }}
             </div>
@@ -63,6 +63,7 @@
             联系地址：
             <el-input
               type="textarea"
+              placeholder="请输入联系地址"
               style="overflow-x:hidden;overflow-y:hidden;"
               autosize
               v-model="meInfo.address"

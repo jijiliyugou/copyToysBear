@@ -10,7 +10,7 @@ export default {
       zoom: 11,
       attrs: this.attr,
       restaurants: [],
-      attr: this.address || '深圳',
+      attr: this.address || '汕头市',
       map: null
     }
   },

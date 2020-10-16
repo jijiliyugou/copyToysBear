@@ -63,7 +63,7 @@
         </el-table-column>
         <el-table-column prop="title" label="日志标题" align="center"></el-table-column>
         <el-table-column prop="url" label="地址"></el-table-column>
-        <el-table-column prop="parameters" label="请求参数"></el-table-column>
+        <!-- <el-table-column prop="parameters" label="请求参数"></el-table-column> -->
         <el-table-column prop="message" label="错误信息"></el-table-column>
         <el-table-column prop="state" label="处理状态" width="80">
           <template slot-scope="scope">

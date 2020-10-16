@@ -39,8 +39,9 @@ export default {
         var map = new BMap.Map('allmap') // 创建Map实例
         // 创建地址解析器实例
         var geoc = new BMap.Geocoder()
+        var myCity = _that.addr.address ? (_that.addr.address.split('市')[0] + '市') : '汕头市'
         geoc.getPoint(
-          _that.addr.address || '深圳市',
+          _that.addr.address || '汕头市',
           function (point) {
             console.log(point)
             if (point) {
@@ -75,7 +76,7 @@ export default {
               geoc.getLocation(point, function (re) {
                 var cityObj = re.addressComponents
                 console.log(123, cityObj.city)
-                map.setCurrentCity(cityObj.city || '深圳市') // 设置地图显示的城市 此项是必须设置的
+                map.setCurrentCity(cityObj.city || '汕头市') // 设置地图显示的城市 此项是必须设置的
               })
               map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
               window.openMap = function () {
@@ -117,7 +118,7 @@ export default {
               _that.$message.error('您选择地址没有解析到结果!')
             }
           },
-          '深圳市'
+          myCity
         )
       })
     }

@@ -91,11 +91,12 @@
                   align-items: center;
                   justify-content: center;
                   padding:0 5px;
-                  text-align:center;
+                  text-align:center;">
+                <span style="display: -webkit-box;
+                  -webkit-line-clamp: 2;
                   overflow: hidden;
-                "
-              >
-                <span>{{ scope.row.companyName }}</span>
+                  text-overflow: clip;
+                  -webkit-box-orient: vertical;">{{ scope.row.companyName }}</span>
               </div>
             </el-image>
           </template>
