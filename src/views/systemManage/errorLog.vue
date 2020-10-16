@@ -292,11 +292,14 @@ export default {
         fd[key] = this.errorLogFormData[key]
       }
       fd.state = true
-      console.log(fd)
       const res = await this.$http.post('/api/UpdateLogRecord', fd)
-      console.log(res)
-      this.getLogErrorPage()
-      this.errorLogDialog = false
+      if (res.data.result.code === 200) {
+        this.errorLogDialog = false
+        this.getLogErrorPage()
+        this.$message.success('处理成功')
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
     }
     // 删除
     // async handleDelete (row) {
