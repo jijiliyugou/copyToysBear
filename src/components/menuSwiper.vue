@@ -13,7 +13,7 @@
           <el-image
             fit="contain"
             :src="item.companyLogo"
-            @click="
+            @click.native="
               $router.push({
                 name: 'ShowRoomDetail',
                 params: { id: item.companyNumber }

@@ -72,7 +72,11 @@ export default {
               // 把标注添加到地图上
               map.addOverlay(marker)
               marker.setAnimation(BMAP_ANIMATION_BOUNCE) // 跳动的动画
-              map.setCurrentCity('深圳') // 设置地图显示的城市 此项是必须设置的
+              geoc.getLocation(point, function (re) {
+                var cityObj = re.addressComponents
+                console.log(123, cityObj.city)
+                map.setCurrentCity(cityObj.city || '深圳市') // 设置地图显示的城市 此项是必须设置的
+              })
               map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
               window.openMap = function () {
                 // _that.showNav = true
