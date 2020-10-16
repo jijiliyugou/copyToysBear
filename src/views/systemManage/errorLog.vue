@@ -252,7 +252,6 @@ export default {
         }
       }
       const res = await this.$http.post('/api/GetLogRecordPage', fd)
-      console.log(res)
       if (res.data.result.code === 200) {
         this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
@@ -294,8 +293,8 @@ export default {
       fd.state = true
       const res = await this.$http.post('/api/UpdateLogRecord', fd)
       if (res.data.result.code === 200) {
+        await this.getLogErrorPage()
         this.errorLogDialog = false
-        this.getLogErrorPage()
         this.$message.success('处理成功')
       } else {
         this.$message.error(res.data.result.msg)
