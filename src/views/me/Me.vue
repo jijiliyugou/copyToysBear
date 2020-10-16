@@ -53,7 +53,7 @@
             <!-- <input v-model="meInfo.phoneNumber" /> -->
             <el-input
               type="number"
-              placeholder="请输入电话号码："
+              placeholder="请输入电话号码"
               v-model="meInfo.phoneNumber"
               oninput="if(value.length>14)value=value.slice(0,14)"
               show-word-limit
@@ -658,16 +658,21 @@ export default {
       }
       &.companyInfo {
         flex: 1;
+        font-size: 14px;
+        font-family: "Microsoft Yahei";
         p {
           display: flex;
           align-items: center;
           @{deep} .el-input {
             width: 540px;
+            font-size: 14px;
             input.el-input__inner {
               border: none;
               outline: none;
               -webkit-appearance: none;
               -moz-appearance: textfield;
+              font-size: 14px;
+              font-family: "Microsoft Yahei";
             }
             input::-webkit-outer-spin-button,
             input::-webkit-inner-spin-button {
@@ -675,6 +680,12 @@ export default {
             }
             input[type="number"] {
               -moz-appearance: textfield;
+            }
+          }
+          @{deep} .el-textarea{
+            .el-textarea__inner{
+              font-size: 14px;
+              font-family: "Microsoft Yahei";
             }
           }
         }

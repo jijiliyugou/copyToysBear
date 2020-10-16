@@ -61,7 +61,7 @@
         ></el-table-tree-column>
         <el-table-column label="级别">
           <template slot-scope="scope">
-            <el-tag>{{
+            <el-tag :type="scope.row.level === 0 ? '' : scope.row.level === 1 ? 'success' : scope.row.level === 2 ? 'warning' : 'danger'">{{
               Number(scope.row.parentId) === 0 ? "一级菜单" : "二级菜单"
             }}</el-tag>
           </template>

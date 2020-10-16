@@ -4754,7 +4754,7 @@ export default {
     flex-wrap: wrap;
     box-sizing: border-box;
     width: 1200px;
-    margin: 10px auto;
+    margin: 0 auto;
     &:after {
       content: "";
       width: 32%;
@@ -4861,7 +4861,6 @@ export default {
               background-color: #fff;
               border-color: #fff;
               color: #000;
-              cursor: not-allowed;
              }
           }
           .title {

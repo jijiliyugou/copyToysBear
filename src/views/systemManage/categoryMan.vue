@@ -50,7 +50,7 @@
         ></el-table-column>
         <el-table-column label="级别">
           <template slot-scope="scope">
-            <el-tag>{{
+            <el-tag :type="scope.row.level === 0 ? '' : scope.row.level === 1 ? 'success' : scope.row.level === 2 ? 'warning' : 'danger'">{{
               scope.row.level === 0
                 ? "一级类目"
                 : scope.row.level === 1

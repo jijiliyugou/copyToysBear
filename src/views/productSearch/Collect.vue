@@ -56,19 +56,53 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column
-          prop="number"
-          label="收藏货号"
-        ></el-table-column>
+        <el-table-column prop="img" label="产品图片">
+          <template slot-scope="scope">
+            <el-image fit="contain" class="myImg" :src="scope.row.img" :preview-src-list="[scope.row.img && scope.row.img.replace(/_MiddlePic/gi, '_Photo')]">
+                    <div
+                      slot="placeholder"
+                      class="image-slot"
+                      style="width:150px;margin:0 auto;"
+                    >
+                      <img
+                        class="errorImg"
+                        src="~@/assets/images/暂无图片.png"
+                        alt
+                      />
+                    </div>
+                    <div
+                      slot="error"
+                      class="image-slot"
+                      style="width:150px;margin:0 auto;"
+                    >
+                      <img
+                        class="errorImg"
+                        src="~@/assets/images/图片加载失败.png"
+                        alt
+                      />
+                    </div>
+                  </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column prop="co_nu" label="收藏货号"></el-table-column>
         <el-table-column prop="name" label="产品名称"></el-table-column>
-        <el-table-column prop="exhibitionName" label="来源"> </el-table-column>
+        <el-table-column label="来源">
+           <template slot-scope="scope">
+           {{ $store.state.userInfo.commparnyList &&
+                  $store.state.userInfo.commparnyList[0] &&
+                  $store.state.userInfo.commparnyList[0].companyType ==
+                    "Exhibition"
+                    ? scope.row.supplierName
+                    : scope.row.exhibitionName}}
+          </template>
+        </el-table-column>
         <el-table-column prop="isOpen" label="开放状态" width="80">
           <template slot-scope="scope">
             <el-tag type="success" v-if="scope.row.isOpen">开放</el-tag>
             <el-tag type="warning" v-else>待开放</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="collecTime" label="收藏时间" width="180">
+        <el-table-column prop="collecTime" sortable label="收藏时间" width="180">
           <template slot-scope="scope">
             {{
               scope.row.collecTime
@@ -77,14 +111,10 @@
             }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="spplierName"
-          label="供应商名称"
-        ></el-table-column>
         <el-table-column prop="price" label="底价" width="100">
           <template slot-scope="scope">
             <span style="color:#f56c6c">
-              {{ scope.row.cu_de + scope.row.price.toFixed(2) }}
+              {{ scope.row.price ? scope.row.cu_de + scope.row.price.toFixed(2) : '???' }}
             </span>
           </template>
         </el-table-column>
@@ -232,5 +262,10 @@ export default {
 .tableContent {
   padding: 20px 0;
   box-sizing: border-box;
+  .myImg{
+    width:80px;
+    height:80px;
+    cursor: pointer;
+  }
 }
 </style>
