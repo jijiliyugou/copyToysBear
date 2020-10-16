@@ -50,28 +50,29 @@
     <!-- 列表 -->
     <div class="tableContent">
       <el-table
+        size="mini"
         :data="tableData"
         style="width: 100%"
-        size="medium"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="platForm" label="终端"></el-table-column>
-        <el-table-column prop="title" label="日志标题"></el-table-column>
-        <el-table-column prop="logType" label="日志类型">
+        <el-table-column prop="platform" label="终端" width="80"></el-table-column>
+        <el-table-column prop="logType" label="日志类型" width="100" align="center">
           <template slot-scope="scope">
-           <el-tag :type="scope.row.logType===0?'danger':scope.row.logType===1?'warning':''" effect="dark">{{scope.row.logType===0?'接口闪退':scope.row.logType===1?'接口超时':'请求失败'}}</el-tag>
+           <el-tag :type="scope.row.logType===0?'danger':scope.row.logType===1?'warning':''" effect="plain">{{scope.row.logType===0?'接口闪退':scope.row.logType===1?'接口超时':'请求失败'}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="message" label="错误信息"></el-table-column>
+        <el-table-column prop="title" label="日志标题" align="center"></el-table-column>
         <el-table-column prop="url" label="地址"></el-table-column>
-        <el-table-column prop="state" label="处理状态">
+        <el-table-column prop="parameters" label="请求参数"></el-table-column>
+        <el-table-column prop="message" label="错误信息"></el-table-column>
+        <el-table-column prop="state" label="处理状态" width="80">
           <template slot-scope="scope">
-           <el-tag :type="scope.row.state?'success':'danger'" effect="plain">{{scope.row.state?'已处理':'未处理'}}</el-tag>
+           <el-tag :type="scope.row.state?'success':'danger'" effect="dark">{{scope.row.state?'已处理':'未处理'}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           prop="createdOn"
-          label="新增日期"
+          label="报错时间"
           sortable
           align="center"
         >
@@ -113,60 +114,42 @@
       </center>
     </div>
     <!-- 处理错误日记dialog -->
-    <el-dialog title="处理错误日记" :visible.sync="errorLogDialog" width="50%">
+    <el-dialog title="处理日志" :visible.sync="errorLogDialog" width="50%">
       <el-form
         ref="addVersionForm"
         label-width="100px"
-        :rules="editLogRules"
         :model="errorLogFormData"
       >
-        <el-form-item label="平台" prop="platForm">
-          <el-select v-model="errorLogFormData.platForm" placeholder="请选择">
-            <el-option
-              v-for="item in $store.state.globalJson.Json.PlatForm"
-              :key="item.id"
-              :label="item.itemText"
-              :value="item.itemCode"
-            ></el-option>
-          </el-select>
+        <el-form-item label="终端" prop="platform">
+          <el-input v-model="errorLogFormData.platform" disabled></el-input>
         </el-form-item>
-        <el-form-item label="版本号" prop="vesion">
-          <el-input v-model="errorLogFormData.vesion"></el-input>
+        <el-form-item label="日志类型" prop="logType">
+          <!-- <el-tag :type="errorLogFormData.logType===0?'danger':errorLogFormData.logType===1?'warning':''" effect="plain">{{errorLogFormData.logType===0?'接口闪退':errorLogFormData.logType===1?'接口超时':'请求失败'}}</el-tag> -->
+           <el-input v-model="errorLogFormData.logType" disabled></el-input>
         </el-form-item>
-        <el-form-item label="链接地址" prop="fileUrl">
-          <el-input
-            v-model="errorLogFormData.fileUrl"
-            :disabled="errorLogFormData.versionFile  !==  ''"
-          ></el-input>
+        <el-form-item label="日志标题" prop="title">
+          <el-input type="textarea" autosize resize="none" v-model="errorLogFormData.title" disabled></el-input>
+          <!-- <el-tag>{{errorLogFormData.title}}</el-tag> -->
         </el-form-item>
-        <el-form-item label="上传文件">
-          <input
-            type="file"
-            ref="installFile"
-            @change="changeUpload"
-            :accept="
-              $store.state.globalJson.Json.packageManage &&
-                $store.state.globalJson.Json.packageManage[0].itemCode
-            "
-            :size="
-              $store.state.globalJson.Json.packageManage &&
-                $store.state.globalJson.Json.packageManage[1].itemCode
-            "
-          />
+        <el-form-item label="请求地址" prop="url">
+          <el-input type="textarea" autosize resize="none" v-model="errorLogFormData.url" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="请求参数" prop="parameters">
+          <el-input type="textarea" autosize resize="none" v-model="errorLogFormData.parameters" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="错误信息" prop="message">
+          <el-input type="textarea" autosize resize="none" v-model="errorLogFormData.message" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="报错时间" prop="createdOn">
+          <el-input type="textarea" autosize resize="none" v-model="errorLogFormData.createdOn" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="处理意见" prop="remark">
+          <el-input type="textarea" placeholder="请输入处理意见" :rows="4" resize="none" v-model="errorLogFormData.remark"></el-input>
         </el-form-item>
         <center>
           <template>
-            <el-button
-              type="primary"
-              @click="handleEdit()"
-              :disabled="isUpLoad"
-            >
-              <i :class="{ 'el-icon-loading': isUpLoad }"></i>
-              {{ isUpLoad ? "文件上传中" : "提 交" }}
-            </el-button>
-            <el-button type="danger" @click="errorLogDialog = false"
-              >取 消</el-button
-            >
+            <el-button type="primary" @click="subProcessingLog">提 交</el-button>
+            <el-button type="danger" @click="errorLogDialog = false">取 消</el-button>
           </template>
         </center>
       </el-form>
@@ -183,11 +166,13 @@ export default {
       isUpLoad: false,
       errorLogDialog: false,
       errorLogFormData: {
-        platForm: null,
+        platform: null,
         logType: null,
         title: null,
         message: null,
+        createdOn: null,
         url: null,
+        id: null,
         parameters: null,
         state: null,
         remark: null
@@ -257,7 +242,7 @@ export default {
       const fd = {
         startTime: this.dateTile && this.dateTile[0],
         endTime: this.dateTile && this.dateTile[1],
-        keyWord: this.searchForm.keyword,
+        keyword: this.searchForm.keyword,
         skipCount: this.currentPage,
         maxResultCount: this.pageSize
       }
@@ -285,28 +270,33 @@ export default {
     },
     // 打开处理日志窗口
     openEdit (row) {
-      console.log(row, this.errorLogFormData)
       for (const key in this.errorLogFormData) {
         this.errorLogFormData[key] = row[key]
       }
-      this.errorLogFormData.id = row.id
       this.errorLogDialog = true
     },
     // 处理错误日志
-    async handleEdit () {
-      this.$refs.addVersionForm.validate(async valid => {
-        if (valid) {
-          this.errorLogFormData.state = true
-          const res = await this.$http.post('/api/UpdateLogRecord', this.errorLogFormData)
-          if (res.data.result.code === 200) {
-            this.$message.success('处理成功')
-            this.getLogErrorPage()
-            this.errorLogDialog = false
-          } else {
-            this.$message.error('处理失败,请检查网络！')
-          }
-        }
-      })
+    async subProcessingLog () {
+      const fd = {
+        platform: null,
+        logType: null,
+        title: null,
+        message: null,
+        url: null,
+        id: null,
+        parameters: null,
+        state: null,
+        remark: null
+      }
+      for (const key in fd) {
+        fd[key] = this.errorLogFormData[key]
+      }
+      fd.state = true
+      console.log(fd)
+      const res = await this.$http.post('/api/UpdateLogRecord', fd)
+      console.log(res)
+      this.getLogErrorPage()
+      this.errorLogDialog = false
     }
     // 删除
     // async handleDelete (row) {

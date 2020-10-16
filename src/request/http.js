@@ -116,7 +116,7 @@ myAxios.install = function (Vue) {
             Message.closeAll()
             $Store.commit('updateAppLoading', false)
             Message.error('登录过期，请重新登录')
-            createLogRecord({ Message: '接口' + error.response.config.url + '，报' + error.response.status + '，' + error.response.statusText, LogType: 2, Title: '登录过期', Url: error.response.config.url })
+            createLogRecord({ Message: '接口' + error.response.config.url + '，报' + error.response.status + '，' + error.response.statusText, LogType: 2, Title: '登录过期', Url: error.response.config.url, Parameters: error.response.config.data })
             router.push({
               path: '/beforeIndex/login?id=signOut'
             })
@@ -124,7 +124,7 @@ myAxios.install = function (Vue) {
           default:
             Message.closeAll()
             $Store.commit('updateAppLoading', false)
-            createLogRecord({ Message: '接口' + error.response.config.url + '，报' + error.response.status + '，' + error.response.statusText, LogType: 2, Title: '请求失败', Url: error.response.config.url })
+            createLogRecord({ Message: '接口' + error.response.config.url + '，报' + error.response.status + '，' + error.response.statusText, LogType: 2, Title: '请求失败', Url: error.response.config.url, Parameters: error.response.config.data })
             Message.error(`请求失败${error.response.statusText},${error.response.status}，请联系管理员`)
             break
         }
@@ -132,6 +132,7 @@ myAxios.install = function (Vue) {
       } else {
         // 请求超时， 重新请求
         var config = error.config
+        console.log(config)
         // If config does not exist or the retry option is not set, reject
         if (!config || !axios.defaults.retry) return Promise.reject(error)
 
@@ -140,7 +141,7 @@ myAxios.install = function (Vue) {
         // Check if we've maxed out the total number of retries
         if (config.__retryCount >= axios.defaults.retry) {
           $Store.commit('updateAppLoading', false)
-          createLogRecord({ Message: '接口：' + config.url + '超时时长为=' + config.timeout + '毫秒，超时次数为=' + (axios.defaults.retry + 1) + '次', LogType: 1, Title: '请求超时', Url: config.url })
+          createLogRecord({ Message: '接口：' + config.url + '超时时长为=' + config.timeout + '毫秒，超时次数为=' + (axios.defaults.retry + 1) + '次', LogType: 1, Title: '请求超时', Url: config.url, Parameters: config.data })
           Message.closeAll()
           Message.error('接口：' + config.url + '，超时时长为=' + config.timeout + '毫秒，超时次数为=' + (axios.defaults.retry + 1) + '次')
           // Reject with the error

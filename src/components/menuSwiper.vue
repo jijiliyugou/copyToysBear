@@ -138,4 +138,7 @@ export default {
     }
   }
 }
+.errorImg{
+   object-fit: contain;
+}
 </style>

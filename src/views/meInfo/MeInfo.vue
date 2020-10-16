@@ -176,7 +176,7 @@
                 </div>
               </el-image>
               <div class="codeTitle">我的排号:</div>
-              <div class="code">{{ personalNumber.arr_nu || 102435 }}</div>
+              <div class="code">{{ personalNumber.arr_nu }}</div>
             </div>
             <i class="el-icon-arrow-right"></i>
           </div>
@@ -238,19 +238,19 @@
                         : $store.state.userInfo.commparnyList[0].companyType ==
                           "Supplier"
                         ? item.fromCompanyName + "：" + item.messageTitle
-                        : item.messageModel === 7
+                        : item.messageModel === '7'
                         ? item.toCompanyName + "：" + item.messageTitle
                         : item.fromCompanyName + "：" + item.messageTitle
                     }}
                   </div>
                   <el-tag
-                    :class="{ red: item.orderStatus === 0 }"
+                    :class="{ red: item.orderStatus === '0' }"
                     :type="
-                      item.orderStatus === 9
+                      item.orderStatus === '9'
                         ? 'success'
-                        : item.orderStatus === 1
+                        : item.orderStatus === '1'
                         ? 'danger'
-                        : item.orderStatus === 99
+                        : item.orderStatus === '99'
                         ? 'info'
                         : ''
                     "
@@ -258,10 +258,10 @@
                   >
                     <i
                       :class="{
-                        wanchengIcon: item.orderStatus === 9,
-                        weichakanIcon: item.orderStatus === 0,
-                        weiquerenIcon: item.orderStatus === 1,
-                        yiquxiaoIcon: item.orderStatus === 99
+                        wanchengIcon: item.orderStatus === '9',
+                        weichakanIcon: item.orderStatus === '0',
+                        weiquerenIcon: item.orderStatus === '1',
+                        yiquxiaoIcon: item.orderStatus === '99'
                       }"
                     ></i>
                     {{ item | myState }}
@@ -296,9 +296,9 @@
                       size="mini"
                       v-show="
                         !item.confirmStatus &&
-                          (item.messageExt === 3 ||
-                            item.messageExt === 5 ||
-                            item.messageExt === 11)
+                          (item.messageExt === '3' ||
+                            item.messageExt === '5' ||
+                            item.messageExt === '11')
                       "
                       @click.stop="configOrder(item)"
                       >确认完成</el-button
@@ -378,19 +378,19 @@
                         : $store.state.userInfo.commparnyList[0].companyType ==
                           "Supplier"
                         ? item.fromCompanyName + "：" + item.messageTitle
-                        : item.messageModel === 7
+                        : item.messageModel === '7'
                         ? item.toCompanyName + "：" + item.messageTitle
                         : item.fromCompanyName + "：" + item.messageTitle
                     }}
                   </div>
                   <el-tag
-                    :class="{ red: item.orderStatus === 0 }"
+                    :class="{ red: item.orderStatus === '0' }"
                     :type="
-                      item.orderStatus === 9
+                      item.orderStatus === '9'
                         ? 'success'
-                        : item.orderStatus === 1
+                        : item.orderStatus === '1'
                         ? 'danger'
-                        : item.orderStatus === 99
+                        : item.orderStatus === '99'
                         ? 'info'
                         : ''
                     "
@@ -398,10 +398,10 @@
                   >
                     <i
                       :class="{
-                        wanchengIcon: item.orderStatus === 9,
-                        weichakanIcon: item.orderStatus === 0,
-                        weiquerenIcon: item.orderStatus === 1,
-                        yiquxiaoIcon: item.orderStatus === 99
+                        wanchengIcon: item.orderStatus === '9',
+                        weichakanIcon: item.orderStatus === '0',
+                        weiquerenIcon: item.orderStatus === '1',
+                        yiquxiaoIcon: item.orderStatus === '99'
                       }"
                     ></i>
                     {{ item | myState }}
@@ -436,9 +436,9 @@
                       size="mini"
                       v-show="
                         !item.confirmStatus &&
-                          (item.messageExt === 3 ||
-                            item.messageExt === 5 ||
-                            item.messageExt === 11)
+                          (item.messageExt === '3' ||
+                            item.messageExt === '5' ||
+                            item.messageExt === '11')
                       "
                       @click.stop="configOrder(item)"
                       >确认完成</el-button
@@ -480,7 +480,7 @@
               ? orderOptions.toCompanyName
               : $store.state.userInfo.commparnyList[0].companyType === "Supplier"
               ? orderOptions.fromCompanyName
-              : orderOptions.messageModel === 7
+              : orderOptions.messageModel === '7'
               ? orderOptions.toCompanyName
               : orderOptions.fromCompanyName
           }}
@@ -495,7 +495,7 @@
                 ? orderOptions.fromCompanyName +
                   "：" +
                   orderOptions.messageTitle
-                : orderOptions.messageModel === 7
+                : orderOptions.messageModel === '7'
                 ? orderOptions.toCompanyName + "：" + orderOptions.messageTitle
                 : orderOptions.fromCompanyName +
                   "：" +
@@ -504,13 +504,13 @@
           </div>
           <!-- 订单详情状态 -->
           <el-tag
-            :class="{ red: orderOptions.orderStatus === 0 }"
+            :class="{ red: orderOptions.orderStatus === '0' }"
             :type="
-              orderOptions.orderStatus === 9
+              orderOptions.orderStatus === '9'
                 ? 'success'
-                : orderOptions.orderStatus === 1
+                : orderOptions.orderStatus === '1'
                 ? 'danger'
-                : orderOptions.orderStatus === 99
+                : orderOptions.orderStatus === '99'
                 ? 'info'
                 : ''
             "
@@ -518,10 +518,10 @@
           >
             <i
               :class="{
-                wanchengIcon: orderOptions.orderStatus === 9,
-                weichakanIcon: orderOptions.orderStatus === 0,
-                weiquerenIcon: orderOptions.orderStatus === 1,
-                yiquxiaoIcon: orderOptions.orderStatus === 99
+                wanchengIcon: orderOptions.orderStatus === '9',
+                weichakanIcon: orderOptions.orderStatus === '0',
+                weiquerenIcon: orderOptions.orderStatus === '1',
+                yiquxiaoIcon: orderOptions.orderStatus === '99'
               }"
             ></i>
             {{ orderOptions | myState }}
@@ -568,9 +568,9 @@
               @click="configOrder(orderOptions)"
               v-show="
                 !orderOptions.confirmStatus &&
-                  (orderOptions.messageExt === 3 ||
-                    orderOptions.messageExt === 5 ||
-                    orderOptions.messageExt === 11)
+                  (orderOptions.messageExt === '3' ||
+                    orderOptions.messageExt === '5' ||
+                    orderOptions.messageExt === '11')
               "
             >
               确认完成
@@ -618,15 +618,15 @@
                   <i></i>
                   {{ item.fa_no }}
                 </div>
-                <div class="pr_na" v-if="item.messageExt === 0">
+                <div class="pr_na" v-if="item.messageExt === '0'">
                   {{ item.pr_na }}
                 </div>
-                <div class="btns" v-else-if="item.messageExt === 3">
+                <div class="btns" v-else-if="item.messageExt === '3'">
                   <el-button
                     @click="updateOrderConfirmStatus(item, 1)"
                     size="mini"
                     round
-                    :class="{ activeGray: item.messageStatus === 1 }"
+                    :class="{ activeGray: item.messageStatus === '1' }"
                     >不可带</el-button
                   >
                   <el-button
@@ -635,17 +635,17 @@
                     round
                     :class="{
                       blueBtn: true,
-                      activeBlue: item.messageStatus === 0
+                      activeBlue: item.messageStatus === '0'
                     }"
                     >可带</el-button
                   >
                 </div>
-                <div class="btns" v-else-if="item.messageExt === 5">
+                <div class="btns" v-else-if="item.messageExt === '5'">
                   <el-button
                     size="mini"
                     @click="updateOrderConfirmStatus(item, 1)"
                     round
-                    :class="{ activeGray: item.messageStatus === 1 }"
+                    :class="{ activeGray: item.messageStatus === '1' }"
                     >不可借</el-button
                   >
                   <el-button
@@ -654,17 +654,17 @@
                     round
                     :class="{
                       orangeBtn: true,
-                      activeOrange: item.messageStatus === 0
+                      activeOrange: item.messageStatus === '0'
                     }"
                     >可借</el-button
                   >
                 </div>
-                <div class="btns" v-else-if="item.messageExt === 11">
+                <div class="btns" v-else-if="item.messageExt === '11'">
                   <el-button
                     size="mini"
                     @click="updateOrderConfirmStatus(item, 2)"
                     round
-                    :class="{ activeGray: item.messageStatus === 2 }"
+                    :class="{ activeGray: item.messageStatus === '2' }"
                     >不可带</el-button
                   >
                   <el-button
@@ -673,7 +673,7 @@
                     round
                     :class="{
                       blueBtn: true,
-                      activeBlue: item.messageStatus === 0
+                      activeBlue: item.messageStatus === '0'
                     }"
                     >可带</el-button
                   >
@@ -683,7 +683,7 @@
                     round
                     :class="{
                       orangeBtn: true,
-                      activeOrange: item.messageStatus === 1
+                      activeOrange: item.messageStatus === '1'
                     }"
                     >可借</el-button
                   >
@@ -4077,6 +4077,7 @@ export default {
     },
     // 打开我的排号详情
     async openRowMeCode () {
+      this.customerVisitCurrentPage = 1
       const currentNumberList = await this.getCurrentNumber()
       if (currentNumberList.data.result.code === 200) {
         if (!currentNumberList.data.result.item.length) {
@@ -4084,12 +4085,12 @@ export default {
         }
         this.currentCodeList = currentNumberList.data.result.item
       }
-      const customerVisitList = await this.getCustomerVisit()
-      if (customerVisitList.data.result.code === 200) {
-        if (!customerVisitList.data.result.item.length) {
+      const res = await this.getCustomerVisit()
+      if (res.data.result.code === 200) {
+        if (!res.data.result.item.length) {
           this.isNoCustomerVisit = true
         }
-        this.customerVisitList = customerVisitList.data.result.item
+        this.customerVisitList = res.data.result.item
       }
       this.showPersonalNumber = true
       this.showSampleSelection = false
@@ -5455,14 +5456,32 @@ export default {
           }
         }
       }
-      @{deep} .orderDetailTitle {
+       @{deep} .orderDetailTitle {
+        width: 100%;
         border: none;
         box-shadow: none;
         flex: 1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        .headerTitle {
+        .el-tabs__header{
+          .el-tabs__nav-wrap{
+            .el-tabs__nav-scroll{
+              .el-tabs__nav{
+                .el-tabs__item{
+                  display:flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+              }
+            }
+          }
+        }
+        .el-tabs__content{
+          .el-tab-pane{
+            width:100%;
+            .headerTitle {
+          width:100%;
           height: 60px;
           display: flex;
           align-items: center;
@@ -5510,6 +5529,9 @@ export default {
             }
           }
         }
+          }
+        }
+        
       }
       .orderDetailTitle2 {
         flex: 1;
@@ -6633,9 +6655,11 @@ export default {
       .personalNumberContent {
         flex: 1;
         background-color: #fff;
+        display:flex;
+        flex-direction: column;
         .currentCode,
         .buyer {
-          margin-top: 30px;
+          // margin-top: 5px;
           background-color: #f6f9ff;
           height: 60px;
           display: flex;
