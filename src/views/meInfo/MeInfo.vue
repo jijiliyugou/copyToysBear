@@ -85,9 +85,16 @@
             <p>{{ personalDetail.phoneNumber }}</p>
           </div>
           <div class="floor">
-            <div class="title">备注：</div>
-            <div style="position: relative;"><el-input type="textarea" autosize class="companyRemark" v-model="personalDetail.remark" placeholder="请输入备注">
-            </el-input><el-button class="subRemark" type="success" size="mini" icon="el-icon-check" @click="editUserRemark(personalDetail)" circle></el-button></div>
+            <div class="title myRemark" v-show="!isEditRemark">备注：
+              <el-button class="subRemark" type="success" size="mini" icon="el-icon-edit" @click="ckeckEditUserRemark" plain>编辑</el-button>
+            </div>
+            <div class="title myRemark" v-show="isEditRemark">备注：
+              <el-button class="subRemark" type="success" size="mini" icon="el-icon-check" @click="editUserRemark(personalDetail)" plain>保存</el-button>
+            </div>
+            <p v-show="personalDetail.remark || isEditRemark">
+              <!-- <el-input type="textarea" :disabled="!isEditRemark" autosize class="companyRemark" v-model="personalDetail.remark" placeholder="请输入备注"></el-input> -->
+              <el-input type="textarea" ref="myTextarea" autosize :disabled="!isEditRemark" class="companyRemark" v-model="personalDetail.remark" placeholder="请输入备注"></el-input>
+            </p>
           </div>
           <center class="send">
             <el-button
@@ -2439,6 +2446,7 @@ export default {
   },
   data () {
     return {
+      isEditRemark: false,
       companyAddr: '',
       companyAddrMapDialog: false,
       orderItemOptions: null,
@@ -3714,12 +3722,19 @@ export default {
         this.dialogVisibleImg = true
       }
     },
+    ckeckEditUserRemark () {
+      this.isEditRemark = true
+      this.$nextTick(()=>{
+        this.$refs.myTextarea.focus()
+      })
+    },
     // 给员工打备注
     async editUserRemark(item){
       const result = await this.$http.post('/api/UpdateOrgPersonnel', item)
       if (result.data.result.code === 200) {
         this.getPersonalDetails(result.data.result.item.id)
         this.$message.success('修改成功')
+        this.isEditRemark = false
       }else {
         this.$message.success('修改失败')
       }
@@ -4837,38 +4852,36 @@ export default {
         .floor {
           .companyRemark {
              @{deep} .el-textarea__inner {
-               border:none;
-               outline:none;
-               padding-left: 0;
-               padding-right: 21px;
-               resize: none;
-               box-sizing: border-box;
+              resize: none;
+              box-sizing: border-box;
+              padding-left:0;
+              padding-right:0;
+              font-size:16px;
+              font-family: "Microsoft Yahei";
+              background-color: #fff;
+              border-color: #fff;
+              color: #000;
+              cursor: not-allowed;
              }
-          }
-          .subRemark{
-            position: absolute;
-            width:21px;
-            height:21px;
-            right:0;
-            bottom:5px;
-             @{deep} .el-icon-check{
-              position: absolute;
-              left:50%;
-              top:50%;
-              transform: translate(-50%,-50%);
-            }
           }
           .title {
             color: #7e7e81;
             font-size: 14px;
             margin: 10px 0;
           }
+          .myRemark{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .subRemark{
+          }
           p {
             padding-bottom: 10px;
           }
         }
         .send {
-          margin-top: 50px;
+          margin-top: 20px;
           .sendInfo {
             background-color: #165af7;
             color: #fff;
