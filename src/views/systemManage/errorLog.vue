@@ -12,29 +12,29 @@
               style="width: 90%"
             ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="终端查询">
+        <el-form-item label="状态查询">
           <el-select
-            v-model="searchForm.platForm"
-            placeholder="请选择终端"
+            v-model="searchForm.state"
+            placeholder="请选择"
             style="width: 90%;"
           >
             <el-option
               v-for="(item, i) in [
-                { label: 'PC', value: 'PC' },
-                { label: 'IOS', value: 'IOS' },
-                { label: 'Android', value: 'Android' }
+                { label: '全部', value: '' },
+                { label: '未处理', value: 0 },
+                { label: '已处理', value: 1 }
               ]"
               :key="i"
               :label="item.label"
               :value="item.value"
             ></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="时间段搜索">
           <el-date-picker
             v-model="searchForm.dateTile"
             value-format="yyyy-MM-ddTHH:mm:ss"
-            type="datetimerange"
+            type="daterange"
             :picker-options="pickerOptions"
             range-separator="—"
             start-placeholder="开始日期"
@@ -227,7 +227,7 @@ export default {
       },
       searchForm: {
         keyword: '',
-        platForm: '',
+        state: '',
         dateTile: null
       }
     }
@@ -240,14 +240,15 @@ export default {
     // 获取错误日志列表
     async getLogErrorPage () {
       const fd = {
-        startTime: this.dateTile && this.dateTile[0],
-        endTime: this.dateTile && this.dateTile[1],
+        startTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
+        endTime: this.searchForm.dateTile && this.searchForm.dateTile[1],
+        state: this.searchForm.state,
         keyword: this.searchForm.keyword,
         skipCount: this.currentPage,
         maxResultCount: this.pageSize
       }
       for (const key in fd) {
-        if (!fd[key]) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
           delete fd[key]
         }
       }

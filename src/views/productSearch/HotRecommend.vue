@@ -211,10 +211,9 @@ export default {
       loading: false,
       datailNumber: null,
       currentPage: 1,
-      pageSize: 60,
+      pageSize: 10,
       totalCount: 0,
       dataList: [],
-      count: 401833,
       categoryList: [],
       defaultProps: {
         children: 'children',
@@ -253,13 +252,18 @@ export default {
     async getProduct () {
       this.loading = true
       try {
-        const res = await this.$http.post('/api/HotRecommendPage', {
-          name: this.$store.state.beforeSearch.value,
+        const fd = {
+          keyword: this.$store.state.beforeSearch.value,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
-        })
+        }
+        for (const key in fd) {
+          if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+            delete fd[key]
+          }
+        }
+        const res = await this.$http.post('/api/HotRecommendPage', fd)
         if (res.data.result.code === 200 && res.data.result.item) {
-          console.log(res.data.result.item)
           this.dataList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
         } else {

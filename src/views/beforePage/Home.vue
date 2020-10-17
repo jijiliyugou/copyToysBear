@@ -1,3 +1,4 @@
+/* eslint-disable vue/require-v-for-key */
 <template>
   <div class="home">
     <menuSwiper :dataList="showroomSwiperList"></menuSwiper>
@@ -63,6 +64,9 @@
               </li>
             </ol>
           </li>
+        </template>
+        <template v-for="item in (3-NoticeObj.length%3)">
+          <div class="buwei" v-if="NoticeObj.length%3 > 0" :key="item"></div>
         </template>
       </ul>
     </div>
@@ -344,9 +348,13 @@ export default {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-      &::after{
+      &:after{
+        content: '';
         width: 390px;
-        box-sizing: border-box;
+      }
+      .buwei{
+        content: '';
+        width: 390px;
       }
       li.items {
         width: 390px;

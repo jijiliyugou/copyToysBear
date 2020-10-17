@@ -8,30 +8,32 @@
             v-model="searchForm.keyWord"
             placeholder="输入关键字"
             style="width: 90%;"
+            size="mini"
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="激活状态搜索">
-          {{ searchForm.state }}
+        <el-form-item label="状态搜索">
           <el-select
             v-model="searchForm.state"
             placeholder="请选择"
+            size="mini"
             style="width: 90%;"
           >
             <el-option
               v-for="(item, i) in [
                 { label: '全部', value: null },
-                { label: '已激活', value: true },
-                { label: '未激活', value: false }
+                { label: '已激活', value: 1 },
+                { label: '未激活', value: 0 }
               ]"
               :key="i"
               :label="item.label"
               :value="item.value"
             ></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="时间段搜索">
           <el-date-picker
             v-model="searchForm.dateTile"
+            size="mini"
             value-format="yyyy-MM-ddTHH:mm:ss"
             type="datetimerange"
             :picker-options="pickerOptions"
@@ -42,8 +44,8 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item class="btnList">
-          <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="primary" @click="openAddRole">新增</el-button>
+          <el-button type="primary" size="mini" @click="search">查询</el-button>
+          <el-button type="primary" size="mini" @click="openAddRole">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -276,9 +278,10 @@ export default {
         StartTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
         EndTime: this.searchForm.dateTile && this.searchForm.dateTile[1]
       }
-      if (!this.searchForm.dateTile) {
-        delete fd.StartTime
-        delete fd.EndTime
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
       }
       const res = await this.$http.post('/api/Auth_RolePage', fd)
       if (res.data.result.code === 200) {

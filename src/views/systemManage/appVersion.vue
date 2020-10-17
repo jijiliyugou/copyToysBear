@@ -4,23 +4,13 @@
     <!-- 搜索 -->
     <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
-        <el-form-item label="审核状态搜索">
-          <el-select
-            v-model="searchForm.state"
-            placeholder="请选择"
-            style="width: 90%;"
-          >
-            <el-option
-              v-for="(item, i) in [
-                { label: '全部', value: '' },
-                { label: '审核通过', value: true },
-                { label: '审核不通过', value: false }
-              ]"
-              :key="i"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+        <el-form-item label="关键字查询">
+         <el-input
+              @keyup.enter.native="search"
+              v-model="searchForm.keyword"
+              placeholder="输入关键字"
+              style="width: 90%"
+            ></el-input>
         </el-form-item>
         <el-form-item label="时间段搜索">
           <el-date-picker
@@ -224,8 +214,7 @@ export default {
         ]
       },
       searchForm: {
-        reportType: '',
-        state: '',
+        keyword: null,
         dateTile: []
       }
     }
@@ -237,10 +226,19 @@ export default {
     },
     // 获取所有app版本
     async getAppVersionPage () {
-      const res = await this.$http.post('/api/BearVesionPage', {
+      const fd = {
         skipCount: this.currentPage,
-        maxResultCount: this.pageSize
-      })
+        maxResultCount: this.pageSize,
+        endTime: this.searchForm.dateTile && this.searchForm.dateTile[1],
+        startTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
+        keyword: this.searchForm.keyword
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
+      }
+      const res = await this.$http.post('/api/BearVesionPage', fd)
       if (res.data.result.code === 200) {
         this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount

@@ -30,8 +30,8 @@
             <el-option
               v-for="(item, i) in [
                 { label: '全部', value: '' },
-                { label: '审核通过', value: true },
-                { label: '审核不通过', value: false }
+                { label: '审核通过', value: 1 },
+                { label: '审核不通过', value: 0 }
               ]"
               :key="i"
               :label="item.label"

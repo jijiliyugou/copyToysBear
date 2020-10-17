@@ -5,7 +5,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-            v-model="formInline.keyWord"
+            v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%;"
           ></el-input>
@@ -109,7 +109,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       formInline: {
-        keyWord: '',
+        keyword: '',
         dateTile: null
       },
       pickerOptions: {
@@ -148,16 +148,19 @@ export default {
   },
   methods: {
     async getSupplierProduct () {
-      const obj = {
-        keyWord: this.formInline.keyWord,
+      const fd = {
+        endTime: this.formInline.dateTile && this.formInline.dateTile[1],
+        startTime: this.formInline.dateTile && this.formInline.dateTile[0],
+        keyword: this.formInline.keyword,
         PageIndex: this.currentPage,
         PageSize: this.pageSize
       }
-      if (this.formInline.dateTile) {
-        obj.StartTime = this.formInline.dateTile && this.formInline.dateTile[0]
-        obj.EndTime = this.formInline.dateTile && this.formInline.dateTile[1]
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
       }
-      const res = await this.$http.post('/api/SupplierProduct', obj)
+      const res = await this.$http.post('/api/SupplierProduct', fd)
       if (res.data.result.code === 200) {
         this.totalCount = res.data.result.item.totalCount
         this.tableData = res.data.result.item.items

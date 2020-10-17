@@ -248,7 +248,6 @@ export default {
       formInline: {
         // 查询角色表单
         keyword: '',
-        state: null,
         dateTile: null
       }
     }
@@ -266,10 +265,19 @@ export default {
     },
     // 获取菜单
     async getAuth () {
-      const res = await this.$http.post('/api/Auth_ModulePage', {
+      const fd = {
         skipCount: this.currentPage,
-        maxResultCount: this.pageSize
-      })
+        maxResultCount: this.pageSize,
+        keyword: this.formInline.keyword,
+        startTime: this.formInline.dateTile && this.formInline.dateTile[0],
+        endTime: this.formInline.dateTile && this.formInline.dateTile[1]
+      }
+      for (const key in fd) {
+        if (!fd[key]) {
+          delete fd[key]
+        }
+      }
+      const res = await this.$http.post('/api/Auth_ModulePage', fd)
       if (res.data.result.code === 200) {
         this.totalCount = res.data.result.item.totalCount
         this.allAuthList = res.data.result.item.items.map((val) => {
@@ -313,7 +321,9 @@ export default {
       this.getAuth()
       this.menuDialogOptions.openMenuDialog = false
     },
-    search () {},
+    search () {
+      this.getAuth()
+    },
     openAdd () {
       this.menuDialogOptions.menuDialogTitle = '新增'
       this.menuDialogOptions.openMenuDialog = true
