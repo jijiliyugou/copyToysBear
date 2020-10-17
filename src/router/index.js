@@ -48,13 +48,13 @@ router.beforeEach(async (to, from, next) => {
     const res = await getToken()
     const obj = { accessToken: res }
     $Store.commit('setToken', obj)
-    if (to.path.includes('beforeIndex') || to.path.includes('erp')) {
+    if (to.path.includes('beforeIndex') || to.path.includes('erp') || to.path.includes('quoteSharing')) {
       next()
     } else {
       return next({ path: '/beforeIndex/login' })
     }
   } else {
-    if (to.path.includes('beforeIndex') || to.path.includes('erp')) {
+    if (to.path.includes('beforeIndex') || to.path.includes('erp') || to.path.includes('quoteSharing')) {
       next()
     } else {
       if ($Store.state.isLogin) {

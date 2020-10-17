@@ -10,13 +10,13 @@
     <router-view
       v-cloak
       :class="{
-        appViews: $route.path  !==  '/404' && !$route.path.includes('/beforeIndex')
+        appViews: $route.path  !==  '/404' && !$route.path.includes('/beforeIndex') && !$route.path.includes('/quoteSharing')
       }"
     />
 
     <Footer
       v-cloak
-      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp')"
+      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp')  && !$route.path.includes('/quoteSharing')"
     ></Footer>
   </div>
 </template>

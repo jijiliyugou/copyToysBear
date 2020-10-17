@@ -12,6 +12,8 @@ import me from './me/index'
 import _404 from './404/index'
 /** ERP模块 */
 import ERP from './ERP/index'
+/** 报价分享 */
+const QuoteSharing = () => import('@/components/quoteSharing.vue')
 /** 特殊搜索路由 */
 const SearchIndex = () => import('@/views/productSearch/searchIndex.vue')
 /** 静态路由 */
@@ -22,8 +24,13 @@ export const staticRouters = [
   meInfo,
   {
     path: '/searchIndex',
-    name: 'SearchIndex',
+    name: 'searchIndex',
     component: SearchIndex
+  },
+  {
+    path: '/quoteSharing',
+    name: 'quoteSharing',
+    component: QuoteSharing
   },
   _404,
   ...ERP,
