@@ -15,6 +15,19 @@ import _ from 'lodash'
 import ElTreeGrid from 'element-tree-grid'
 import wsConnection from '@/store/wsStore'
 import VueClipboard from 'vue-clipboard2'
+(function (doc, win) {
+  var docEl = doc.documentElement
+  var resizeEvt =
+    'orientationchange' in window ? 'orientationchange' : 'resize'
+  var recalc = function () {
+    var clientWidth = docEl.clientWidth
+    if (!clientWidth) return
+    docEl.style.fontSize = clientWidth / 7.5 + 'px'
+  }
+  if (!doc.addEventListener) return
+  win.addEventListener(resizeEvt, recalc, false)
+  doc.addEventListener('DOMContentLoaded', recalc, false)
+})(document, window)
 Vue.use(VueClipboard)
 Vue.prototype.$setWs = wsConnection
 

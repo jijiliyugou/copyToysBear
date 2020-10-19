@@ -1501,9 +1501,8 @@ export default {
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
-      if (!this.formInline.dateTile) {
-        delete fd.StartTime
-        delete fd.EndTime
+      for (const key in fd) {
+        if (!fd[key]) delete fd[key]
       }
       const res = await this.$http.post('/api/CompanyManagementPage', fd)
       if (res.data.result.code === 200) {

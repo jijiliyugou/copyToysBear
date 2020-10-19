@@ -13,7 +13,9 @@ import _404 from './404/index'
 /** ERP模块 */
 import ERP from './ERP/index'
 /** 报价分享 */
-const QuoteSharing = () => import('@/components/quoteSharing.vue')
+const OfferSharing = () => import('@/components/offer/offerSharing.vue')
+/** 报价详情 */
+const OfferDetail = () => import('@/components/offer/offerDetail.vue')
 /** 特殊搜索路由 */
 const SearchIndex = () => import('@/views/productSearch/searchIndex.vue')
 /** 静态路由 */
@@ -28,9 +30,14 @@ export const staticRouters = [
     component: SearchIndex
   },
   {
-    path: '/quoteSharing',
-    name: 'quoteSharing',
-    component: QuoteSharing
+    path: '/offerSharing',
+    name: 'offerSharing',
+    component: OfferSharing
+  },
+  {
+    path: '/offerDetail/:id',
+    name: 'offerDetail',
+    component: OfferDetail
   },
   _404,
   ...ERP,

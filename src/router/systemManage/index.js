@@ -6,6 +6,7 @@ const CategoryMan = () => import('@/views/systemManage/categoryMan.vue')
 const ReportReview = () => import('@/views/systemManage/reportReview.vue')
 const AppVersion = () => import('@/views/systemManage/appVersion.vue')
 const ErrorLog = () => import('@/views/systemManage/errorLog.vue')
+const SMSMan = () => import('@/views/systemManage/SMSMan.vue')
 
 export default [
   {
@@ -47,5 +48,10 @@ export default [
     path: '/errorLog',
     name: 'errorLog',
     component: ErrorLog
+  },
+  {
+    path: '/SMSMan',
+    name: 'SMSMan',
+    component: SMSMan
   }
 ]

@@ -6,6 +6,7 @@ html,body{
 	height: 100%;
 	box-sizing: border-box;
 	overflow: hidden;
+	font-size: 16px;
 }
 h1,h2,h3,h4,h5,h6,em,i {
 	font-weight:100;
@@ -21,4 +22,15 @@ a {
 }
 a:hover {
 	text-decoration:none;
+}
+.el-cascader-menu {
+	min-width:120px !important;
+	.el-cascader-menu__wrap{
+		width: 100%;
+		overflow-x: hidden;
+		overflow-y: auto;
+		.el-cascader-node{
+			padding:0 5px;
+		}
+	}
 }
