@@ -1,7 +1,8 @@
 <template>
   <div style="position:relative;min-height:757px;">
     <bsTop></bsTop>
-    <div class="searchBox">
+    <div style="width:1200px;margin:0 auto;">
+      <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="举报类别">
           <el-select
@@ -160,6 +161,7 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </center>
+    </div>
     </div>
     <!-- 审核 -->
     <el-dialog title="审核" :visible.sync="shenheDialog" width="50%">

@@ -15,7 +15,7 @@
           报价参数：<span class="content">{{productInfo && productInfo.bidPrice}}</span>
         </div>
         <div class="item">
-          报价员：<span class="content">吴邪</span>
+          报价员：<span class="content">{{productInfo && productInfo.linkman}}</span>
         </div>
       </div>
     </el-card>
@@ -29,22 +29,22 @@
     <!-- <div slot="header" class="detailTitle">
         <div class="titleText">商品详情</div>
       </div> -->
-    <div class="centent">
+    <div class="centent"  v-if="productDetail">
       <div class="img">
-        <el-image :preview-src-list="['http://139.9.71.135:8087/ProductImg/Productdefault/Productdefault.png']" style="width: 100%;"
-      :src="'http://139.9.71.135:8087/ProductImg/Productdefault/Productdefault.png'"
+        <el-image :preview-src-list="imagesList" style="width: 100%;"
+      :src="productDetail.imageUrl"
       fit="contain"></el-image>
       </div>
       <div class="cententText">
-        <p class="textItem name">儿童益智飞机大炮好牛B啊，你咋不上天咧</p>
-        <p class="textItem">货号：HS00402587</p>
-        <p class="textItem">包装方式：PVP卡头套</p>
-        <p class="textItem">样品规格：29x3x22(CM)</p>
-        <p class="textItem">外箱规格：29x3x22(CM)</p>
-        <p class="textItem">装箱量：内核数/装箱数</p>
-        <p class="textItem">体积/材积：20.0CM/13.02CM</p>
-        <p class="textItem">毛重/净重：20.0kg/13.02kg</p>
-        <p class="textItem">报价：<span class="price">￥100.00</span></p>
+        <p class="textItem name">{{productDetail.name}}</p>
+        <p class="textItem">货号：{{productDetail.fa_no}}</p>
+        <p class="textItem">包装方式：{{productDetail.ch_pa}}</p>
+        <p class="textItem">样品规格：{{productDetail.pr_le + " X " + productDetail.pr_wi + " X " + productDetail.pr_hi + "(CM)"}}</p>
+        <p class="textItem">外箱规格：{{productDetail.ou_le + " X " + productDetail.ou_wi + " X " + productDetail.ou_hi + "(CM)"}}</p>
+        <p class="textItem">装箱量：{{productDetail.in_en + "/" + productDetail.ou_lo + "(PSC)"}}</p>
+        <p class="textItem">体积/材积：{{productDetail.bulk_stere + "(CBM)" + "/" + productDetail.bulk_feet + "(CUFT)"}}</p>
+        <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
+        <p class="textItem">报价：<span class="price">{{productDetail.cu_de + (productDetail.price && productDetail.price.toFixed(2))}}</span></p>
       </div>
     </div>
   </div>
@@ -54,6 +54,8 @@
 export default {
   data () {
     return {
+      productDetail: null,
+      imagesList: [],
       productInfo: null,
       currentPage: 1,
       pageSize: 10
@@ -75,15 +77,14 @@ export default {
     // 获取产品明细
     async getProductByNumber () {
       const id = this.$route.params.id
-      const res = await this.$http.post('/api/BearProductByNumber', {
+      const res = await this.$http.post('/api/GetProductByProductNumber', {
         productNumber: id
       })
-      console.log(res)
       if (res.data.result.code === 200) {
-        this.productDetail = res.data.result.item
-        this.imagesList = res.data.result.item.imglist
-          ? res.data.result.item.imglist
-          : []
+        this.productDetail = res.data.result.item.bearProduct
+        this.imagesList = res.data.result.item.imglist.map(val => val && (val.imgUrl.replace(/_MiddlePic/, '_Photo')))
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     }
   },
@@ -95,7 +96,6 @@ export default {
 }
 </script>
 <style scoped lang='less'>
-@deep: ~">>>";
 @deep: ~">>>";
 .baojia {
   width: 100%;

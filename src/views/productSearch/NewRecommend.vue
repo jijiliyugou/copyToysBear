@@ -2,7 +2,8 @@
   <div style="position:relative;min-height:757px;">
     <bsTop></bsTop>
 
-    <!-- 搜索头部 -->
+   <div style="width:1200px;margin:0 auto;">
+      <!-- 搜索头部 -->
     <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="货物编号">
@@ -90,6 +91,7 @@
             ></el-pagination>
       </center>
     </div>
+   </div>
     <!-- 新增新品推荐 -->
     <!-- 授权dialog -->
     <el-dialog

@@ -7,12 +7,7 @@
     element-loading-background="rgba(200, 200, 200, 0.5)"
     @mousewheel="mousewheel"
   >
-    <router-view
-      v-cloak
-      :class="{
-        appViews: $route.path  !==  '/404' && !$route.path.includes('/beforeIndex') && !$route.path.includes('/quoteSharing') && !$route.path.includes('offerSharing') && !$route.path.includes('offerDetail')
-      }"
-    />
+    <router-view v-cloak />
 
     <Footer
       v-cloak

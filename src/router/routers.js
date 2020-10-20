@@ -14,6 +14,8 @@ import _404 from './404/index'
 import ERP from './ERP/index'
 /** 报价分享 */
 const OfferSharing = () => import('@/components/offer/offerSharing.vue')
+/** 报价分享PC */
+const OfferPCSharing = () => import('@/components/offer/offerPCSharing.vue')
 /** 报价详情 */
 const OfferDetail = () => import('@/components/offer/offerDetail.vue')
 /** 特殊搜索路由 */
@@ -33,6 +35,11 @@ export const staticRouters = [
     path: '/offerSharing',
     name: 'offerSharing',
     component: OfferSharing
+  },
+  {
+    path: '/offerPCSharing',
+    name: 'offerPCSharing',
+    component: OfferPCSharing
   },
   {
     path: '/offerDetail/:id/:pid',

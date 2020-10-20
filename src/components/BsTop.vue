@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <el-row>
+  <div style="background-color:#2468a9;">
+    <el-row style="height:60px;overflow: hidden;width:1200px;margin:0 auto;">
       <el-col :span="2">
-        <div class="grid-content bg-purple grid-content-top">
-          <img @click="toHome" src="~@/assets/images/bsLogo.png" alt />
+        <div class="grid-content bg-purple-light grid-content-top">
+          <img @click="toHome" style="vertical-align:top;" src="~@/assets/images/bsLogo.png" alt />
         </div>
       </el-col>
       <el-col :span="18">
@@ -330,12 +330,13 @@ export default {
 <style lang="less" scoped>
 .grid-content-top {
   background-color: #2468a9;
+  box-sizing: border-box;
+  height: 60px;
   img {
+    box-sizing: border-box;
     width: 60px;
     height: 60px;
     cursor: pointer;
-    vertical-align: top;
-    float: right;
   }
 }
 .el-menu {
@@ -350,6 +351,7 @@ export default {
     line-height: 60px;
     margin: 0;
     padding: 0 20px;
+    box-sizing: border-box;
     &:hover {
       background-color: rgb(29, 83, 135);
     }

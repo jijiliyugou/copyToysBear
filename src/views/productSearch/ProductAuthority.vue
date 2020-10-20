@@ -1,7 +1,8 @@
 <template>
   <div style="position:relative;min-height:757px;">
     <bsTop></bsTop>
-    <template v-if="!tableData || tableData.length === 0">
+    <div style="width:1200px;margin:0 auto;">
+      <template v-if="!tableData || tableData.length === 0">
       <div class="zanwuchanpin"></div>
     </template>
     <template v-else>
@@ -54,6 +55,7 @@
         </center>
       </div>
     </template>
+    </div>
   </div>
 </template>
 

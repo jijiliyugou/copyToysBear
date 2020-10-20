@@ -2,7 +2,8 @@
   <div style="position:relative;min-height:757px;">
     <bsTop></bsTop>
     <!-- 搜索 -->
-    <div class="searchBox">
+    <div style="width:1200px;margin:0 auto;">
+      <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="关键字查询">
          <el-input
@@ -113,6 +114,9 @@
         ></el-pagination>
       </center>
     </div>
+    </div>
+    <!-- <div style="width:1200px;margin:0 auto;">
+    </div> -->
     <!-- 处理错误日记dialog -->
     <el-dialog title="处理日志" :visible.sync="errorLogDialog" width="50%">
       <el-form

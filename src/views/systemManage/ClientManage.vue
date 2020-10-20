@@ -1,7 +1,8 @@
 <template>
   <div style="position: relative; min-height: 757px">
     <bsTop></bsTop>
-    <div class="searchBox">
+    <div style="width:1200px;margin:0 auto;">
+      <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="关键字查询" size="mini">
             <el-input
@@ -200,6 +201,7 @@
           @current-change="currentChange"
         ></el-pagination>
       </center>
+    </div>
     </div>
     <!-- 新增编辑审核客户dialog -->
     <el-dialog
