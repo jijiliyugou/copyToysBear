@@ -35,7 +35,7 @@ export const staticRouters = [
     component: OfferSharing
   },
   {
-    path: '/offerDetail/:id',
+    path: '/offerDetail/:id/:pid',
     name: 'offerDetail',
     component: OfferDetail
   },

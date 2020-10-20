@@ -1,5 +1,5 @@
 <template>
-  <div class="baojia" @scroll="baojiaScroll">
+  <div class="baojia" @scroll="baojiaScroll" v-infinite-scroll="load" infinite-scroll-disabled="disabled">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <div class="titleText">报价信息</div>
@@ -40,10 +40,14 @@
     </div>
     <div class="productList">
       <div class="listTitle">
-        报价商品 ({{totalCount}})
+        <span class="listTitleTXT">报价商品 ({{totalCount}})</span>
+        <div class="downloads">
+          <el-button type="primary" plain size="small">下载PDF</el-button>
+          <el-button type="primary" plain size="small">下载Excel</el-button>
+        </div>
       </div>
-      <div class="listItems" v-if="totalCount > 1" v-infinite-scroll="load" infinite-scroll-disabled="disabled">
-        <el-card class="listItem" v-for="(item, i) in productList" :key="i" @click.native="productDetail(item.productNumber)">
+      <div class="listItems" v-if="totalCount > 1">
+        <el-card class="listItem" v-for="(item, i) in [...productList,...productList,...productList,...productList,...productList]" :key="i" @click.stop.native="productDetail($event, item.productNumber)">
           <div class="left">
             <el-image
             :preview-src-list="item.imageUrl ? [item.imageUrl] : ['http://139.9.71.135:8087/ProductImg/Productdefault/Productdefault.png']"
@@ -313,11 +317,11 @@ export default {
       const top = e.target.scrollTop
       const box = document.getElementsByClassName('baojia')[0]
       const item = document.getElementsByClassName('categoryList')[0]
-      if (top >= 250) {
-        box.style.paddingTop = '1.333333rem'
+      if (top >= 205) {
+        box.style.paddingTop = '1rem'
         item.style.position = 'fixed'
         item.style.left = '0'
-        item.style.padding = '0.133333rem 0.200000rem 0.133333rem 0.200000rem'
+        item.style.padding = '0.133333rem 0.188888rem 0.133333rem 0.188888rem'
         item.style.top = '0px'
       } else {
         box.style.paddingTop = '0px'
@@ -357,13 +361,14 @@ export default {
       }
     },
     // 点击列表进入详情页
-    productDetail (number) {
-      console.log(number)
-      if (!number) {
-        this.$message.error('该产品没有产品编号')
-        return false
+    productDetail (e, number) {
+      if (e.target.localName !== 'img' && e.target.localName !== 'i') {
+        if (!number) {
+          this.$message.error('该产品没有产品编号')
+          return false
+        }
+        this.$router.push({ name: 'offerDetail', params: { id: number, pid: this.$route.query.id } })
       }
-      this.$router.push({ name: 'offerDetail', params: { id: number } })
     }
   },
   created () {
@@ -387,7 +392,12 @@ export default {
 .baojia {
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   font-size: 0.266667rem;
   .text {
     font-size: 14px;
@@ -411,6 +421,19 @@ export default {
         align-items: center;
         .titleText{
           font-weight: 600;
+          position: relative;
+          text-indent: 0.133333rem;
+          &::before{
+            content:'';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            height: 70%;
+            width: 4px;
+            background-color: #165af7;
+            transform:translate(0, -50%);
+            border-radius: 0 5px 5px 0;
+          }
         }
       }
   }
@@ -423,6 +446,7 @@ export default {
   .categoryList{
     width: 95%;
     // height:1.066667rem;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -447,8 +471,32 @@ export default {
       height:0.933333rem;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       font-weight: 600;
       border-bottom: 1px solid #EBEEF5;
+      .listTitleTXT{
+        position: relative;
+        text-indent: 0.133333rem;
+        &::before{
+          content:'';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          height: 70%;
+          width: 4px;
+          background-color: #165af7;
+          transform:translate(0, -50%);
+          border-radius: 0 5px 5px 0;
+        }
+      }
+      .downloads{
+        .el-button{
+          font-size: 0.16rem;
+          border-radius: 0.266667rem;
+          padding: 0.12rem 0.2rem;
+          border: 0.013333rem solid #b3d8ff;
+        }
+      }
     }
     .listItems{
       .listItem{
@@ -482,9 +530,5 @@ export default {
       }
     }
   }
-}
-/deep/ .el-cascader-menu {
-max-width: 2rem !important;
-min-width: 0 !important;
 }
 </style>

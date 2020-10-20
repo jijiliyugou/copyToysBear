@@ -10,7 +10,7 @@
     <router-view
       v-cloak
       :class="{
-        appViews: $route.path  !==  '/404' && !$route.path.includes('/beforeIndex') && !$route.path.includes('/quoteSharing')
+        appViews: $route.path  !==  '/404' && !$route.path.includes('/beforeIndex') && !$route.path.includes('/quoteSharing') && !$route.path.includes('offerSharing') && !$route.path.includes('offerDetail')
       }"
     />
 
