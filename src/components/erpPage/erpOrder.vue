@@ -72,7 +72,7 @@
           <div class="pages" v-show="tableList && tableList.length > 1">
             <div class="shouye" @click="toOnePage">首页</div>
             <el-pagination
-              layout=" prev, pager, next"
+              layout="prev, pager, next"
               background
               prev-text="上一页"
               next-text="下一页"

@@ -181,7 +181,7 @@
           </div>
           <center
             style="margin:20px auto 0 auto;"
-            v-show="totalCount > 10 && !isDetail"
+            v-show="!isDetail"
           >
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"

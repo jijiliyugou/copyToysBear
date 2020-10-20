@@ -43,8 +43,6 @@
         <center style="margin:20px;">
           <el-pagination
             background
-            prev-text="上一页"
-            next-text="下一页"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalCount"
             :page-sizes="[10, 30, 60, 100]"

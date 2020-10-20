@@ -189,7 +189,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <center style="margin-top: 20px" v-show="totalCount > 10">
+      <center style="margin-top: 20px">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           background
@@ -525,7 +525,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <center style="margin-top:20px;" v-if="userManList.length > 10">
+      <!-- <center style="margin-top:20px;">
         <el-pagination
           layout="prev, pager, next"
           background
@@ -816,7 +816,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <center style="margin-top: 20px" v-if="employeeMan.totalCount > 10">
+      <center style="margin-top: 20px">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           background
@@ -1352,6 +1352,7 @@ export default {
     // 打开员工管理
     openEmployeeMan (row) {
       this.employeeList = []
+      this.employeeMan.currentPage = 1
       this.employeeMan.companyNumber = row.companyNumber
       this.employeeMan.phoneNumber = row.phoneNumber
       this.employeeMan.id = row.id

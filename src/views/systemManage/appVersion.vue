@@ -76,7 +76,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <center style="margin-top:20px;" v-show="totalCount > 10">
+      <center style="margin-top:20px;">
          <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           background
