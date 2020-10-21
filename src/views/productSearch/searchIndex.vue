@@ -84,7 +84,7 @@
                     >
                       <img
                         class="errorImg"
-                        src="~@/assets/images/暂无图片.png"
+                        src="~@/assets/images/imgError.jpg"
                         alt
                       />
                     </div>
@@ -95,7 +95,7 @@
                     >
                       <img
                         class="errorImg"
-                        src="~@/assets/images/图片加载失败.png"
+                        src="~@/assets/images/imgError.jpg"
                         alt
                       />
                     </div>

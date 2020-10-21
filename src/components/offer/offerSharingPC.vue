@@ -34,6 +34,23 @@
         </el-select>
       </div>
       <div class="searchContent">
+        <div class="filterTitle">
+            <div class="keywrodSearch">
+              <el-input placeholder="请输入搜索内容" v-model="searchName" class="input-with-select">
+                <el-select v-model="selectSearchName" slot="prepend" placeholder="请选择">
+                  <el-option label="餐厅名" value="1"></el-option>
+                  <el-option label="订单号" value="2"></el-option>
+                  <el-option label="用户电话" value="3"></el-option>
+                </el-select>
+                <el-button slot="append" icon="el-icon-search"></el-button>
+              </el-input>
+            </div>
+            <div class="downloads">
+              <el-button type="primary" plain size="small">下载PDF</el-button>
+              <el-button type="primary" plain size="small">下载Excel</el-button>
+            </div>
+          <!-- <div class="more">更多筛选</div> -->
+        </div>
         <template v-if="!dataList || dataList.length === 0">
           <div class="zanwuchanpin"></div>
         </template>
@@ -130,6 +147,8 @@ export default {
   data () {
     return {
       value: '',
+      searchName: '',
+      selectSearchName: '',
       productInfo: null,
       categoryNumber: null,
       isDateSort: false,
@@ -339,102 +358,27 @@ export default {
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
         position: relative;
-        ::v-deep .el-button {
-          height: 100%;
-          i {
-            font-size: 14px;
-            margin-left: 10px;
-          }
-        }
-        .priceFilter {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          margin-left: 20px;
-          p {
-            width: 50px;
-          }
-          .priceInput,
-          ::v-deep .el-input__inner {
-            width: 50px;
-            height: 30px;
-          }
-          span {
-            width: 5px;
-            height: 2px;
-            margin: 0 5px;
-            background-color: #aaa;
-          }
-        }
-        .searchBtnBox {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          margin-left: 20px;
-          .searchBtn {
-            width: 50px;
-            height: 30px;
-          }
-          p {
-            height: 100%;
-            width: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: left;
-            padding-left: 10px;
-          }
-          .count {
-            color: red;
-            margin: 0 5px;
-          }
-        }
-        .more {
-          position: absolute;
-          right: 10px;
-          top: 10px;
-          i {
-            font-weight: 700;
-            font-size: 20;
-            cursor: pointer;
-          }
-        }
       }
       .filterTitle {
-        margin-top: 5px;
-        display: flex;
-        height: 36px;
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        position: relative;
-        align-items: center;
-        justify-content: space-between;
-        box-sizing: border-box;
-        .dataFilters {
+          margin-left: 15px;
           display: flex;
+          height: 40px;
+          border-top: 1px solid #ccc;
+          border-bottom: 1px solid #ccc;
+          position: relative;
+          align-items: center;
+          justify-content: space-between;
           box-sizing: border-box;
-          .factoryFilters {
-            margin-left: 50px;
+          padding: 5px 0;
+          .keywrodSearch{
+            flex: 1;
           }
-          .myTotal {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-            p {
-              width: 150px;
-              display: flex;
-              align-items: center;
-              justify-content: left;
-              padding-left: 10px;
-            }
-            .count {
-              color: red;
-              margin: 0 5px;
-            }
+          .downloads{
           }
         }
-      }
       .productList {
         margin-left: 10px;
+        margin-top: 10px;
         width: 650px;
         box-sizing: border-box;
         display: flex;
@@ -516,41 +460,33 @@ export default {
       }
     }
   }
-  ::v-deep .el-tree {
-    background-color: transparent;
-    .el-tree-node:focus > .el-tree-node__content {
-      background-color: transparent;
-    }
-    .el-tree-node:hover > .el-tree-node__content {
-      background-color: transparent;
-    }
-    .el-tree-node__expand-icon.expanded {
-      -webkit-transform: rotate(0deg) !important;
-      transform: rotate(0deg) !important;
-    }
-    .el-icon-caret-right:before {
-      // 加号图片
-      content: "\e723" !important;
-      font-size: 16px;
-    }
-    .expanded:before {
-      // 减号图片
-      content: "\e722" !important;
-      font-size: 16px;
-    }
-    // 叶子类目不要图标
-    .is-leaf.el-tree-node__expand-icon.el-icon-caret-right:before {
-      content: "" !important;
-      font-size: 16px;
-    }
-  }
-  .myFooter {
-    // margin-top: 50px;
-    position: absolute;
-    width: 100%;
-    bottom: -160px;
-    left: 0;
-    background-color: #fff;
-  }
+  // ::v-deep .el-tree {
+  //   background-color: transparent;
+  //   .el-tree-node:focus > .el-tree-node__content {
+  //     background-color: transparent;
+  //   }
+  //   .el-tree-node:hover > .el-tree-node__content {
+  //     background-color: transparent;
+  //   }
+  //   .el-tree-node__expand-icon.expanded {
+  //     -webkit-transform: rotate(0deg) !important;
+  //     transform: rotate(0deg) !important;
+  //   }
+  //   .el-icon-caret-right:before {
+  //     // 加号图片
+  //     content: "\e723" !important;
+  //     font-size: 16px;
+  //   }
+  //   .expanded:before {
+  //     // 减号图片
+  //     content: "\e722" !important;
+  //     font-size: 16px;
+  //   }
+  //   // 叶子类目不要图标
+  //   .is-leaf.el-tree-node__expand-icon.el-icon-caret-right:before {
+  //     content: "" !important;
+  //     font-size: 16px;
+  //   }
+  // }
 }
 </style>

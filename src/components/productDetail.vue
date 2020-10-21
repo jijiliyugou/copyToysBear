@@ -20,12 +20,12 @@
             "
           >
             <div slot="placeholder" class="image-slot">
-              <img class="errorImg" src="~@/assets/images/暂无图片.png" alt />
+              <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
             </div>
             <div slot="error" class="image-slot">
               <img
                 class="errorImg"
-                src="~@/assets/images/图片加载失败.png"
+                src="~@/assets/images/imgError.jpg"
                 alt
               />
             </div>
