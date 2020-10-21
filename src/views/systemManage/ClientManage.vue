@@ -1025,7 +1025,7 @@ export default {
       addRules: {
         companyName: [
           { required: true, message: '请输入公司名称', trigger: 'blur' },
-          { min: 1, max: 100, message: '请输入 1-100 个字符', trigger: 'blur' }
+          { min: 1, max: 99, message: '请输入 1-99 个字符', trigger: 'blur' }
         ],
         companyType: [
           { required: true, message: '请选择公司类型', trigger: 'change' }
