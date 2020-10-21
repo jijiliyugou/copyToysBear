@@ -1,75 +1,45 @@
 <template>
   <div class="productSearchIndex">
-    <bsTop></bsTop>
-    <!-- <productSearchTop :showColl="true"></productSearchTop> -->
     <div class="offerInfo">
+      <div class="navBar">
+      <div class="navBarTitle">
+        <span class="title">报价信息</span>
+      </div>
+    </div>
+    </div>
+    <div class="offerInfoContent">
+      <el-card class="offerCard">
+        <p>报价主题：{{ productInfo && productInfo.title }}</p>
+        <p>报价参数：{{ productInfo && productInfo.bidPrice }}</p>
+        <p>报价员：{{ productInfo && productInfo.linkman }}</p>
+      </el-card>
+    </div>
+     <div class="offerInfo">
+      <div class="navBar">
+      <div class="navBarTitle">
+        <span class="title">报价商品 (2)</span>
+      </div>
+    </div>
     </div>
     <div class="searchWraps">
-      <div class="searchSidebar">
-        <h4 class="title el-icon-menu">产品目录</h4>
-        <div class="treeContent">
-          <el-tree
-            :data="categoryList"
-            :props="defaultProps"
-            accordion
-            @node-click="handleNodeClick"
-          ></el-tree>
-        </div>
+      <div class="searchSidebar" v-show="!isDetail">
+        <h4 class="title el-icon-search"><span class="titleText">分类搜索</span></h4>
+        <el-select v-model="value" placeholder="请输入或选择"  @change="handleChange" clearable filterable>
+          <el-option
+            v-for="item in [{categoryName: '全部', categoryNumber: ''}, ...categoryList]"
+            :key="item.value"
+            :label="item.categoryName"
+            :value="item.categoryNumber">
+          </el-option>
+        </el-select>
       </div>
       <div class="searchContent">
-        <!-- <div class="productFilter">
-          <el-button size="small" @click="priceSort">
-            价格排序
-            <i class="iconfont icon-xiangshang" style="vertical-align: middle;" v-show="isPriceSort"></i>
-            <i class="iconfont icon-xiangxia" v-show="!isPriceSort" style="vertical-align: middle;"></i>
-          </el-button>
-          <el-button size="small" @click="dateSort">
-            时间排序
-            <i class="iconfont icon-xiangshang" style="vertical-align: middle;" v-show="isDateSort"></i>
-            <i class="iconfont icon-xiangxia" style="vertical-align: middle;" v-show="!isDateSort"></i>
-          </el-button>
-          <div class="priceFilter">
-            <p>价格筛选</p>
-            <el-input class="priceInput"></el-input>
-            <span></span>
-            <el-input class="priceInput"></el-input>
-          </div>
-          <div class="searchBtnBox">
-            <el-button size="small" class="searchBtn">搜索</el-button>
-            <p>
-              总记录共
-              <span class="count">{{ totalCount }}</span>条
-            </p>
-          </div>
-          <div class="more">
-            <i class="iconfont icon-gengduo"></i>
-          </div>
-        </div>-->
-        <!-- <div class="filterTitle">
-          <div class="dataFilters">
-            资料筛选：
-            <span style="color:#fc8a26;"
-              >玩具宝上传产品资料(产品图片质量较好)</span
-            >
-            <div class="factoryFilters">
-              <span>厂家自传产品资料(产品图片质量可能较差)</span>
-            </div>
-            <div class="myTotal">
-              <p>
-                总记录共
-                <span class="count">{{ totalCount }}</span
-                >条
-              </p>
-            </div>
-          </div>
-        </div> -->
-          <!-- <div class="more">更多筛选</div> -->
         <template v-if="!dataList || dataList.length === 0">
           <div class="zanwuchanpin"></div>
         </template>
         <template v-else>
-          <div>
-            <ul class="productList" v-show="!isDetail">
+          <div  v-show="!isDetail">
+            <ul class="productList">
               <li
                 class="productItems"
                 v-for="(item, i) in dataList"
@@ -85,7 +55,7 @@
                     >
                       <img
                         class="errorImg"
-                        src="~@/assets/images/暂无图片.png"
+                        src="~@/assets/images/imgError.jpg"
                         alt
                       />
                     </div>
@@ -96,7 +66,7 @@
                     >
                       <img
                         class="errorImg"
-                        src="~@/assets/images/图片加载失败.png"
+                        src="~@/assets/images/imgError.jpg"
                         alt
                       />
                     </div>
@@ -125,12 +95,6 @@
                 </div>
               </li>
             </ul>
-            <div class="productList" v-if="isDetail">
-              <productDetail
-                :number="datailNumber"
-                @changeIsDetail="changeIsDetail"
-              ></productDetail>
-            </div>
             <center
               style="margin:20px auto 0 auto;"
               v-show="!isDetail"
@@ -140,12 +104,19 @@
                 background
                 :total="totalCount"
                 :page-size="pageSize"
-                :page-sizes="[10, 20, 30, 60]"
+                :page-sizes="[6, 9, 15, 30]"
                 @current-change="changePage"
                 @size-change="handleSizeChange"
               ></el-pagination>
             </center>
           </div>
+          <div class="productDetail" v-if="isDetail">
+              <productDetail
+                :number="datailNumber"
+                :pid="$route.query.id"
+                @changeIsDetail="changeIsDetail"
+              ></productDetail>
+            </div>
         </template>
       </div>
     </div>
@@ -153,23 +124,38 @@
 </template>
 
 <script>
-import bsTop from '@/components/BsTop'
-// import productSearchTop from '@/components/productSearchTop'
-import productDetail from '@/components/productDetail'
+import productDetail from '@/components/offer/offerDetailPC'
 export default {
-  components: { bsTop, productDetail },
+  components: { productDetail },
   data () {
     return {
+      value: '',
+      productInfo: null,
       categoryNumber: null,
       isDateSort: false,
       isPriceSort: false,
       isDetail: false,
       datailNumber: null,
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 6,
       totalCount: 0,
       dataList: [],
-      categoryList: [],
+      categoryList: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
       defaultProps: {
         children: 'children',
         label: 'name',
@@ -208,32 +194,48 @@ export default {
     // 修改产品当前页
     changePage (page) {
       this.currentPage = page
-      this.getProduct()
+      this.getProductOfferDetailPage()
     },
     // 修改产品当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
-      this.getProduct()
+      this.getProductOfferDetailPage()
     },
     // 获取产品类目列表
     async getProductCategoryList () {
-      const res = await this.$http.post('/api/ProductCategoryList', {})
+      const res = await this.$http.post('/api/GetProductCategoryList', { offerNumber: this.$route.query.id })
       if (res.data.result.code === 200) {
         this.categoryList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
       }
     },
+    // 分类搜索产品
+    handleChange (value) {
+      // 重新搜索产品列表
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
+    },
+    // 获取报价头部信息
+    async getProductOfferByNumber () {
+      const res = await this.$http.post('/api/GetProductOfferByNumber', {
+        offerNumber: this.$route.query.id
+      })
+      if (res.data.result.code === 200) {
+        this.productInfo = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 获取报价信息产品列表
     async getProductOfferDetailPage (flag) {
-      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.categoryNumber }
+      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.value }
       for (const key in fd) {
         if (!fd[key]) delete fd[key]
       }
       const res = await this.$http.post('/api/ProductOfferDetailPage', fd)
-      console.log(res)
       if (res.data.result.code === 200) {
-        this.dataList = flag ? this.dataList.concat(res.data.result.item.items) : res.data.result.item.items
+        this.dataList = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
@@ -242,9 +244,15 @@ export default {
   },
   created () {
     this.getProductCategoryList()
+    this.getProductOfferByNumber()
     this.getProductOfferDetailPage()
   },
   mounted () {
+  },
+  watch: {
+    '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
+      if (val < 1024) this.$router.push('/offerSharing?id=' + this.$route.query.id)
+    }
   }
 }
 </script>
@@ -252,8 +260,42 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .productSearchIndex {
-  position: relative;
-  min-height: 757px;
+  .navBar {
+  background: linear-gradient(#fff, #e8e8e8, #e8e8e8, #c5c5c5);
+  .navBarTitle {
+    height: 50px;
+    display: flex;
+    width: 800px;
+    text-indent: 10px;
+    margin: 0 auto;
+    align-items: center;
+    .title{
+    position: relative;
+    font-weight: 600;
+     &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          height: 70%;
+          width: 4px;
+          background-color: #165af7;
+          transform: translate(0, -50%);
+          border-radius: 0 5px 5px 0;
+        }
+    }
+  }
+}
+.offerInfoContent{
+  width: 800px;
+  margin: 0 auto;
+  .offerCard{
+    margin: 10px 0;
+    p{
+      padding: 5px 0;
+    }
+  }
+}
   .searchTops {
     width: 100%;
     text-align: center;
@@ -265,12 +307,12 @@ export default {
     }
   }
   .searchWraps {
-    width: 1200px;
+    width: 800px;
     margin: 20px auto;
     box-sizing: border-box;
     display: flex;
     .searchSidebar {
-      width: 200px;
+      width: 150px;
       height: 100%;
       background-color: #e2f1ff;
       .treeContent {
@@ -282,11 +324,13 @@ export default {
         width: 100%;
         text-align: center;
         padding: 10px 0;
+        .titleText{
+          padding-left: 5px;
+        }
       }
     }
     .searchContent {
       flex: 1;
-      padding: 0 20px;
       font-weight: 500;
       font-size: 12px;
       .productFilter {
@@ -390,12 +434,22 @@ export default {
         }
       }
       .productList {
+        margin-left: 10px;
+        width: 650px;
+        box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
         font-size: 10px;
+        &::after{
+          content: "";
+          display: block;
+          width: 200px;
+        }
         .productItems {
-          width: 230px;
+          width: 200px;
           margin: 5px;
+          box-sizing: border-box;
           cursor: pointer;
           box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
           .img {

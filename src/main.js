@@ -48,5 +48,11 @@ new Vue({
   render: h => h(App),
   data: {
     eventHub: new Vue()
+  },
+  mounted () {
+    window.onresize = () => {
+      window.screenWidth = document.documentElement.clientWidth
+      this.$store.state.screenWidth = window.screenWidth
+    }
   }
 }).$mount('#app')

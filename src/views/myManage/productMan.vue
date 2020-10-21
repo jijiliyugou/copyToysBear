@@ -311,6 +311,7 @@ export default {
         number: null,
         price: null,
         img: '',
+        productNumber: '',
         ch_pa: null,
         fa_no: null,
         pr_le: null,
@@ -507,7 +508,6 @@ export default {
       for (const key in this.addProductForm) {
         this.addProductForm[key] = row[key]
       }
-      console.log(this.addProductForm, row)
       this.cateId = null
       this.addProductForm.id = row.id
       this.productDialogOptions.productDialogTitle = '编辑'
@@ -524,6 +524,7 @@ export default {
         img: '',
         price: null,
         number: null,
+        productNumber: null,
         ch_pa: null,
         fa_no: null,
         pr_le: null,

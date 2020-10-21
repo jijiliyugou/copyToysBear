@@ -67,7 +67,7 @@ export default {
     },
     // 获取报价信息
     async getProductOfferByNumber () {
-      const res = await this.$http.post('/api/GetProductOfferByNumber', { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.params.pid })
+      const res = await this.$http.post('/api/GetProductOfferByNumber', { offerNumber: this.$route.params.pid })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
       } else {

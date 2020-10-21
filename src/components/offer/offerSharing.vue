@@ -34,7 +34,7 @@
     <div class="floatSearch">
       <div class="categoryList">
         <div class="cates">
-          分类：<el-cascader
+          <!-- 分类：<el-cascader
             clearable
             :show-all-levels="false"
             placeholder="请输入分类"
@@ -53,7 +53,15 @@
             @visible-change="resetSelect"
             class="myCate"
             @change="handleChange"
-          ></el-cascader>
+          ></el-cascader> -->
+          分类：<el-select v-model="categoryNumber" @change="handleChange" placeholder="请输入或选择" clearable filterable>
+          <el-option
+            v-for="item in [{categoryName: '全部', categoryNumber: ''}, ...categoryList]"
+            :key="item.value"
+            :label="item.categoryName"
+            :value="item.categoryNumber">
+          </el-option>
+        </el-select>
         </div>
         <div class="total">总数：{{ totalCount }}</div>
       </div>
@@ -66,16 +74,10 @@
       </div>
     </div>
     <div class="productList">
-      <div class="listItems" v-if="totalCount > 1">
+      <div class="listItems" v-if="totalCount > 0">
         <el-card
           class="listItem"
-          v-for="(item, i) in [
-            ...productList,
-            ...productList,
-            ...productList,
-            ...productList,
-            ...productList,
-          ]"
+          v-for="(item, i) in productList"
           :key="i"
           @click.stop.native="productDetail(item.productNumber)"
         >
@@ -435,9 +437,9 @@ export default {
       // 重新搜索产品列表
       this.currentPage = 1
       this.getProductOfferDetailPage()
-      this.$refs.clearSelect.panel.activePath = []
-      this.$refs.clearSelect.panel.syncActivePath()
-      this.$refs.clearSelect.dropDownVisible = false
+      // this.$refs.clearSelect.panel.activePath = []
+      // this.$refs.clearSelect.panel.syncActivePath()
+      // this.$refs.clearSelect.dropDownVisible = false
     },
     resetSelect (flag) {
       if (flag && this.$refs.clearSelect.getCheckedNodes().length === 0) {
@@ -463,11 +465,10 @@ export default {
         item.style.padding = '10px 0px'
       }
     },
-    // 获取产品分类
+    // 获取产品类目列表
     async getProductCategoryList () {
-      const res = await this.$http.post('/api/ProductCategoryList', {})
+      const res = await this.$http.post('/api/GetProductCategoryList', { offerNumber: this.$route.query.id })
       if (res.data.result.code === 200) {
-        this.traverseCateList(res.data.result.item)
         this.categoryList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
@@ -527,7 +528,15 @@ export default {
       return this.$store.state.vueElementLoading || this.noMore
     }
   },
-  mounted () {}
+  mounted () {
+  },
+  watch: {
+    '$store.state.screenWidth' (val) {
+      if (val > 1024) {
+        this.$router.push('/offerSharingPC?id=' + this.$route.query.id)
+      }
+    }
+  }
 }
 </script>
 <style scoped lang='less'>

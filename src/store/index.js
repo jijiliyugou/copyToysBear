@@ -7,6 +7,7 @@ import globalJson from './Json.js'
 Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
+    screenWidth: document.documentElement.clientWidth, // 屏幕宽度
     wsOrderMsg: null,
     wsId: '',
     wsMsg: null,
