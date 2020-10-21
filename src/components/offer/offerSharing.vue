@@ -68,8 +68,8 @@
       <div class="listTitle">
         <span class="listTitleTXT">报价商品 ({{ totalCount }})</span>
         <div class="downloads">
-          <el-button type="primary" plain size="small">下载PDF</el-button>
-          <el-button type="primary" plain size="small">下载Excel</el-button>
+          <el-button type="primary" @click="downloadDocument('PDF')" plain size="small">下载PDF</el-button>
+          <el-button type="primary" @click="downloadDocument('Excel')" plain size="small">下载Excel</el-button>
         </div>
       </div>
     </div>
@@ -417,6 +417,10 @@ export default {
     }
   },
   methods: {
+    // 下载
+    downloadDocument (document) {
+      console.log('下载了' + document)
+    },
     // 下拉加载更多
     load () {
       this.currentPage++

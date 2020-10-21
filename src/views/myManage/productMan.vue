@@ -312,7 +312,10 @@ export default {
         price: null,
         img: '',
         productNumber: '',
+        companyNumber: '',
         ch_pa: null,
+        unit: null,
+        ma_nu: null,
         fa_no: null,
         pr_le: null,
         pr_wi: null,
@@ -505,6 +508,7 @@ export default {
     },
     // 打开编辑产品
     handleEdit (row) {
+      console.log(row)
       for (const key in this.addProductForm) {
         this.addProductForm[key] = row[key]
       }
@@ -525,8 +529,11 @@ export default {
         price: null,
         number: null,
         productNumber: null,
+        companyNumber: null,
         ch_pa: null,
+        unit: null,
         fa_no: null,
+        ma_nu: null,
         pr_le: null,
         pr_wi: null,
         pr_hi: null,

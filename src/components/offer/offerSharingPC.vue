@@ -34,20 +34,27 @@
         </el-select>
       </div>
       <div class="searchContent">
-        <div class="filterTitle">
+        <div class="filterTitle" v-show="!isDetail">
             <div class="keywrodSearch">
-              <el-input placeholder="请输入搜索内容" v-model="searchName" class="input-with-select">
-                <el-select v-model="selectSearchName" slot="prepend" placeholder="请选择">
-                  <el-option label="餐厅名" value="1"></el-option>
-                  <el-option label="订单号" value="2"></el-option>
-                  <el-option label="用户电话" value="3"></el-option>
-                </el-select>
-                <el-button slot="append" icon="el-icon-search"></el-button>
+              <el-input placeholder="请输入搜索内容" size="mini" @keyup.enter.native="search" v-model="keyword" class="input-with-select">
+                <el-button slot="append" size="mini" icon="el-icon-search" @click="search"></el-button>
               </el-input>
             </div>
+            <div class="sortSearch">
+              <el-button type="primary" plain size="mini" @click="priceSort">
+                价格排序
+                <i class="el-icon-arrow-down el-icon--right" v-show="!isPriceSort"></i>
+                <i class="el-icon-arrow-up el-icon--right" v-show="isPriceSort"></i>
+                </el-button>
+              <el-button type="primary" plain size="mini" @click="dateSort">
+                时间排序
+                <i class="el-icon-arrow-down el-icon--right" v-show="!isDateSort"></i>
+                <i class="el-icon-arrow-up el-icon--right" v-show="isDateSort"></i>
+                </el-button>
+            </div>
             <div class="downloads">
-              <el-button type="primary" plain size="small">下载PDF</el-button>
-              <el-button type="primary" plain size="small">下载Excel</el-button>
+              <el-button type="primary" @click="downloadDocument('PDF')" plain size="mini">下载PDF<i class="el-icon-download el-icon--right"></i></el-button>
+              <el-button type="primary" @click="downloadDocument('Excel')" plain size="mini">下载Excel<i class="el-icon-download el-icon--right"></i></el-button>
             </div>
           <!-- <div class="more">更多筛选</div> -->
         </div>
@@ -98,7 +105,7 @@
                   <ul>
                     <li>
                       <!-- 出厂货号：{{ item.fa_no }} -->
-                      货号：{{ item.fa_no }}
+                      产品货号：{{ item.fa_no }}
                     </li>
                     <li>
                       毛重/净重：{{
@@ -147,8 +154,7 @@ export default {
   data () {
     return {
       value: '',
-      searchName: '',
-      selectSearchName: '',
+      keyword: '',
       productInfo: null,
       categoryNumber: null,
       isDateSort: false,
@@ -183,18 +189,38 @@ export default {
     }
   },
   methods: {
+    // 下载
+    downloadDocument (document) {
+      console.log('下载了' + document)
+    },
+    // 关键字搜索
+    search () {
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
+    },
     // 价格排序
-    // priceSort () {
-    //   this.isPriceSort = !this.isPriceSort
-    //   // 数组排序
-    //   this.dataList.sort((a, b) => {
-    //     console.log(a, b)
-    //   })
-    // },
+    priceSort () {
+      // 数组排序
+      this.dataList.sort((a, b) => {
+        if (this.isPriceSort) {
+          return a.unitPrice - b.unitPrice
+        } else {
+          return b.unitPrice - a.unitPrice
+        }
+      })
+      this.isPriceSort = !this.isPriceSort
+    },
     // // 时间排序
-    // dateSort () {
-    //   this.isDateSort = !this.isDateSort
-    // },
+    dateSort () {
+      this.dataList.sort((a, b) => {
+        if (this.isDateSort) {
+          return Date.parse(a.createdOn) - Date.parse(b.createdOn)
+        } else {
+          return Date.parse(b.createdOn) - Date.parse(a.createdOn)
+        }
+      })
+      this.isDateSort = !this.isDateSort
+    },
     // 点击分类事件
     handleNodeClick (data) {
       this.categoryNumber = data.id
@@ -248,7 +274,7 @@ export default {
     },
     // 获取报价信息产品列表
     async getProductOfferDetailPage (flag) {
-      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.value }
+      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.value, keyword: this.keyword }
       for (const key in fd) {
         if (!fd[key]) delete fd[key]
       }
@@ -370,10 +396,20 @@ export default {
           justify-content: space-between;
           box-sizing: border-box;
           padding: 5px 0;
-          .keywrodSearch{
+          .keywrodSearch,.sortSearch,.downloads{
             flex: 1;
+            box-sizing: border-box;
+            margin-left: 20px;
+          }
+          .keywrodSearch{
+            flex: 0.8;
+            margin-left: 0;
+          }
+          .sortSearch{
+            margin-left: 25px;
           }
           .downloads{
+            margin-right: 0;
           }
         }
       .productList {
@@ -460,33 +496,5 @@ export default {
       }
     }
   }
-  // ::v-deep .el-tree {
-  //   background-color: transparent;
-  //   .el-tree-node:focus > .el-tree-node__content {
-  //     background-color: transparent;
-  //   }
-  //   .el-tree-node:hover > .el-tree-node__content {
-  //     background-color: transparent;
-  //   }
-  //   .el-tree-node__expand-icon.expanded {
-  //     -webkit-transform: rotate(0deg) !important;
-  //     transform: rotate(0deg) !important;
-  //   }
-  //   .el-icon-caret-right:before {
-  //     // 加号图片
-  //     content: "\e723" !important;
-  //     font-size: 16px;
-  //   }
-  //   .expanded:before {
-  //     // 减号图片
-  //     content: "\e722" !important;
-  //     font-size: 16px;
-  //   }
-  //   // 叶子类目不要图标
-  //   .is-leaf.el-tree-node__expand-icon.el-icon-caret-right:before {
-  //     content: "" !important;
-  //     font-size: 16px;
-  //   }
-  // }
 }
 </style>

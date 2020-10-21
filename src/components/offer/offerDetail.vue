@@ -92,7 +92,12 @@ export default {
     this.getProductOfferByNumber()
     this.getProductByNumber()
   },
-  mounted () {}
+  mounted () {},
+  watch: {
+    '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
+      if (val > 1024) this.$router.push('/offerSharingPC?id=' + this.$route.params.pid)
+    }
+  }
 }
 </script>
 <style scoped lang='less'>
