@@ -96,6 +96,16 @@
                     />
                   </div>
                 </el-image>
+                <i
+                  v-show="item.isFavorite"
+                    class="iconClient iconfont icon-wujiaoxing-"
+                    @click.stop="addCollect(item)"
+                  ></i>
+                  <i
+                  v-show="!item.isFavorite"
+                    class="iconClient iconfont icon-wujiaoxingkong"
+                    @click.stop="addCollect(item)"
+                  ></i>
               </div>
               <div class="title">产品名称：{{ item.name }}</div>
               <div class="details">
@@ -202,6 +212,21 @@ export default {
     }
   },
   methods: {
+    // 产品收藏
+    async addCollect (item) {
+      const res = await this.$http.post('/api/CreateProductCollection', {
+        productNumber: item.productNumber
+      })
+      if (res.data.result.code === 200) {
+        this.$message.closeAll()
+        if (item.isFavorite) {
+          this.$message.success('取消收藏成功')
+        } else {
+          this.$message.success('收藏成功')
+        }
+        item.isFavorite = !item.isFavorite
+      }
+    },
     handleNodeClick (data) {
       console.log(data)
     },
@@ -441,6 +466,14 @@ export default {
         .img {
           width: 100%;
           height: 150px;
+          position: relative;
+           .iconClient {
+              position: absolute;
+              right: 5px;
+              bottom: 5px;
+              color: #fb6055;
+              cursor: pointer;
+            }
           @{deep} .el-image {
             width: 100%;
             height: 150px;

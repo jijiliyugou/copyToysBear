@@ -6,6 +6,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
+          clearable
             size="mini"
             v-model="formInline.name"
             placeholder="输入关键字"
@@ -14,12 +15,15 @@
         </el-form-item>
         <el-form-item label="类目查询">
           <el-cascader
+          :show-all-levels="false"
+          filterable
           size="mini"
+          ref="cateRef"
           clearable
           style="width: 90%"
           v-model="formInline.categoryId"
-          @change="changeFormInlineCate"
-          :options="[{ name: '全部', id: null }, ...categoryList]" :props="{label: 'name',children: 'children', checkStrictly: true}">
+          @change="handleChange"
+          :options="[{ name: '全部', id: '' }, ...categoryList]" :props="{label: 'name',value: 'id',children: 'children',checkStrictly: true,emitPath: false}">
           </el-cascader>
         </el-form-item>
         <el-form-item label="时间段搜索">
@@ -164,9 +168,12 @@
         <el-form-item  label="产品分类：" prop="categoryNumber">
           <el-cascader
           clearable
+          filterable
+          ref="addCateRef"
+          :show-all-levels="false"
           v-model="addProductForm.categoryNumber"
           @change="changeCate"
-          :options="categoryList" :props="{label: 'name',children: 'children', checkStrictly: true}">
+          :options="categoryList" :props="{label: 'name',value: 'id',children: 'children',checkStrictly: true,emitPath: false}">
           </el-cascader>
         </el-form-item>
         <el-form-item label="单价：" class="productCu_de">
@@ -292,7 +299,7 @@ export default {
       pageSize: 10,
       productList: [],
       formInline: {
-        categoryId: null,
+        categoryId: '',
         // 查询角色表单
         name: '',
         state: null,
@@ -365,25 +372,33 @@ export default {
       },
       addProductRules: {
         name: [
-          { required: true, message: '请输入类目名称', trigger: 'blur' },
+          { required: true, message: '请输入产品名称', trigger: 'blur' },
           {
             min: 1,
             max: 20,
             message: '长度在 1 到 20 个字符',
             trigger: 'blur'
           }
+        ],
+        categoryNumber: [
+          { required: true, message: '请输选择类目', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     // 搜索级联选择
-    changeFormInlineCate () {
-      console.log(this.formInline)
+    handleChange (val) {
+      this.$refs.cateRef.panel.activePath = []
+      this.$refs.cateRef.panel.syncActivePath()
+      this.$refs.cateRef.dropDownVisible = false
     },
     // 级联选择
     changeCate (id) {
-      this.cateId = id[id.length - 1]
+      this.addProductForm.categoryName = this.$refs.addCateRef.getCheckedNodes()[0].label
+      this.$refs.addCateRef.panel.activePath = []
+      this.$refs.addCateRef.panel.syncActivePath()
+      this.$refs.addCateRef.dropDownVisible = false
     },
     // 上传产品图片
     async successUpload () {
@@ -404,12 +419,13 @@ export default {
     },
     // 递归分类
     traverseCateList (list) {
-      for (let i = 0; i < list.length; i++) {
-        list[i].value = JSON.stringify(list[i])
-        if (list[i].children && list[i].children.length === 0) {
-          delete list[i].children
-        } else {
-          this.traverseCateList(list[i].children)
+      if (list instanceof Array) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].children && list[i].children.length === 0) {
+            delete list[i].children
+          } else {
+            this.traverseCateList(list[i].children)
+          }
         }
       }
     },
@@ -443,12 +459,11 @@ export default {
     },
     // 获取产品列表
     async getProductList () {
-      console.log(this.formInline.categoryId && this.formInline.categoryId.length)
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         name: this.formInline.name,
-        categoryId: (this.formInline.categoryId && this.formInline.categoryId[0]) ? (this.formInline.categoryId && this.formInline.categoryId.length && JSON.parse(this.formInline.categoryId[this.formInline.categoryId.length - 1]).id) : null,
+        categoryId: this.formInline.categoryId,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
@@ -467,10 +482,6 @@ export default {
     },
     // 编辑产品
     async updateBearProduct () {
-      if (this.cateId) {
-        this.addProductForm.categoryName = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).name
-        this.addProductForm.categoryNumber = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).id
-      }
       const res = await this.$http.post(
         '/api/UpdateBearProduct',
         this.addProductForm
@@ -485,8 +496,6 @@ export default {
     },
     // 新增产品
     async createProduct () {
-      this.addProductForm.categoryName = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).name
-      this.addProductForm.categoryNumber = JSON.parse(this.addProductForm.categoryNumber[this.addProductForm.categoryNumber.length - 1]).id
       const res = await this.$http.post('/api/CreateBearProduct', this.addProductForm)
       if (res.data.result.code === 200) {
         this.$message.success('新增产品成功')
@@ -508,7 +517,6 @@ export default {
     },
     // 打开编辑产品
     handleEdit (row) {
-      console.log(row)
       for (const key in this.addProductForm) {
         this.addProductForm[key] = row[key]
       }
@@ -521,7 +529,7 @@ export default {
     openAdd () {
       this.addProductForm = {
         categoryName: '',
-        categoryNumber: [],
+        categoryNumber: '',
         supplierId: this.$store.state.currentComparnyId,
         supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
         name: '',
@@ -554,11 +562,15 @@ export default {
     },
     // 确认新增产品
     subAddProduct () {
-      if (this.productDialogOptions.productDialogTitle === '新增') {
-        this.createProduct()
-      } else {
-        this.updateBearProduct()
-      }
+      this.$refs.addProductRulesForm.validate((valid) => {
+        if (valid) {
+          if (this.productDialogOptions.productDialogTitle === '新增') {
+            this.createProduct()
+          } else {
+            this.updateBearProduct()
+          }
+        }
+      })
     },
     // 获取一年的时间
     /* 获取过去时间，并传值给现在时间 */

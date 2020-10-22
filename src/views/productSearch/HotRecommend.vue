@@ -98,7 +98,13 @@
                     </div>
                   </el-image>
                   <i
-                    class="iconClient iconfont icon--wujiaoxing"
+                  v-show="item.isFavorite"
+                    class="iconClient iconfont icon-wujiaoxing-"
+                    @click.stop="addCollect(item)"
+                  ></i>
+                  <i
+                  v-show="!item.isFavorite"
+                    class="iconClient iconfont icon-wujiaoxingkong"
                     @click.stop="addCollect(item)"
                   ></i>
                 </div>
@@ -229,7 +235,13 @@ export default {
         productNumber: item.productNumber
       })
       if (res.data.result.code === 200) {
-        this.$message.success('收藏成功')
+        this.$message.closeAll()
+        if (item.isFavorite) {
+          this.$message.success('取消收藏成功')
+        } else {
+          this.$message.success('收藏成功')
+        }
+        item.isFavorite = !item.isFavorite
       }
     },
     handleNodeClick (data) {

@@ -75,9 +75,9 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
 }
 @{deep} .el-loading-spinner .circular {
   width: 100px;

@@ -11,7 +11,7 @@
         <div class="swiperList">
           <el-image
             fit="contain"
-            :src="productDetail.imglist && productDetail.imglist[0].imgUrl"
+            :src="productDetail && productDetail.bearProduct && productDetail.bearProduct.imageUrl"
             :preview-src-list="
               productDetail.imglist &&
                 productDetail.imglist.map(
@@ -30,6 +30,16 @@
               />
             </div>
           </el-image>
+          <i
+                  v-show="productDetail.isFavorite"
+                    class="iconClient iconfont icon-wujiaoxing-"
+                    @click.stop="addCollect(productDetail)"
+                  ></i>
+                  <i
+                  v-show="!productDetail.isFavorite"
+                    class="iconClient iconfont icon-wujiaoxingkong"
+                    @click.stop="addCollect(productDetail)"
+                  ></i>
         </div>
       </div>
       <!-- 产品内容 -->
@@ -225,6 +235,21 @@ export default {
     }
   },
   methods: {
+    // 收藏
+    async addCollect (item) {
+      const res = await this.$http.post('/api/CreateProductCollection', {
+        productNumber: item.bearProduct.productNumber
+      })
+      if (res.data.result.code === 200) {
+        this.$message.closeAll()
+        if (item.isFavorite) {
+          this.$message.success('取消收藏成功')
+        } else {
+          this.$message.success('收藏成功')
+        }
+        item.isFavorite = !item.isFavorite
+      }
+    },
     async getProductByNumber () {
       const id = this.number
       const res = await this.$http.post('/api/BearProductByNumber', {
@@ -301,6 +326,15 @@ export default {
       height: 500px;
       border: 1px solid #ededed;
       cursor: pointer;
+      position:relative;
+      .iconClient {
+              position: absolute;
+              font-size: 30px;
+              right: 10px;
+              top: 10px;
+              color: #fb6055;
+              cursor: pointer;
+            }
       @{deep} .el-image {
         width: 100%;
         height: 100%;

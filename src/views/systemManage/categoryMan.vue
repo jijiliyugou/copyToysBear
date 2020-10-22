@@ -338,4 +338,7 @@ export default {
     float: right;
   }
 }
+.tableContent{
+  padding-bottom: 20px;
+}
 </style>

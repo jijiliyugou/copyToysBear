@@ -426,17 +426,6 @@ export default {
       this.currentPage++
       this.getProductOfferDetailPage(true)
     },
-    // 递归分类
-    traverseCateList (list) {
-      for (let i = 0; i < list.length; i++) {
-        list[i].value = JSON.stringify(list[i])
-        if (list[i].children && list[i].children.length === 0) {
-          delete list[i].children
-        } else {
-          this.traverseCateList(list[i].children)
-        }
-      }
-    },
     handleChange (value) {
       // 重新搜索产品列表
       this.currentPage = 1

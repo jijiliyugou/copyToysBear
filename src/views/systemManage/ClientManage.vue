@@ -207,6 +207,7 @@
     <el-dialog
       :title="dialogTitle"
       :visible.sync="clientDialog"
+      v-if="clientDialog"
       top="0px"
       class="addClientDialog"
       width="50%"
@@ -1390,6 +1391,7 @@ export default {
     // 打开新增客户面板
     openAddClient () {
       this.clientDialog = true
+      this.isShowLoading = false
       this.dialogTitle = '新增客户'
       this.editImages = []
       this.addClientForm = {
@@ -1461,7 +1463,6 @@ export default {
     },
     // 提交新增用户
     async addClient () {
-      this.isShowLoading = true
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200 && imgRes.data.result.object[0]) {
         this.addClientForm.companyLogo = imgRes.data.result.object[0].filePath
@@ -1470,6 +1471,7 @@ export default {
       }
       this.$refs.ClientForm.validate(async (valid) => {
         if (valid) {
+          this.isShowLoading = true
           this.andClientIcon = 'el-icon-loading'
           const res = await this.$http.post(
             '/api/CreateOrgCompany',
@@ -1638,6 +1640,7 @@ export default {
     // 打开编辑客户列表
     openEdit (row) {
       console.log(row)
+      this.isShowLoading = false
       this.clientDialog = true
       this.editImages = []
       this.dialogTitle = '用户编辑'
@@ -1653,8 +1656,6 @@ export default {
     },
     // 编辑客户列表
     async handlerEdit () {
-      this.isShowLoading = true
-      console.log(123)
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200 && imgRes.data.result.object[0]) {
         this.addClientForm.companyLogo = imgRes.data.result.object[0]
@@ -1664,6 +1665,7 @@ export default {
       console.log(this.addClientForm)
       this.$refs.ClientForm.validate(async (valid) => {
         if (valid) {
+          this.isShowLoading = true
           this.andClientIcon = 'el-icon-loading'
           const res = await this.$http.post(
             '/api/UpdateOrgCompany',

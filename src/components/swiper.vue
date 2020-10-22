@@ -25,7 +25,7 @@
           <div class="item-content">
             <p class="item-title">产品名称：{{ item.name }}</p>
             <div class="item-detail line-2">
-              产品编号：{{ item.number }}
+              产品货号：{{ item.fa_no }}
             </div>
             <p class="item-price">
               价格：
