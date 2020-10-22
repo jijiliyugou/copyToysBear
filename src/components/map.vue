@@ -39,11 +39,11 @@ export default {
         var map = new BMap.Map('allmap') // 创建Map实例
         // 创建地址解析器实例
         var geoc = new BMap.Geocoder()
-        var myCity = _that.addr.address ? (_that.addr.address.split('市')[0] + '市') : '汕头市'
-        geoc.getPoint(
-          _that.addr.address || '汕头市',
+        var myCity = _that.addr.address ? ((_that.addr.address.split('市')[0] + '市').split('省')[1]) : '汕头市'
+        //  ||
+        geoc.getPoint(_that.addr.address,
           function (point) {
-            console.log(point)
+            console.log(point, myCity)
             if (point) {
               map.centerAndZoom(point, 17)
               map.addOverlay(new BMap.Marker(point))
@@ -76,13 +76,14 @@ export default {
               geoc.getLocation(point, function (re) {
                 var cityObj = re.addressComponents
                 console.log(123, cityObj.city)
-                map.setCurrentCity(cityObj.city || '汕头市') // 设置地图显示的城市 此项是必须设置的
+                map.setCurrentCity(cityObj.city || myCity) // 设置地图显示的城市 此项是必须设置的
               })
               map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
               window.openMap = function () {
                 // _that.showNav = true
                 // document.getElementById('viewDiv').innerHTML = '<object type="text/html" codebase="https" data=' + 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=' + _that.addr.companyName + ' width="100%" height="102%"></object>'
-                _that.mapAttr = 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=' + _that.addr.companyName
+                // _that.mapAttr = 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=webapp.baidu.openAPIdemo'
+                _that.mapAttr = 'http://api.map.baidu.com/geocoder?address=' + _that.addr.address + '&output=html&src=webapp.baidu.openAPIdemo'
                 window.open(_that.mapAttr)
               }
               var content =
