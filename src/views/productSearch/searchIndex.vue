@@ -334,6 +334,7 @@ export default {
       this.isDetail = false
       this.dataList = this.$store.state.imageSearchValue
       this.totalCount = this.dataList.length
+      this.$store.commit('updateAppLoading', false)
       this.$store.commit('clearSearch')
     } else {
       this.getProduct()

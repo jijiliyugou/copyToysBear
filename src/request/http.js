@@ -45,6 +45,7 @@ myAxios.install = function (Vue) {
     config => {
       // 配置不需要loading的请求
       if (
+        !config.url.includes('ProductCategoryList') &&
         !config.url.includes('MessageUploadFile') &&
         !config.url.includes('GetInstantMessageByNumber') &&
         !config.url.includes('GetHotWord') &&
