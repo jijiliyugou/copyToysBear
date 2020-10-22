@@ -68,7 +68,6 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productDetail = res.data.result.item.bearProduct
-        console.log(this.productDetail)
         this.imagesList = res.data.result.item.imglist.map(val => val && (val.imgUrl.replace(/_MiddlePic/, '_Photo')))
       } else {
         this.$message.error(res.data.result.msg)
