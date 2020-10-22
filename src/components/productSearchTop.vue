@@ -206,6 +206,10 @@ export default {
       this.$root.eventHub.$emit('toSearchIndex')
       this.$router.push({ path: '/searchIndex' })
     },
+    toHotRecommend () {
+      this.$root.eventHub.$emit('toHotRecommend')
+      this.$router.push({ path: '/toHotRecommend' })
+    },
     // 图片搜索时太慢，显示loading
     showLoading () {
       this.$store.commit('updateAppLoading', true)

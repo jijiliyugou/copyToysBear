@@ -295,8 +295,12 @@ export default {
     },
     // 显示产品详情
     productDetail (productNumber) {
-      this.isDetail = true // 打开详情页
-      this.datailNumber = productNumber
+      if (productNumber) {
+        this.isDetail = true // 打开详情页
+        this.datailNumber = productNumber
+      } else {
+        this.$message.error('该产品没有productNumber')
+      }
     },
     // 回退事件
     changeIsDetail (val) {

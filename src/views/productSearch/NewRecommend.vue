@@ -6,20 +6,24 @@
       <!-- 搜索头部 -->
     <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
-        <el-form-item label="货物编号">
-          <el-input
-            v-model="searchForm.code"
-            placeholder="输入货物编号"
-            style="width: 90%;"
-          ></el-input>
-        </el-form-item>
-
         <el-form-item label="关键字查询">
           <el-input
-            v-model="searchForm.keyWord"
+            v-model="searchForm.keyword"
             placeholder="输入关键字"
             style="width: 90%;"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="时间段搜索">
+          <el-date-picker
+            v-model="searchForm.dateTile"
+            value-format="yyyy-MM-ddTHH:mm:ss"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="—"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="right"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" @click="search">查询</el-button>
@@ -136,21 +140,72 @@ export default {
       },
       editNewProdTitle: '新增新品推荐',
       showEditNewProd: false,
-      searchForm: {},
+      searchForm: {
+        dateTile: null,
+        keyword: ''
+      },
       currentPage: 1,
       pageSize: 10,
       totalCount: 100,
-      dataList: []
+      dataList: [],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
+      }
     }
   },
   methods: {
+    // 删除
+    handleDelete (index, row) {
+      console.log(index, row)
+    },
+    // 审核
+    handleShenhe (row) {
+      console.log(row)
+    },
     // 获取新品推荐
     async getNewArrivalsPage () {
-      const res = await this.$http.post('/api/GetNewArrivalsPage', {
+      const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
-        AuditStatus: 0
-      })
+        AuditStatus: 0,
+        keyword: this.searchForm.keyword,
+        startTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
+        endTime: this.searchForm.dateTile && this.searchForm.dateTile[1]
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
+      }
+      const res = await this.$http.post('/api/GetNewArrivalsPage', fd)
       if (res.data.result.code === 200) {
         this.dataList = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
@@ -184,16 +239,15 @@ export default {
     },
     // 查询
     search () {
-      console.log(this.searchForm)
+      this.currentPage = 1
+      this.getNewArrivalsPage()
     },
     handleEdit (row) {
+      this.editNewProdTitle = '编辑新品推荐'
       // console.log(row.exhibitionName,row.productNumber);
       this.editNewProd.arrivalsName = row.exhibitionName
       this.editNewProd.productData = row.productNumber
       this.showEditNewProd = true
-    },
-    handleDelete (index, row) {
-      console.log(index, row)
     },
     // 修改当前页
     currentChange (page) {

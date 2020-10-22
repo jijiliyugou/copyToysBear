@@ -253,8 +253,12 @@ export default {
     },
     // 显示产品详情
     productDetail (productNumber) {
-      this.isDetail = true // 打开详情页
-      this.datailNumber = productNumber
+      if (productNumber) {
+        this.isDetail = true // 打开详情页
+        this.datailNumber = productNumber
+      } else {
+        this.$message.error('该产品没有productNumber')
+      }
     },
     successUpload (response, file, fileList) {
       this.$store.commit('searchValues', response)
@@ -341,14 +345,14 @@ export default {
     } else {
       this.getProduct()
     }
-    this.$root.eventHub.$on('toSearchIndex', () => {
-      this.currentPage = 1
-      this.pageSize = 60
-      this.totalCount = 0
-      this.dataList = []
-      this.search = this.$store.state.searchValue
-      this.getProduct(true)
-    })
+    // this.$root.eventHub.$on('toSearchIndex', () => {
+    //   this.currentPage = 1
+    //   this.pageSize = 60
+    //   this.totalCount = 0
+    //   this.dataList = []
+    //   this.search = this.$store.state.searchValue
+    //   this.getProduct(true)
+    // })
     if (this.$route.query.id) {
       this.productDetail(this.$route.query.id)
     }

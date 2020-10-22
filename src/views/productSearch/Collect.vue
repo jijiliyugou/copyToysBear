@@ -4,35 +4,25 @@
     <div style="width:1200px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="货物编号">
-          <el-input
-            v-model="formInline.code"
-            placeholder="输入货物编号"
-            style="width: 70%;"
-          ></el-input>
-        </el-form-item>
-
         <el-form-item label="关键字查询">
           <el-input
-            v-model="formInline.keyWord"
+          clearable
+            v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%;"
           ></el-input>
         </el-form-item>
-
-        <el-form-item label="来源查询">
-          <el-select
-            v-model="formInline.source"
-            placeholder="请选择"
-            style="width: 90%;"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+        <el-form-item label="时间段搜索">
+          <el-date-picker
+            v-model="formInline.dateTile"
+            value-format="yyyy-MM-ddTHH:mm:ss"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="—"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="right"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" @click="search">查询</el-button>
@@ -170,43 +160,66 @@ export default {
       pageSize: 10,
       currentPage: 1,
       formInline: {
-        keyWord: '',
-        code: '',
-        source: ''
+        keyword: '',
+        dateTile: null
       },
-      options: [
-        {
-          value: '选项1',
-          label: '展厅'
-        },
-        {
-          value: '选项2',
-          label: '公司'
-        },
-        {
-          value: '选项3',
-          label: '供应商'
-        }
-      ],
-      tableData: []
+      tableData: [],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick (picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
+      }
     }
   },
   methods: {
     async getCollectList () {
-      const res = await this.$http.post('/api/ProductCollectionPage', {
+      const fd = {
         skipCount: this.currentPage,
-        maxResultCount: this.pageSize
-      })
+        maxResultCount: this.pageSize,
+        keyword: this.formInline.keyword,
+        startTime: this.formInline.dateTile && this.formInline.dateTile[0],
+        endTime: this.formInline.dateTile && this.formInline.dateTile[1]
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
+      }
+      const res = await this.$http.post('/api/ProductCollectionPage', fd)
       if (res.data.result.code === 200) {
         this.totalCount = res.data.result.item.totalCount
         this.tableData = res.data.result.item.items
       }
     },
-    search () {},
-    addData () {},
-    // 禁选
-    disableSelect (row, i) {
-      return row.isOpen
+    search () {
+      this.currentPage = 1
+      this.getCollectList()
     },
     // 导出
     batchExport () {
@@ -227,6 +240,7 @@ export default {
         this.getCollectList()
       }
     },
+    // 删除收藏
     async handleDelete (row) {
       const res = await this.$http.post('/api/CreateProductCollection', {
         productNumber: row.productNumber
