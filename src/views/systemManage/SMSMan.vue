@@ -172,7 +172,7 @@ export default {
   }
 }
 .tableContent {
-  padding: 20px 0;
+  padding-bottom: 20px;
   box-sizing: border-box;
 }
 </style>
