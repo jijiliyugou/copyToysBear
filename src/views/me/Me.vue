@@ -412,6 +412,7 @@ export default {
     },
     // 打开添加员工
     openAddEmploee (code, row) {
+      console.log(row)
       this.editImages = []
       if (row) {
         this.isEdit = true
@@ -419,7 +420,7 @@ export default {
         for (const key in this.addEmployeeForm) {
           this.addEmployeeForm[key] = row[key]
         }
-        this.editImages[0] = { url: row.userImage }
+        row.userImage && (this.editImages[0] = { url: row.userImage })
         this.addEmployeeForm.id = row.id
         this.addEmployeeDialog = true
       } else {
@@ -465,21 +466,6 @@ export default {
               this.addEmployeeForm
             )
             if (res.data.result.code === 200) {
-              this.addEmployeeForm = {
-                // 编辑员工表单
-                personnelNo: null,
-                phoneNumber: '',
-                password: '',
-                sex: 1,
-                isMain: false,
-                enabled: false,
-                remark: '',
-                birthday: '',
-                userImage: '',
-                linkman: null,
-                CompanyId: null,
-                newPassword: null // 编辑时的密码
-              }
               this.addEmployeeDialog = false
               this.$message.success(this.employeeTitle + '成功')
               this.getCurrentDate()
@@ -501,21 +487,6 @@ export default {
               this.addEmployeeForm
             )
             if (res.data.result.code === 200) {
-              this.addEmployeeForm = {
-                // 新增员工表单
-                personnelNo: null,
-                phoneNumber: '',
-                password: '',
-                sex: 1,
-                isMain: false,
-                enabled: false,
-                remark: '',
-                birthday: '',
-                userImage: '',
-                linkman: null,
-                CompanyId: null,
-                newPassword: null // 编辑时的密码
-              }
               this.addEmployeeDialog = false
               this.$message.success('新增员工成功')
               this.getCurrentDate()
