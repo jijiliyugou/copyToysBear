@@ -68,7 +68,7 @@
         <el-table-column prop="message" label="错误信息"></el-table-column>
         <el-table-column prop="state" label="处理状态" width="80">
           <template slot-scope="scope">
-           <el-tag :type="scope.row.state?'success':'danger'" effect="dark">{{scope.row.state?'已处理':'未处理'}}</el-tag>
+           <el-tag :type="scope.row.state?'success':'danger'">{{scope.row.state?'已处理':'未处理'}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
