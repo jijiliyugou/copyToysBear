@@ -395,7 +395,7 @@ export default {
     },
     // 级联选择
     changeCate (id) {
-      this.addProductForm.categoryName = this.$refs.addCateRef.getCheckedNodes()[0].label
+      id && (this.addProductForm.categoryName = this.$refs.addCateRef.getCheckedNodes()[0].label)
       this.$refs.addCateRef.panel.activePath = []
       this.$refs.addCateRef.panel.syncActivePath()
       this.$refs.addCateRef.dropDownVisible = false

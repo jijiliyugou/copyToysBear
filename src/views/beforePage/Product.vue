@@ -243,7 +243,7 @@ export default {
     // 获取产品列表
     // 默认搜索产品
     async getProductList (search) {
-      this.$store.commit('updateLoading', true)
+      // this.$store.commit('updateLoading', true)
       try {
         const res = await this.$http.post('/api/SearchBearProductPage', {
           [this.name]: search,
@@ -253,16 +253,16 @@ export default {
         if (res.data.result.code === 200 && res.data.result.item) {
           this.productList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
-          this.$store.commit('updateLoading', false)
+          // this.$store.commit('updateLoading', false)
         } else {
           this.totalCount = 0
           this.productList = []
-          this.$store.commit('updateLoading', false)
-          this.$message.error(res.data.result.msg)
+          // this.$store.commit('updateLoading', false)
+          this.$message.error(res.data.result.msg + '，请登录后查看')
         }
         $('#app').animate({ scrollTop: 0 }) // 滚到顶部
       } catch (error) {
-        this.$store.commit('updateLoading', false)
+        // this.$store.commit('updateLoading', false)
         this.totalCount = 0
       }
     },
