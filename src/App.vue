@@ -71,15 +71,12 @@ export default {
   display: none;
 }
 #app {
-  overflow: auto;
   height: 100%;
-  box-sizing: border-box;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
   position: relative;
-  .appViews {
-    max-width: 1200px;
-    margin: 0 auto;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 @{deep} .el-loading-spinner .circular {
