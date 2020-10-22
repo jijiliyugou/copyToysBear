@@ -77,7 +77,8 @@
       <div class="employeeManage" v-if="meInfo">
         <p class="title">员工管理</p>
         <div class="employList">
-          <li class="listItem" v-for="item in meInfo.personnels" :key="item.id">
+          <li class="listItem" v-for="(item, i) in meInfo.personnels" :key="i">
+          <!-- <li class="listItem" v-for="item in meInfo.personnels" :key="item.id"> -->
             <!-- <el-avatar
               style="backgroundColor:#165af7;color:white;"
               @click.native="openAddEmploee(1, item)"
