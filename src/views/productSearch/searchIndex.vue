@@ -395,7 +395,7 @@ export default {
       height: 100%;
       background-color: #e2f1ff;
       .treeContent {
-        min-height: 580px;
+        min-height: 400px;
         padding: 10px;
       }
       .title {
