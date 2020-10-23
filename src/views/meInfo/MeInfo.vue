@@ -1298,6 +1298,7 @@
             <el-input
               class="searchInput"
               prefix-icon="iconfont icon-sousuo"
+              clearable
               v-model="searchCompanyName"
               placeholder="请输入公司名称进行搜索"
               @keyup.enter.native="searchCompanyList"
@@ -1737,7 +1738,7 @@
                 </span>
               </div>
             </el-upload>
-            <el-dialog :visible.sync="dialogVisibleImg">
+            <el-dialog :visible.sync="dialogVisibleImg" destroy-on-close>
               <img
                 v-if="dialogVisibleImg"
                 width="100%"
@@ -2243,7 +2244,7 @@
       </li>
     </div>
     <!-- 打标签 -->
-    <el-dialog title="新增标签" :visible.sync="dialogAddTag" width="400px">
+    <el-dialog title="新增标签" :visible.sync="dialogAddTag" destroy-on-close width="400px">
       <el-form label-position="left" label-width="80px">
         <el-form-item label="标签内容">
           <el-input
@@ -2364,6 +2365,7 @@
     <el-dialog
       title="选择收信人"
       :visible.sync="selectPush"
+      destroy-on-close
       width="30%"
       top="50px"
     >
@@ -2425,6 +2427,7 @@
       title="定位"
       :visible.sync="companyAddrMapDialog"
       v-if="companyAddrMapDialog"
+      destroy-on-close
       width="50%">
       <div class="companyAddrMapBox" v-if="companyAddr">
         <BMapComponent :addr="companyAddr"></BMapComponent>

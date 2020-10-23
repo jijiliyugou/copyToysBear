@@ -7,6 +7,7 @@
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="关键字查询">
          <el-input
+         clearable
               @keyup.enter.native="search"
               v-model="searchForm.keyword"
               placeholder="输入关键字"
@@ -91,7 +92,7 @@
     </div>
     </div>
     <!-- 新增编辑版本 -->
-    <el-dialog :title="versionTitle" :visible.sync="versionDialog" width="50%">
+    <el-dialog :title="versionTitle" :visible.sync="versionDialog" destroy-on-close width="50%">
       <el-form
         ref="addVersionForm"
         label-width="100px"

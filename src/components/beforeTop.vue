@@ -45,13 +45,13 @@
           <img class="logo" src="~@/assets/images/logo.png" alt />
         </div>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="12">
         <div class="grid-content bg-purple-light grid-content-top">
           <div class="top-center">
             <el-input
               placeholder="查询云平台产品，支持图片搜索"
+              clearable
               class="input-with-select elInput"
-              style="width:400px;"
               v-model="$store.state.beforeSearch.value"
               @keyup.enter.native="toProductSearch"
             >
@@ -75,7 +75,7 @@
               />
             </i>
             <el-button
-              style="backgroundColor:#165af7;color:#fff;border:none;border-radius: 0;"
+            class="subSearch"
               @click="toProductSearch"
               icon="el-icon-search"
               >搜索</el-button
@@ -83,7 +83,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="6">
         <div class="grid-content bg-purple grid-content-top erwemas">
           <div class="erwema">
             <img src="~@/assets/images/xiazaiApp.png" alt />
@@ -103,7 +103,7 @@
       </ul>
     </div>
     <!-- vueCropper 剪裁图片实现-->
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" append-to-body>
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
       <div class="cropper-content">
         <div class="cropper" style="text-align:center">
           <vueCropper
@@ -428,24 +428,42 @@ export default {
     width: 110px;
     height: 110px;
   }
+  @{deep} input.el-input--suffix, @{deep} input.el-input__inner {
+      border: none;
+    }
   .top-center {
     border-radius: 50px;
     border: 1px solid #ccc;
     overflow: hidden;
     height: 40px;
+    width:100%;
     display: flex;
-    @{deep} input.el-input__inner {
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+    /deep/ .el-input-group__append, /deep/ .el-input-group__prepend, /deep/ .el-input {
       border: none;
     }
-    text-align: center;
-    margin: 30px 0;
-    position: relative;
+    @{deep} .elInput{
+      border:none;
+      flex:1;
+    }
+    .subSearch{
+      background-color:#165af7;
+      color:#fff;
+      border:none;
+      border-radius: 0;
+      width:100px;
+      display:flex;
+      height:100%;
+      justify-content: center;
+      align-items: center;
+    }
     .myCamera {
-      position: absolute;
-      right: 100px;
-      top: 0;
-
+      border:none;
+      margin-right: 10px;
       font-size: 24px;
+      position: relative;
       .fileInput {
         position: absolute;
         left: 0;

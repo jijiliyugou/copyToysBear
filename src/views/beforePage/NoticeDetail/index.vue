@@ -72,7 +72,7 @@
             </template>
           </el-carousel>
         </div>
-        <el-dialog :visible.sync="dialogImgUpload">
+        <el-dialog :visible.sync="dialogImgUpload" destroy-on-close>
           <img width="100%" :src="imgUrl" alt />
         </el-dialog>
         <!-- 小幻灯片 -->

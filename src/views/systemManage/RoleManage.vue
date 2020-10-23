@@ -7,6 +7,7 @@
         <el-form-item label="关键字查询">
           <el-input
             v-model="searchForm.keyWord"
+            clearable
             placeholder="输入关键字"
             style="width: 90%;"
             size="mini"
@@ -15,6 +16,7 @@
         <el-form-item label="状态搜索">
           <el-select
             v-model="searchForm.state"
+            clearable
             placeholder="请选择"
             size="mini"
             style="width: 90%;"
@@ -110,6 +112,7 @@
     <el-dialog
       :title="roleDialogOptions.roleDialogTitle"
       :visible.sync="roleDialogOptions.openRoleDialog"
+      destroy-on-close
       width="50%"
     >
       <el-form

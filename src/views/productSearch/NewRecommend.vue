@@ -9,6 +9,7 @@
         <el-form-item label="关键字查询">
           <el-input
             v-model="searchForm.keyword"
+            clearable
             placeholder="输入关键字"
             style="width: 90%;"
           ></el-input>
@@ -100,6 +101,7 @@
     <!-- 授权dialog -->
     <el-dialog
       :title="editNewProdTitle"
+      destroy-on-close
       :visible.sync="showEditNewProd"
       width="30%"
     >

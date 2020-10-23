@@ -9,14 +9,7 @@
             v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%;"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="单号编号输入">
-          <el-input
-            @keyup.enter.native="search"
-            v-model="formInline.orderNumber"
-            placeholder="输入单号编号"
-            style="width: 90%;"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="时间段查询">
@@ -132,7 +125,6 @@ export default {
       totalPage: null,
       formInline: {
         keyword: null,
-        orderCode: null,
         dateTile: null
       },
       tableData: [],
@@ -174,7 +166,6 @@ export default {
     async getOrderManList () {
       const fd = {
         keyword: this.formInline.keyword,
-        orderNumber: this.formInline.orderNumber,
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],

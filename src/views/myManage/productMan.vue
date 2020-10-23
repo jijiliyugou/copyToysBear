@@ -122,7 +122,7 @@
     <el-dialog
       :title="productDialogOptions.productDialogTitle + '产品'"
       :visible.sync="productDialogOptions.openProductDialog"
-      v-if="productDialogOptions.openProductDialog"
+      destroy-on-close
       class="productDialog"
     >
       <el-form
@@ -152,7 +152,7 @@
             >
               <i class="el-icon-plus"></i>
             </el-upload>
-            <el-dialog :visible.sync="dialogUpload" :modal="false">
+            <el-dialog :visible.sync="dialogUpload" destroy-on-close :modal="false">
               <img width="100%" :src="LogoUrl" alt />
             </el-dialog>
         </el-form-item> -->

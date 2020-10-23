@@ -149,7 +149,7 @@
       </center>
     </ul>
     <!-- 评论 -->
-    <el-dialog :title="pinglunTitle" :visible.sync="dialogPinglun" width="30%">
+    <el-dialog :title="pinglunTitle" :visible.sync="dialogPinglun" destroy-on-close width="30%">
       <el-form label-position="left" label-width="80px">
         <el-form-item label="评论内容">
           <el-input v-model="pinglunValue" autocomplete="off"></el-input>
@@ -161,7 +161,7 @@
       </span>
     </el-dialog>
     <!-- 举报 -->
-    <el-dialog title="举报" :visible.sync="dialogjubao" width="30%">
+    <el-dialog title="举报" :visible.sync="dialogjubao" destroy-on-close width="30%">
       <ul class="selectJubaoInfo">
         <li
           v-for="(item, i) in ['政治敏感', '欺诈骗钱', '其他']"

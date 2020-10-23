@@ -8,6 +8,7 @@
           <el-select
             v-model="searchForm.reportType"
             placeholder="请选择"
+            clearable
             style="width: 90%;"
           >
             <el-option
@@ -24,6 +25,7 @@
         </el-form-item>
         <el-form-item label="审核状态搜索">
           <el-select
+          clearable
             v-model="searchForm.state"
             placeholder="请选择"
             style="width: 90%;"
@@ -164,7 +166,7 @@
     </div>
     </div>
     <!-- 审核 -->
-    <el-dialog title="审核" :visible.sync="shenheDialog" width="50%">
+    <el-dialog title="审核" :visible.sync="shenheDialog" destroy-on-close width="50%">
       <el-form ref="shenheForm" label-width="100px" :model="shenheFormData">
         <el-form-item>
           <el-avatar

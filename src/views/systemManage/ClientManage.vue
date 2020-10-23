@@ -6,10 +6,11 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="关键字查询" size="mini">
             <el-input
+            clearable
               @keyup.enter.native="search"
               v-model="formInline.CompanyName"
               placeholder="输入关键字"
-              style="width: 90%"
+              style="width: 100%"
             ></el-input>
           </el-form-item>
           <el-form-item label="类型查询" size="mini">
@@ -203,11 +204,12 @@
       </center>
     </div>
     </div>
+      <!-- :close-on-click-modal="false" -->
     <!-- 新增编辑审核客户dialog -->
     <el-dialog
       :title="dialogTitle"
       :visible.sync="clientDialog"
-      v-if="clientDialog"
+      destroy-on-close
       top="0px"
       class="addClientDialog"
       width="50%"
@@ -305,7 +307,7 @@
           >
             <i class="el-icon-plus"></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogUpload" :modal="false">
+          <el-dialog :visible.sync="dialogUpload" destroy-on-close :modal="false">
             <img width="100%" :src="companyLogoUrl" alt />
           </el-dialog>
         </el-form-item>
@@ -469,6 +471,7 @@
     <el-dialog
       :title="UserManConfig.title"
       :visible.sync="UserManConfig.userManDialog"
+      destroy-on-close
       width="70%"
     >
       <el-table
@@ -542,6 +545,7 @@
     <el-dialog
       :title="authDialogConfig.title"
       :visible.sync="authDialogConfig.show"
+      destroy-on-close
       width="30%"
     >
       <el-form label-width="100px" :model="authForm">
@@ -619,6 +623,7 @@
         width="50%"
         top="50px"
         :title="employeeMan.employeeTitle"
+        destroy-on-close
         :visible.sync="innerVisible"
         append-to-body
       >
@@ -641,7 +646,7 @@
             >
               <i class="el-icon-plus"></i>
             </el-upload>
-            <el-dialog :visible.sync="dialogUpload" :modal="false">
+            <el-dialog :visible.sync="dialogUpload" destroy-on-close :modal="false">
               <img width="100%" :src="LogoUrl" alt />
             </el-dialog>
           </el-form-item>
@@ -833,6 +838,7 @@
       <!-- 嵌套员工关联dialog -->
       <el-dialog
         :title="relatedConfig.title"
+        destroy-on-close
         :visible.sync="relatedConfig.relatedDialog"
         width="70%"
         append-to-body

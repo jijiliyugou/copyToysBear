@@ -7,6 +7,7 @@
         <el-form-item label="关键字查询">
           <el-input
             v-model="formInline.ItemText"
+            clearable
             placeholder="输入关键字"
             style="width: 90%;"
           ></el-input>
@@ -85,6 +86,7 @@
     <el-dialog
       :title="systemDialogTitle"
       :visible.sync="systemDialog"
+      destroy-on-close
       width="50%"
     >
       <el-tabs v-model="addType" type="card">

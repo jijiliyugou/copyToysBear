@@ -5,6 +5,7 @@
         class="searchInput"
         prefix-icon="iconfont icon-sousuo"
         v-model="search"
+        clearable
         placeholder="搜索"
       ></el-input>
     </div>

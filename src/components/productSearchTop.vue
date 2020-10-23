@@ -28,6 +28,7 @@
           :on-progress="showLoading"
           :on-change="changeUpload"
         >
+        <i @click.stop.prevent="clearSearch" v-show="$store.state.searchValue" class="el-input__icon el-icon-circle-close el-input__clear"></i>
           <i class="el-input__icon el-icon-camera-solid myCamera"></i>
         </el-upload>
       </el-input>
@@ -43,7 +44,7 @@
       >
     </div>
     <!-- vueCropper 剪裁图片实现-->
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" append-to-body>
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
       <div class="cropper-content">
         <div class="cropper" style="text-align:center">
           <vueCropper
@@ -129,6 +130,10 @@ export default {
   computed: {
   },
   methods: {
+    // 清空搜索框
+    clearSearch () {
+      this.$store.commit('searchTxtValues', null)
+    },
     // 确定裁剪图片
     onCubeImg () {
       console.log(this.fileinfo)
@@ -238,6 +243,9 @@ export default {
     color: black;
     font-size: 22px;
     cursor: pointer;
+  }
+  .el-input__clear{
+    vertical-align: top;
   }
 }
 // 截图

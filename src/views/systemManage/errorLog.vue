@@ -8,6 +8,7 @@
         <el-form-item label="关键字查询">
          <el-input
               @keyup.enter.native="search"
+              clearable
               v-model="searchForm.keyword"
               placeholder="输入关键字"
               style="width: 90%"
@@ -15,6 +16,7 @@
         </el-form-item>
         <el-form-item label="状态查询">
           <el-select
+          clearable
             v-model="searchForm.state"
             placeholder="请选择"
             style="width: 90%;"
@@ -118,7 +120,7 @@
     <!-- <div style="width:1200px;margin:0 auto;">
     </div> -->
     <!-- 处理错误日记dialog -->
-    <el-dialog title="处理日志" :visible.sync="errorLogDialog" width="50%">
+    <el-dialog title="处理日志" :visible.sync="errorLogDialog" destroy-on-close width="50%">
       <el-form
         ref="addVersionForm"
         label-width="100px"

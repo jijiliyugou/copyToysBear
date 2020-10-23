@@ -1,7 +1,4 @@
-const ProductAuthority = () =>
-  import('@/views/productSearch/ProductAuthority.vue')
 const Collect = () => import('@/views/productSearch/Collect.vue')
-
 const HotRecommend = () => import('@/views/productSearch/HotRecommend.vue')
 const NewRecommend = () => import('@/views/productSearch/NewRecommend.vue')
 const ProductSearch = () => import('@/views/productSearch/ProductSearch.vue')
@@ -15,11 +12,6 @@ export default [
     path: '/collect',
     name: 'collect',
     component: Collect
-  },
-  {
-    path: '/productAuthority',
-    name: 'productAuthority',
-    component: ProductAuthority
   },
   {
     path: '/hotRecommend',

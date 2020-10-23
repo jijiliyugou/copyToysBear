@@ -9,6 +9,7 @@
             v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="时间段搜索">
@@ -107,7 +108,7 @@
     <el-dialog
       :title="cateDialogOptions.cateDialogTitle + '类目'"
       :visible.sync="cateDialogOptions.openCateDialog"
-      v-if="cateDialogOptions.openCateDialog"
+      destroy-on-close
       width="30%"
     >
       <el-form

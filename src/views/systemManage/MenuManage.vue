@@ -7,6 +7,7 @@
         <el-form-item label="关键字查询">
           <el-input
             v-model="formInline.keyword"
+            clearable
             placeholder="输入关键字"
             style="width: 90%"
           ></el-input>
@@ -115,6 +116,7 @@
     <el-dialog
       :title="menuDialogOptions.menuDialogTitle + '菜单'"
       :visible.sync="menuDialogOptions.openMenuDialog"
+      destroy-on-close
       width="50%"
     >
       <el-form ref="form" :model="addMenuForm" label-width="100px">
