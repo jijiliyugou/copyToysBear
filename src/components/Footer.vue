@@ -20,18 +20,17 @@
       >
     </p>
     <p class="contactType">
-      电话：0754-89861122
-      <span></span>传真：0754-89861122 <span></span>E-mail：Toys@Toysbao.com
+      电话：0754-89671122
+      <span></span>传真：0754-89671122 <span></span>E-mail：Toys@Toysbao.com
     </p>
     <div class="QQ">
-      <div @click="toKefu"><i class="qq01"></i>客服001</div>
-      <div @click="toKefu"><i class="qq02"></i>客服002</div>
+      <div @click="toKefu1"><i class="qq01"></i>客服001</div>
+      <div @click="toKefu2"><i class="qq02"></i>客服002</div>
     </div>
     <div class="Copyright">
-      Copyright<span></span>©<span></span>2014<span
-      ></span>深圳宏升软件技术开发有限公司<span> </span>
+      Copyright<span></span>©<span> </span> {{year}} <span> </span>深圳宏升软件技术开发有限公司<span> </span>
       <em> 粤ICP备13031421号-4 </em>
-      <img src="../assets/images/cnzz.gif" alt="" />
+      <img src="~@/assets/images/cnzz.gif" alt="" />
     </div>
   </div>
 </template>
@@ -39,8 +38,18 @@
 <script>
 export default {
   methods: {
-    toKefu () {
-      window.open('https://shang.qq.com//email/stop/email_stop.html', '_blank')
+    toKefu1 () {
+      var qq1 = 'http://wpa.qq.com/msgrd?v=3&amp;uin=3300802838&amp;site=qq&amp;menu=yes'
+      window.open(qq1, '_blank')
+    },
+    toKefu2 () {
+      var qq2 = 'tencent://message/?uin=3300802838&Site=Sambow&Menu=yes'
+      window.open(qq2, '_blank')
+    }
+  },
+  computed: {
+    year () {
+      return new Date().getFullYear()
     }
   }
 }

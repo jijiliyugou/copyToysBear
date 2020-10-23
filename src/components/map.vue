@@ -40,10 +40,19 @@ export default {
         // 创建地址解析器实例
         var geoc = new BMap.Geocoder()
         var myCity = _that.addr.address ? ((_that.addr.address.split('市')[0] + '市').split('省')[1]) : '汕头市'
-        //  ||
+        $.ajax({
+          url: 'https://api.map.baidu.com/geocoder',
+          type: 'GET',
+          data: { address: _that.addr.address, output: 'json', key: 'Sq9k6GvxctKQIyW4wKWaasFDz5AdlFNH', city: myCity },
+          dataType: 'jsonp',
+          success (success) {
+          // 成功返回的数据success
+            console.log(1234, success)
+          }
+        })
+
         geoc.getPoint(_that.addr.address,
           function (point) {
-            console.log(point, myCity)
             if (point) {
               map.centerAndZoom(point, 17)
               map.addOverlay(new BMap.Marker(point))
@@ -75,7 +84,6 @@ export default {
               marker.setAnimation(BMAP_ANIMATION_BOUNCE) // 跳动的动画
               geoc.getLocation(point, function (re) {
                 var cityObj = re.addressComponents
-                console.log(123, cityObj.city)
                 map.setCurrentCity(cityObj.city || myCity) // 设置地图显示的城市 此项是必须设置的
               })
               map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放

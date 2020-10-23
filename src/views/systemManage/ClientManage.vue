@@ -210,6 +210,7 @@
       :title="dialogTitle"
       :visible.sync="clientDialog"
       destroy-on-close
+      lock-scroll
       top="0px"
       class="addClientDialog"
       width="50%"

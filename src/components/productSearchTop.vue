@@ -92,7 +92,8 @@
 import { VueCropper } from 'vue-cropper'
 export default {
   props: {
-    showColl: Boolean
+    showColl: Boolean,
+    parentEl: String
   },
   components: {
     VueCropper: VueCropper
@@ -160,7 +161,7 @@ export default {
           this.$store.commit('searchValues', null)
           this.$message.error(res.data.result.message)
         }
-        this.$router.push('/searchIndex')
+        this.$router.push('/' + this.parentEl)
         this.$store.commit('updateAppLoading', false)
       })
     },
@@ -208,12 +209,12 @@ export default {
       })
     },
     toSearchIndex () {
-      this.$root.eventHub.$emit('toSearchIndex')
-      this.$router.push({ path: '/searchIndex' })
-    },
-    toHotRecommend () {
-      this.$root.eventHub.$emit('toHotRecommend')
-      this.$router.push({ path: '/toHotRecommend' })
+      if (this.parentEl === 'hotRecommend') {
+        this.$root.eventHub.$emit('toHotRecommend')
+      } else {
+        this.$root.eventHub.$emit('toSearchIndex')
+      }
+      this.$router.push({ name: this.parentEl || 'searchIndex' })
     },
     // 图片搜索时太慢，显示loading
     showLoading () {
@@ -228,7 +229,8 @@ export default {
       } else {
         this.$store.commit('searchValues', [])
       }
-      this.$router.push('/searchIndex')
+      console.log(this.parentEl)
+      this.$router.push({ name: (this.parentEl || 'searchIndex') })
       this.$store.commit('updateAppLoading', false)
     }
   }

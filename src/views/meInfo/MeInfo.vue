@@ -1309,9 +1309,9 @@
             v-show="showSearchCompanyCount"
           >
             搜索到
-            <span style="color:red;">{{ CompanyListtotalCount }}</span> 个结果
+            <span style="color:red;">{{ companyListTotalCount }}</span> 个结果
           </center>
-          <div class="listItems" v-if="CompanyListtotalCount">
+          <div class="listItems" v-if="companyListTotalCount" v-infinite-scroll="companyListLoad" infinite-scroll-disabled="companyLoadDisabled">
             <div
               class="item"
               v-for="(item, i) in CompanyList"
@@ -2449,6 +2449,9 @@ export default {
   },
   data () {
     return {
+      companyLoadDisabled: true,
+      companyListPageSize: 20,
+      companyListCurrentPage: 1,
       isEditRemark: false,
       companyAddr: '',
       companyAddrMapDialog: false,
@@ -2589,7 +2592,7 @@ export default {
       personalDetail: undefined,
       CompanyDetail: undefined,
       CompanyList: [],
-      CompanyListtotalCount: 0,
+      companyListTotalCount: 0,
       showCollection: {
         type: null,
         active1: null,
@@ -3078,6 +3081,24 @@ export default {
       }
       this.showTypeOptions.showLiaotianType = 'showLiaotianList'
       this.active2 = null
+    },
+    // 公司下拉加载更多
+    async companyListLoad(val) {
+      this.companyListCurrentPage++
+       const res = await this.$http.post('/api/ContactsCompanyListByID', {
+        companyID: this.showCollection.id,
+        OppositeRole: this.showCollection.listType,
+        companyName: this.searchCompanyName,
+        maxResultCount: this.companyListPageSize,
+        skipCount: this.companyListCurrentPage
+      })
+      if (res.data.result.code === 200) {
+        this.CompanyList = this.CompanyList.concat(res.data.result.item.items)
+        this.companyListTotalCount = res.data.result.item.totalCount
+        if (this.CompanyList.length >= this.companyListTotalCount) this.companyLoadDisabled = true
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
     },
     // 点击订单|订单详情立即沟通
     async orderSend (item, value) {
@@ -3785,8 +3806,11 @@ export default {
     },
     // 搜索公司列表
     async searchCompanyList () {
-      this.showSearchCompanyCount = true
+      this.showSearchCompanyCount = false
+      this.companyLoadDisabled = true
+      this.companyListCurrentPage = 1
       await this.getContactsCompanyListByID()
+      this.showSearchCompanyCount = true
       this.showTypeOptions.showLiaotianType = null
       this.isGroupNumber = false
       this.active2 = null
@@ -3796,17 +3820,25 @@ export default {
       const res = await this.$http.post('/api/ContactsCompanyListByID', {
         companyID: this.showCollection.id,
         OppositeRole: this.showCollection.listType,
-        companyName: this.searchCompanyName
+        companyName: this.searchCompanyName,
+        maxResultCount: this.companyListPageSize,
+        skipCount: this.companyListCurrentPage
       })
       if (res.data.result.code === 200) {
         this.CompanyList = res.data.result.item.items
-        this.CompanyListtotalCount = res.data.result.item.totalCount
+        this.companyListTotalCount = res.data.result.item.totalCount
+        if (this.companyListTotalCount > this.companyListPageSize) this.companyLoadDisabled = false
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     // 点击查看对应公司列表页
     async showCompanyList (val) {
       this.offDetail()
+      this.companyLoadDisabled = true
       this.showSearchCompanyCount = false
+      this.CompanyList = []
+      this.companyListTotalCount = 0
       this.showTypeOptions.showType = false
       this.active2 = null
       this.showCollection = val

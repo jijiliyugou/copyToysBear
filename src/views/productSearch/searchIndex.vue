@@ -1,7 +1,7 @@
 <template>
   <div class="productSearchIndex">
     <bsTop></bsTop>
-    <productSearchTop :showColl="true"></productSearchTop>
+    <productSearchTop :showColl="true" parentEl="searchIndex"></productSearchTop>
     <div class="searchWraps">
       <div class="searchSidebar">
         <h4 class="title el-icon-menu">产品目录</h4>
@@ -44,24 +44,8 @@
           </div>
         </div>-->
         <div class="filterTitle">
-          <div class="dataFilters">
-            资料筛选：
-            <span style="color:#fc8a26;"
-              >玩具宝上传产品资料(产品图片质量较好)</span
-            >
-            <div class="factoryFilters">
-              <span>厂家自传产品资料(产品图片质量可能较差)</span>
-            </div>
-            <div class="myTotal">
-              <p>
-                总记录共
-                <span class="count">{{ totalCount }}</span
-                >条
-              </p>
-            </div>
-          </div>
-
-          <!-- <div class="more">更多筛选</div> -->
+          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.searchValue }}</span> </p> <p>用时： <span class="colorGreen">{{ httpTime | dataFormat }} </span>  秒</p></div>
+          <p class="totalCountBox">总记录共 <span class="count">{{ totalCount }}</span>条</p>
         </div>
         <template v-if="!dataList || dataList.length === 0">
           <div class="zanwuchanpin"></div>
@@ -217,6 +201,7 @@ export default {
   components: { bsTop, productSearchTop, productDetail },
   data () {
     return {
+      httpTime: null,
       isDateSort: false,
       isPriceSort: false,
       isDetail: false,
@@ -274,11 +259,13 @@ export default {
     async getProduct () {
       this.loading = true
       try {
+        var start = Date.now()
         const res = await this.$http.post('/api/SearchBearProductPage', {
           name: this.$store.state.searchValue,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
         })
+        this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.dataList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
@@ -365,6 +352,11 @@ export default {
     })
     if (this.$route.query.id) {
       this.productDetail(this.$route.query.id)
+    }
+  },
+  filters: {
+    dataFormat (value) {
+      return value / 1000
     }
   },
   beforeDestroy () {
@@ -489,29 +481,29 @@ export default {
         border-bottom: 1px solid #ccc;
         position: relative;
         align-items: center;
-        justify-content: space-between;
+        justify-content:space-between;
         box-sizing: border-box;
-        .dataFilters {
-          display: flex;
-          box-sizing: border-box;
-          .factoryFilters {
-            margin-left: 50px;
+        &:after {
+          display: block;
+          content:'';
+          flex:1
+        }
+        .totalCountBox {
+          flex:1;
+          text-align: center;
+          .count {
+          color: red;
+          margin: 0 5px;
           }
-          .myTotal {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-            p {
-              width: 150px;
-              display: flex;
-              align-items: center;
-              justify-content: left;
-              padding-left: 10px;
-            }
-            .count {
-              color: red;
-              margin: 0 5px;
-            }
+        }
+        .searchOptions{
+          display: flex;
+          box-sizing:border-box;
+          p{
+            margin-right:20px;
+          }
+          .colorGreen{
+            color: #66b1ff;
           }
         }
       }

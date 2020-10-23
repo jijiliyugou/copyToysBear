@@ -13,50 +13,9 @@
         </div>
       </div>
       <div class="content">
-        <!-- <div class="productFilter">
-          <el-button size="small">
-            价格排序
-            <i class="iconfont icon-xiangxiajiantou"></i>
-          </el-button>
-          <el-button size="small">
-            时间排序
-            <i class="iconfont icon-xiangxiajiantou"></i>
-          </el-button>
-          <div class="priceFilter">
-            <p>价格筛选</p>
-            <el-input class="priceInput"></el-input>
-            <span></span>
-            <el-input class="priceInput"></el-input>
-          </div>
-          <div class="searchBox">
-            <el-button size="small" class="search">搜索</el-button>
-            <p>
-              总记录共
-              <span class="count">{{ totalCount }}</span>条
-            </p>
-          </div>
-          <div class="more">
-            <i class="iconfont icon-gengduo"></i>
-          </div>
-        </div>-->
         <div class="filterTitle">
-          <div class="dataFilter">
-            资料筛选：
-            <span style="color:#fc8a26;"
-              >玩具宝上传产品资料(产品图片质量较好)</span
-            >
-            <div class="factoryFilter">
-              <span>厂家自传产品资料(产品图片质量可能较差)</span>
-            </div>
-            <div class="searchBox">
-              <p>
-                总记录共
-                <span class="count">{{ totalCount }}</span
-                >条
-              </p>
-            </div>
-          </div>
-          <!-- <div class="more">更多筛选</div> -->
+          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.beforeSearch.value }}</span> </p> <p>用时： <span class="colorGreen">{{ httpTime | dataFormat }} </span>  秒</p></div>
+          <p class="totalCountBox">总记录共 <span class="count">{{ totalCount }}</span>条</p>
         </div>
         <template
           v-if="!productList || (productList && productList.length < 1)"
@@ -199,6 +158,7 @@
 export default {
   data () {
     return {
+      httpTime: null,
       currentPage: 1,
       pageSize: 60,
       totalCount: 0,
@@ -243,13 +203,14 @@ export default {
     // 获取产品列表
     // 默认搜索产品
     async getProductList (search) {
-      // this.$store.commit('updateLoading', true)
       try {
+        var start = Date.now()
         const res = await this.$http.post('/api/SearchBearProductPage', {
           [this.name]: search,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
         })
+        this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.productList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
@@ -315,6 +276,11 @@ export default {
     },
     name () {
       return this.$store.state.beforeSearch.type
+    }
+  },
+  filters: {
+    dataFormat (value) {
+      return value / 1000
     }
   },
   watch: {
@@ -415,43 +381,39 @@ export default {
       }
     }
     .filterTitle {
-      margin-top: 2px;
-      display: flex;
-      height: 34px;
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
-      position: relative;
-      align-items: center;
-      justify-content: space-between;
-      .dataFilter {
+        margin-top: 5px;
         display: flex;
-        .factoryFilter {
-          margin-left: 50px;
+        height: 36px;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        position: relative;
+        align-items: center;
+        justify-content:space-between;
+        box-sizing: border-box;
+        &:after {
+          display: block;
+          content:'';
+          flex:1
         }
-        .searchBox {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          margin-left: 20px;
-          .search {
-            width: 50px;
-            height: 30px;
-          }
-          p {
-            height: 100%;
-            width: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: left;
-            padding-left: 10px;
-          }
+        .totalCountBox {
+          flex:1;
+          text-align: center;
           .count {
-            color: red;
-            margin: 0 5px;
+          color: red;
+          margin: 0 5px;
+          }
+        }
+        .searchOptions{
+          display: flex;
+          box-sizing:border-box;
+          p{
+            margin-right:20px;
+          }
+          .colorGreen{
+            color: #66b1ff;
           }
         }
       }
-    }
     .productList {
       display: flex;
       flex-wrap: wrap;

@@ -1,7 +1,7 @@
 <template>
   <div class="productSearchIndex">
     <bsTop></bsTop>
-    <productSearchTop :showColl="true"></productSearchTop>
+    <productSearchTop :showColl="true" parentEl="hotRecommend"></productSearchTop>
     <div class="searchWraps">
       <div class="searchSidebar">
         <h4 class="title el-icon-menu">产品目录</h4>
@@ -41,24 +41,9 @@
             <i class="iconfont icon-gengduo"></i>
           </div>
         </div>-->
-        <div class="filterTitles">
-          <div class="dataFilters">
-            资料筛选：
-            <span style="color:#fc8a26;"
-              >玩具宝上传产品资料(产品图片质量较好)</span
-            >
-            <div class="factoryFilter">
-              <span>厂家自传产品资料(产品图片质量可能较差)</span>
-            </div>
-            <div class="myTotal">
-              <p>
-                总记录共
-                <span class="count">{{ totalCount }}</span
-                >条
-              </p>
-            </div>
-          </div>
-          <!-- <div class="more">更多筛选</div> -->
+         <div class="filterTitle">
+          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.searchValue }}</span> </p> <p>用时： <span class="colorGreen">{{ httpTime | dataFormat }} </span>  秒</p></div>
+          <p class="totalCountBox">总记录共 <span class="count">{{ totalCount }}</span>条</p>
         </div>
         <div>
           <template v-if="!dataList || dataList.length === 0">
@@ -213,6 +198,7 @@ export default {
   components: { bsTop, productSearchTop, productDetail },
   data () {
     return {
+      httpTime: null,
       isDetail: false,
       loading: false,
       datailNumber: null,
@@ -266,10 +252,11 @@ export default {
     },
     // 文字搜索
     async getProduct () {
+      var start = Date.now()
       this.loading = true
       try {
         const fd = {
-          keyword: this.$store.state.beforeSearch.value,
+          name: this.$store.state.searchValue,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
         }
@@ -279,6 +266,7 @@ export default {
           }
         }
         const res = await this.$http.post('/api/HotRecommendPage', fd)
+        this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.dataList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
@@ -290,14 +278,6 @@ export default {
       } catch (error) {
         this.loading = false
         this.totalCount = 0
-      }
-    },
-    // 图片搜索数据
-    showSearchValue () {
-      if (this.$store.state.imageSearchValue instanceof Array) {
-        this.isDetail = false
-        this.dataList = this.$store.state.imageSearchValue
-        this.$store.commit('clearSearch')
       }
     },
     // 修改热门产品当前页
@@ -320,11 +300,16 @@ export default {
       }
     }
   },
+  filters: {
+    dataFormat (value) {
+      return value / 1000
+    }
+  },
   watch: {
     '$store.state.imageSearchValue' (newVal) {
-      if (newVal && newVal.result.code === 200) {
-        this.dataList = newVal.result.object.result
-        this.totalCount = newVal.result.object.result.length
+      if (newVal) {
+        this.dataList = newVal
+        this.totalCount = newVal.length
         this.isDetail = false
         this.$nextTick(() => {
           this.$store.commit('clearSearch')
@@ -336,23 +321,23 @@ export default {
     }
   },
   mounted () {
-    if (
-      this.$_.size(this.$store.state.imageSearchValue) &&
-      this.$store.state.imageSearchValue.result.code === 200
-    ) {
-      this.dataList = this.$store.state.imageSearchValue.result.object.result
+    if (this.$store.state.imageSearchValue instanceof Array) {
+      this.isDetail = false
+      this.dataList = this.$store.state.imageSearchValue
+      this.totalCount = this.dataList.length
+      this.$store.commit('updateAppLoading', false)
       this.$store.commit('clearSearch')
     } else {
       this.getProduct()
     }
-    // this.$root.eventHub.$on('toSearchIndex', () => {
-    //   this.currentPage = 1
-    //   this.pageSize = 60
-    //   this.totalCount = 0
-    //   this.dataList = []
-    //   this.search = this.$store.state.searchValue
-    //   this.getProduct(true)
-    // })
+    this.$root.eventHub.$on('toHotRecommend', () => {
+      this.currentPage = 1
+      this.pageSize = 60
+      this.totalCount = 0
+      this.dataList = []
+      this.search = this.$store.state.searchValues
+      this.getProduct()
+    })
     if (this.$route.query.id) {
       this.productDetail(this.$route.query.id)
     }
@@ -361,7 +346,7 @@ export default {
     this.getProductCategoryList()
   },
   beforeDestroy () {
-    this.$root.eventHub.$off('toSearchIndex')
+    this.$root.eventHub.$off('toHotRecommend')
   }
 }
 </script>
@@ -474,7 +459,7 @@ export default {
           }
         }
       }
-      .filterTitles {
+      .filterTitle {
         margin-top: 5px;
         display: flex;
         height: 36px;
@@ -482,27 +467,29 @@ export default {
         border-bottom: 1px solid #ccc;
         position: relative;
         align-items: center;
-        justify-content: space-between;
-        .dataFilters {
-          display: flex;
-          .factoryFilter {
-            margin-left: 50px;
+        justify-content:space-between;
+        box-sizing: border-box;
+        &:after {
+          display: block;
+          content:'';
+          flex:1
+        }
+        .totalCountBox {
+          flex:1;
+          text-align: center;
+          .count {
+          color: red;
+          margin: 0 5px;
           }
-          .myTotal {
-            display: flex;
-            align-items: center;
-            margin-left: 20px;
-            p {
-              width: 150px;
-              display: flex;
-              align-items: center;
-              justify-content: left;
-              padding-left: 10px;
-            }
-            .count {
-              color: red;
-              margin: 0 5px;
-            }
+        }
+        .searchOptions{
+          display: flex;
+          box-sizing:border-box;
+          p{
+            margin-right:20px;
+          }
+          .colorGreen{
+            color: #66b1ff;
           }
         }
       }

@@ -1,7 +1,7 @@
 <template>
   <div style="min-height:755px;">
     <bsTop></bsTop>
-    <productSearchTop></productSearchTop>
+    <productSearchTop parentEl="searchIndex"></productSearchTop>
     <ul class="hotSearch">
       <li>热门搜搜</li>
       <li
@@ -59,12 +59,6 @@ export default {
   },
   methods: {
     // 去产品列表
-    toHotRecommend (item) {
-      this.$router.push({
-        path: '/hotRecommend',
-        query: { id: item.productNumber }
-      })
-    },
     async toSearchIndex (val) {
       this.$store.commit('searchTxtValues', val)
       this.$router.push({ path: '/searchIndex' })
