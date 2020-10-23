@@ -221,7 +221,7 @@
         label-width="100px"
         :model="addClientForm"
         :rules="addRules"
-        class="clientDialog"
+        class="clientDialogForm"
       >
         <el-form-item
           label="公司类型"
@@ -1238,7 +1238,6 @@ export default {
     },
     // 新增员工
     async addEmployee () {
-      this.isShowLoading = true
       this.addEmployeeForm.CompanyId = this.employeeMan.id
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200) {
@@ -1252,6 +1251,7 @@ export default {
       if (this.isEdit) {
         this.$refs.addEmployeeRef.validate(async (valid) => {
           if (valid) {
+            this.isShowLoading = true
             this.addEmployeeForm.password = this.addEmployeeForm.password
               ? this.$md5('LitterBear' + this.addEmployeeForm.password)
               : this.addEmployeeForm.newPassword
@@ -1492,9 +1492,9 @@ export default {
           } else {
             this.$message.error(res.data.result.msg)
           }
+          this.isShowLoading = false
         }
       })
-      this.isShowLoading = false
     },
     search () {
       this.currentPage = 1
@@ -1680,15 +1680,14 @@ export default {
           if (res.data.result.code === 200) {
             this.$message.success('编辑客户成功')
             this.isShowLoading = false
+            this.clientDialog = false
+            this.andClientIcon = ''
+            this.file = null
+            this.getClientList()
           } else {
             this.$message.error(res.data.result.msg)
             this.isShowLoading = false
           }
-          this.andClientIcon = ''
-          this.file = null
-          this.clientDialog = false
-          this.isShowLoading = false
-          this.getClientList()
         }
       })
     },
@@ -1801,7 +1800,7 @@ export default {
     color: #ff6600;
   }
 }
-.clientDialog {
+.clientDialogForm {
   @{deep} .el-form-item {
     margin-bottom: 5px;
     .el-form-item__error {
