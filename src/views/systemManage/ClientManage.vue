@@ -1467,7 +1467,7 @@ export default {
       this.companyLogoUrl = file.url
       this.dialogUpload = true
     },
-    // 提交新增用户
+    // 提交新增客户
     async addClient () {
       const imgRes = await this.successUpload()
       if (imgRes.data.result.code === 200 && imgRes.data.result.object[0]) {
@@ -1519,13 +1519,9 @@ export default {
       if (res.data.result.code === 200) {
         this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
+      } else {
+        this.$message.error(res.data.result.msg)
       }
-      // this.formInline = {
-      //   // 搜索表单
-      //   CompanyName: null,
-      //   CompanyType: null,
-      //   dateTile: null
-      // };
     },
     // 获取公司类型列表
     async getClientTypeList (type) {
@@ -1572,7 +1568,6 @@ export default {
     },
     // 打开绑定公司
     openUserMan (row) {
-      // this.UserManConfig.CompantNumber = null;
       this.UserManConfig.userManDialog = true
       this.UserManConfig.CompantNumber = row.companyNumber
       this.UserManConfig.phoneNumber = row.phoneNumber
