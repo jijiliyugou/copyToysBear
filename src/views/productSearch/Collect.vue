@@ -259,6 +259,7 @@ export default {
     // 修改当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getCollectList()
     }
   },

@@ -66,19 +66,21 @@
         <div class="myPagination">
           <div class="total">
             共
-            <span style="color:#165af7;font-weight:bold;">{{ totalPage }}</span>
+            <span style="color:#165af7;font-weight:bold;">{{ totalCount }}</span>
             条
           </div>
           <div class="pages" v-show="tableList && tableList.length > 1">
             <div class="shouye" @click="toOnePage">首页</div>
             <el-pagination
-              layout="prev, pager, next"
+              layout="total, sizes, prev, pager, next, jumper"
               background
               prev-text="上一页"
               next-text="下一页"
-              :total="totalPage"
+              :total="totalCount"
               :page-size="pageSize"
+              :page-sizes="[6, 9, 15, 30]"
               @current-change="currentChange"
+              @size-change="handleSizeChange"
             ></el-pagination>
           </div>
         </div>
@@ -107,7 +109,7 @@ export default {
         number: null
       },
       tableList: [],
-      totalPage: null,
+      totalCount: null,
       currentPage: 1,
       pageSize: 10
     }
@@ -147,6 +149,7 @@ export default {
     },
     handleSizeChange (pages) {
       this.pageSize = pages
+      if (this.currentPage * pages > this.totalCount) return
       this.getOrderList()
     },
     async getOrderList () {
@@ -160,7 +163,7 @@ export default {
         //   this.tableList.push(res.data.result.item.items[0])
         // }
         this.tableList = res.data.result.item.items
-        this.totalPage = res.data.result.item.totalCount
+        this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.message)
       }

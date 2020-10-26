@@ -288,6 +288,7 @@ export default {
     // 修改热门产品当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getProduct()
     },
     // 获取产品类目列表

@@ -142,6 +142,7 @@ export default {
     },
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getSMSSendInfo()
     },
     // 获取短息发送记录
@@ -156,6 +157,8 @@ export default {
       if (res.data.result.code === 200) {
         this.SMSInfoList = res.data.result.object.items
         this.totalCount = res.data.result.object.totalCount
+      } else {
+        this.$message.error(res.data.result.message)
       }
     }
   },

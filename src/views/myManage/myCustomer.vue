@@ -21,8 +21,8 @@
           >
             <el-option
               v-for="(item, i) in [
-                { value: 'Sales', label: '公司' },
                 { label: '展厅', value: 'Exhibition' },
+                { label: '公司', value: 'Sales' },
                 { label: '供应商', value: 'Supplier' }
               ]"
               :key="i"
@@ -103,7 +103,7 @@ export default {
   components: { bsTop },
   data () {
     return {
-      companyType: 'Sales',
+      companyType: 'Exhibition',
       exportTable: [],
       totalCount: 0,
       pageSize: 10,
@@ -188,6 +188,7 @@ export default {
     // 分页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return
       this.getContactsCompanyListByID()
     }
   },

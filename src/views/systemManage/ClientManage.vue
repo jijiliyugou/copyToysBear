@@ -82,7 +82,7 @@
       >
         <el-table-column prop="companyNumber" label="客户头像" width="80">
           <template slot-scope="scope">
-            <el-image class="img" :src="scope.row.companyLogo" fit="cover">
+            <el-image class="img" :src="scope.row.companyLogo" fit="cover" :preview-src-list="[scope.row.companyLogo]">
               <div
                 slot="error"
                 class="image-slot"
@@ -1561,6 +1561,7 @@ export default {
     // 客户管理列表调整每页几条
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getClientList()
     },
     // 头像加载失败
@@ -1637,6 +1638,7 @@ export default {
     // 员工管理修改每页条数
     employeeManSizeChange (pageSize) {
       this.employeeMan.pageSize = pageSize
+      if (this.employeeMan.currentPage * pageSize > this.employeeMan.totalCount) return false
       this.getEmployeeList(this.employeeMan.id)
     },
     // 打开编辑客户列表

@@ -305,7 +305,7 @@ export default {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         name: this.formInline.keyword,
-        isEnabled: this.formInline.state,
+        enabled: this.formInline.state,
         startTime: this.formInline.dateTile && this.formInline.dateTile[0],
         endTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
@@ -398,6 +398,7 @@ export default {
     // 修改当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getAuth()
     }
   },

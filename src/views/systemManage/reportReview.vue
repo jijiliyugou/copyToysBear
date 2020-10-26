@@ -316,6 +316,7 @@ export default {
     // 切换当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getMessageReportPage()
     },
     // 打开审核

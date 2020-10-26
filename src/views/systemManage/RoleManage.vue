@@ -408,6 +408,7 @@ export default {
     // 修改页码当前页
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getRoleList()
     }
   },

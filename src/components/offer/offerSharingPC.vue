@@ -244,6 +244,7 @@ export default {
     // 修改产品当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return
       this.getProductOfferDetailPage()
     },
     // 获取产品类目列表

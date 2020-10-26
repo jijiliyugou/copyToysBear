@@ -74,6 +74,7 @@ export default {
     },
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
     }
   }
 }

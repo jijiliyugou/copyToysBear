@@ -92,6 +92,7 @@ export default {
     handleSizeChange (pageSize) {
       this.isJiangxu = true
       this.pageSize = pageSize
+      if (this.currentPage * pageSize > this.totalCount) return false
       this.getNoticeList()
     },
     async getNoticeList () {
