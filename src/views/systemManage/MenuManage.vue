@@ -12,25 +12,6 @@
             style="width: 90%"
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="激活状态搜索">
-          {{ formInline.state }}
-          <el-select
-            v-model="formInline.state"
-            placeholder="请选择"
-            style="width: 90%;"
-          >
-            <el-option
-              v-for="(item, i) in [
-                { label: '全部', value: null },
-                { label: '已激活', value: true },
-                { label: '未激活', value: false }
-              ]"
-              :key="i"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item> -->
         <el-form-item label="时间段搜索">
           <el-date-picker
             v-model="formInline.dateTile"
@@ -116,10 +97,10 @@
     <el-dialog
       :title="menuDialogOptions.menuDialogTitle + '菜单'"
       :visible.sync="menuDialogOptions.openMenuDialog"
-      destroy-on-close
+      v-if="menuDialogOptions.openMenuDialog"
       width="50%"
     >
-      <el-form ref="form" :model="addMenuForm" label-width="100px">
+      <el-form ref="menuFormRef" :rules="rulesMenuForm" :model="addMenuForm" label-width="100px">
         <el-form-item :label="menuDialogOptions.menuDialogTitle + '类型'">
           <el-radio-group v-model="addType" size="small">
             <el-radio label="1" border
@@ -130,11 +111,11 @@
             >
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="父级">
+        <el-form-item label="父级" :prop="Number(addType) === 2 ? 'parentId' : ''">
           <el-select
             v-model="addMenuForm.parentId"
             placeholder="请选择"
-            :disabled="Number(addType) !==  2"
+            :disabled="Number(addType) !== 2"
           >
             <el-option
               v-for="item in allAuthList"
@@ -144,16 +125,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="名称">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="addMenuForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="路径">
+        <el-form-item label="路径" prop="linkUrl">
           <el-input v-model="addMenuForm.linkUrl"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="orderSort">
           <el-input v-model="addMenuForm.orderSort"></el-input>
         </el-form-item>
-        <el-form-item label="是否激活">
+        <el-form-item label="是否激活" prop="enabled">
           <el-radio-group v-model="addMenuForm.enabled">
             <el-radio label="true">是</el-radio>
             <el-radio label="false">否</el-radio>
@@ -249,6 +230,33 @@ export default {
         linkUrl: '',
         orderSort: ''
       },
+      rulesMenuForm: {
+        parentId: [
+          { required: true, message: '请选择父级菜单', trigger: 'change' }
+        ],
+        name: [
+          { required: true, message: '请输入菜单名称', trigger: 'blur' },
+          { min: 1, max: 99, message: '长度在 1 到 99 个字符', trigger: 'blur' }
+        ],
+        linkUrl: [
+          { required: true, message: '请输入菜单地址', trigger: 'blur' },
+          { min: 1, max: 99, message: '长度在 1 到 99 个字符', trigger: 'blur' }
+        ],
+        enabled: [
+          { required: true, message: '请选择激活状态', trigger: 'change' }
+        ],
+        orderSort: [
+          { required: true, message: '排序为必填项' },
+          {
+            min: 1,
+            max: 99,
+            validator (r, v, b) {
+              /^[\d]*$/.test(v) ? b() : b(new Error('请填写数字'))
+            },
+            message: '长度在 1 到 99 个字符'
+          }
+        ]
+      },
       formInline: {
         // 查询角色表单
         keyword: '',
@@ -305,32 +313,27 @@ export default {
     // 新增菜单
     async addMenus () {
       var AuthUrl
-      if (this.addType === 1) {
+      if (Number(this.addType) === 1) {
         this.addMenuForm.parentId = 0
       }
-      if (this.menuDialogOptions.menuDialogTitle === '新增') {
-        AuthUrl = '/api/CreateAuth_Module'
-      } else if (this.menuDialogOptions.menuDialogTitle === '编辑') {
-        AuthUrl = '/api/UpdateAuth_Module'
-      }
-      await this.$http.post(AuthUrl, this.addMenuForm)
-      this.addType = '1'
-      this.addMenuForm = {
-        parentId: '',
-        name: '',
-        enabled: 'false',
-        linkUrl: '',
-        orderSort: ''
-      }
-      this.getAuth()
-      this.menuDialogOptions.openMenuDialog = false
+      this.$refs.menuFormRef.validate(async valid => {
+        if (valid) {
+          if (this.menuDialogOptions.menuDialogTitle === '新增') {
+            AuthUrl = '/api/CreateAuth_Module'
+          } else if (this.menuDialogOptions.menuDialogTitle === '编辑') {
+            AuthUrl = '/api/UpdateAuth_Module'
+          }
+          await this.$http.post(AuthUrl, this.addMenuForm)
+          this.getAuth()
+          this.menuDialogOptions.openMenuDialog = false
+        }
+      })
     },
     search () {
       this.getAuth()
     },
     openAdd () {
       this.menuDialogOptions.menuDialogTitle = '新增'
-      this.menuDialogOptions.openMenuDialog = true
       this.addType = '1'
       this.addMenuForm = {
         parentId: '',
@@ -339,6 +342,7 @@ export default {
         linkUrl: '',
         orderSort: ''
       }
+      this.menuDialogOptions.openMenuDialog = true
     },
     // 编辑表格
     handleEdit (index, row) {

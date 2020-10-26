@@ -209,7 +209,7 @@
     <el-dialog
       :title="dialogTitle"
       :visible.sync="clientDialog"
-      destroy-on-close
+      v-if="clientDialog"
       lock-scroll
       top="0px"
       class="addClientDialog"
@@ -624,8 +624,8 @@
         width="50%"
         top="50px"
         :title="employeeMan.employeeTitle"
-        destroy-on-close
         :visible.sync="innerVisible"
+        v-if="innerVisible"
         append-to-body
       >
         <el-form

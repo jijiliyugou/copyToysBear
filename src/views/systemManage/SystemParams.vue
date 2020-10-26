@@ -86,7 +86,7 @@
     <el-dialog
       :title="systemDialogTitle"
       :visible.sync="systemDialog"
-      destroy-on-close
+      v-if="systemDialog"
       width="50%"
     >
       <el-tabs v-model="addType" type="card">

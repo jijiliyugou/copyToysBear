@@ -92,7 +92,7 @@
     </div>
     </div>
     <!-- 新增编辑版本 -->
-    <el-dialog :title="versionTitle" :visible.sync="versionDialog" destroy-on-close width="50%">
+    <el-dialog :title="versionTitle" :visible.sync="versionDialog" v-if="versionDialog" width="50%">
       <el-form
         ref="addVersionForm"
         label-width="100px"
@@ -115,7 +115,7 @@
         <el-form-item label="链接地址" prop="fileUrl">
           <el-input
             v-model="versionFormData.fileUrl"
-            :disabled="versionFormData.versionFile  !==  ''"
+            :disabled="versionFormData.versionFile  !=  ''"
           ></el-input>
         </el-form-item>
         <el-form-item label="上传文件">
@@ -273,6 +273,7 @@ export default {
       this.versionFormData = {
         vesion: null,
         fileUrl: '',
+        platForm: '',
         versionFile: ''
       }
       this.versionDialog = true

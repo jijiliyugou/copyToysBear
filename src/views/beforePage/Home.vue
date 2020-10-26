@@ -147,7 +147,7 @@
 
 <script>
 import axios from 'axios'
-import swiper from '@/components/swiper'
+import swiper from '@/components/beforeSwiper'
 import menuSwiper from '@/components/menuSwiper'
 export default {
   name: 'Home',

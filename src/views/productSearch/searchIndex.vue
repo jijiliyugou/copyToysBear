@@ -1,7 +1,10 @@
 <template>
   <div class="productSearchIndex">
     <bsTop></bsTop>
-    <productSearchTop :showColl="true" parentEl="searchIndex"></productSearchTop>
+    <productSearchTop
+      :showColl="true"
+      parentEl="searchIndex"
+    ></productSearchTop>
     <div class="searchWraps">
       <div class="searchSidebar">
         <h4 class="title el-icon-menu">产品目录</h4>
@@ -44,10 +47,22 @@
           </div>
         </div>-->
         <div class="filterTitle">
-          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.searchValue }}</span> </p> <p>用时： <span class="colorGreen">{{ httpTime | dataFormat }} </span>  秒</p></div>
-          <p class="totalCountBox">总记录共 <span class="count">{{ totalCount }}</span>条</p>
+          <div class="searchOptions">
+            <p>
+              搜索内容：
+              <span class="colorGreen">{{ $store.state.searchValue }}</span>
+            </p>
+            <p>
+              用时：
+              <span class="colorGreen">{{ httpTime | dataFormat }} </span> 秒
+            </p>
+          </div>
+          <p class="totalCountBox">
+            总记录共 <span class="count">{{ totalCount }}</span
+            >条
+          </p>
         </div>
-        <template v-if="!dataList || dataList.length === 0">
+        <template v-if="(!dataList || dataList.length === 0) && !isDetail">
           <div class="zanwuchanpin"></div>
         </template>
         <template v-else>
@@ -64,7 +79,7 @@
                     <div
                       slot="placeholder"
                       class="image-slot"
-                      style="width:150px;margin:0 auto;"
+                      style="width: 150px; margin: 0 auto"
                     >
                       <img
                         class="errorImg"
@@ -75,7 +90,7 @@
                     <div
                       slot="error"
                       class="image-slot"
-                      style="width:150px;margin:0 auto;"
+                      style="width: 150px; margin: 0 auto"
                     >
                       <img
                         class="errorImg"
@@ -85,12 +100,12 @@
                     </div>
                   </el-image>
                   <i
-                  v-show="item.isFavorite"
+                    v-show="item.isFavorite"
                     class="iconClient iconfont icon-wujiaoxing-"
                     @click.stop="addCollect(item)"
                   ></i>
                   <i
-                  v-show="!item.isFavorite"
+                    v-show="!item.isFavorite"
                     class="iconClient iconfont icon-wujiaoxingkong"
                     @click.stop="addCollect(item)"
                   ></i>
@@ -166,16 +181,7 @@
                 </div>
               </li>
             </ul>
-            <div class="productList" v-if="isDetail">
-              <productDetail
-                :number="datailNumber"
-                @changeIsDetail="changeIsDetail"
-              ></productDetail>
-            </div>
-            <center
-              style="margin:20px auto 0 auto;"
-              v-show="!isDetail"
-            >
+            <center style="margin: 20px auto 0 auto" v-show="!isDetail">
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 background
@@ -188,6 +194,12 @@
             </center>
           </div>
         </template>
+        <div class="productList" v-if="isDetail">
+          <productDetail
+            :number="datailNumber"
+            @changeIsDetail="changeIsDetail"
+          ></productDetail>
+        </div>
       </div>
     </div>
   </div>
@@ -283,8 +295,10 @@ export default {
     // 显示产品详情
     productDetail (productNumber) {
       if (productNumber) {
-        this.isDetail = true // 打开详情页
         this.datailNumber = productNumber
+        this.$nextTick(() => {
+          this.isDetail = true // 打开详情页
+        })
       } else {
         this.$message.error('该产品没有productNumber')
       }
@@ -292,6 +306,10 @@ export default {
     // 回退事件
     changeIsDetail (val) {
       this.isDetail = val
+      if (!this.dataList || this.dataList.length < 1) {
+        this.currentPage = 1
+        this.getProduct()
+      }
     },
     // 修改产品当前页
     changePage (page) {
@@ -315,7 +333,6 @@ export default {
   },
   watch: {
     '$store.state.imageSearchValue' (newVal) {
-      console.log('newVal', newVal)
       if (newVal) {
         this.dataList = newVal
         this.totalCount = newVal.length
@@ -333,14 +350,19 @@ export default {
     this.getProductCategoryList()
   },
   mounted () {
-    if (this.$store.state.imageSearchValue instanceof Array) {
-      this.isDetail = false
-      this.dataList = this.$store.state.imageSearchValue
-      this.totalCount = this.dataList.length
-      this.$store.commit('updateAppLoading', false)
-      this.$store.commit('clearSearch')
+    if (this.$route.params.id) {
+      this.datailNumber = this.$route.params.id
+      this.productDetail(this.datailNumber)
     } else {
-      this.getProduct()
+      if (this.$store.state.imageSearchValue instanceof Array) {
+        this.isDetail = false
+        this.dataList = this.$store.state.imageSearchValue
+        this.totalCount = this.dataList.length
+        this.$store.commit('updateAppLoading', false)
+        this.$store.commit('clearSearch')
+      } else {
+        this.getProduct()
+      }
     }
     this.$root.eventHub.$on('toSearchIndex', () => {
       this.currentPage = 1
@@ -350,9 +372,6 @@ export default {
       this.search = this.$store.state.searchValues
       this.getProduct(true)
     })
-    if (this.$route.query.id) {
-      this.productDetail(this.$route.query.id)
-    }
   },
   filters: {
     dataFormat (value) {
@@ -481,28 +500,28 @@ export default {
         border-bottom: 1px solid #ccc;
         position: relative;
         align-items: center;
-        justify-content:space-between;
+        justify-content: space-between;
         box-sizing: border-box;
         &:after {
           display: block;
-          content:'';
-          flex:1
+          content: "";
+          flex: 1;
         }
         .totalCountBox {
-          flex:1;
+          flex: 1;
           text-align: center;
           .count {
-          color: red;
-          margin: 0 5px;
+            color: red;
+            margin: 0 5px;
           }
         }
-        .searchOptions{
+        .searchOptions {
           display: flex;
-          box-sizing:border-box;
-          p{
-            margin-right:20px;
+          box-sizing: border-box;
+          p {
+            margin-right: 20px;
           }
-          .colorGreen{
+          .colorGreen {
             color: #66b1ff;
           }
         }

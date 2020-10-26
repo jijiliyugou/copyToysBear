@@ -252,6 +252,7 @@ export default {
     },
     async getProductByNumber () {
       const id = this.number
+      console.log(id)
       const res = await this.$http.post('/api/BearProductByNumber', {
         productNumber: id
       })

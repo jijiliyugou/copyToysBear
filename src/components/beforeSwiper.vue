@@ -81,7 +81,7 @@ export default {
   methods: {
     toProductDetail (number) {
       this.$router.push({
-        name: 'searchIndex',
+        name: 'ProductDetail',
         params: { id: number }
       })
     },

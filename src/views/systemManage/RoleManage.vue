@@ -112,13 +112,13 @@
     <el-dialog
       :title="roleDialogOptions.roleDialogTitle"
       :visible.sync="roleDialogOptions.openRoleDialog"
-      destroy-on-close
+      v-if="roleDialogOptions.openRoleDialog"
       width="50%"
     >
       <el-form
-        ref="form"
         style="max-height:500px;overflow: auto;"
         :rules="roleRules"
+        ref="roleRef"
         :model="addRoleForm"
         label-width="100px"
       >
@@ -300,10 +300,6 @@ export default {
     },
     // 打开新增角色
     openAddRole () {
-      this.defaultChecked = []
-      this.$nextTick(() => {
-        this.$refs.refRole.setCheckedKeys([])
-      })
       this.roleDialogOptions.openRoleDialog = true
       this.roleDialogOptions.roleDialogTitle = '新增角色'
       this.addRoleForm = {
@@ -314,37 +310,45 @@ export default {
         moduleIdList: [],
         description: null
       }
+      this.defaultChecked = []
+      this.$nextTick(() => {
+        this.$refs.refRole.setCheckedKeys([])
+      })
     },
     // 新增角色 | 编辑角色
     async addRoles () {
-      const checkedKeys = this.$refs.refRole.getCheckedKeys()
-      const halfCheckedKeys = this.$refs.refRole.getHalfCheckedKeys()
-      this.addRoleForm.moduleIdList = [...checkedKeys, ...halfCheckedKeys]
-      if (this.roleDialogOptions.roleDialogTitle === '新增角色') {
-        const res = await this.$http.post(
-          '/api/CreateAuth_Role',
-          this.addRoleForm
-        )
-        if (res.data.result.code === 200) {
-          this.getRoleList()
-          this.$message.success('新增角色成功')
-        } else {
-          this.$message.error('新增角色失败')
-        }
-      } else {
-        const res = await this.$http.post('/api/UpdateUserRoleMenu', {
-          ...this.addRoleForm,
-          id: this.setRoleRid
-        })
-        if (res.data.result.code === 200) {
-          this.getRoleList()
-          this.$message.success('编辑角色成功')
-        } else {
-          this.$message.error('编辑角色失败')
-        }
-      }
+      this.$refs.roleRef.validate(async valid => {
+        if (valid) {
+          const checkedKeys = this.$refs.refRole.getCheckedKeys()
+          const halfCheckedKeys = this.$refs.refRole.getHalfCheckedKeys()
+          this.addRoleForm.moduleIdList = [...checkedKeys, ...halfCheckedKeys]
+          if (this.roleDialogOptions.roleDialogTitle === '新增角色') {
+            const res = await this.$http.post(
+              '/api/CreateAuth_Role',
+              this.addRoleForm
+            )
+            if (res.data.result.code === 200) {
+              this.getRoleList()
+              this.$message.success('新增角色成功')
+            } else {
+              this.$message.error('新增角色失败')
+            }
+          } else {
+            const res = await this.$http.post('/api/UpdateUserRoleMenu', {
+              ...this.addRoleForm,
+              id: this.setRoleRid
+            })
+            if (res.data.result.code === 200) {
+              this.getRoleList()
+              this.$message.success('编辑角色成功')
+            } else {
+              this.$message.error('编辑角色失败')
+            }
+          }
 
-      this.roleDialogOptions.openRoleDialog = false
+          this.roleDialogOptions.openRoleDialog = false
+        }
+      })
     },
     // 获取所有权限
     async getAllAuth () {
@@ -372,17 +376,16 @@ export default {
       for (const key in row) {
         this.addRoleForm[key] = row[key]
       }
-
-      this.roleDialogOptions.openRoleDialog = true
       const res = await this.getCurrentMenuList(row.id)
-      if (
-        res.data.result.code === 200 &&
-        res.data.result.item.moduleIdList &&
-        res.data.result.item.moduleIdList.length > 1
-      ) {
-        this.defaultChecked = res.data.result.item.moduleIdList
+      if (res.data.result.code === 200) {
+        this.defaultChecked = res.data.result.item.moduleIdList || []
+        this.roleDialogOptions.openRoleDialog = true
+        this.$nextTick(() => {
+          this.$refs.refRole.setCheckedKeys(this.defaultChecked)
+        })
+      } else {
+        this.$message.error('获取权限失败')
       }
-      this.$refs.refRole.setCheckedKeys(this.defaultChecked)
     },
     // 删除列表
     async handleDelete (index, row) {
