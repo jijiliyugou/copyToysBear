@@ -784,7 +784,7 @@
                 </p>
                 <p>净重/毛重：{{ item.ne_we }}/{{ item.gr_we }}(kg)</p>
                 <p>
-                  报价：<span class="price">{{
+                  参考单价：<span class="price">{{
                     item.cu_de + item.fa_pr.toFixed(2)
                   }}</span>
                 </p>

@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="price">
-            报价：{{ productDetail.cu_de }}
+            参考单价：{{ productDetail.cu_de }}
             <span>{{
               (productDetail.bearProduct && productDetail.bearProduct.price) === 0
                 ? "???"
