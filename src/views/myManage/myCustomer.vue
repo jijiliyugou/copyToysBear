@@ -6,9 +6,11 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-            v-model="formInline.keyWord"
+            v-model="formInline.keyword"
+            clearable
             placeholder="输入关键字"
             style="width: 90%;"
+            @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
         <el-form-item label="公司类型" prop="companyType">
@@ -54,6 +56,7 @@
               fit="contain"
               class="myImage"
               :src="scope.row.companyLogo"
+              :preview-src-list="[scope.row.companyLogo]"
             >
               <div slot="placeholder" class="image-slot">
                 <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
@@ -106,7 +109,7 @@ export default {
       pageSize: 10,
       currentPage: 1,
       formInline: {
-        keyWord: '',
+        keyword: '',
         dateTile: null
       },
       pickerOptions: {
@@ -146,14 +149,17 @@ export default {
   methods: {
     async getContactsCompanyListByID () {
       const fd = {
-        keyWord: this.formInline.keyWord,
+        keyword: this.formInline.keyword,
         skipCount: this.currentPage,
         OppositeRole: this.companyType,
-        maxResultCount: this.pageSize
+        maxResultCount: this.pageSize,
+        StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
+        EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
-      if (this.formInline.dateTile) {
-        fd.StartTime = this.formInline.dateTile && this.formInline.dateTile[0]
-        fd.EndTime = this.formInline.dateTile && this.formInline.dateTile[1]
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
       }
       const res = await this.$http.post('/api/ContactsCompanyListByID', fd)
       if (res.data.result.code === 200) {
@@ -206,6 +212,10 @@ export default {
   @{deep} .myImage {
     width: 80px;
     height: 80px;
+    img{
+      width: 80px;
+      height: 80px;
+    }
   }
 }
 </style>

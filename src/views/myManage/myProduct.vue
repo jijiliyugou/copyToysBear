@@ -6,9 +6,11 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
+          clearable
             v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%;"
+            @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
         <el-form-item label="时间段搜索">

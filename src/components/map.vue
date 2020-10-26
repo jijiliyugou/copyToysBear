@@ -40,17 +40,6 @@ export default {
         // 创建地址解析器实例
         var geoc = new BMap.Geocoder()
         var myCity = _that.addr.address ? ((_that.addr.address.split('市')[0] + '市').split('省')[1]) : '汕头市'
-        $.ajax({
-          url: 'https://api.map.baidu.com/geocoder',
-          type: 'GET',
-          data: { address: _that.addr.address, output: 'json', key: 'Sq9k6GvxctKQIyW4wKWaasFDz5AdlFNH', city: myCity },
-          dataType: 'jsonp',
-          success (success) {
-          // 成功返回的数据success
-            console.log(1234, success)
-          }
-        })
-
         geoc.getPoint(_that.addr.address,
           function (point) {
             if (point) {
@@ -91,7 +80,7 @@ export default {
                 // _that.showNav = true
                 // document.getElementById('viewDiv').innerHTML = '<object type="text/html" codebase="https" data=' + 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=' + _that.addr.companyName + ' width="100%" height="102%"></object>'
                 // _that.mapAttr = 'https://api.map.baidu.com/marker?location=' + point.lat + ',' + point.lng + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=webapp.baidu.openAPIdemo'
-                _that.mapAttr = 'http://api.map.baidu.com/geocoder?address=' + _that.addr.address + '&output=html&src=webapp.baidu.openAPIdemo'
+                _that.mapAttr = 'https://api.map.baidu.com/geocoder?address=' + _that.addr.address + '&title=' + _that.addr.companyName + '&content=' + _that.addr.address + '&output=html&src=webapp.baidu.openAPIdemo'
                 window.open(_that.mapAttr)
               }
               var content =
@@ -151,11 +140,7 @@ export default {
         border-radius:10px 0 0 0;
     }
     .BMap_pop div:nth-child(3){
-        border-radius:0 10px 0 0;background:#ABABAB;;
-        /*background: #ABABAB;*/
-        // width:23px;
-        // width:0px;
-        // height:0px;
+        border-radius:0 10px 0 0;background:#ABABAB;
     }
     .BMap_pop div:nth-child(3) div{
         border-radius:10px;

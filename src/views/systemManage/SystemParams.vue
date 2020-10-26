@@ -8,6 +8,7 @@
           <el-input
             v-model="formInline.ItemText"
             clearable
+            @keyup.enter.native="search"
             placeholder="输入关键字"
             style="width: 90%;"
           ></el-input>

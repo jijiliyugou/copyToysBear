@@ -16,14 +16,14 @@
             <div slot="placeholder" class="image-slot">
               <img
                 class="errorImg"
-                src="~@/assets/images/zanwutupian1.png"
+                src="~@/assets/images/imgError.jpg"
                 alt
               />
             </div>
             <div slot="error" class="image-slot">
               <img
                 class="errorImg"
-                src="~@/assets/images/zanwutupian1.png"
+                src="~@/assets/images/imgError.jpg"
                 alt
               />
             </div>

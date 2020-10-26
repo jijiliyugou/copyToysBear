@@ -12,6 +12,7 @@
             clearable
             placeholder="输入关键字"
             style="width: 90%;"
+            @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
         <el-form-item label="时间段搜索">

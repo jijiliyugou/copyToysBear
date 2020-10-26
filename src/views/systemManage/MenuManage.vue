@@ -6,14 +6,37 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
+          size="mini"
             v-model="formInline.keyword"
             clearable
+            @keyup.enter.native="search"
             placeholder="输入关键字"
             style="width: 90%"
           ></el-input>
         </el-form-item>
+        <el-form-item label="状态搜索">
+          <el-select
+            v-model="formInline.state"
+            clearable
+            placeholder="请选择"
+            size="mini"
+            style="width: 90%;"
+          >
+            <el-option
+              v-for="(item, i) in [
+                { label: '全部', value: null },
+                { label: '已激活', value: 1 },
+                { label: '未激活', value: 0 }
+              ]"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="时间段搜索">
           <el-date-picker
+          size="mini"
             v-model="formInline.dateTile"
             value-format="yyyy-MM-ddTHH:mm:ss"
             type="datetimerange"
@@ -25,8 +48,8 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item class="btnList">
-          <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="primary" @click="openAdd">新增</el-button>
+          <el-button type="primary" size="mini" @click="search">查询</el-button>
+          <el-button type="primary" size="mini" @click="openAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -260,6 +283,7 @@ export default {
       formInline: {
         // 查询角色表单
         keyword: '',
+        state: '',
         dateTile: null
       }
     }
@@ -280,12 +304,13 @@ export default {
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
-        keyword: this.formInline.keyword,
+        name: this.formInline.keyword,
+        isEnabled: this.formInline.state,
         startTime: this.formInline.dateTile && this.formInline.dateTile[0],
         endTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
       for (const key in fd) {
-        if (!fd[key]) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
           delete fd[key]
         }
       }

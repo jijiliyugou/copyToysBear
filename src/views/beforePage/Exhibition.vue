@@ -21,9 +21,7 @@
             class="textItem"
             v-for="item in exhibitionList"
             :key="item"
-            @click="
-              $router.push({ name: 'ShowRoomDetail', params: { id: item } })
-            "
+            @click="toExhibitionDetail(item)"
           >
             <div class="left">
               <h4 class="text">2014法律纠纷地方撒VS得到从第三方</h4>
@@ -67,6 +65,10 @@ export default {
     }
   },
   methods: {
+    toExhibitionDetail (item) {
+      console.log(item)
+      this.$message.error('暂无详情页')
+    },
     changePage (page) {
       this.currentPage = page
     },

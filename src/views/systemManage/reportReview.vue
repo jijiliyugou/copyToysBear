@@ -4,6 +4,15 @@
     <div style="width:1200px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <el-form-item label="关键字查询">
+          <el-input
+            v-model="searchForm.keyword"
+            clearable
+            placeholder="关键字查询"
+            @keyup.enter.native="search"
+            style="width: 90%;"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="举报类别">
           <el-select
             v-model="searchForm.reportType"
@@ -23,7 +32,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="审核状态搜索">
+        <!-- <el-form-item label="审核状态搜索">
           <el-select
           clearable
             v-model="searchForm.state"
@@ -41,7 +50,7 @@
               :value="item.value"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="时间段搜索">
           <el-date-picker
             v-model="searchForm.dateTile"
@@ -266,7 +275,7 @@ export default {
         ]
       },
       searchForm: {
-        reportType: '',
+        keyword: '',
         state: '',
         dateTile: []
       }
@@ -283,16 +292,15 @@ export default {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         reportType: this.searchForm.reportType,
-        reportState: this.searchForm.state
+        keyword: this.searchForm.keyword,
+        StartTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
+        EndTime: this.searchForm.dateTile && this.searchForm.dateTile[1]
       }
       for (const key in fd) {
-        if (fd[key] === '') {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
           delete fd[key]
         }
       }
-      this.searchForm.dateTile[0] &&
-        (fd.startTime = this.searchForm.dateTile[0])
-      this.searchForm.dateTile[1] && (fd.endTime = this.searchForm.dateTile[1])
       const res = await this.$http.post('/api/MessageReportPage', fd)
       console.log(res)
       if (res.data.result.code === 200) {

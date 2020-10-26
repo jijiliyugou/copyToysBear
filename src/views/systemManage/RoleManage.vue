@@ -6,9 +6,10 @@
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-            v-model="searchForm.keyWord"
+            v-model="searchForm.keyword"
             clearable
             placeholder="输入关键字"
+            @keyup.enter.native="search"
             style="width: 90%;"
             size="mini"
           ></el-input>
@@ -236,7 +237,7 @@ export default {
       },
       searchForm: {
         // 查询角色表单
-        keyWord: '',
+        keyword: '',
         state: null,
         dateTile: null
       },
@@ -275,10 +276,10 @@ export default {
     // 获取系统角色列表
     async getRoleList () {
       const fd = {
-        state: this.searchForm.state,
+        isEnabled: this.searchForm.state,
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
-        keyWord: this.searchForm.keyWord,
+        roleName: this.searchForm.keyword,
         CompanyType: this.searchForm.CompanyType,
         StartTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
         EndTime: this.searchForm.dateTile && this.searchForm.dateTile[1]

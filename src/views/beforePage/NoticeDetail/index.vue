@@ -21,7 +21,7 @@
             @change="changeIndex"
             indicator-position="none"
           >
-            <template v-if="noticeData.imgList">
+            <template v-if="noticeData.imgList && noticeData.imgList.length > 0">
               <el-carousel-item
                 v-for="(item, i) in noticeData.imgList"
                 :key="i"

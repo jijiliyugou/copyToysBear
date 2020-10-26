@@ -9,6 +9,7 @@
             v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%"
+            @keyup.enter.native="search"
             clearable
           ></el-input>
         </el-form-item>
@@ -235,9 +236,10 @@ export default {
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
-      if (!this.formInline.dateTile) {
-        delete fd.StartTime
-        delete fd.EndTime
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
       }
       const res = await this.$http.post('/api/ProductCategoryPage', fd)
       if (res.data.result.code === 200) {

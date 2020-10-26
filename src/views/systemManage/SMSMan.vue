@@ -9,6 +9,7 @@
             v-model="formInline.keyword"
             clearable
             placeholder="关键字查询"
+            @keyup.enter.native="search"
             style="width: 90%;"
           ></el-input>
         </el-form-item>
@@ -147,7 +148,9 @@ export default {
     async getSMSSendInfo () {
       const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, startTime: this.formInline.dateTile && this.formInline.dateTile[0], endTime: this.formInline.dateTile && this.formInline.dateTile[1], keyword: this.formInline.keyword }
       for (const key in fd) {
-        if (!fd[key]) delete fd[key]
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
       }
       const res = await this.$http.post('/api/SMSrecordPage', fd)
       if (res.data.result.code === 200) {
