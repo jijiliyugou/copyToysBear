@@ -58,15 +58,14 @@
               <span>{{ productDetail.bearProduct && productDetail.bearProduct.createdOn | createdOn }}</span>
             </div>
           </div>
-          <div class="price">
-            参考单价：{{ productDetail.cu_de }}
-            <span>{{
-              (productDetail.bearProduct && productDetail.bearProduct.price) === 0
-                ? "???"
-                : (productDetail.bearProduct && productDetail.bearProduct.price)
-            }}</span>
-          </div>
           <ul class="productParams">
+            <li>
+            参考单价：<span  class="price">{{productDetail.cu_de +
+              (productDetail.bearProduct.price === 0
+                ? "???"
+                : productDetail.bearProduct.price)
+            }}</span>
+            </li>
             <li>
               出厂货号：{{
                 (productDetail.bearProduct && productDetail.bearProduct.fa_no) === 0
@@ -395,14 +394,6 @@ export default {
           font-size: 12px;
         }
       }
-      .price {
-        color: #ff0000;
-        font-size: 12px;
-        margin: 20px 0;
-        span {
-          font-size: 22px;
-        }
-      }
       .Introduction {
         line-height: 30px;
       }
@@ -412,6 +403,10 @@ export default {
         position: relative;
         li {
           line-height: 40px;
+          .price {
+            color: #ff0000;
+            font-size: 22px;
+          }
         }
         .tagBox {
           height: 32px;
