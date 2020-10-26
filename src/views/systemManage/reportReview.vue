@@ -284,6 +284,7 @@ export default {
   methods: {
     // 列表查询
     search () {
+      this.currentPage = 1
       this.getMessageReportPage()
     },
     // 获取所有举报消息

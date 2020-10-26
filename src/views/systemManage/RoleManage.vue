@@ -297,6 +297,7 @@ export default {
     },
     // 列表查询
     search () {
+      this.currentPage = 1
       this.getRoleList()
     },
     // 打开新增角色

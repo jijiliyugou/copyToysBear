@@ -355,6 +355,7 @@ export default {
       })
     },
     search () {
+      this.currentPage = 1
       this.getAuth()
     },
     openAdd () {

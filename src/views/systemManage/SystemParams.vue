@@ -369,6 +369,7 @@ export default {
     },
     // 搜索
     search () {
+      this.currentPage = 1
       this.getSysList()
     },
     // 编辑系统参数

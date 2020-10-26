@@ -261,6 +261,7 @@ export default {
       this.getCategoryPage()
     },
     search () {
+      this.currentPage = 1
       this.getCategoryPage()
     },
     // 打开父级新增类目列表窗口

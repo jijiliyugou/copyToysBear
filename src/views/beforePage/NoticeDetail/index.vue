@@ -72,8 +72,8 @@
             </template>
           </el-carousel>
         </div>
-        <el-dialog :visible.sync="dialogImgUpload" destroy-on-close>
-          <img width="100%" :src="imgUrl" alt />
+        <el-dialog :visible.sync="dialogImgUpload" top="0" destroy-on-close>
+          <img :src="imgUrl" alt />
         </el-dialog>
         <!-- 小幻灯片 -->
         <div

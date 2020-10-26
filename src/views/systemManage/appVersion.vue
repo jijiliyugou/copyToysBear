@@ -225,6 +225,7 @@ export default {
   methods: {
     // 列表查询
     search () {
+      this.currentPage = 1
       this.getAppVersionPage()
     },
     // 获取所有app版本
