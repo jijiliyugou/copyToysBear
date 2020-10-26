@@ -102,7 +102,7 @@
                     装箱量：{{
                       item.fa_no === 0
                         ? "???"
-                        : item.in_en + "/" + item.ou_lo + "(PSC)"
+                        : item.in_en + "/" + item.ou_lo + "(PCS)"
                     }}
                   </li>
                   <li>

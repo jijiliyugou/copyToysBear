@@ -776,7 +776,7 @@
                     item.ou_hi
                   }}(CM)
                 </p>
-                <p>装箱量：{{ item.in_en }}/{{ item.ou_lo }}(PSC)</p>
+                <p>装箱量：{{ item.in_en }}/{{ item.ou_lo }}(PCS)</p>
                 <p>
                   体积/材积：{{ item.bulk_feet }}(CBM)/{{
                     item.bulk_stere

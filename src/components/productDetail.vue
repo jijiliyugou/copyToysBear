@@ -112,7 +112,7 @@
                   : productDetail.bearProduct.in_en +
                     "/" +
                     productDetail.bearProduct.ou_lo +
-                    "(PSC)"
+                    "(PCS)"
               }}
             </li>
             <li>
