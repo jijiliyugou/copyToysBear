@@ -71,7 +71,7 @@
                 @click="productDetail(item.productNumber)"
               >
                 <div class="img">
-                  <el-image fit="contain" :src="item.img">
+                  <el-image fit="contain" :src="item.imageUrl">
                     <div
                       slot="placeholder"
                       class="image-slot"
