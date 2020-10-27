@@ -27,7 +27,7 @@
         </li>
         <li class="companyInfo">
           <p>
-            公司名称：
+            <span class="title">公司名称：</span>
             <el-input
               type="text"
               placeholder="请输入公司名称"
@@ -37,7 +37,7 @@
             ></el-input>
           </p>
           <p>
-            邮箱地址：
+            <span class="title">邮箱地址：</span>
             <!-- <input v-model="meInfo.e_mail" /> -->
             <el-input
               type="email"
@@ -49,7 +49,7 @@
             ></el-input>
           </p>
           <p>
-            电话号码：
+            <span class="title">电话号码：</span>
             <!-- <input v-model="meInfo.phoneNumber" /> -->
             <el-input
               type="number"
@@ -60,15 +60,16 @@
             ></el-input>
           </p>
           <p>
-            联系地址：
+            <span class="title">联系地址：</span>
             <el-input
               type="textarea"
               placeholder="请输入联系地址"
               style="overflow-x:hidden;overflow-y:hidden;"
               autosize
+              resize="none"
               v-model="meInfo.address"
               autocomplete="off"
-              maxlength="50"
+              maxlength="99"
               minlength="1"
             ></el-input>
           </p>
@@ -576,7 +577,7 @@ export default {
 @deep: ~">>>";
 .wrap {
   max-width: 1200px;
-min-width: 800px;
+  min-width: 800px;
   margin: 0 auto;
   .myInfo {
     display: flex;
@@ -612,34 +613,19 @@ min-width: 800px;
     }
     li {
       margin: 20px;
-      p {
-        input {
-          width: 80%;
-        }
-        @{deep} .el-textarea {
-          width: 540px;
-          textarea.el-textarea__inner {
-            border: none;
-            outline: none;
-            resize: none;
-          }
-        }
-      }
-      &:nth-child(2) {
-        padding: 20px 0;
-        p {
-          margin: 10px 0;
-        }
-      }
       &.companyInfo {
         flex: 1;
         font-size: 14px;
         font-family: "Microsoft Yahei";
+        display:flex;
+        flex-direction: column;
         p {
           display: flex;
           align-items: center;
+          .title{
+            min-width:70px;
+          }
           @{deep} .el-input {
-            width: 540px;
             font-size: 14px;
             input.el-input__inner {
               border: none;
@@ -659,6 +645,8 @@ min-width: 800px;
           }
           @{deep} .el-textarea{
             .el-textarea__inner{
+              border: none;
+              outline: none;
               font-size: 14px;
               font-family: "Microsoft Yahei";
             }
