@@ -36,7 +36,7 @@
       <div class="searchContent">
         <div class="filterTitle" v-show="!isDetail">
             <div class="keywrodSearch">
-              <el-input placeholder="请输入搜索内容" size="mini" @keyup.enter.native="search" v-model="keyword" class="input-with-select">
+              <el-input placeholder="请输入搜索内容" size="mini" @keyup.enter.native="search" clearable v-model="keyword" class="input-with-select">
                 <el-button slot="append" size="mini" icon="el-icon-search" @click="search"></el-button>
               </el-input>
             </div>
