@@ -105,15 +105,16 @@
                   <ul>
                     <li>
                       <!-- 出厂货号：{{ item.fa_no }} -->
-                      产品货号：{{ item.fa_no }}
+                      出厂货号：<span>{{ item.fa_no }}</span>
                     </li>
                     <li>
-                      毛重/净重：{{
-                        item.ne_we + "/" + item.gr_we + "(kg)"
-                      }}
+                      装箱量：<span>{{item.in_en + "/" + item.ou_lo + "(PCS)"}}</span>
                     </li>
                     <li>
-                      报价：<span>{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
+                      体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
+                    </li>
+                    <li>
+                      报价：<span class="price">{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
                     </li>
                   </ul>
                 </div>
@@ -470,15 +471,13 @@ export default {
             ul {
               li {
                 padding-top: 5px;
+                .price {
+                  color:#ff2505;
+                }
               }
               @{deep} .el-tag {
                 margin: 5px 0;
               }
-            }
-            p {
-              float: right;
-              color: #cb9348;
-              font-weight: 700;
             }
           }
           &:hover {

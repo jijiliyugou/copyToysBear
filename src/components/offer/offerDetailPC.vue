@@ -29,7 +29,7 @@
       <!-- 产品内容 -->
       <div class="cententText" v-if="productDetail">
           <p class="textItem name">产品名称：{{productDetail.name}}</p>
-          <p class="textItem">产品货号：{{productDetail.fa_no}}</p>
+          <p class="textItem">出厂货号：{{productDetail.fa_no}}</p>
           <p class="textItem">包装方式：{{productDetail.ch_pa}}</p>
           <p class="textItem">样品规格：{{productDetail.pr_le + " X " + productDetail.pr_wi + " X " + productDetail.pr_hi + "(CM)"}}</p>
           <p class="textItem">外箱规格：{{productDetail.ou_le + " X " + productDetail.ou_wi + " X " + productDetail.ou_hi + "(CM)"}}</p>

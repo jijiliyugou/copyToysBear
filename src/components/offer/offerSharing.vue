@@ -112,13 +112,16 @@
           <div class="right">
             <p class="productName">{{ item.name }}</p>
             <p class="productCode">
-              货号：<span>{{ item.fa_no }}</span>
+              出厂货号：<span>{{ item.fa_no }}</span>
             </p>
-            <p class="productWeight">
-              毛重/净重：<span>{{ item.gr_we }}/{{ item.ne_we }}kg</span>
+            <p>
+              装箱量：<span>{{item.in_en + "/" + item.ou_lo + "(PCS)"}}</span>
+            </p>
+            <p>
+              体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
             </p>
             <p class="productPrice">
-              单价：<span class="price">{{
+              报价：<span class="price">{{
                 item.cu_de + item.unitPrice.toFixed(2)
               }}</span>
             </p>
@@ -444,18 +447,20 @@ export default {
     // 滚动事件
     baojiaScroll (e) {
       const top = e.target.scrollTop
-      const box = document.getElementsByClassName('baojia')[0]
+      const box = $('.productList')[0]
+      const card = $('.box-card').outerHeight(true)
+      const line = $('.line').outerHeight(true)
+      const itemHeight = $('.floatSearch').outerHeight(true)
       const item = document.getElementsByClassName('floatSearch')[0]
-      if (top >= 205) {
-        box.style.paddingTop = '2rem'
+      if (top >= (card + line)) {
         item.style.position = 'fixed'
         item.style.left = '0'
-        item.style.padding = '0.133333rem 0.188888rem 0.133333rem 0.188888rem'
+        item.style.padding = '0 0.188888rem'
         item.style.top = '0px'
+        box.style.paddingTop = itemHeight + 'px'
       } else {
-        box.style.paddingTop = '0px'
         item.style.position = 'static'
-        item.style.padding = '10px 0px'
+        box.style.paddingTop = 0 + 'px'
       }
     },
     // 获取产品类目列表
@@ -482,7 +487,7 @@ export default {
       if (res.data.result.code === 200) {
         this.productList = flag
           ? this.productList.concat(res.data.result.item.items)
-          : [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
+          : res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
@@ -541,16 +546,16 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
   box-sizing: border-box;
+  font-size: 0.266667rem;
   &::-webkit-scrollbar {
     display: none;
   }
-  font-size: 0.266667rem;
   .text {
-    font-size: 14px;
+    font-size: 0.186667rem;
   }
 
   .item {
-    margin-bottom: 18px;
+    margin-bottom: 0.24rem;
     &:last-of-type {
       margin-bottom: 0;
     }
@@ -650,6 +655,9 @@ export default {
       .listItem {
         margin-bottom: 0.266667rem;
         border-radius: 0.133333rem;
+        &:first-of-type {
+          margin-top: 0.266667rem;
+        }
         @{deep} .el-card__body {
           padding: 0.133333rem;
           display: flex;
@@ -658,19 +666,24 @@ export default {
             margin-right: 0.133333rem;
             border-radius: 0.133333rem;
             box-sizing: border-box;
+            display:flex;
+            align-items:center;
           }
           .right {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            .productName {
-              font-weight: 600;
-            }
-            .productPrice {
-              .price {
-                color: #f54d35;
-                font-weight: 500;
+              p{
+                padding: 2px 0;
+                &.productName {
+                font-weight: 600;
+              }
+              &.productPrice {
+                .price {
+                  color: #f54d35;
+                  font-weight: 500;
+                }
               }
             }
           }

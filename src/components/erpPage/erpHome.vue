@@ -24,10 +24,35 @@
       >
         <div class="myimg">
           <el-image
-            style="height:100px;"
+            style="height:100px;display:flex;align-items:center;"
             :src="item.companyLogo"
             fit="contain"
-          ></el-image>
+          >
+          <div
+                      slot="placeholder"
+                      class="image-slot"
+                      style="width: 80px; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width: 80px;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                    <div
+                      slot="error"
+                      class="image-slot"
+                      style="width: 80px; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width: 80px;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+          </el-image>
         </div>
         <div class="text">{{ item.companyName }}</div>
       </li>

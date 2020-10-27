@@ -200,6 +200,7 @@ export default {
         this.getQrCodeUrl()
       } else {
         clearInterval(this.qrTimer)
+        this.ws && this.ws.close()
       }
     }
   },
@@ -269,7 +270,7 @@ export default {
         RandomCode: this.randomCode
       })
       if (res.data.result.isLogin) {
-        this.ws.close()
+        this.ws && this.ws.close()
         clearInterval(this.qrTimer)
         this.qrTimer = null
         this.$store.commit('setToken', res.data.result)
@@ -326,6 +327,7 @@ export default {
         // 开启长连接
         this.initWebSocket()
       }
+      // const TIME_COUNT = 20
       const TIME_COUNT = 300
       if (!this.timer) {
         let count = TIME_COUNT
@@ -336,6 +338,7 @@ export default {
           if (count > 0 && count <= TIME_COUNT) {
             count--
           } else {
+            this.ws && this.ws.close()
             this.showQrCode = true
             this.qrcodeTitle = '二维码已失效，点击刷新'
             clearInterval(this.qrTimer)

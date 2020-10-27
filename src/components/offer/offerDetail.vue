@@ -37,7 +37,7 @@
       </div>
       <div class="cententText">
         <p class="textItem name">{{productDetail.name}}</p>
-        <p class="textItem">货号：{{productDetail.fa_no}}</p>
+        <p class="textItem">出厂货号：{{productDetail.fa_no}}</p>
         <p class="textItem">包装方式：{{productDetail.ch_pa}}</p>
         <p class="textItem">样品规格：{{productDetail.pr_le + " X " + productDetail.pr_wi + " X " + productDetail.pr_hi + "(CM)"}}</p>
         <p class="textItem">外箱规格：{{productDetail.ou_le + " X " + productDetail.ou_wi + " X " + productDetail.ou_hi + "(CM)"}}</p>
@@ -107,10 +107,6 @@ export default {
   height: 100%;
   overflow: auto;
   font-size: 0.266667rem;
-  .text {
-    font-size: 14px;
-  }
-
   .item {
     margin-bottom: 0.24rem;
     &:last-of-type{
@@ -122,8 +118,7 @@ export default {
     margin: 0.4rem auto 0 auto;
     @{deep} .el-card__header {
       padding:0.133333rem;
-    }
-     @{deep} .clearfix {
+     .clearfix {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -137,13 +132,19 @@ export default {
             left: 0;
             top: 50%;
             height: 70%;
-            width: 4px;
+            width: 0.053333rem;
             background-color: #165af7;
             transform:translate(0, -50%);
-            border-radius: 0 5px 5px 0;
+            border-radius: 0 0.066667rem 0.066667rem 0;
           }
         }
       }
+    }
+    @{deep} .el-card__body{
+      .text{
+        font-size: 0.186667rem;
+      }
+    }
   }
   .line{
     width: 100%;
@@ -152,6 +153,7 @@ export default {
     background: #F5F5F5;
   }
   .backTo{
+    font-size: 0.24rem;
     padding: 0.133333rem;
     border-bottom: 1px solid #EBEEF5;
     display: flex;
@@ -169,6 +171,7 @@ export default {
       align-items: center;
       padding-right: 0.133333rem;
       box-sizing: border-box;
+      height:100%;
     }
     .cententText{
       flex: 2;
