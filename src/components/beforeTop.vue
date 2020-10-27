@@ -91,7 +91,7 @@
         </div>
       </el-col>
     </el-row>
-    <div class="sidebar" style="width:1200px;margin: 0 auto;">
+    <div class="sidebar" style="maxWidth:1200px;minWidth:800px;margin: 0 auto;">
       <ul>
         <router-link
           class="li"

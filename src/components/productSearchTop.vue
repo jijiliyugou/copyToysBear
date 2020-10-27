@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bsSearchTopBox">
     <div class="bsSearch">
       <el-input
         placeholder="请输入内容"
@@ -238,7 +238,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.bsSearch {
+.bsSearchTopBox{
+  max-width: 1200px;
+  min-width: 800px;
+  margin: 0 auto;
+  .bsSearch {
   text-align: center;
   margin: 30px 0;
   .myCamera {
@@ -252,9 +256,10 @@ export default {
 }
 // 截图
 .cropper-content {
-  .cropper {
-    width: auto;
-    height: 500px;
+    .cropper {
+      width: auto;
+      height: 500px;
+    }
   }
 }
 </style>

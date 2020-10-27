@@ -1,7 +1,7 @@
 <template>
   <div style="position:relative;min-height:757px;">
     <bsTop></bsTop>
-    <div style="width:1200px;margin:0 auto;">
+    <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">

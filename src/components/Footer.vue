@@ -71,6 +71,7 @@ export default {
   .footerBox{
     max-width: 1200px;
     min-width: 800px;
+    margin:0 auto;
     p {
     margin: 10px 0;
   }
