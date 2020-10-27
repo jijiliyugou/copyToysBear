@@ -113,7 +113,7 @@
                       }}
                     </li>
                     <li>
-                      单价：<span>{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
+                      报价：<span>{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
                     </li>
                   </ul>
                 </div>

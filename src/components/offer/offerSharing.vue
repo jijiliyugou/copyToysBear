@@ -19,7 +19,7 @@
           }}</span>
         </div>
         <div class="item">
-          报价参数：<span class="content">{{
+          报价：<span class="content">{{
             productInfo && productInfo.bidPrice
           }}</span>
         </div>
