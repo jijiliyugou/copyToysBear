@@ -3,7 +3,7 @@
     <bsTop></bsTop>
     <productSearchTop parentEl="searchIndex"></productSearchTop>
     <ul class="hotSearch">
-      <li style="minWidth:48px;">热门搜搜</li>
+      <li style="minWidth:60px;">热门搜搜：</li>
       <div class="item">
         <li
         @click="toSearchIndex(item.productName)"
@@ -114,7 +114,7 @@ export default {
   }
 }
 .hotSearch {
-  max-width: 1000px;
+  max-width: 1200px;
   min-width: 800px;
   margin:0 auto;
   display: flex;
