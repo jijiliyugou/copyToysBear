@@ -133,7 +133,7 @@ export default {
   }
 }
 .lunbo {
-  width: 1200px;
+  max-width: 1200px;
   margin: 200px auto 10px auto;
   padding: 10px;
   box-sizing: border-box;

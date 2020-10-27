@@ -74,7 +74,7 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .showRoom {
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
   .showRoomList {
     margin-top: 5px;

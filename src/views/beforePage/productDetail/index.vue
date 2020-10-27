@@ -315,7 +315,7 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .productDetailBox {
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .Graphic {

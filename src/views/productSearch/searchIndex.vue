@@ -402,7 +402,7 @@ export default {
     }
   }
   .searchWraps {
-    width: 1200px;
+    max-width: 1200px;
     margin: 20px auto;
     box-sizing: border-box;
     display: flex;

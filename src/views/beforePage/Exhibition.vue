@@ -86,13 +86,13 @@ export default {
   .navBarTitle {
     height: 50px;
     display: flex;
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     align-items: center;
   }
 }
 .exhibitionContent {
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
   .title {
     margin-top: 20px;

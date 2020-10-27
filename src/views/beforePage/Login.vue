@@ -566,7 +566,7 @@ export default {
 .login,
 .content {
   height: 100%;
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .miaddle {

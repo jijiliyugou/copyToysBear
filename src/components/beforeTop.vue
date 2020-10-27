@@ -344,7 +344,7 @@ export default {
 }
 .banner {
   .bannerContent {
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     height: 50px;
     display: flex;

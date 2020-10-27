@@ -214,7 +214,7 @@ export default {
   position: relative;
   min-height: 757px;
   .searchBox {
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 50px 0;
     box-sizing: border-box;

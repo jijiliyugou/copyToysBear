@@ -370,7 +370,7 @@ export default {
   .searchWraps {
     width: 100%;
     box-sizing: border-box;
-    width: 1200px;
+    max-width: 1200px;
     margin: 20px auto;
     display: flex;
     .searchSidebar {

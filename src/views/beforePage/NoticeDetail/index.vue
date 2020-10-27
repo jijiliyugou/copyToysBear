@@ -264,7 +264,7 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .noticeDetailBox {
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .Graphic {

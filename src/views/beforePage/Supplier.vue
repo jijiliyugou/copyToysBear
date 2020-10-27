@@ -107,7 +107,7 @@ export default {
     .navBarTitle {
       height: 50px;
       display: flex;
-      width: 1200px;
+      max-width: 1200px;
       margin: 0 auto;
       align-items: center;
     }
@@ -115,7 +115,7 @@ export default {
 
   .buyersList {
     display: flex;
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     justify-content: space-between;
     text-align: justify;

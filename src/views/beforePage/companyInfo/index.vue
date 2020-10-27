@@ -71,7 +71,7 @@ export default {
 
     .navBar {
       height: 50px;
-      width: 1200px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -79,7 +79,7 @@ export default {
     }
   }
   .contentWrap {
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     margin-top: 20px;
     display: flex;

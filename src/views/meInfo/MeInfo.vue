@@ -4788,7 +4788,7 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     box-sizing: border-box;
-    width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     &:after {
       content: "";
