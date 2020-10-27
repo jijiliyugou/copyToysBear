@@ -3,14 +3,16 @@
     <bsTop></bsTop>
     <productSearchTop parentEl="searchIndex"></productSearchTop>
     <ul class="hotSearch">
-      <li>热门搜搜</li>
-      <li
+      <li style="minWidth:48px;">热门搜搜</li>
+      <div class="item">
+        <li
         @click="toSearchIndex(item.productName)"
         v-for="(item, i) in hotWords"
         :key="i"
       >
         {{ item.productName }}
       </li>
+      </div>
     </ul>
     <div class="lunbo" v-if="!carouselList || !carouselList.length">
       <h5>
@@ -112,24 +114,24 @@ export default {
   }
 }
 .hotSearch {
-  max-width: 1200px;
+  max-width: 1000px;
   min-width: 800px;
   margin:0 auto;
   display: flex;
   justify-content: center;
   li {
-    margin: 0 10px;
+    margin:10px;
     font-size: 12px;
-    color: #ccc;
-    cursor: pointer;
-    &:hover {
-      color: #409eff;
-    }
-    &:first-child {
-      color: black;
-      cursor: default;
+  }
+  .item{
+    display: flex;
+    flex-wrap:wrap;
+    li{
+      margin: 10px;
+      color: #ccc;
+      cursor: pointer;
       &:hover {
-        color: black;
+        color: #409eff;
       }
     }
   }
