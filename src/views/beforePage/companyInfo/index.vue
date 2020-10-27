@@ -72,7 +72,7 @@ export default {
     .navBar {
       height: 50px;
       max-width: 1200px;
-min-width: 700px;
+min-width: 800px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -81,7 +81,7 @@ min-width: 700px;
   }
   .contentWrap {
     max-width: 1200px;
-min-width: 700px;
+min-width: 800px;
     margin: 0 auto;
     margin-top: 20px;
     display: flex;

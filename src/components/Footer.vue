@@ -1,6 +1,7 @@
 <template>
   <div class="footer">
-    <p class="contactMe">
+    <div class="footerBox">
+      <p class="contactMe">
       <em @click="$router.push('/beforeIndex/companyInfo/contactUs')"
         >联系我们</em
       >
@@ -33,6 +34,7 @@
       <img src="~@/assets/images/cnzz.gif" alt="" />
     </div>
   </div>
+    </div>
 </template>
 
 <script>
@@ -66,7 +68,10 @@ export default {
   flex-direction: column;
   background-color: #909090;
   padding: 20px 0;
-  p {
+  .footerBox{
+    max-width: 1200px;
+    min-width: 800px;
+    p {
     margin: 10px 0;
   }
   .contactMe {
@@ -120,6 +125,7 @@ export default {
         color: #4cd6fd;
       }
     }
+  }
   }
 }
 </style>
