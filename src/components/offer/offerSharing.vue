@@ -482,7 +482,7 @@ export default {
       if (res.data.result.code === 200) {
         this.productList = flag
           ? this.productList.concat(res.data.result.item.items)
-          : res.data.result.item.items
+          : [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)

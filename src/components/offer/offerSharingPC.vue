@@ -294,11 +294,11 @@ export default {
     this.getProductOfferDetailPage()
   },
   mounted () {
-    if (this.$store.state.screenWidth < 1024) this.$router.push('/offerSharing?id=' + this.$route.query.id)
+    if (this.$store.state.screenWidth <= 1024) this.$router.push('/offerSharing?id=' + this.$route.query.id)
   },
   watch: {
     '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
-      if (val < 1024) this.$router.push('/offerSharing?id=' + this.$route.query.id)
+      if (val <= 1024) this.$router.push('/offerSharing?id=' + this.$route.query.id)
     }
   }
 }
