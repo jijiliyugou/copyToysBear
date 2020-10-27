@@ -96,6 +96,7 @@ export default {
 <style lang="less" scoped>
 .showRoomTetailBox {
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
 }
 .contactTitleTxt {
@@ -122,6 +123,7 @@ export default {
   .title {
     position: absolute;
     max-width: 1200px;
+min-width: 700px;
     top: 50%;
     left: 50%;
     text-indent: 100px;

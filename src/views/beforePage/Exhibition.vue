@@ -87,12 +87,14 @@ export default {
     height: 50px;
     display: flex;
     max-width: 1200px;
+min-width: 700px;
     margin: 0 auto;
     align-items: center;
   }
 }
 .exhibitionContent {
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
   .title {
     margin-top: 20px;

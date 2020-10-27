@@ -270,6 +270,7 @@ export default {
 <style lang="less" scoped>
 .home {
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
   .el-carousel__item h3 {
     color: #475669;

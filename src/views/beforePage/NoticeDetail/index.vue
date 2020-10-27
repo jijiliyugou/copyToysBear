@@ -265,6 +265,7 @@ export default {
 @deep: ~">>>";
 .noticeDetailBox {
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
 }
 .Graphic {

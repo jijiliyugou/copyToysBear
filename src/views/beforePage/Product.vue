@@ -312,6 +312,7 @@ export default {
 .productwrap {
   width: 100%;
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
   min-height: 569px;
   box-sizing: border-box;

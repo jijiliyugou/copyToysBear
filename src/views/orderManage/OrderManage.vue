@@ -215,6 +215,7 @@ export default {
   min-height: 757px;
   .searchBox {
     max-width: 1200px;
+min-width: 700px;
     margin: 0 auto;
     padding: 50px 0;
     box-sizing: border-box;

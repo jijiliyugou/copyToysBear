@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <el-row style="width:1200px;margin: 0 auto;">
+    <el-row style="maxWidth:1200px;margin: 0 auto;">
       <el-col :span="6">
         <div class="grid-content bg-purple grid-content-top">
           <img class="logo" src="~@/assets/images/logo.png" alt />
@@ -345,6 +345,7 @@ export default {
 .banner {
   .bannerContent {
     max-width: 1200px;
+    min-width: 700px;
     margin: 0 auto;
     height: 50px;
     display: flex;

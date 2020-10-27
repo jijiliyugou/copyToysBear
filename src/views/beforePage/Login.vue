@@ -567,6 +567,7 @@ export default {
 .content {
   height: 100%;
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
 }
 .miaddle {

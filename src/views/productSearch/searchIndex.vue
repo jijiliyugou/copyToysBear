@@ -403,6 +403,7 @@ export default {
   }
   .searchWraps {
     max-width: 1200px;
+min-width: 700px;
     margin: 20px auto;
     box-sizing: border-box;
     display: flex;

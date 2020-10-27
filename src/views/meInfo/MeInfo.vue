@@ -4789,6 +4789,7 @@ export default {
     flex-wrap: wrap;
     box-sizing: border-box;
     max-width: 1200px;
+min-width: 700px;
     margin: 0 auto;
     &:after {
       content: "";

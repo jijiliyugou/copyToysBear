@@ -120,12 +120,14 @@ export default {
     height: 50px;
     display: flex;
     max-width: 1200px;
+min-width: 700px;
     margin: 0 auto;
     align-items: center;
   }
 }
 .findSamInfoContent {
   max-width: 1200px;
+min-width: 700px;
   margin: 0 auto;
   .sendDate {
     color: #666;
