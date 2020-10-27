@@ -83,14 +83,14 @@
         >
           <div class="left">
             <el-image
-              style="width: 100px; height: 100px; position: static"
+              style="width:1.333333rem;height:1.333333rem;position: static"
               :src="item.imageUrl"
               fit="contain"
             >
               <div slot="placeholder" class="image-slot">
                 <img
                   class="errorImg"
-                  style="width: 100px; height: 100px"
+                  style="width:1.333333rem; height: 1.333333rem;"
                   src="~@/assets/images/imgError.jpg"
                   alt
                 />
@@ -98,11 +98,11 @@
               <div
                 slot="error"
                 class="image-slot"
-                style="width: 100px; height: 100px"
+                style="width:1.333333rem; height: 1.333333rem;"
               >
                 <img
                   class="errorImg"
-                  style="width: 100px; height: 100px"
+                  style="width:1.333333rem;height:1.333333rem;"
                   src="~@/assets/images/imgError.jpg"
                   alt
                 />
