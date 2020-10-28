@@ -72,6 +72,8 @@ export default {
 }
 #app {
   height: 100%;
+  width: 100%;
+  min-width: 800px;
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
@@ -103,11 +105,9 @@ export default {
   width: 100%;
   height: 100%;
 }
-// @media screen and (max-width: 1024px) {
-//   body,
-//   #app,
-//   .appViews {
-//     width: 100%;
-//   }
-// }
+@media screen and (max-width: 1024px) {
+  #app{
+    margin: 0 auto;
+  }
+}
 </style>

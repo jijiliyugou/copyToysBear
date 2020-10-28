@@ -69,12 +69,12 @@ export default {
   background-color: #909090;
   padding: 20px 0;
   .footerBox{
-    max-width: 1200px;
+    width: 100%;
     min-width: 800px;
     margin:0 auto;
     p {
     margin: 10px 0;
-  }
+    }
   .contactMe {
     span {
       margin: 0 40px;

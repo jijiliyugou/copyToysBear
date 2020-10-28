@@ -265,7 +265,7 @@ export default {
       }
       const res = await this.$http.post('/api/ProductOfferDetailPage', fd)
       if (res.data.result.code === 200) {
-        this.dataList = res.data.result.item.items
+        this.dataList = [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
@@ -296,7 +296,7 @@ export default {
   .navBarTitle {
     height: 50px;
     display: flex;
-    width: 800px;
+    width: 900px;
     text-indent: 10px;
     margin: 0 auto;
     align-items: center;
@@ -318,7 +318,7 @@ export default {
   }
 }
 .offerInfoContent{
-  width: 800px;
+  width: 900px;
   margin: 0 auto;
   .offerCard{
     margin: 10px 0;
@@ -338,12 +338,12 @@ export default {
     }
   }
   .searchWraps {
-    width: 800px;
+    width: 900px;
     margin: 20px auto;
     box-sizing: border-box;
     display: flex;
     .searchSidebar {
-      width: 150px;
+      width: 200px;
       height: 100%;
       background-color: #e2f1ff;
       .treeContent {
@@ -364,6 +364,8 @@ export default {
       flex: 1;
       font-weight: 500;
       font-size: 12px;
+      padding-left: 15px;
+      box-sizing: border-box;
       .productFilter {
         display: flex;
         height: 36px;
@@ -372,36 +374,31 @@ export default {
         position: relative;
       }
       .filterTitle {
-          margin-left: 15px;
           display: flex;
           height: 40px;
           border-top: 1px solid #ccc;
           border-bottom: 1px solid #ccc;
-          position: relative;
           align-items: center;
           justify-content: space-between;
           box-sizing: border-box;
-          padding: 5px 0;
-          .keywrodSearch,.sortSearch,.downloads{
-            flex: 1;
-            box-sizing: border-box;
-            margin-left: 20px;
-          }
           .keywrodSearch{
-            flex: 0.8;
-            margin-left: 0;
+            width: 220px;
+            display: flex;
           }
           .sortSearch{
-            margin-left: 25px;
+            width: 220px;
+            display: flex;
+            justify-content: center;
           }
           .downloads{
-            margin-right: 0;
+            width: 220px;
+            display: flex;
+            justify-content: flex-end;
           }
         }
       .productList {
-        margin-left: 10px;
-        margin-top: 10px;
-        width: 650px;
+        margin-top: 15px;
+        width: 100%;
         box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
@@ -410,12 +407,12 @@ export default {
         &::after{
           content: "";
           display: block;
-          width: 200px;
+          width: 220px;
         }
         .productItems {
-          width: 200px;
-          margin: 5px;
-          box-sizing: border-box;
+          width: 220px;
+          margin: 5px 0;
+          // box-sizing: border-box;
           cursor: pointer;
           box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
           .img {
@@ -450,7 +447,6 @@ export default {
           }
           .details {
             padding: 0 10px 10px 10px;
-
             ul {
               li {
                 padding-top: 5px;
