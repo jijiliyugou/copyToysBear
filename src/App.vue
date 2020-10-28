@@ -74,12 +74,7 @@ export default {
   height: 100%;
   width: 100%;
   min-width: 800px;
-  overflow-x: hidden;
-  overflow-y: scroll;
   position: relative;
-  // &::-webkit-scrollbar {
-  //   display: none;
-  // }
 }
 @{deep} .el-loading-spinner .circular {
   width: 100px;

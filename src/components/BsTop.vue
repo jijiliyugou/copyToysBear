@@ -107,15 +107,18 @@
       </el-col>
     </el-row>
     <!-- vueCropper 剪裁图片实现-->
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" append-to-body>
       <div class="cropper-content">
         <div class="cropper" style="text-align:center">
           <vueCropper
             ref="cropper"
             :img="option.img"
-            :outputSize="option.size"
+            :outputSize="option.outputSize"
             :outputType="option.outputType"
-            :info="true"
+            :autoCropWidth="option.autoCropWidth"
+            :autoCropHeight="option.autoCropHeight"
+            :canScale='option.canScale'
+            :info="option.info"
             :full="option.full"
             :canMove="option.canMove"
             :canMoveBox="option.canMoveBox"
@@ -126,6 +129,7 @@
             :centerBox="option.centerBox"
             :infoTrue="option.infoTrue"
             :fixedBox="option.fixedBox"
+            :mode="option.mode"
           ></vueCropper>
         </div>
       </div>
@@ -164,6 +168,7 @@ export default {
       option: {
         img: '', // 裁剪图片的地址
         info: true, // 裁剪框的大小信息
+        full: false, // 是否输出原图比例的截图
         outputSize: 0.8, // 裁剪生成图片的质量
         outputType: 'jpeg', // 裁剪生成图片的格式
         canScale: true, // 图片是否允许滚轮缩放
@@ -173,11 +178,12 @@ export default {
         fixedBox: false, // 固定截图框大小 不允许改变
         fixed: false, // 是否开启截图框宽高固定比例
         fixedNumber: [1, 1], // 截图框的宽高比例
-        full: false, // 是否输出原图比例的截图
-        canMoveBox: false, // 截图框能否拖动
+        canMove: true, // 图片是否可移动
+        canMoveBox: true, // 截图框能否拖动
         original: false, // 上传图片按照原始比例渲染
-        centerBox: false, // 截图框是否被限制在图片里面
-        infoTrue: true // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+        centerBox: true, // 截图框是否被限制在图片里面
+        infoTrue: false, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+        mode: 'contain'
       },
       picsList: [], // 页面显示的数组
       // 防止重复提交
@@ -196,7 +202,6 @@ export default {
   methods: {
     // 确定裁剪图片
     onCubeImg () {
-      console.log(this.fileinfo)
       this.loading = true
       this.showLoading()
       // 获取cropper的截图的base64 数据
@@ -215,11 +220,10 @@ export default {
         fd.append('companynumber', companynumber)
         fd.append('file', file)
         const res = await this.$http.post('/api/File/SearchPicture', fd)
+        this.cropperCancel()
         if (res.data.result.code === 200) {
-          this.cropperCancel()
           this.$store.commit('searchValues', res.data.result.object)
         } else {
-          this.cropperCancel()
           this.$store.commit('searchValues', null)
           this.$message.error(res.data.result.message)
         }
@@ -255,12 +259,12 @@ export default {
     },
     // 选取图片 限制图片大小
     changeUpload (file, fileList) {
-      this.isShowCropper = true
       const isLt5M = file.size / 1024 / 1024 < 3
       if (!isLt5M) {
         this.$message.error('上传文件大小不能超过 3MB!')
         return false
       }
+      this.isShowCropper = true
       this.fileinfo = file
       // 上传成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {
