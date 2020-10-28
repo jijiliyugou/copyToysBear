@@ -196,13 +196,14 @@ export default {
     },
     // 选取图片 限制图片大小
     changeUpload (file, fileList) {
-      console.log(file, fileList)
-      this.isShowCropper = true
       const isLt5M = file.size / 1024 / 1024 < 3
       if (!isLt5M) {
         this.$message.error('上传文件大小不能超过 3MB!')
+        this.option.img = ''
+        this.$refs.uploadRef.value = ''
         return false
       }
+      this.isShowCropper = true
       this.fileinfo = file
       // 上传成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {

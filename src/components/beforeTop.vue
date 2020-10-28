@@ -289,6 +289,8 @@ export default {
       const isLt5M = this.fileinfo.size / 1024 / 1024 < 3
       if (!isLt5M) {
         this.$message.error('上传文件大小不能超过 3MB!')
+        this.option.img = ''
+        this.$refs.uploadRef.value = ''
         return false
       }
       this.isShowCropper = true
