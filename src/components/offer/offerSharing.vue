@@ -580,10 +580,10 @@ export default {
           left: 0;
           top: 50%;
           height: 70%;
-          width: 4px;
+          width: 0.066667rem;
           background-color: #165af7;
           transform: translate(0, -50%);
-          border-radius: 0 5px 5px 0;
+          border-radius: 0 0.066667rem 0.066667rem 0;
         }
       }
     }
@@ -632,10 +632,10 @@ export default {
           left: 0;
           top: 50%;
           height: 70%;
-          width: 4px;
+          width: 0.066667rem;
           background-color: #165af7;
           transform: translate(0, -50%);
-          border-radius: 0 5px 5px 0;
+          border-radius: 0 0.066667rem 0.066667rem 0;
         }
       }
       .downloads {

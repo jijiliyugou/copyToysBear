@@ -11,7 +11,7 @@
 
     <Footer
       v-cloak
-      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('offer')"
+      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('/offer')"
     ></Footer>
   </div>
 </template>
