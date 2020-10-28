@@ -118,7 +118,7 @@ export default {
         full: false, // 是否输出原图比例的截图
         outputSize: 0.8, // 裁剪生成图片的质量
         outputType: 'jpeg', // 裁剪生成图片的格式
-        canScale: true, // 图片是否允许滚轮缩放
+        canScale: false, // 图片是否允许滚轮缩放
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 500, // 默认生成截图框宽度
         autoCropHeight: 500, // 默认生成截图框高度
@@ -129,8 +129,7 @@ export default {
         canMoveBox: true, // 截图框能否拖动
         original: false, // 上传图片按照原始比例渲染
         centerBox: true, // 截图框是否被限制在图片里面
-        infoTrue: false, // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
-        mode: 'contain'
+        infoTrue: false // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
       }
     }
   },
