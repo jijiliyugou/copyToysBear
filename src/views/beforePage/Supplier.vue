@@ -15,7 +15,7 @@
           @click="
             $router.push({
               name: 'companyDetail',
-              params: { id: item.companyNumber }
+              params: { id: item.companyNumber, title: '供应商联系方式' }
             })
           "
           v-for="item in Supplier"

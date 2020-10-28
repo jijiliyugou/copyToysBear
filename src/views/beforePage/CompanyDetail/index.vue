@@ -3,7 +3,7 @@
     <div class="DetailLogo"></div>
     <div class="navBar">
       <div class="navBarTitle">
-        采购商联系方式
+        {{$route.params.title}}
       </div>
     </div>
     <div class="contactTable">

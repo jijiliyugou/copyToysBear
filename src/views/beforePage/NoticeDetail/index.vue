@@ -134,7 +134,7 @@
       </div>
     </div>
     <div class="contact">
-      <div class="contactTitleTxt">采购商联系方式</div>
+      <div class="contactTitleTxt">联系方式</div>
       <div class="contactTitleLine"></div>
       <h2 class="companyName">
         {{ noticeData.companyInfo && noticeData.companyInfo.companyName }}
