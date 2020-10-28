@@ -44,12 +44,12 @@ export const staticRouters = [
     component: OfferSharingPC
   },
   {
-    path: '/offerDetail/:id/:pid',
+    path: '/offerDetail/:pid/:id',
     name: 'offerDetail',
     component: OfferDetail
   },
   {
-    path: '/offerDetailPC/:id/:pid',
+    path: '/offerDetailPC/:pid/:id',
     name: 'offerDetailPC',
     component: OfferDetailPC
   },
