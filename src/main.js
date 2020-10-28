@@ -15,6 +15,10 @@ import _ from 'lodash'
 import ElTreeGrid from 'element-tree-grid'
 import wsConnection from '@/store/wsStore'
 import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard)
+Vue.prototype.$setWs = wsConnection
+Vue.component(ElTreeGrid.name, ElTreeGrid)
+Vue.prototype.$video = Video;
 (function (doc, win) {
   var docEl = doc.documentElement
   var resizeEvt =
@@ -28,11 +32,6 @@ import VueClipboard from 'vue-clipboard2'
   win.addEventListener(resizeEvt, recalc, false)
   doc.addEventListener('DOMContentLoaded', recalc, false)
 })(document, window)
-Vue.use(VueClipboard)
-Vue.prototype.$setWs = wsConnection
-
-Vue.component(ElTreeGrid.name, ElTreeGrid)
-Vue.prototype.$video = Video
 
 Vue.prototype.$_ = _
 

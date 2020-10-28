@@ -58,7 +58,7 @@
               <span>{{ productDetail.bearProduct && productDetail.bearProduct.createdOn | createdOn }}</span>
             </div>
           </div>
-          <ul class="productParams">
+          <ul class="productParams" v-if="productDetail.bearProduct">
             <li>
             参考单价：<span  class="price">{{productDetail.cu_de +
               (productDetail.bearProduct.price === 0

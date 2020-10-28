@@ -73,7 +73,6 @@ export default {
 #app {
   height: 100%;
   width: 100%;
-  min-width: 800px;
   position: relative;
 }
 @{deep} .el-loading-spinner .circular {
@@ -99,10 +98,5 @@ export default {
   background-size: 200px 200px;
   width: 100%;
   height: 100%;
-}
-@media screen and (max-width: 1024px) {
-  #app{
-    margin: 0 auto;
-  }
 }
 </style>
