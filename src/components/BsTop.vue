@@ -107,7 +107,7 @@
       </el-col>
     </el-row>
     <!-- vueCropper 剪裁图片实现-->
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" append-to-body>
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" v-if="isShowCropper" :append-to-body="true">
       <div class="cropper-content">
         <div class="cropper" style="text-align:center">
           <vueCropper
@@ -321,12 +321,6 @@ export default {
     })
   },
   computed: {
-    // vProps() {
-    //   // https://cn.vuejs.org/v2/api/#vm-attrs
-    //   // 包含了父作用域中不作为 prop 被识别 (且获取) 的特性绑定 (class 和 style 除外)。
-    //   // 当一个组件没有声明任何 prop 时，这里会包含所有父作用域的绑定 (class 和 style 除外)，并且可以通过 v-bind="$attrs" 传入内部组件——在创建高级别的组件时非常有用。
-    //   return { ...this.$props, ...this.$attrs };
-    // }
   }
 }
 </script>
