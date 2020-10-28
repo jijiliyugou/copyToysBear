@@ -14,10 +14,12 @@ import _404 from './404/index'
 import ERP from './ERP/index'
 /** 报价分享 */
 const OfferSharing = () => import('@/components/offer/offerSharing.vue')
-/** 报价分享PC */
-const OfferSharingPC = () => import('@/components/offer/offerSharingPC.vue')
 /** 报价详情 */
 const OfferDetail = () => import('@/components/offer/offerDetail.vue')
+/** 报价分享PC */
+const OfferSharingPC = () => import('@/components/offer/offerSharingPC.vue')
+/** 报价详情pc */
+const OfferDetailPC = () => import('@/components/offer/offerDetailPC.vue')
 /** 特殊搜索路由 */
 const SearchIndex = () => import('@/views/productSearch/searchIndex.vue')
 /** 静态路由 */
@@ -45,6 +47,11 @@ export const staticRouters = [
     path: '/offerDetail/:id/:pid',
     name: 'offerDetail',
     component: OfferDetail
+  },
+  {
+    path: '/offerDetailPC/:id/:pid',
+    name: 'offerDetailPC',
+    component: OfferDetailPC
   },
   _404,
   ...ERP,

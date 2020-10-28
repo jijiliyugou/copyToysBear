@@ -17,12 +17,12 @@
      <div class="offerInfo">
       <div class="navBar">
       <div class="navBarTitle">
-        <span class="title">报价商品 (2)</span>
+        <span class="title">报价商品 ({{totalCount}})</span>
       </div>
     </div>
     </div>
     <div class="searchWraps">
-      <div class="searchSidebar" v-show="!isDetail">
+      <div class="searchSidebar">
         <h4 class="title el-icon-search"><span class="titleText">分类搜索</span></h4>
         <el-select v-model="value" placeholder="请输入或选择"  @change="handleChange" clearable filterable>
           <el-option
@@ -34,7 +34,7 @@
         </el-select>
       </div>
       <div class="searchContent">
-        <div class="filterTitle" v-show="!isDetail">
+        <div class="filterTitle">
             <div class="keywrodSearch">
               <el-input placeholder="请输入搜索内容" size="mini" @keyup.enter.native="search" clearable v-model="keyword" class="input-with-select">
                 <el-button slot="append" size="mini" icon="el-icon-search" @click="search"></el-button>
@@ -62,7 +62,6 @@
           <div class="zanwuchanpin"></div>
         </template>
         <template v-else>
-          <div  v-show="!isDetail">
             <ul class="productList">
               <li
                 class="productItems"
@@ -120,10 +119,7 @@
                 </div>
               </li>
             </ul>
-            <center
-              style="margin:20px auto 0 auto;"
-              v-show="!isDetail"
-            >
+            <center style="margin:20px auto 0 auto;">
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 background
@@ -134,14 +130,6 @@
                 @size-change="handleSizeChange"
               ></el-pagination>
             </center>
-          </div>
-          <div class="productDetail" v-if="isDetail">
-              <productDetail
-                :number="datailNumber"
-                :pid="$route.query.id"
-                @changeIsDetail="changeIsDetail"
-              ></productDetail>
-            </div>
         </template>
       </div>
     </div>
@@ -149,9 +137,7 @@
 </template>
 
 <script>
-import productDetail from '@/components/offer/offerDetailPC'
 export default {
-  components: { productDetail },
   data () {
     return {
       value: '',
@@ -160,8 +146,6 @@ export default {
       categoryNumber: null,
       isDateSort: false,
       isPriceSort: false,
-      isDetail: false,
-      datailNumber: null,
       currentPage: 1,
       pageSize: 6,
       totalCount: 0,
@@ -230,12 +214,11 @@ export default {
     },
     // 显示产品详情
     productDetail (productNumber) {
-      this.isDetail = true // 打开详情页
-      this.datailNumber = productNumber
-    },
-    // 回退事件
-    changeIsDetail (val) {
-      this.isDetail = val
+      if (!productNumber) {
+        this.$message.error('该产品没有产品编号')
+        return false
+      }
+      this.$router.push({ name: 'offerDetailPC', params: { id: productNumber, pid: this.$route.query.id } })
     },
     // 修改产品当前页
     changePage (page) {

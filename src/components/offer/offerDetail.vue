@@ -20,11 +20,14 @@
       </div>
     </el-card>
     <div class="line"></div>
-    <div class="backTo">
+    <!-- <div class="backTo">
       <el-page-header
         @back="toOfferSharing"
         content="商品详情"
       ></el-page-header>
+    </div> -->
+    <div class="listTitle">
+      <span class="listTitleTXT">商品详情</span>
     </div>
     <!-- <div slot="header" class="detailTitle">
         <div class="titleText">商品详情</div>
@@ -76,9 +79,8 @@ export default {
     },
     // 获取产品明细
     async getProductByNumber () {
-      const id = this.$route.params.id
       const res = await this.$http.post('/api/GetProductByProductNumber', {
-        productNumber: id
+        productNumber: this.$route.params.id
       })
       if (res.data.result.code === 200) {
         this.productDetail = res.data.result.item.bearProduct
@@ -92,10 +94,12 @@ export default {
     this.getProductOfferByNumber()
     this.getProductByNumber()
   },
-  mounted () {},
+  mounted () {
+    if (this.$store.state.screenWidth > 1024) this.$router.push({ name: 'offerDetailPC', params: { id: this.$route.params.id, pid: this.$route.params.pid } })
+  },
   watch: {
-    '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
-      if (val > 1024) this.$router.push('/offerSharingPC?id=' + this.$route.params.pid)
+    '$store.state.screenWidth' (val) {
+      if (val > 1024) this.$router.push({ name: 'offerDetailPC', params: { id: this.$route.params.id, pid: this.$route.params.pid } })
     }
   }
 }
@@ -152,6 +156,40 @@ export default {
     height: 0.266667rem;
     background: #F5F5F5;
   }
+  .listTitle {
+      width: 95%;
+      margin: 0 auto;
+      height: 0.933333rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ebeef5;
+      .listTitleTXT {
+        position: relative;
+        text-indent: 0.133333rem;
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          height: 70%;
+          width: 0.053333rem;
+          background-color: #165af7;
+          transform: translate(0, -50%);
+          border-radius: 0 5px 5px 0;
+        }
+      }
+      .downloads {
+        .el-button {
+          font-size: 0.16rem;
+          border-radius: 0.266667rem;
+          padding: 0.12rem 0.2rem;
+          border: 0.013333rem solid #b3d8ff;
+        }
+      }
+    }
   .backTo{
     font-size: 0.24rem;
     padding: 0.133333rem;

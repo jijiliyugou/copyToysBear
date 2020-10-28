@@ -1,10 +1,26 @@
+
 <template>
-  <div style="width:100%;margin-left:5px;">
-    <div class="berad">
-      <el-page-header
-        @back="changeIsDetail"
-        content="产品详情"
-      ></el-page-header>
+  <div class="offerDetailBox">
+    <div class="offerInfo">
+      <div class="navBar">
+      <div class="navBarTitle">
+        <span class="title">报价信息</span>
+      </div>
+    </div>
+    </div>
+    <div class="offerInfoContent">
+      <el-card class="offerCard">
+        <p>报价主题：{{ productInfo && productInfo.title }}</p>
+        <p>报价参数：{{ productInfo && productInfo.bidPrice }}</p>
+        <p>报价员：{{ productInfo && productInfo.linkman }}</p>
+      </el-card>
+    </div>
+     <div class="offerInfo">
+      <div class="navBar">
+      <div class="navBarTitle">
+        <span class="title">商品详情</span>
+      </div>
+    </div>
     </div>
     <div class="Graphic">
       <div class="left">
@@ -27,16 +43,16 @@
         </div>
       </div>
       <!-- 产品内容 -->
-      <div class="cententText" v-if="productDetail">
-          <p class="textItem name">产品名称：{{productDetail.name}}</p>
-          <p class="textItem">出厂货号：{{productDetail.fa_no}}</p>
-          <p class="textItem">包装方式：{{productDetail.ch_pa}}</p>
-          <p class="textItem">样品规格：{{productDetail.pr_le + " X " + productDetail.pr_wi + " X " + productDetail.pr_hi + "(CM)"}}</p>
-          <p class="textItem">外箱规格：{{productDetail.ou_le + " X " + productDetail.ou_wi + " X " + productDetail.ou_hi + "(CM)"}}</p>
-          <p class="textItem">装箱量：{{productDetail.in_en + "/" + productDetail.ou_lo + "(PCS)"}}</p>
-          <p class="textItem">体积/材积：{{productDetail.bulk_stere + "(CBM)" + "/" + productDetail.bulk_feet + "(CUFT)"}}</p>
-          <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
-          <p class="textItem">报价：<span class="price">{{productDetail.cu_de + (productDetail.price && productDetail.price.toFixed(2))}}</span></p>
+      <div class="cententText">
+          <p class="textItem name">产品名称：{{productDetail && productDetail.name}}</p>
+          <p class="textItem">出厂货号：{{productDetail && productDetail.fa_no}}</p>
+          <p class="textItem">包装方式：{{productDetail && productDetail.ch_pa}}</p>
+          <p class="textItem">样品规格：{{productDetail && productDetail.pr_le + " X " + productDetail && productDetail.pr_wi + " X " + productDetail && productDetail.pr_hi + "(CM)"}}</p>
+          <p class="textItem">外箱规格：{{productDetail && productDetail.ou_le + " X " + productDetail && productDetail.ou_wi + " X " + productDetail && productDetail.ou_hi + "(CM)"}}</p>
+          <p class="textItem">装箱量：{{productDetail && productDetail.in_en + "/" + productDetail && productDetail.ou_lo + "(PCS)"}}</p>
+          <p class="textItem">体积/材积：{{productDetail && productDetail.bulk_stere + "(CBM)" + "/" + productDetail && productDetail.bulk_feet + "(CUFT)"}}</p>
+          <p class="textItem">毛重/净重：{{productDetail && productDetail.ne_we + "/" + productDetail && productDetail.gr_we + "(kg)"}}</p>
+          <p class="textItem">报价：<span class="price">{{productDetail && productDetail.cu_de + (productDetail && productDetail.price && productDetail.price.toFixed(2))}}</span></p>
       </div>
     </div>
   </div>
@@ -55,16 +71,25 @@ export default {
       hoverActive: false,
       myMargin: 0,
       productDetail: null,
+      productInfo: null,
       imagesList: null,
       companyData: null
     }
   },
   methods: {
+    // 获取报价信息
+    async getProductOfferByNumber () {
+      const res = await this.$http.post('/api/GetProductOfferByNumber', { offerNumber: this.$route.params.pid })
+      if (res.data.result.code === 200) {
+        this.productInfo = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 获取产品明细
     async getProductByNumber () {
-      const id = this.number
       const res = await this.$http.post('/api/GetProductByProductNumber', {
-        productNumber: id
+        productNumber: this.$route.params.id
       })
       if (res.data.result.code === 200) {
         this.productDetail = res.data.result.item.bearProduct
@@ -77,30 +102,73 @@ export default {
       this.$emit('changeIsDetail', false)
     }
   },
-  mounted () {
+  created () {
+    this.getProductOfferByNumber()
     this.getProductByNumber()
+  },
+  mounted () {
+    if (this.$store.state.screenWidth <= 1024) this.$router.push({ name: 'offerDetail', params: { id: this.$route.params.id, pid: this.$route.params.pid } })
+  },
+  watch: {
+    '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
+      if (val <= 1024) this.$router.push({ name: 'offerDetail', params: { id: this.$route.params.id, pid: this.$route.params.pid } })
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 @deep: ~">>>";
-.berad {
-  margin-bottom: 5px;
-  height: 36px;
-  font-size: 16px;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  @{deep} .el-page-header__left:hover {
-    color: #409eff;
+.offerDetailBox{
+  .navBar {
+  background: linear-gradient(#fff, #e8e8e8, #e8e8e8, #c5c5c5);
+  .navBarTitle {
+    height: 50px;
+    display: flex;
+    width: 800px;
+    text-indent: 10px;
+    margin: 0 auto;
+    align-items: center;
+    .title{
+    position: relative;
+    font-weight: 600;
+     &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          height: 70%;
+          width: 4px;
+          background-color: #165af7;
+          transform: translate(0, -50%);
+          border-radius: 0 5px 5px 0;
+        }
+    }
+  }
+}
+.offerInfoContent{
+  width: 800px;
+  margin: 0 auto;
+  .offerCard{
+    margin: 10px 0;
+    p{
+      padding: 5px 0;
+    }
+  }
+}
+  .offerCard{
+    margin: 10px 0;
+    p{
+      padding: 5px 0;
+    }
   }
 }
 .Graphic {
-  width: 100%;
+  width: 800px;
+  margin: 20px auto;
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
   .left {
     width: 400px;
     .swiperList {
