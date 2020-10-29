@@ -75,7 +75,7 @@
                 @click="productDetail(item.productNumber)"
               >
                 <div class="img">
-                  <el-image fit="contain" :src="item.img">
+                  <el-image fit="contain" :src="item.img" lazy>
                     <div
                       slot="placeholder"
                       class="image-slot"
@@ -367,7 +367,6 @@ export default {
     }
     this.$root.eventHub.$on('toSearchIndex', () => {
       this.currentPage = 1
-      this.pageSize = 60
       this.totalCount = 0
       this.dataList = []
       this.search = this.$store.state.searchValues

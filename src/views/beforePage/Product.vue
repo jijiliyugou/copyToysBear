@@ -31,7 +31,7 @@
               @click="toProductDetail(item)"
             >
               <div class="img">
-                <el-image fit="contain" :src="item.img">
+                <el-image fit="contain" :src="item.img" lazy>
                   <div
                     slot="placeholder"
                     class="image-slot"
@@ -39,7 +39,7 @@
                   >
                     <img
                       class="errorImg"
-                      src="~@/assets/images/暂无图片.png"
+                      src="~@/assets/images/imgError.jpg"
                       alt
                     />
                   </div>
@@ -50,7 +50,7 @@
                   >
                     <img
                       class="errorImg"
-                      src="~@/assets/images/图片加载失败.png"
+                      src="~@/assets/images/imgError.jpg"
                       alt
                     />
                   </div>
@@ -258,7 +258,6 @@ export default {
   mounted () {
     this.$root.eventHub.$on('searchBeforeProduct', () => {
       this.currentPage = 1
-      this.pageSize = 60
       this.productList = []
       this.getProductList(this.search)
     })
