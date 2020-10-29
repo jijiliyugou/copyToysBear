@@ -205,29 +205,34 @@ export default {
       this.showLoading()
       // 获取cropper的截图的base64 数据
       this.$refs.cropper.getCropBlob(async file => {
-        this.option.img = window.URL.createObjectURL(file)
+        const urlPreView = window.URL.createObjectURL(file)
+        this.option.img = urlPreView
+        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
         // 将剪裁后base64的图片转化为file格式
         // let file = this.dataURLtoFile(
         //   data,this.fileinfo.uid
 
         // );
         // 上传
-        const companynumber =
+        try {
+          const companynumber =
           this.$store.state.userInfo.commparnyList[0] &&
           this.$store.state.userInfo.commparnyList[0].companyNumber
-        const fd = new FormData()
-        fd.append('companynumber', companynumber)
-        fd.append('file', file)
-        const res = await this.$http.post('/api/File/SearchPicture', fd)
-        this.cropperCancel()
-        if (res.data.result.code === 200) {
-          this.$store.commit('searchValues', res.data.result.object)
-        } else {
-          this.$store.commit('searchValues', null)
-          this.$message.error(res.data.result.message)
+          const fd = new FormData()
+          fd.append('companynumber', companynumber)
+          fd.append('file', file)
+          const res = await this.$http.post('/api/File/SearchPicture', fd)
+          this.cropperCancel()
+          if (res.data.result.code === 200) {
+            this.$store.commit('searchValues', res.data.result.object)
+          } else {
+            this.$store.commit('searchValues', null)
+            this.$message.error(res.data.result.message)
+          }
+          this.$router.push('/searchIndex')
+        } catch (error) {
+          this.cropperCancel()
         }
-        this.$router.push('/searchIndex')
-        this.$store.commit('updateAppLoading', false)
       })
     },
     // 取消裁剪
@@ -314,7 +319,9 @@ export default {
       // window.open("http://127.0.0.1:8080/#/beforeIndex/home", "_blank");
     }
   },
-
+  beforeDestroy () {
+    // this.$store.commit('handlerBeforeSearchImgPreview', null)
+  },
   mounted () {
     this.menuList = this.$store.state.routers.map(val => {
       val.parent.children = val.children

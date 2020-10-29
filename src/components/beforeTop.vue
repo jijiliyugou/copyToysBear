@@ -216,7 +216,9 @@ export default {
       this.loading = true
       // 获取cropper的截图的 数据
       this.$refs.cropper.getCropBlob(async file => {
-        this.option.img = URL.createObjectURL(file)
+        const urlPreView = URL.createObjectURL(file)
+        this.option.img = urlPreView
+        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
           ? this.$store.state.userInfo.commparnyList[0].companyNumber
@@ -224,16 +226,20 @@ export default {
         const fd = new FormData()
         fd.append('companynumber', companyNumber)
         fd.append('file', file)
-        const res = await this.$http.post('/api/File/SearchPicture', fd)
-        if (res.data.result.code === 200) {
+        try {
+          const res = await this.$http.post('/api/File/SearchPicture', fd)
+          if (res.data.result.code === 200) {
+            this.cropperCancel()
+            this.$store.commit('handlerBeforeSearchImg', res.data.result.object)
+          } else {
+            this.cropperCancel()
+            this.$store.commit('handlerBeforeSearchImg', null)
+            this.$message.error(res.data.result.message)
+          }
+          this.$router.push('/beforeIndex/product')
+        } catch (error) {
           this.cropperCancel()
-          this.$store.commit('handlerBeforeSearchImg', res.data.result.object)
-        } else {
-          this.cropperCancel()
-          this.$store.commit('handlerBeforeSearchImg', null)
-          this.$message.error(res.data.result.message)
         }
-        this.$router.push('/beforeIndex/product')
       })
     },
     // 取消裁剪
@@ -242,7 +248,7 @@ export default {
       this.isShowCropper = false
       this.loading = false
       this.option.img = ''
-      this.$refs.uploadRef.value = ''
+      this.$refs.uploadRef && (this.$refs.uploadRef.value = '')
     },
     // 将base64转换为文件对象
     dataURLtoFile (dataurl, filename) {
@@ -336,6 +342,9 @@ export default {
   },
   mounted () {
     this.search = this.$store.state.beforeSearch.value
+  },
+  beforeDestroy () {
+    this.$store.commit('handlerBeforeSearchImgPreview', null)
   }
 }
 </script>

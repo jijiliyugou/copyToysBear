@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     screenWidth: document.documentElement.clientWidth, // 屏幕宽度
     wsOrderMsg: null,
+    beforeSearchImgPreview: null,
     wsId: '',
     wsMsg: null,
     isLogin: false,
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     },
     handlerBeforeSearch (state, value) {
       state.beforeSearch = value
+    },
+    handlerBeforeSearchImgPreview (state, value) {
+      state.beforeSearchImgPreview = value
     },
     handlerBeforeSearchImg (state, value) {
       state.beforeSearchImg = value

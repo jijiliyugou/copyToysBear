@@ -137,7 +137,6 @@ myAxios.install = function (Vue) {
       } else {
         // 请求超时， 重新请求
         var config = error.config
-        console.log(config)
         // If config does not exist or the retry option is not set, reject
         if (!config || !axios.defaults.retry) return Promise.reject(error)
 
