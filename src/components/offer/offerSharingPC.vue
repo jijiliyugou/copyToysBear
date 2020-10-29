@@ -1,5 +1,39 @@
 <template>
   <div class="productSearchIndex">
+    <div class="topLayout">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-image fit="contain" src="~@/assets/images/imgError.jpg" lazy>
+                    <div
+                      slot="placeholder"
+                      class="image-slot"
+                      style="width:80px;height:80px; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:80px;height:80px;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                    <div
+                      slot="error"
+                      class="image-slot"
+                      style="width:80px;height:80px; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:80px;height:80px;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                  </el-image>
+        </el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="6"><div class="grid-content bg-purple offterBtn"><i class="offterShare el-icon-share"></i> 分享</div></el-col>
+      </el-row>
+    </div>
     <div class="offerInfo">
       <div class="navBar">
       <div class="navBarTitle">
@@ -9,9 +43,17 @@
     </div>
     <div class="offerInfoContent">
       <el-card class="offerCard">
-        <p>报价主题：{{ productInfo && productInfo.title }}</p>
-        <p>报价参数：{{ productInfo && productInfo.bidPrice }}</p>
-        <p>报价员：{{ productInfo && productInfo.linkman }}</p>
+        <div class="offerParams">
+          <div class="left">
+            <p>报价参数：{{ productInfo && productInfo.bidPrice }}</p>
+            <p>报价员：{{ productInfo && productInfo.linkman }}</p>
+          </div>
+          <div class="right"></div>
+        </div>
+        <div class="dates">
+          <p class="dateIconBox"><i class="dateIcon"></i>2020-10-10</p>
+          <a href="#" class="lookInfo">查看联系方式></a>
+        </div>
       </el-card>
     </div>
      <div class="offerInfo">
@@ -317,13 +359,71 @@ export default {
     }
   }
 }
+.topLayout{
+  width: 900px;
+  margin: 0 auto;
+  .el-row {
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .conText{
+      text-align: center;
+      color: #165BF7;
+      font-size: 30px;
+    }
+    .offterBtn{
+      color: #F7BA24;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      .offterShare{
+        font-size: 35px;
+      }
+    }
+  }
+}
 .offerInfoContent{
   width: 900px;
   margin: 0 auto;
   .offerCard{
     margin: 10px 0;
-    p{
-      padding: 5px 0;
+    .offerParams, .dates{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .dateIconBox{
+        display: flex;
+        align-items: center;
+        .dateIcon{
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url('~@/assets/images/报价分享时间.png') no-repeat center;
+        background-size: contain;
+        }
+      }
+      .lookInfo{
+          color: #165af7;
+          &:hover{
+            text-decoration: underline;
+          }
+        }
+    }
+    .offerParams{
+      margin-bottom: 40px;
+      .left{
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+      }
+      .right{
+        flex: 1;
+      }
     }
   }
 }
