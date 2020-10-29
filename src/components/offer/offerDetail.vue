@@ -1,25 +1,58 @@
 <template>
   <div class="baojia">
+   <div class="topLayout">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" src="~@/assets/images/imgError.jpg" lazy>
+                    <div
+                      slot="placeholder"
+                      class="image-slot"
+                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:0.533333rem;height:0.533333rem;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                    <div
+                      slot="error"
+                      class="image-slot"
+                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:0.533333rem;height:0.533333rem;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                  </el-image>
+        </el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="6"><div class="grid-content bg-purple offterBtn"><i class="offterShare el-icon-share"></i> 分享</div></el-col>
+      </el-row>
+    </div>
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <div class="titleText">报价信息</div>
-        <!-- <el-button type="warning" icon="el-icon-edit" size="small"
-          >编辑</el-button
-        > -->
-      </div>
-      <div class="text">
-        <div class="item">
-          报价主题：<span class="content">{{productInfo && productInfo.title}}</span>
+      <div class="textContent">
+        <div class="top">
+          <p>
+            报价参数：<span class="content">{{
+            productInfo && productInfo.title
+          }}</span>
+          </p>
+          <p>
+            联系人：<span class="content">{{
+            productInfo && productInfo.linkman
+          }}</span>
+          </p>
         </div>
-        <div class="item">
-          报价参数：<span class="content">{{productInfo && productInfo.bidPrice}}</span>
-        </div>
-        <div class="item">
-          报价员：<span class="content">{{productInfo && productInfo.linkman}}</span>
+        <div class="lookInfo">
+          <a href="#">查看联系方式></a>
         </div>
       </div>
     </el-card>
-    <div class="line"></div>
     <!-- <div class="backTo">
       <el-page-header
         @back="toOfferSharing"
@@ -28,12 +61,13 @@
     </div> -->
     <div class="listTitle">
       <span class="listTitleTXT">商品详情</span>
+      <span class="backtrack" @click="backtrackPage"><i class="backtrackIcon iconfont icon-fanhui"></i> 返回</span>
     </div>
     <!-- <div slot="header" class="detailTitle">
         <div class="titleText">商品详情</div>
       </div> -->
     <div class="centent"  v-if="productDetail">
-      <div class="img">
+      <div class="imgBox">
         <el-image :preview-src-list="imagesList" style="width: 100%;"
       :src="productDetail.imageUrl"
       fit="contain"></el-image>
@@ -49,6 +83,7 @@
         <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
         <p class="textItem">报价：<span class="price">{{productDetail.cu_de + (productDetail.price && productDetail.price.toFixed(2))}}</span></p>
       </div>
+      <p class="createDate"><i class="createDateIcon"></i> 2020-10-24</p>
     </div>
   </div>
 </template>
@@ -65,7 +100,7 @@ export default {
     }
   },
   methods: {
-    toOfferSharing () {
+    backtrackPage () {
       this.$router.go(-1)
     },
     // 获取报价信息
@@ -110,43 +145,68 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  font-size: 0.266667rem;
+  font-size: 0.346667rem;
   .item {
     margin-bottom: 0.24rem;
     &:last-of-type{
       margin-bottom: 0;
     }
   }
- .box-card{
+   .topLayout{
+  width: 95%;
+  margin: 0 auto;
+  .el-row {
+    height: 0.933333rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .conText{
+      text-align: center;
+      color: #165BF7;
+      font-size: 0.4rem;
+    }
+    .offterBtn{
+      color: #F7BA24;
+      font-size: 0.293333rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      .offterShare{
+        font-size: 0.466667rem;
+      }
+    }
+  }
+}
+ .box-card {
     width: 95%;
-    margin: 0.4rem auto 0 auto;
-    @{deep} .el-card__header {
-      padding:0.133333rem;
-     .clearfix {
+    margin: 0 auto;
+    border-radius: 0.133333rem;
+    @{deep} .el-card__body{
+      padding: 0 0.24rem;
+    }
+    .textContent {
+      .top{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .titleText{
-          font-weight: 600;
-          position: relative;
-          text-indent: 0.133333rem;
-          &::before{
-            content:'';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            height: 70%;
-            width: 0.066667rem;
-            background-color: #165af7;
-            transform:translate(0, -50%);
-            border-radius: 0 0.066667rem 0.066667rem 0;
-          }
+        height: 1.066667rem;
+        p{
+          flex: 1;
         }
       }
-    }
-    @{deep} .el-card__body{
-      .text{
-        font-size: 0.186667rem;
+      .lookInfo{
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 0.826667rem;
+        a{
+          color: #165af7;
+          &:hover{
+            text-decoration: underline;
+          }
+        }
       }
     }
   }
@@ -159,6 +219,7 @@ export default {
   .listTitle {
       width: 95%;
       margin: 0 auto;
+      margin-top: 0.066667rem;
       height: 0.933333rem;
       display: flex;
       align-items: center;
@@ -180,6 +241,10 @@ export default {
           transform: translate(0, -50%);
           border-radius: 0 5px 5px 0;
         }
+      }
+      .backtrack{
+        font-weight: normal;
+        cursor: pointer;
       }
       .downloads {
         .el-button {
@@ -203,15 +268,35 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .img{
-      flex: 1;
+    position: relative;
+    .createDate{
+      position: absolute;
+      bottom: 0.266667rem;
+      left: 0.133333rem;
       display: flex;
+      color: #707070;
+      font-size: 0.293333rem;
+      align-items: center;
+      .createDateIcon{
+        display: block;
+        width: 0.266667rem;
+        height: 0.266667rem;
+        background: url('~@/assets/images/报价分享时间.png') no-repeat center;
+        background-size:contain;
+        margin-right: 0.066667rem;
+      }
+    }
+    .imgBox{
+      flex: 1;
+      height: 100%;
+      flex-wrap: wrap;
       align-items: center;
       padding-right: 0.133333rem;
       box-sizing: border-box;
-      height:100%;
     }
     .cententText{
+      color: #707070;
+      font-size: 0.293333rem;
       flex: 2;
       .textItem{
         margin-bottom: 0.133333rem;
@@ -220,31 +305,10 @@ export default {
         }
       }
       .name{
+        color: #000;
         font-weight: 600;
       }
     }
   }
-  // @{deep} .detailTitle {
-  //       display: flex;
-  //       padding:  0.133333rem 0.266667rem;
-  //       justify-content: space-between;
-  //       align-items: center;
-  //       .titleText{
-  //         font-weight: 600;
-  //         position: relative;
-  //         text-indent: 0.133333rem;
-  //         &::before{
-  //           content:'';
-  //           position: absolute;
-  //           left: 0;
-  //           top: 50%;
-  //           height: 70%;
-  //           width: 4px;
-  //           background-color: #165af7;
-  //           transform:translate(0, -50%);
-  //           border-radius: 0 5px 5px 0;
-  //         }
-  //       }
-  //     }
 }
 </style>

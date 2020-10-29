@@ -5,32 +5,66 @@
     v-infinite-scroll="load"
     infinite-scroll-disabled="disabled"
   >
+  <div class="boxOne">
+    <div class="topLayout">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" src="~@/assets/images/imgError.jpg" lazy>
+                    <div
+                      slot="placeholder"
+                      class="image-slot"
+                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:0.533333rem;height:0.533333rem;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                    <div
+                      slot="error"
+                      class="image-slot"
+                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:0.533333rem;height:0.533333rem;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                  </el-image>
+        </el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="6"><div class="grid-content bg-purple offterBtn"><i class="offterShare el-icon-share"></i> 分享</div></el-col>
+      </el-row>
+    </div>
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <div class="titleText">报价信息</div>
-        <!-- <el-button type="warning" icon="el-icon-edit" size="small"
-          >编辑</el-button
-        > -->
-      </div>
-      <div class="text">
-        <div class="item">
-          报价主题：<span class="content">{{
+      <div class="textContent">
+        <div class="top">
+          <p>
+            报价参数：<span class="content">{{
             productInfo && productInfo.title
           }}</span>
-        </div>
-        <div class="item">
-          报价：<span class="content">{{
-            productInfo && productInfo.bidPrice
-          }}</span>
-        </div>
-        <div class="item">
-          报价员：<span class="content">{{
+          </p>
+          <p>
+            联系人：<span class="content">{{
             productInfo && productInfo.linkman
           }}</span>
+          </p>
+        </div>
+        <div class="lookInfo">
+          <a href="#">查看联系方式></a>
         </div>
       </div>
     </el-card>
-    <div class="line"></div>
+  </div>
+  <div class="boxTwo">
+    <div class="keyWordSearch">
+      <el-input v-model="keyword" placeholder="请输入搜索关键字" clearable></el-input>
+      <el-button type="primary" round>搜索</el-button>
+    </div>
     <div class="floatSearch">
       <div class="categoryList">
         <div class="cates">
@@ -68,29 +102,38 @@
       <div class="listTitle">
         <span class="listTitleTXT">报价商品 ({{ totalCount }})</span>
         <div class="downloads">
-          <el-button type="primary" @click="downloadDocument('PDF')" plain size="small">下载PDF</el-button>
-          <el-button type="primary" @click="downloadDocument('Excel')" plain size="small">下载Excel</el-button>
+        </div>
+      </div>
+      <div class="filterProduct">
+        <p :class="{'priceFilter': true, 'active': isFilterActive === 0}" @click="sortPrice(0)">产品单价 <i v-show="isPrice === null" style="font-size:0.32rem;" class="iconfont icon-paixu"></i><i v-show="isPrice === true" class="el-icon-arrow-up"></i><i v-show="isPrice === false" class="el-icon-arrow-down"></i></p>
+        <p :class="{'priceFilter': true, 'active': isFilterActive === 1}" @click="sortDate(1)">新增时间  <i v-show="isDate === null" style="font-size:0.32rem;" class="iconfont icon-paixu"></i><i class="el-icon-arrow-up" v-show="isDate"></i><i v-show="isDate===false" class="el-icon-arrow-down"></i></p>
+        <p :class="{'priceFilter': true, 'active': isFilterActive === 2}" @click="sortHot(2)">产品热度  <i v-show="isHot === null" style="font-size:0.32rem;" class="iconfont icon-paixu"></i><i class="el-icon-arrow-up" v-show="isHot"></i><i v-show="isHot===false" class="el-icon-arrow-down"></i></p>
+        <div :class="{'more': true, 'active': isFilterActive === 3}">
+          <i v-show="isList" class="list" @click="checkList(3)"></i>
+          <i v-show="!isList" class="square" @click="checkList(3)"></i>
         </div>
       </div>
     </div>
+  </div>
     <div class="productList">
-      <div class="listItems" v-if="totalCount > 0">
-        <el-card
+      <template v-if="totalCount > 0">
+      <div class="listItems" v-show="isList">
+          <el-card
           class="listItem"
           v-for="(item, i) in productList"
           :key="i"
           @click.stop.native="productDetail(item.productNumber)"
         >
-          <div class="left">
+          <div class="contentBox">
+            <div class="left">
             <el-image
-              style="width:1.333333rem;height:1.333333rem;position: static"
+              style="position: static"
               :src="item.imageUrl"
               fit="contain"
             >
               <div slot="placeholder" class="image-slot">
                 <img
                   class="errorImg"
-                  style="width:1.333333rem; height: 1.333333rem;"
                   src="~@/assets/images/imgError.jpg"
                   alt
                 />
@@ -98,11 +141,9 @@
               <div
                 slot="error"
                 class="image-slot"
-                style="width:1.333333rem; height: 1.333333rem;"
               >
                 <img
                   class="errorImg"
-                  style="width:1.333333rem;height:1.333333rem;"
                   src="~@/assets/images/imgError.jpg"
                   alt
                 />
@@ -126,8 +167,56 @@
               }}</span>
             </p>
           </div>
+          </div>
+          <div class="createDate"><i class="dateIcon"></i> 2020-10-10</div>
         </el-card>
       </div>
+      <div class="squareItems" v-show="!isList">
+          <el-card
+          class="squareItem"
+          v-for="(item, i) in productList"
+          :key="i"
+          @click.stop.native="productDetail(item.productNumber)"
+        >
+          <div class="top">
+            <el-image
+              style="position: static"
+              :src="item.imageUrl"
+              fit="contain"
+            >
+              <div slot="placeholder" class="image-slot">
+                <img
+                  class="errorImg"
+                  src="~@/assets/images/imgError.jpg"
+                  alt
+                />
+              </div>
+              <div
+                slot="error"
+                class="image-slot"
+              >
+                <img
+                  class="errorImg"
+                  src="~@/assets/images/imgError.jpg"
+                  alt
+                />
+              </div>
+            </el-image>
+          </div>
+          <div class="bottom">
+            <p class="productName">{{ item.name }}</p>
+            <p class="productCode">
+              出厂货号：<span>{{ item.fa_no }}</span>
+            </p>
+            <p class="productPrice">
+              报价：<span class="price">{{
+                item.cu_de + item.unitPrice.toFixed(2)
+              }}</span>
+            </p>
+          </div>
+        </el-card>
+      </div>
+      </template>
       <el-image
         v-else
         style="width: 100%; position: static"
@@ -142,6 +231,7 @@
 export default {
   data () {
     return {
+      keyword: null,
       productInfo: null,
       productList: [],
       currentPage: 1,
@@ -149,277 +239,37 @@ export default {
       categoryList: [],
       categoryNumber: '',
       totalCount: 0,
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [
-                {
-                  value: 'yizhi',
-                  label: '一致'
-                },
-                {
-                  value: 'fankui',
-                  label: '反馈'
-                },
-                {
-                  value: 'xiaolv',
-                  label: '效率'
-                },
-                {
-                  value: 'kekong',
-                  label: '可控'
-                }
-              ]
-            },
-            {
-              value: 'daohang',
-              label: '导航',
-              children: [
-                {
-                  value: 'cexiangdaohang',
-                  label: '侧向导航'
-                },
-                {
-                  value: 'dingbudaohang',
-                  label: '顶部导航'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic',
-              children: [
-                {
-                  value: 'layout',
-                  label: 'Layout 布局'
-                },
-                {
-                  value: 'color',
-                  label: 'Color 色彩'
-                },
-                {
-                  value: 'typography',
-                  label: 'Typography 字体'
-                },
-                {
-                  value: 'icon',
-                  label: 'Icon 图标'
-                },
-                {
-                  value: 'button',
-                  label: 'Button 按钮'
-                }
-              ]
-            },
-            {
-              value: 'form',
-              label: 'Form',
-              children: [
-                {
-                  value: 'radio',
-                  label: 'Radio 单选框'
-                },
-                {
-                  value: 'checkbox',
-                  label: 'Checkbox 多选框'
-                },
-                {
-                  value: 'input',
-                  label: 'Input 输入框'
-                },
-                {
-                  value: 'input-number',
-                  label: 'InputNumber 计数器'
-                },
-                {
-                  value: 'select',
-                  label: 'Select 选择器'
-                },
-                {
-                  value: 'cascader',
-                  label: 'Cascader 级联选择器'
-                },
-                {
-                  value: 'switch',
-                  label: 'Switch 开关'
-                },
-                {
-                  value: 'slider',
-                  label: 'Slider 滑块'
-                },
-                {
-                  value: 'time-picker',
-                  label: 'TimePicker 时间选择器'
-                },
-                {
-                  value: 'date-picker',
-                  label: 'DatePicker 日期选择器'
-                },
-                {
-                  value: 'datetime-picker',
-                  label: 'DateTimePicker 日期时间选择器'
-                },
-                {
-                  value: 'upload',
-                  label: 'Upload 上传'
-                },
-                {
-                  value: 'rate',
-                  label: 'Rate 评分'
-                },
-                {
-                  value: 'form',
-                  label: 'Form 表单'
-                }
-              ]
-            },
-            {
-              value: 'data',
-              label: 'Data',
-              children: [
-                {
-                  value: 'table',
-                  label: 'Table 表格'
-                },
-                {
-                  value: 'tag',
-                  label: 'Tag 标签'
-                },
-                {
-                  value: 'progress',
-                  label: 'Progress 进度条'
-                },
-                {
-                  value: 'tree',
-                  label: 'Tree 树形控件'
-                },
-                {
-                  value: 'pagination',
-                  label: 'Pagination 分页'
-                },
-                {
-                  value: 'badge',
-                  label: 'Badge 标记'
-                }
-              ]
-            },
-            {
-              value: 'notice',
-              label: 'Notice',
-              children: [
-                {
-                  value: 'alert',
-                  label: 'Alert 警告'
-                },
-                {
-                  value: 'loading',
-                  label: 'Loading 加载'
-                },
-                {
-                  value: 'message',
-                  label: 'Message 消息提示'
-                },
-                {
-                  value: 'message-box',
-                  label: 'MessageBox 弹框'
-                },
-                {
-                  value: 'notification',
-                  label: 'Notification 通知'
-                }
-              ]
-            },
-            {
-              value: 'navigation',
-              label: 'Navigation',
-              children: [
-                {
-                  value: 'menu',
-                  label: 'NavMenu 导航菜单'
-                },
-                {
-                  value: 'tabs',
-                  label: 'Tabs 标签页'
-                },
-                {
-                  value: 'breadcrumb',
-                  label: 'Breadcrumb 面包屑'
-                },
-                {
-                  value: 'dropdown',
-                  label: 'Dropdown 下拉菜单'
-                },
-                {
-                  value: 'steps',
-                  label: 'Steps 步骤条'
-                }
-              ]
-            },
-            {
-              value: 'others',
-              label: 'Others',
-              children: [
-                {
-                  value: 'dialog',
-                  label: 'Dialog 对话框'
-                },
-                {
-                  value: 'tooltip',
-                  label: 'Tooltip 文字提示'
-                },
-                {
-                  value: 'popover',
-                  label: 'Popover 弹出框'
-                },
-                {
-                  value: 'card',
-                  label: 'Card 卡片'
-                },
-                {
-                  value: 'carousel',
-                  label: 'Carousel 走马灯'
-                },
-                {
-                  value: 'collapse',
-                  label: 'Collapse 折叠面板'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            },
-            {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
-          ]
-        }
-      ]
+      isFilterActive: null,
+      isList: true,
+      isDate: null,
+      isHot: null,
+      isPrice: null
     }
   },
   methods: {
+    // 切换列表
+    checkList (number) {
+      this.isList = !this.isList
+      this.isFilterActive = number
+      // this.isPrice = true
+      // this.isDate = true
+      // this.isHot = true
+    },
+    // 价格排序
+    sortPrice (number) {
+      this.isFilterActive = number
+      this.isPrice = !this.isPrice
+    },
+    // 时间排序
+    sortDate (number) {
+      this.isFilterActive = number
+      this.isDate = !this.isDate
+    },
+    // 热度排序
+    sortHot (number) {
+      this.isFilterActive = number
+      this.isHot = !this.isHot
+    },
     // 下载
     downloadDocument (document) {
       console.log('下载了' + document)
@@ -447,16 +297,14 @@ export default {
     // 滚动事件
     baojiaScroll (e) {
       const top = e.target.scrollTop
+      const boxOne = $('.boxOne').outerHeight(true)
+      const item = document.getElementsByClassName('boxTwo')[0]
+      const itemHeight = $('.boxTwo').outerHeight(true)
       const box = $('.productList')[0]
-      const card = $('.box-card').outerHeight(true)
-      const line = $('.line').outerHeight(true)
-      const itemHeight = $('.floatSearch').outerHeight(true)
-      const item = document.getElementsByClassName('floatSearch')[0]
-      if (top >= (card + line)) {
+      if (top >= boxOne) {
         item.style.position = 'fixed'
         item.style.left = '0'
-        item.style.padding = '0 0.188888rem'
-        item.style.top = '0px'
+        item.style.top = '0'
         box.style.paddingTop = itemHeight + 'px'
       } else {
         item.style.position = 'static'
@@ -487,7 +335,7 @@ export default {
       if (res.data.result.code === 200) {
         this.productList = flag
           ? this.productList.concat(res.data.result.item.items)
-          : res.data.result.item.items
+          : [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
@@ -546,10 +394,40 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
   box-sizing: border-box;
-  font-size: 0.266667rem;
+  font-size: 0.346667rem;
   &::-webkit-scrollbar {
     display: none;
   }
+  .boxTwo{
+    width: 100%;
+    background-color: #fff;
+  }
+  .topLayout{
+  width: 95%;
+  margin: 0 auto;
+  .el-row {
+    height: 0.933333rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .conText{
+      text-align: center;
+      color: #165BF7;
+      font-size: 0.4rem;
+    }
+    .offterBtn{
+      color: #F7BA24;
+      font-size: 0.293333rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      .offterShare{
+        font-size: 0.466667rem;
+      }
+    }
+  }
+}
   .text {
     font-size: 0.186667rem;
   }
@@ -562,37 +440,66 @@ export default {
   }
   .box-card {
     width: 95%;
-    margin: 0.4rem auto 0 auto;
-    @{deep} .el-card__header {
-      padding: 0.133333rem;
+    margin: 0 auto;
+    border-radius: 0.133333rem;
+    @{deep} .el-card__body{
+      padding: 0 0.24rem;
     }
-    @{deep} .clearfix {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .titleText {
-        font-weight: 600;
-        position: relative;
-        text-indent: 0.133333rem;
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 50%;
-          height: 70%;
-          width: 0.066667rem;
-          background-color: #165af7;
-          transform: translate(0, -50%);
-          border-radius: 0 0.066667rem 0.066667rem 0;
+    .textContent {
+      .top{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 1.066667rem;
+        p{
+          flex: 1;
+        }
+      }
+      .lookInfo{
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 0.826667rem;
+        a{
+          color: #165af7;
+          &:hover{
+            text-decoration: underline;
+          }
         }
       }
     }
   }
-  .line {
-    width: 100%;
-    height: 100%;
-    height: 0.266667rem;
-    background: #f5f5f5;
+  .keyWordSearch {
+    width: 95%;
+    margin: 0.16rem auto;
+    height: 0.906667rem;
+    background: #eceeef;
+    border-radius: 0.453333rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    .el-input{
+      height: 100%;
+      background-color: transparent;
+      flex: 1;
+      @{deep} input{
+        height: 100%;
+        background-color: transparent;
+        width: 100%;
+        border: none;
+        font-size: 0.346667rem;
+        text-indent: 0.266667rem;
+      }
+    }
+    .el-button{
+      width: 1.866667rem;
+      height: 100%;
+      border-radius: 0.5rem;
+      font-size: 0.346667rem;
+      background-color: #165AF7;
+    }
   }
   .floatSearch {
     width: 95%;
@@ -612,6 +519,8 @@ export default {
         justify-content: space-between;
         @{deep} .el-input__inner {
           width: 2.666667rem;
+          padding-right: 0.4rem;
+          line-height: 0.533333rem;
         }
       }
     }
@@ -647,6 +556,42 @@ export default {
         }
       }
     }
+    .filterProduct{
+      width: 100%;
+      display: flex;
+      height: 0.8rem;
+      align-items: center;
+      font-size: 0.32rem;
+      color: #707070;
+      .priceFilter{
+        margin-right: 0.533333rem;
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
+      .more{
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        i.list{
+          display: block;
+          width: 0.4rem;
+          height: 0.4rem;
+          background: url('~@/assets/images/格式化列表.png') no-repeat center;
+          background-size: contain;
+        }
+        i.square{
+          display: block;
+          width: 0.4rem;
+          height: 0.4rem;
+          background: url('~@/assets/images/liebiao2.png') no-repeat center;
+          background-size: contain;
+        }
+      }
+      .active {
+        color: #165AF7;
+      }
+    }
   }
   .productList {
     width: 95%;
@@ -660,24 +605,36 @@ export default {
         }
         @{deep} .el-card__body {
           padding: 0.133333rem;
-          display: flex;
-          justify-content: space-between;
-          .left {
+          .contentBox {
+            display: flex;
+            justify-content: space-between;
+            .left {
             margin-right: 0.133333rem;
             border-radius: 0.133333rem;
             box-sizing: border-box;
             display:flex;
             align-items:center;
+            width: 2rem;
+            height: 2rem;
+            .el-image{
+              width: 100%;
+              img{
+                width: 100%;
+              }
+            }
           }
           .right {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            font-size: 0.266667rem;
+            color: #626262;
               p{
                 padding: 2px 0;
                 &.productName {
                 font-weight: 600;
+                color: #000;
               }
               &.productPrice {
                 .price {
@@ -685,6 +642,57 @@ export default {
                   font-weight: 500;
                 }
               }
+            }
+          }
+          }
+          .createDate{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            font-size: 0.266667rem;
+            color: #626262;
+            .dateIcon {
+              display: block;
+              width: 0.266667rem;
+              height: 0.266667rem;
+              background: url('~@/assets/images/报价分享时间.png') no-repeat center;
+              background-size:contain;
+              margin-right: 0.066667rem;
+            }
+          }
+        }
+      }
+    }
+    .squareItems{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .squareItem{
+        width: 48%;
+        margin-top: 0.24rem;
+        @{deep} .el-card__body{
+          padding: 0.133333rem;
+        }
+        .top{
+          width: 100%;
+          height: 2.32rem;
+          .el-image{
+            width: 100%;
+            height: 2.32rem;
+            img {
+              width: 100%;
+              height: 2.32rem;
+            }
+          }
+        }
+        .bottom{
+          padding-bottom: 0.066667rem;
+          p {
+            padding-top: 0.133333rem;
+            .price{
+              color: #f54d35;
+              font-weight: 500;
             }
           }
         }
