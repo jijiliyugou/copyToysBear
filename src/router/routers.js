@@ -1,25 +1,19 @@
 /** 前台模块 */
-import beforeModule from './beforrIndex/index'
+import beforeModule from '@/router/beforrIndex/index'
 /** 我的消息模块 */
-import meInfo from './meInfo/index'
+import meInfo from '@/router/meInfo/index'
 /** 订单管理模块 */
-import orderManage from './orderManage/index'
+import orderManage from '@/router/orderManage/index'
 /** 动态模块 */
-import dynamicRouting from './dynamicRouting/index'
+import dynamicRouting from '@/router/dynamicRouting/index'
 /** 个人中心模块 */
-import me from './me/index'
+import me from '@/router/me/index'
 /** 404模块 */
-import _404 from './404/index'
+import _404 from '@/router/404/index'
 /** ERP模块 */
-import ERP from './ERP/index'
-/** 报价分享 */
-const OfferSharing = () => import('@/components/offer/offerSharing.vue')
-/** 报价详情 */
-const OfferDetail = () => import('@/components/offer/offerDetail.vue')
-/** 报价分享PC */
-const OfferSharingPC = () => import('@/components/offer/offerSharingPC.vue')
-/** 报价详情pc */
-const OfferDetailPC = () => import('@/components/offer/offerDetailPC.vue')
+import ERP from '@/router/ERP/index'
+/** 报价分享模块 */
+import offer from '@/router/offer/index'
 /** 特殊搜索路由 */
 const SearchIndex = () => import('@/views/productSearch/searchIndex.vue')
 /** 静态路由 */
@@ -33,28 +27,9 @@ export const staticRouters = [
     name: 'searchIndex',
     component: SearchIndex
   },
-  {
-    path: '/offerSharing',
-    name: 'offerSharing',
-    component: OfferSharing
-  },
-  {
-    path: '/offerSharingPC',
-    name: 'offerSharingPC',
-    component: OfferSharingPC
-  },
-  {
-    path: '/offerDetail/:pid/:id',
-    name: 'offerDetail',
-    component: OfferDetail
-  },
-  {
-    path: '/offerDetailPC/:pid/:id',
-    name: 'offerDetailPC',
-    component: OfferDetailPC
-  },
   _404,
   ...ERP,
+  ...offer,
   {
     path: '/',
     redirect: '/beforeIndex/home'

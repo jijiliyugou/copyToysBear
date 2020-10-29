@@ -55,14 +55,14 @@
           </p>
         </div>
         <div class="lookInfo">
-          <a href="#">查看联系方式></a>
+          <a @click="toContact">查看联系方式></a>
         </div>
       </div>
     </el-card>
   </div>
   <div class="boxTwo">
     <div class="keyWordSearch">
-      <el-input v-model="keyword" placeholder="请输入搜索关键字" clearable></el-input>
+      <el-input v-model="keyword" placeholder="请输入搜索关键字"></el-input>
       <el-button type="primary" round>搜索</el-button>
     </div>
     <div class="floatSearch">
@@ -247,6 +247,10 @@ export default {
     }
   },
   methods: {
+    // 查看联系方式
+    toContact () {
+      this.$router.push({ name: 'offerContact', params: { id: this.$route.query.id } })
+    },
     // 切换列表
     checkList (number) {
       this.isList = !this.isList

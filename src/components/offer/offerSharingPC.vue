@@ -52,7 +52,7 @@
         </div>
         <div class="dates">
           <p class="dateIconBox"><i class="dateIcon"></i>2020-10-10</p>
-          <a href="#" class="lookInfo">查看联系方式></a>
+          <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </el-card>
     </div>
@@ -216,6 +216,10 @@ export default {
     }
   },
   methods: {
+    // 查看联系方式
+    toContact () {
+      this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id } })
+    },
     // 下载
     downloadDocument (document) {
       console.log('下载了' + document)
@@ -409,6 +413,7 @@ export default {
       }
       .lookInfo{
           color: #165af7;
+          cursor: pointer;
           &:hover{
             text-decoration: underline;
           }

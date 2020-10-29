@@ -49,7 +49,7 @@
           </p>
         </div>
         <div class="lookInfo">
-          <a href="#">查看联系方式></a>
+          <a @click="toContact">查看联系方式></a>
         </div>
       </div>
     </el-card>
@@ -100,6 +100,11 @@ export default {
     }
   },
   methods: {
+    // 查看联系方式
+    toContact () {
+      this.$router.push({ name: 'offerContact', params: { id: this.$route.params.pid } })
+    },
+    // 返回
     backtrackPage () {
       this.$router.go(-1)
     },
@@ -245,6 +250,11 @@ export default {
       .backtrack{
         font-weight: normal;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        i{
+          margin-right: 0.066667rem;
+        }
       }
       .downloads {
         .el-button {
