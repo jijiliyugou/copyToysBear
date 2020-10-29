@@ -490,6 +490,7 @@ export default {
       this.totalCount = 0
       this.dataList = []
       this.search = this.$store.state.searchValues
+      this.$store.commit('handlerBeforeSearchImgPreview', null)
       this.getProduct(true)
     })
   },

@@ -50,7 +50,15 @@
             <div class="zanwuchanpin"></div>
           </template>
           <template v-else>
-            <ul class="productList" v-show="!isDetail">
+            <div v-show="!isDetail">
+            <div class="preview" v-if="$store.state.beforeSearchImgPreview">
+            <el-image
+            @click.native="openCubeImg"
+            :src="$store.state.beforeSearchImgPreview"
+            fit="contain"></el-image>
+            <div class="title">搜索产品</div>
+          </div>
+            <ul class="productList">
               <li
                 class="productItems"
                 v-for="(item, i) in dataList"
@@ -163,17 +171,7 @@
                 </div>
               </li>
             </ul>
-          </template>
-          <div class="productList" v-if="isDetail">
-            <productDetail
-              :number="datailNumber"
-              @changeIsDetail="changeIsDetail"
-            ></productDetail>
-          </div>
-          <center
-            style="margin:20px auto 0 auto;"
-            v-show="!isDetail"
-          >
+          <center style="margin:20px auto 0 auto;">
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
               :page-sizes="[10, 20, 30, 60]"
@@ -184,9 +182,63 @@
               @size-change="handleSizeChange"
             ></el-pagination>
           </center>
+            </div>
+          </template>
+          <div class="productList" v-if="isDetail">
+            <productDetail
+              :number="datailNumber"
+              @changeIsDetail="changeIsDetail"
+            ></productDetail>
+          </div>
         </div>
       </div>
     </div>
+    <!-- vueCropper 剪裁图片实现-->
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
+      <div class="cropper-content">
+        <div class="cropper" style="text-align:center">
+          <vueCropper
+            ref="cropper"
+            :img="option.img"
+            :outputSize="option.outputSize"
+            :outputType="option.outputType"
+            :autoCropWidth="option.autoCropWidth"
+            :autoCropHeight="option.autoCropHeight"
+            :canScale='option.canScale'
+            :info="option.info"
+            :full="option.full"
+            :canMove="option.canMove"
+            :canMoveBox="option.canMoveBox"
+            :original="option.original"
+            :autoCrop="option.autoCrop"
+            :fixed="option.fixed"
+            :fixedNumber="option.fixedNumber"
+            :centerBox="option.centerBox"
+            :infoTrue="option.infoTrue"
+            :fixedBox="option.fixedBox"
+            :mode="option.mode"
+          ></vueCropper>
+        </div>
+      </div>
+      <center slot="footer" class="dialog-footer">
+        <el-button type="info" @click="cropperCancel">取 消</el-button>
+        <el-button
+          type="primary"
+          class="el-icon-refresh-left"
+          @click="$refs.cropper.rotateLeft()"
+          >左 旋 转</el-button
+        >
+        <el-button
+          type="primary"
+          class="el-icon-refresh-right"
+          @click="$refs.cropper.rotateRight()"
+          >右 旋 转</el-button
+        >
+        <el-button type="success" @click="onCubeImg" :loading="cropperLoading"
+          >确认</el-button
+        >
+      </center>
+    </el-dialog>
   </div>
 </template>
 
@@ -194,10 +246,33 @@
 import bsTop from '@/components/BsTop'
 import productSearchTop from '@/components/productSearchTop'
 import productDetail from '@/components/productDetail'
+import { VueCropper } from 'vue-cropper'
 export default {
-  components: { bsTop, productSearchTop, productDetail },
+  components: { bsTop, productSearchTop, productDetail, VueCropper },
   data () {
     return {
+      cropperLoading: false,
+      // 裁剪组件的基础配置option
+      option: {
+        img: '', // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        full: false, // 是否输出原图比例的截图
+        outputSize: 0.8, // 裁剪生成图片的质量
+        outputType: 'jpeg', // 裁剪生成图片的格式
+        canScale: false, // 图片是否允许滚轮缩放
+        autoCrop: true, // 是否默认生成截图框
+        autoCropWidth: 500, // 默认生成截图框宽度
+        autoCropHeight: 500, // 默认生成截图框高度
+        fixedBox: false, // 固定截图框大小 不允许改变
+        fixed: false, // 是否开启截图框宽高固定比例
+        fixedNumber: [1, 1], // 截图框的宽高比例
+        canMove: true, // 图片是否可移动
+        canMoveBox: true, // 截图框能否拖动
+        original: false, // 上传图片按照原始比例渲染
+        centerBox: true, // 截图框是否被限制在图片里面
+        infoTrue: false // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+      },
+      isShowCropper: false,
       httpTime: null,
       isDetail: false,
       loading: false,
@@ -215,6 +290,50 @@ export default {
     }
   },
   methods: {
+    // 确定裁剪图片
+    onCubeImg () {
+      this.cropperLoading = true
+      // 获取cropper的截图的 数据
+      this.$refs.cropper.getCropBlob(async file => {
+        const urlPreView = URL.createObjectURL(file)
+        this.option.img = urlPreView
+        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
+        // 上传
+        const companyNumber = this.$store.state.userInfo.commparnyList
+          ? this.$store.state.userInfo.commparnyList[0].companyNumber
+          : 'Tourist'
+        const fd = new FormData()
+        fd.append('companynumber', companyNumber)
+        fd.append('file', file)
+        try {
+          const res = await this.$http.post('/api/File/SearchPicture', fd)
+          if (res.data.result.code === 200) {
+            this.cropperCancel()
+            this.$store.commit('searchValues', res.data.result.object)
+          } else {
+            this.cropperCancel()
+            this.$store.commit('searchValues', null)
+            this.$message.error(res.data.result.message)
+          }
+          this.$router.push('searchIndex')
+        } catch (error) {
+          this.cropperCancel()
+        }
+      })
+    },
+    // 取消裁剪
+    cropperCancel () {
+      this.$refs.cropper.clearCrop()
+      this.isShowCropper = false
+      this.cropperLoading = false
+      this.option.img = ''
+      this.$refs.uploadRef && (this.$refs.uploadRef.value = '')
+    },
+    // 重新切图
+    openCubeImg () {
+      this.isShowCropper = true
+      this.option.img = this.$store.state.beforeSearchImgPreview
+    },
     // 收藏
     async addCollect (item) {
       const res = await this.$http.post('/api/CreateProductCollection', {
@@ -322,24 +441,27 @@ export default {
     }
   },
   mounted () {
-    if (this.$store.state.imageSearchValue instanceof Array) {
-      this.isDetail = false
-      this.dataList = this.$store.state.imageSearchValue
-      this.totalCount = this.dataList.length
-      this.$store.commit('updateAppLoading', false)
-      this.$store.commit('clearSearch')
+    if (this.$route.params.id) {
+      this.productDetail(this.$route.params.id)
+      this.$store.commit('handlerBeforeSearchImgPreview', null)
+      // this.productDetail(this.datailNumber)
     } else {
-      this.getProduct()
-    }
-    this.$root.eventHub.$on('toHotRecommend', () => {
-      this.currentPage = 1
-      this.totalCount = 0
-      this.dataList = []
-      this.search = this.$store.state.searchValues
-      this.getProduct()
-    })
-    if (this.$route.query.id) {
-      this.productDetail(this.$route.query.id)
+      if (this.$store.state.imageSearchValue instanceof Array) {
+        this.isDetail = false
+        this.dataList = this.$store.state.imageSearchValue
+        this.totalCount = this.dataList.length
+        this.$store.commit('clearSearch')
+      } else {
+        this.$store.commit('handlerBeforeSearchImgPreview', null)
+        this.getProduct()
+      }
+      this.$root.eventHub.$on('toHotRecommend', () => {
+        this.currentPage = 1
+        this.totalCount = 0
+        this.dataList = []
+        this.search = this.$store.state.searchValues
+        this.getProduct()
+      })
     }
   },
   created () {
@@ -370,7 +492,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     max-width: 1200px;
-min-width: 800px;
+    min-width: 800px;
     margin: 20px auto;
     display: flex;
     .searchSidebar {
@@ -564,6 +686,30 @@ min-width: 800px;
           }
         }
       }
+      .preview{
+        width: 400px;
+        height: 200px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        .title{
+          text-align: center;
+          color: #165af7;
+        }
+        .el-image{
+          width: 100%;
+          height: 184px;
+          cursor: pointer;
+          @{deep} img {
+            transition: all 1s;
+            &:hover {
+              -webkit-transform: scale(1.1);
+              -moz-transform: scale(1.1);
+              -ms-transform: scale(1.1);
+              transform: scale(1.1);
+            }
+          }
+        }
+      }
     }
   }
   ::v-deep .el-tree {
@@ -594,13 +740,12 @@ min-width: 800px;
       font-size: 16px;
     }
   }
-  .myFooter {
-    // margin-top: 50px;
-    position: absolute;
-    width: 100%;
-    bottom: -160px;
-    left: 0;
-    background-color: #fff;
+}
+// 截图
+.cropper-content {
+  .cropper {
+    width: auto;
+    height: 500px;
   }
 }
 </style>

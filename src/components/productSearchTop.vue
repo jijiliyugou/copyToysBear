@@ -146,7 +146,9 @@ export default {
       this.showLoading()
       // 获取cropper的截图的base64 数据
       this.$refs.cropper.getCropBlob(async file => {
-        this.option.img = window.URL.createObjectURL(file)
+        const urlPreView = window.URL.createObjectURL(file)
+        this.option.img = urlPreView
+        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
         // 上传
         const companynumber =
           this.$store.state.userInfo &&

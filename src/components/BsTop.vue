@@ -319,9 +319,6 @@ export default {
       // window.open("http://127.0.0.1:8080/#/beforeIndex/home", "_blank");
     }
   },
-  beforeDestroy () {
-    // this.$store.commit('handlerBeforeSearchImgPreview', null)
-  },
   mounted () {
     this.menuList = this.$store.state.routers.map(val => {
       val.parent.children = val.children
