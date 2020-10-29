@@ -32,7 +32,17 @@
                   </el-image>
         </el-col>
         <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
-        <el-col :span="6"><div class="grid-content bg-purple offterBtn"><i class="offterShare el-icon-share"></i> 分享</div></el-col>
+        <el-col :span="6" style="display:flex;justify-content:flex-end">
+          <el-popover
+          placement="bottom"
+          title="复制链接地址"
+          trigger="click">
+          <div style="display:flex;align-items:center;">
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height: 30px;" disabled>https://www.toysbear.com/#/</div><el-button size="small" @click="copyUrl">复制</el-button>
+          </div>
+          <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
+          </el-popover>
+          </el-col>
       </el-row>
     </div>
     <div class="offerInfo">
@@ -123,6 +133,27 @@ export default {
     backtrackPage () {
       this.$router.go(-1)
     },
+    // 复制
+    copyUrl () {
+      var div = document.getElementById('copyUrl')
+      var range
+      if (document.body.createTextRange) {
+        range = document.body.createTextRange()
+        range.moveToElementText(div)
+        range.select()
+      } else if (window.getSelection) {
+        var selection = window.getSelection()
+        range = document.createRange()
+        range.selectNodeContents(div)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else {
+        console.warn('none')
+      }
+      document.execCommand('Copy') // 执行浏览器复制命令
+      // console.warn('none')
+      this.$message.success('已复制好，可贴粘。')
+    },
     // 获取报价信息
     async getProductOfferByNumber () {
       const res = await this.$http.post('/api/GetProductOfferByNumber', { offerNumber: this.$route.params.pid })
@@ -179,6 +210,7 @@ export default {
       color: #165BF7;
       font-size: 30px;
     }
+
     .offterBtn{
       color: #F7BA24;
       font-size: 22px;
@@ -186,9 +218,17 @@ export default {
       align-items: center;
       justify-content: flex-end;
       cursor: pointer;
-      .offterShare{
-        font-size: 35px;
+      border: none;
+      @{deep} span{
+        display: flex;
+        align-items: center;
       }
+      .offterShare{
+        font-size: 30px;
+      }
+    }
+    .el-popover__reference{
+      background-color: transparent;
     }
   }
 }

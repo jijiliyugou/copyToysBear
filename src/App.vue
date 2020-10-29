@@ -35,6 +35,7 @@ export default {
       if (this.$store.state.AppLoading) e.preventDefault()
     },
     prohibit () {
+      // console.log(document.oncontextmenu)
       // 禁用鼠标右击、F12
       document.oncontextmenu = function () {
         return false

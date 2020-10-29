@@ -37,7 +37,16 @@
                   </el-image>
         </el-col>
         <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
-        <el-col :span="6"><div class="grid-content bg-purple offterBtn"><i class="offterShare el-icon-share"></i> 分享</div></el-col>
+         <el-col :span="6">
+          <el-popover
+          placement="bottom"
+          title="复制链接地址"
+          width="200"
+          trigger="click">
+          <el-input v-model="url" disabled placeholder="请输入内容"></el-input>
+          <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
+          </el-popover>
+          </el-col>
       </el-row>
     </div>
     <el-card class="box-card">
@@ -231,6 +240,7 @@
 export default {
   data () {
     return {
+      url: 'https://www.toysbear.com',
       keyword: null,
       productInfo: null,
       productList: [],
@@ -426,9 +436,13 @@ export default {
       align-items: center;
       justify-content: flex-end;
       cursor: pointer;
+      border: none;
       .offterShare{
         font-size: 0.466667rem;
       }
+    }
+    .el-popover__reference{
+      background-color: transparent;
     }
   }
 }
