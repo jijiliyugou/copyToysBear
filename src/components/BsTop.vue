@@ -163,6 +163,7 @@ export default {
   },
   data () {
     return {
+      baseImg: null,
       fileinfo: null,
       // 裁剪组件的基础配置option
       option: {
@@ -202,12 +203,13 @@ export default {
     // 确定裁剪图片
     onCubeImg () {
       this.loading = true
+      this.$store.commit('searchTxtValues', null)
       this.showLoading()
       // 获取cropper的截图的base64 数据
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = window.URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
+        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.baseImg })
         // 将剪裁后base64的图片转化为file格式
         // let file = this.dataURLtoFile(
         //   data,this.fileinfo.uid
@@ -275,7 +277,7 @@ export default {
       // 上传成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {
         const f = window.URL.createObjectURL(file.raw)
-        this.option.img = f
+        this.baseImg = this.option.img = f
         this.dialogVisible = true
       })
     },

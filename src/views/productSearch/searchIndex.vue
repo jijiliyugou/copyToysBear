@@ -63,16 +63,35 @@
           </p>
         </div>
         <template v-if="(!dataList || dataList.length === 0) && !isDetail">
+          <div class="preview" v-if="$store.state.beforeSearchImgPreview">
+          <div class="miniImg">
+            <el-image
+            @click.native.stop.prevent="openCubeImg($store.state.beforeSearchImgPreview.img)"
+            :src="$store.state.beforeSearchImgPreview.img"
+            fit="contain"></el-image>
+          </div>
+            <el-image
+            :src="$store.state.beforeSearchImgPreview.baseImg"
+            @click.native.stop.prevent="openCubeImg($store.state.beforeSearchImgPreview.baseImg)"
+            fit="contain"></el-image>
+            <div class="title"><span>搜索产品</span></div>
+          </div>
           <div class="zanwuchanpin"></div>
         </template>
         <template v-else>
           <div v-show="!isDetail">
             <div class="preview" v-if="$store.state.beforeSearchImgPreview">
+          <div class="miniImg">
             <el-image
-            @click.native="openCubeImg"
-            :src="$store.state.beforeSearchImgPreview"
+            @click.native.stop.prevent="openCubeImg($store.state.beforeSearchImgPreview.img)"
+            :src="$store.state.beforeSearchImgPreview.img"
             fit="contain"></el-image>
-            <div class="title">搜索产品</div>
+          </div>
+            <el-image
+            :src="$store.state.beforeSearchImgPreview.baseImg"
+            @click.native.stop.prevent="openCubeImg($store.state.beforeSearchImgPreview.baseImg)"
+            fit="contain"></el-image>
+            <div class="title"><span>搜索产品</span></div>
           </div>
             <ul class="productList">
               <li
@@ -316,7 +335,7 @@ export default {
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
+        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.$store.state.beforeSearchImgPreview.baseImg })
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
           ? this.$store.state.userInfo.commparnyList[0].companyNumber
@@ -334,7 +353,7 @@ export default {
             this.$store.commit('searchValues', null)
             this.$message.error(res.data.result.message)
           }
-          this.$router.push('searchIndex')
+          // this.$router.push('searchIndex')
         } catch (error) {
           this.cropperCancel()
         }
@@ -349,9 +368,9 @@ export default {
       this.$refs.uploadRef && (this.$refs.uploadRef.value = '')
     },
     // 重新切图
-    openCubeImg () {
+    openCubeImg (img) {
       this.isShowCropper = true
-      this.option.img = this.$store.state.beforeSearchImgPreview
+      this.option.img = img
     },
     // 价格排序
     priceSort () {
@@ -482,6 +501,7 @@ export default {
         this.totalCount = this.dataList.length
         this.$store.commit('clearSearch')
       } else {
+        this.$store.commit('handlerBeforeSearchImgPreview', null)
         this.getProduct()
       }
     }
@@ -502,6 +522,7 @@ export default {
   beforeDestroy () {
     this.$root.eventHub.$off('toSearchIndex')
     this.$store.commit('searchTxtValues', null)
+    this.$store.commit('handlerBeforeSearchImgPreview', null)
   }
 }
 </script>
@@ -726,9 +747,50 @@ export default {
         height: 200px;
         margin: 0 auto;
         box-sizing: border-box;
+        position: relative;
+        .miniImg{
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 100px;
+          height: 100px;
+          box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.2);
+          background-color: #fff;
+          z-index: 1;
+          .el-image{
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+          @{deep} img {
+            transition: all 1s;
+            &:hover {
+              -webkit-transform: scale(1.1);
+              -moz-transform: scale(1.1);
+              -ms-transform: scale(1.1);
+              transform: scale(1.1);
+            }
+          }
+        }
+        }
         .title{
           text-align: center;
-          color: #165af7;
+          color: #aaa;
+          position: relative;
+          &::before{
+            position: absolute;
+            content: '';
+            left: 50%;
+            width: 200px;
+            height: 3px;
+            top: 50%;
+            background-color: #ddd;
+            transform: translate(-50%,-50%);
+            }
+          span{
+          position: relative;
+          background-color: #fff;
+          padding: 0 10px;
+          }
         }
         .el-image{
           width: 100%;

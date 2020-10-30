@@ -5,7 +5,6 @@
         placeholder="请输入内容"
         class="input-with-select"
         v-model="$store.state.searchValue"
-        @input="changge"
         style="width:300px;"
         @keyup.enter.native="toSearchIndex"
       >
@@ -104,6 +103,7 @@ export default {
   },
   data () {
     return {
+      baseImg: null,
       loading: false,
       fileinfo: null,
       isShowCropper: false,
@@ -143,12 +143,13 @@ export default {
     // 确定裁剪图片
     onCubeImg () {
       this.loading = true
+      this.$store.commit('searchTxtValues', null)
       this.showLoading()
       // 获取cropper的截图的base64 数据
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = window.URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
+        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.baseImg })
         // 上传
         const companynumber =
           this.$store.state.userInfo &&
@@ -198,6 +199,7 @@ export default {
     },
     // 选取图片 限制图片大小
     changeUpload (file, fileList) {
+      this.$store.commit('searchTxtValues', '')
       const isLt5M = file.size / 1024 / 1024 < 3
       if (!isLt5M) {
         this.$message.error('上传文件大小不能超过 3MB!')
@@ -210,7 +212,7 @@ export default {
       // 上传成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {
         const f = window.URL.createObjectURL(file.raw)
-        this.option.img = f
+        this.baseImg = this.option.img = f
         this.dialogVisible = true
       })
     },
@@ -225,9 +227,6 @@ export default {
     // 图片搜索时太慢，显示loading
     showLoading () {
       this.$store.commit('updateAppLoading', true)
-    },
-    changge () {
-      this.$store.commit('handlerBeforeSearch', this.search)
     },
     successUpload (response, file, fileList) {
       if (response.result.code === 200) {

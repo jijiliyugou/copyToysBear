@@ -159,6 +159,7 @@ export default {
   },
   data () {
     return {
+      baseImg: '',
       // 显示裁剪框
       isShowCropper: false,
       loading: false,
@@ -214,11 +215,12 @@ export default {
     // 确定裁剪图片
     onCubeImg () {
       this.loading = true
+      this.$store.commit('handlerBeforeSearch', { value: '', type: 'name' })
       // 获取cropper的截图的 数据
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', urlPreView)
+        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.baseImg })
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
           ? this.$store.state.userInfo.commparnyList[0].companyNumber
@@ -304,7 +306,7 @@ export default {
       // 上传成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {
         const f = window.URL.createObjectURL(this.fileinfo)
-        this.option.img = f
+        this.baseImg = this.option.img = f
         this.dialogVisible = true
       })
     },
@@ -342,10 +344,10 @@ export default {
   },
   mounted () {
     this.search = this.$store.state.beforeSearch.value
-  },
-  beforeDestroy () {
-    this.$store.commit('handlerBeforeSearchImgPreview', null)
   }
+  // beforeDestroy () {
+  //   this.$store.commit('handlerBeforeSearchImgPreview', null)
+  // }
 }
 </script>
 
