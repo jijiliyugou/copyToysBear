@@ -177,7 +177,7 @@
                 <div
                   slot="error"
                   class="image-slot"
-                  style="width:100%;height:100%;display:flex;align-items:center;justify-content:left;white-space: nowrap;"
+                  style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;white-space: nowrap;"
                 >
                   {{ showOrderCompanyItem.client_na }}
                 </div>
@@ -1061,37 +1061,20 @@
       </li>
       <!-- 打开我的产品列表 -->
       <li class="contentThree" v-if="showSampleSelection === 'myProduct'">
-        <div class="rankingWrapContent">
-          <p class="titleTXT">我的产品</p>
-          <div class="bigRankingHeaderTop">
-            <div class="changshang">
-              <div class="icon">
-                <i></i>
-              </div>
-              <div class="text">厂商名称</div>
-            </div>
-            <div class="huohao">
-              <div class="icon">
-                <i></i>
-              </div>
-              <div class="text">出厂货号</div>
-            </div>
-            <div class="name">
-              <div class="icon">
-                <i></i>
-              </div>
-              <div class="text">商品名称</div>
-            </div>
+         <h3 class="infoListTitle" style="background-color: #fff;">我的产品</h3>
+        <div class="myProductSearch">
+          <div class="inputBox">
+            <el-input v-model="myProductSearchValue" clearable placeholder="请输入搜索内容"></el-input>
+            <el-button type="primary" round>搜索</el-button>
           </div>
         </div>
-        <ul
-          class="rankingWrapBody"
-          v-infinite-scroll="addSampleSelectionList"
-          infinite-scroll-disabled="activeAddSample"
-        >
-          <template v-if="sampleSelectionList && sampleSelectionList.length">
-            <li v-for="(item, i) in sampleSelectionList" :key="i">
-              <span class="item">{{ item.ma_na }}</span>
+        <div class="myProductSearchTotalCountBox"><p></p><p class="myTotalCount"><span>{{sampleSelectionTotalCount}}</span>条产品</p> <p class="more"><i @click="checkMoreEvent" class="checkCube" v-show="isCheckCube"></i><i @click="checkMoreEvent" class="checkList"  v-show="!isCheckCube"></i></p></div>
+        <ul class="myProductWrapBody" v-infinite-scroll="addSampleSelectionList"
+          infinite-scroll-disabled="activeAddSample">
+          <template v-if="sampleSelectionList && sampleSelectionTotalCount">
+            <!-- 方格类型 -->
+            <div class="itemBox" v-if="isCheckCube">
+              <li class="itemCube"  v-for="(item, i) in sampleSelectionList" :key="i">
               <div class="imgItem">
                 <el-image
                   fit="contain"
@@ -1101,14 +1084,12 @@
                     item.imageUrl &&
                       item.imageUrl.replace(/_SmallPic/, '_Photo')
                   ]"
-                  style="width:40px;height:40px;margin-right:10px;"
                 >
                   <div slot="placeholder" class="image-slot">
                     <img
                       class="errorImg"
                       src="~@/assets/images/imgError.jpg"
                       alt
-                      style="width:40px;height:40px;margin-right:10px;"
                     />
                   </div>
                   <div slot="error" class="image-slot">
@@ -1116,14 +1097,60 @@
                       class="errorImg"
                       src="~@/assets/images/imgError.jpg"
                       alt
-                      style="width:40px;height:40px;margin-right:10px;"
                     />
                   </div>
                 </el-image>
-                <span>{{ item.fa_no }}</span>
               </div>
-              <span class="item">{{ item.name }}</span>
+              <div class="context">
+                <h3 class="contextItem">{{ item.name }}</h3>
+                <p class="contextItem"> 出厂货号：{{ item.fa_no }}</p>
+                <p class="contextItem">参考单价：<span class="price">{{ item.cu_de + item.price }}</span> </p>
+              </div>
             </li>
+            </div>
+            <!-- 列表类型 -->
+            <div class="itemBox" v-else>
+              <li class="itemList"  v-for="(item, i) in sampleSelectionList" :key="i">
+              <div class="imgItemLeft">
+                <el-image
+                  fit="contain"
+                  :src="item.imageUrl"
+                  :key="item.id"
+                  :preview-src-list="[
+                    item.imageUrl &&
+                      item.imageUrl.replace(/_SmallPic/, '_Photo')
+                  ]"
+                >
+                  <div slot="placeholder" class="image-slot">
+                    <img
+                      class="errorImg"
+                      src="~@/assets/images/imgError.jpg"
+                      alt
+                    />
+                  </div>
+                  <div slot="error" class="image-slot">
+                    <img
+                      class="errorImg"
+                      src="~@/assets/images/imgError.jpg"
+                      alt
+                    />
+                  </div>
+                </el-image>
+                <div class="date"><i></i> 2020-10-10</div>
+              </div>
+              <div class="context">
+                <h3 class="contextItem productName">{{ item.name }}</h3>
+                <p class="contextItem"> 出厂货号：{{ item.fa_no }}</p>
+                <p class="contextItem"> 包装：{{ item.ch_pa }}</p>
+                <p class="contextItem"> 样品规格：{{item.pr_le + " X " + item.pr_wi + " X " + item.pr_hi + "(CM)"}}</p>
+                <p class="contextItem"> 外箱规格：{{ item.ou_le + " X " + item.ou_wi + " X " + item.ou_hi + "(CM)" }}(CM)</p>
+                <p class="contextItem"> 装箱量：{{ item.in_en + "/" + item.ou_lo + "(PCS)" }}</p>
+                <p class="contextItem"> 体积/材积：{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</p>
+                <p class="contextItem"> 毛重净重：{{ item.ne_we + "/" + item.gr_we + "(KG)" }}</p>
+                <p class="contextItem"> 参考单价：<span class="price">{{ item.cu_de + item.price }}</span> </p>
+              </div>
+            </li>
+            </div>
             <center
               style="padding:10px;backgroundColor:#f5f7fa;color:#aaa"
               v-show="showAddSampleTXT"
@@ -2456,6 +2483,8 @@ export default {
   },
   data () {
     return {
+      isCheckCube: true,
+      myProductSearchValue: null,
       companyLoadDisabled: true,
       companyListPageSize: 20,
       companyListCurrentPage: 1,
@@ -2499,6 +2528,7 @@ export default {
       mySampleSelectionCurrentPage: 1,
       sampleSelectionPageSize: 30,
       sampleSelectionList: [],
+      sampleSelectionTotalCount: 0,
       currentCodeList: [],
       customerVisitList: [],
       personalNumber: {
@@ -4063,6 +4093,7 @@ export default {
             this.sampleSelectionList = this.sampleSelectionList.concat(
               res.data.result.item.items
             )
+            this.sampleSelectionTotalCount = res.data.result.item.totalCount
             this.activeAddSample = false
           } else {
             this.showAddSampleTXT = '我也是有底线的'
@@ -4118,6 +4149,7 @@ export default {
         switch (val) {
           case 'myProduct':
             this.sampleSelectionList = res.data.result.item.items
+            this.sampleSelectionTotalCount = res.data.result.item.totalCount
             this.activeAddSample = false
             break
           default:
@@ -4572,6 +4604,10 @@ export default {
     openMap(addr){
       this.companyAddr = addr
       this.companyAddrMapDialog = true
+    },
+    // 切换我的产品展示格式类型
+    checkMoreEvent () {
+      this.isCheckCube = !this.isCheckCube
     }
   },
   mounted () {
@@ -5122,7 +5158,72 @@ min-width: 800px;
       display: flex;
       position: relative;
       flex-direction: column;
-
+      .myProductSearch {
+        height: 60px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .inputBox{
+          width: 95%;
+          height: 40px;
+          border-radius: 30px;
+          overflow: hidden;
+          border: 1px solid #aaa;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          @{deep} .el-input{
+            border: none;
+            .el-input__inner{
+              border: none;
+            }
+          }
+          .el-button{
+            border: none;
+            height: 100%;
+            background-color: #165af7;
+          }
+        }
+      }
+      .myProductSearchTotalCountBox{
+        padding: 10px 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        p {
+          flex: 1;
+          &.myTotalCount{
+            text-align: center;
+            span{
+              color: #ff0000;
+              margin-right: 5px;
+            }
+          }
+          &.more{
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 10px;
+            .checkList{
+              width: 20px;
+              height: 20px;
+              display: block;
+              background: url('~@/assets/images/格式化列表.png') no-repeat center;
+              background-size: contain;
+              cursor: pointer;
+            }
+            .checkCube{
+              width: 20px;
+              height: 20px;
+              display: block;
+              background: url('~@/assets/images/liebiao2.png') no-repeat center;
+              background-size: contain;
+              cursor: pointer;
+            }
+          }
+        }
+      }
       .datas {
         width: 100%;
         background-color: #fff;
@@ -6660,6 +6761,119 @@ min-width: 800px;
               i {
                 background: url("~@/assets/images/数据@2x.png") no-repeat center;
                 background-size: contain;
+              }
+            }
+          }
+        }
+      }
+      // 我的产品下拉
+      .myProductWrapBody{
+        font-size: 14px;
+        border: none;
+        height: 675px;
+        width: 100%;
+        overflow-x: none;
+        overflow-y: scroll;
+        justify-content: space-evenly;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        /** 单独为横向和竖向设置滚动条 **/
+        .itemBox{
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          align-content: flex-start;
+          justify-content: space-evenly;
+          .itemCube{
+            width: 46%;
+            height: 260px;
+            margin: 5px 0;
+            overflow: hidden;
+            border: 1px solid #DCDCDC;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .imgItem{
+              width: 100%;
+              height: 175px;
+              @{deep} .el-image{
+                width: 100%;
+                height: 100%;
+                img{
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+            }
+            .context{
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-evenly;
+              .contextItem{
+                box-sizing: border-box;
+                padding: 0 10px;
+                .price {
+                  color: #ff0000;
+                }
+              }
+            }
+          }
+          .itemList {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 10px;
+            margin: 5px 10px;
+            overflow: hidden;
+            cursor: pointer;
+            height: 250px;
+            .imgItemLeft{
+              flex: 1;
+              display: flex;
+              align-items: center;
+              position: relative;
+              .el-image{
+                width: 100%;
+              }
+              .date{
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+                left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 0;
+                color: #626262;
+                i {
+                  display: block;
+                  margin-right: 5px;
+                  width: 14px;
+                  height: 14px;
+                  background: url('~@/assets/images/时间.png') no-repeat center;
+                  background-size: contain;
+                }
+              }
+            }
+            .context{
+              flex: 2;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-evenly;
+              color: #626262;
+              .contextItem{
+                box-sizing: border-box;
+                padding-left: 5px;
+                .price {
+                  color: #ff0000;
+                }
+                &.productName {
+                  color: #000;
+                  font-weight: 600;
+                }
               }
             }
           }

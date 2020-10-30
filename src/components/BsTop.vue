@@ -174,11 +174,11 @@ export default {
         outputType: 'jpeg', // 裁剪生成图片的格式
         canScale: false, // 图片是否允许滚轮缩放
         autoCrop: true, // 是否默认生成截图框
-        autoCropWidth: 500, // 默认生成截图框宽度
+        autoCropWidth: 1000, // 默认生成截图框宽度
         autoCropHeight: 500, // 默认生成截图框高度
         fixedBox: false, // 固定截图框大小 不允许改变
         fixed: false, // 是否开启截图框宽高固定比例
-        fixedNumber: [1, 1], // 截图框的宽高比例
+        fixedNumber: [2, 1], // 截图框的宽高比例
         canMove: true, // 图片是否可移动
         canMoveBox: true, // 截图框能否拖动
         original: false, // 上传图片按照原始比例渲染
