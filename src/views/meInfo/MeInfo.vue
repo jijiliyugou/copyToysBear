@@ -2370,26 +2370,33 @@
       top="50px"
     >
       <el-radio-group class="myRadios" v-model="radio" @change="changeRadios">
-        <el-radio label="SUPPLIER">
+        <el-radio label="all">
           <el-avatar
             :size="30"
             :src="require('@/assets/images/供应商.png')"
           ></el-avatar
-          >所有供应商
+          >平台所有人
         </el-radio>
-        <el-radio label="EXHIBITION">
-          <el-avatar
-            :size="30"
-            :src="require('@/assets/images/展厅.png')"
-          ></el-avatar
-          >所有展厅
-        </el-radio>
-        <el-radio label="SALES">
+        <el-radio label="Exhibition" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Admin'">
           <el-avatar
             :size="30"
             :src="require('@/assets/images/公司.png')"
           ></el-avatar
-          >所有公司
+          >所有展厅联系人
+        </el-radio>
+        <el-radio label="Sales" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Supplier' || $store.state.userInfo.commparnyList[0].companyType === 'Admin'">
+          <el-avatar
+            :size="30"
+            :src="require('@/assets/images/公司.png')"
+          ></el-avatar
+          >所有公司联系人
+        </el-radio>
+        <el-radio label="Supplier"  v-show="$store.state.userInfo.commparnyList[0].companyType === 'Exhibition' || $store.state.userInfo.commparnyList[0].companyType === 'Admin'">
+          <el-avatar
+            :size="30"
+            :src="require('@/assets/images/公司.png')"
+          ></el-avatar
+          >所有厂商联系人
         </el-radio>
       </el-radio-group>
       <div class="tongxunlu">
@@ -7196,9 +7203,11 @@ min-width: 800px;
     display: flex;
     align-items: center;
     margin: 20px;
-    @{deep} .el-avatar {
+    .el-radio__label{
+     .el-avatar {
       vertical-align: top;
       margin-right: 10px;
+      }
     }
     .el-radio__label,
     .is-checked,
@@ -7217,14 +7226,16 @@ min-width: 800px;
 .tongxunluLianxiren {
   max-height: 430px;
   overflow: auto;
-}
-.myCheckBox {
-  @{deep} .el-checkbox {
+  .myCheckBox {
+  .el-checkbox {
     font-size: 30px;
     display: flex;
     align-items: center;
     margin: 20px;
-    @{deep} .el-image {
+    @{deep} .el-checkbox__label, @{deep} .el-checkbox__input{
+      display: flex;
+      align-items: center;
+      .el-image {
       transition: all 0.5s;
       width: 30px;
       height: 30px;
@@ -7232,7 +7243,9 @@ min-width: 800px;
       border-radius: 50%;
       background-color: #165af7;
       color: white;
+      }
     }
+    
     &:hover {
       @{deep} .el-image {
         -webkit-transform: scale(1.1);
@@ -7249,6 +7262,7 @@ min-width: 800px;
       border-radius: 50%;
     }
   }
+}
 }
 .zanwushuju1 {
   width: 100%;

@@ -1,46 +1,45 @@
 
 <template>
   <div class="offerDetailBox">
-    <div class="topLayout">
+      <div class="topLayout">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-image fit="contain" src="~@/assets/images/imgError.jpg" lazy>
-            <div
-              slot="placeholder"
-              class="image-slot"
-              style="width: 1.066667rem; height: 1.066667rem; margin: 0 auto"
-            >
-              <img
-                class="errorImg"
-                style="width: 1.066667rem; height: 1.066667rem"
-                src="~@/assets/images/imgError.jpg"
-                alt
-              />
-            </div>
-            <div
-              slot="error"
-              class="image-slot"
-              style="width: 1.066667rem; height: 1.066667rem; margin: 0 auto"
-            >
-              <img
-                class="errorImg"
-                style="width: 1.066667rem; height: 1.066667rem"
-                src="~@/assets/images/imgError.jpg"
-                alt
-              />
-            </div>
-          </el-image>
+          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" src="~@/assets/images/imgError.jpg" lazy>
+                    <div
+                      slot="placeholder"
+                      class="image-slot"
+                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:0.533333rem;height:0.533333rem;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                    <div
+                      slot="error"
+                      class="image-slot"
+                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
+                    >
+                      <img
+                        class="errorImg"
+                        style="width:0.533333rem;height:0.533333rem;"
+                        src="~@/assets/images/imgError.jpg"
+                        alt
+                      />
+                    </div>
+                  </el-image>
         </el-col>
-        <el-col :span="12"
-          ><div class="grid-content bg-purple conText">玩具厂分享</div></el-col
-        >
-         <el-col :span="6">
+        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+         <el-col :span="6" style="display:flex;justify-content:flex-end;">
           <el-popover
           placement="bottom"
           title="复制链接地址"
-          width="200"
           trigger="click">
-          <el-input v-model="url" disabled placeholder="请输入内容"></el-input>
+          <div style="display:flex;align-items:center;">
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height:30px;" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
+          </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
           </el-col>
@@ -98,6 +97,27 @@ export default {
     backtrackPage () {
       this.$router.go(-1)
     },
+    // 复制
+    copyUrl () {
+      var div = document.getElementById('copyUrl')
+      var range
+      if (document.body.createTextRange) {
+        range = document.body.createTextRange()
+        range.moveToElementText(div)
+        range.select()
+      } else if (window.getSelection) {
+        var selection = window.getSelection()
+        range = document.createRange()
+        range.selectNodeContents(div)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else {
+        console.warn('none')
+      }
+      document.execCommand('Copy') // 执行浏览器复制命令
+      // console.warn('none')
+      this.$message.success('已复制好，可贴粘。')
+    },
     // 打开地图
     openMap () {
       const mapAttr =
@@ -146,36 +166,39 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .offerDetailBox {
-  .topLayout {
-    width: 95%;
-    margin: 0 auto;
-    .el-row {
-      height: 1.066667rem;
+    .topLayout{
+  width: 95%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  .el-row {
+    height: 0.933333rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .conText{
+      text-align: center;
+      color: #165BF7;
+      font-size: 0.4rem;
+    }
+    .offterBtn{
+      color: #F7BA24;
+      font-size: 0.293333rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      .conText {
-        text-align: center;
-        color: #165bf7;
-        font-size: 0.4rem;
+      justify-content: flex-end;
+      padding-right: 0;
+      margin: 0;
+      cursor: pointer;
+      border: none;
+      .offterShare{
+        font-size: 0.466667rem;
       }
-      .offterBtn {
-        color: #f7ba24;
-        font-size: 0.293333rem;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        cursor: pointer;
-        .offterShare {
-          font-size: 0.466667rem;
-        }
-      }
-      .el-popover__reference{
+    }
+    .el-popover__reference{
       background-color: transparent;
     }
-    }
   }
+}
   .offerInfo {
     .navBar {
       background: linear-gradient(#fff, #e8e8e8, #e8e8e8, #c5c5c5);

@@ -37,7 +37,7 @@
           title="复制链接地址"
           trigger="click">
           <div style="display:flex;align-items:center;">
-            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height: 30px;" disabled>https://www.toysbear.com/#/</div><el-button size="small" @click="copyUrl">复制</el-button>
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height: 30px;" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
           </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
@@ -76,7 +76,7 @@
     <div class="searchWraps">
       <div class="searchSidebar">
         <h4 class="title el-icon-search"><span class="titleText">分类搜索</span></h4>
-        <el-select v-model="value" placeholder="请输入或选择"  @change="handleChange" clearable filterable>
+        <el-select v-model="categoryNumber" placeholder="请输入或选择"  @change="handleChange" clearable filterable>
           <el-option
             v-for="item in [{categoryName: '全部', categoryNumber: ''}, ...categoryList]"
             :key="item.value"
@@ -192,8 +192,7 @@
 export default {
   data () {
     return {
-      url: 'https://www.toysbear.com',
-      value: '',
+      url: 'https://www.toysbear.com/#/',
       keyword: '',
       productInfo: null,
       categoryNumber: null,
@@ -337,7 +336,7 @@ export default {
     },
     // 获取报价信息产品列表
     async getProductOfferDetailPage (flag) {
-      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.value, keyword: this.keyword }
+      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.categoryNumber, keyword: this.keyword }
       for (const key in fd) {
         if (!fd[key]) delete fd[key]
       }

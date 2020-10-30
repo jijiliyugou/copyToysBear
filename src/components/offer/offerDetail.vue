@@ -35,9 +35,10 @@
           <el-popover
           placement="bottom"
           title="复制链接地址"
-          width="200"
           trigger="click">
-          <el-input v-model="url" disabled placeholder="请输入内容"></el-input>
+          <div style="display:flex;align-items:center;">
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height:30px;" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
+          </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
           </el-col>
@@ -118,6 +119,27 @@ export default {
     backtrackPage () {
       this.$router.go(-1)
     },
+    // 复制
+    copyUrl () {
+      var div = document.getElementById('copyUrl')
+      var range
+      if (document.body.createTextRange) {
+        range = document.body.createTextRange()
+        range.moveToElementText(div)
+        range.select()
+      } else if (window.getSelection) {
+        var selection = window.getSelection()
+        range = document.createRange()
+        range.selectNodeContents(div)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else {
+        console.warn('none')
+      }
+      document.execCommand('Copy') // 执行浏览器复制命令
+      // console.warn('none')
+      this.$message.success('已复制好，可贴粘。')
+    },
     // 获取报价信息
     async getProductOfferByNumber () {
       const res = await this.$http.post('/api/GetProductOfferByNumber', { offerNumber: this.$route.params.pid })
@@ -185,9 +207,10 @@ export default {
       font-size: 0.293333rem;
       display: flex;
       align-items: center;
+      padding-right: 0;
       justify-content: flex-end;
-      border: none;
       cursor: pointer;
+      border: none;
       .offterShare{
         font-size: 0.466667rem;
       }
