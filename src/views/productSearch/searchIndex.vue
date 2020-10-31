@@ -411,11 +411,15 @@ export default {
       this.loading = true
       try {
         var start = Date.now()
-        const res = await this.$http.post('/api/SearchBearProductPage', {
+        const fd = {
           name: this.$store.state.searchValue,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
-        })
+        }
+        for (const key in fd) {
+          if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
+        }
+        const res = await this.$http.post('/api/SearchBearProductPage', fd)
         this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.dataList = res.data.result.item.items
@@ -423,7 +427,7 @@ export default {
         } else {
           this.totalCount = 0
         }
-        $('body').animate({ scrollTop: 0 }) // 滚到顶部
+        $('html').animate({ scrollTop: 0 }) // 滚到顶部
         this.loading = false
       } catch (error) {
         this.loading = false

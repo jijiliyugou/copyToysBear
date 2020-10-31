@@ -412,6 +412,7 @@ export default {
           this.$message.error(res.data.result.msg)
           this.totalCount = 0
         }
+        $('html').animate({ scrollTop: 0 }) // 滚到顶部
         this.loading = false
       } catch (error) {
         this.loading = false

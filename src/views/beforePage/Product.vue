@@ -363,7 +363,7 @@ export default {
           // this.$store.commit('updateLoading', false)
           this.$message.error(res.data.result.msg + '，请登录后查看')
         }
-        $('#app').animate({ scrollTop: 0 }) // 滚到顶部
+        $('html').animate({ scrollTop: 0 }) // 滚到顶部
       } catch (error) {
         // this.$store.commit('updateLoading', false)
         this.totalCount = 0
