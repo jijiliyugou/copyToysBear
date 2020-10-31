@@ -9,7 +9,7 @@
     <div class="topLayout">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" src="~@/assets/images/imgError.jpg" lazy>
+          <el-image fit="contain" style="width:0.533333rem;height:0.533333rem;" :src="productInfo && productInfo.companyLogo" lazy>
                     <div
                       slot="placeholder"
                       class="image-slot"
@@ -36,14 +36,14 @@
                     </div>
                   </el-image>
         </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
          <el-col :span="6">
           <el-popover
           placement="bottom"
           title="复制链接地址"
           trigger="click">
            <div style="display:flex;align-items:center;">
-            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height:30px;" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height:30px;overflow: hidden;fontSize:0.16rem;white-space: nowrap;text-overflow:ellipsis;maxWidth: 5.333333rem" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
           </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
@@ -64,8 +64,9 @@
           }}</span>
           </p>
         </div>
-        <div class="lookInfo">
-          <a @click="toContact">查看联系方式></a>
+        <div class="dates">
+          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
+          <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </div>
     </el-card>
@@ -241,7 +242,7 @@
 export default {
   data () {
     return {
-      url: 'https://www.toysbear.com',
+      url: window.location.href,
       keyword: null,
       productInfo: null,
       productList: [],
@@ -285,8 +286,12 @@ export default {
       this.$message.success('已复制好，可贴粘。')
     },
     // 查看联系方式
-    toContact () {
-      this.$router.push({ name: 'offerContact', params: { id: this.$route.query.id } })
+    toContact (e) {
+      if (this.productInfo.companyId) {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id, companyId: this.productInfo.companyId } })
+      } else {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id, companyId: (this.productInfo.companyId || 123) } })
+      }
     },
     // 切换列表
     checkList (number) {
@@ -371,7 +376,7 @@ export default {
       if (res.data.result.code === 200) {
         this.productList = flag
           ? this.productList.concat(res.data.result.item.items)
-          : [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
+          : res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
@@ -495,19 +500,34 @@ export default {
           flex: 1;
         }
       }
-      .lookInfo{
-        border-top: 1px solid #eee;
+      .dates{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      color: #626262;
+      font-size: 0.266667rem;
+      .dateIconBox{
         display: flex;
-        justify-content: flex-end;
         align-items: center;
-        height: 0.826667rem;
-        a{
+        .dateIcon{
+        width: 0.266667rem;
+        height: 0.266667rem;
+        margin-right: 0.066667rem;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url('~@/assets/images/报价分享时间.png') no-repeat center;
+        background-size: contain;
+        }
+      }
+      .lookInfo{
           color: #165af7;
+          cursor: pointer;
           &:hover{
             text-decoration: underline;
           }
         }
-      }
+    }
     }
   }
   .keyWordSearch {

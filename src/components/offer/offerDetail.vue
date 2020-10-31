@@ -3,7 +3,7 @@
    <div class="topLayout">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" src="~@/assets/images/imgError.jpg" lazy>
+          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" :src="productInfo && productInfo.companyLogo" lazy>
                     <div
                       slot="placeholder"
                       class="image-slot"
@@ -30,7 +30,7 @@
                     </div>
                   </el-image>
         </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
         <el-col :span="6">
           <el-popover
           placement="bottom"
@@ -102,7 +102,7 @@
 export default {
   data () {
     return {
-      url: 'https://www.toysbear.com',
+      url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.pid,
       productDetail: null,
       imagesList: [],
       productInfo: null,
@@ -113,7 +113,11 @@ export default {
   methods: {
     // 查看联系方式
     toContact () {
-      this.$router.push({ name: 'offerContact', params: { id: this.$route.params.pid } })
+      if (this.productInfo.companyId) {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.params.pid, companyId: this.productInfo.companyId } })
+      } else {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.params.pid, companyId: (this.productInfo.companyId || 123) } })
+      }
     },
     // 返回
     backtrackPage () {

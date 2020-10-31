@@ -4,7 +4,7 @@
       <div class="topLayout">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" src="~@/assets/images/imgError.jpg" lazy>
+          <el-image fit="contain"  style="width:0.533333rem;height:0.533333rem;" :src="productInfo && productInfo.companyLogo" lazy>
                     <div
                       slot="placeholder"
                       class="image-slot"
@@ -31,14 +31,14 @@
                     </div>
                   </el-image>
         </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
          <el-col :span="6" style="display:flex;justify-content:flex-end;">
           <el-popover
           placement="bottom"
           title="复制链接地址"
           trigger="click">
           <div style="display:flex;align-items:center;">
-            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height:30px;" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height:30px;overflow:hidden;fontSize:0.16rem;white-space: nowrap;text-overflow:ellipsis;maxWidth: 5.333333rem" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
           </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
@@ -87,7 +87,7 @@
 export default {
   data () {
     return {
-      url: 'https://www.toysbear.com',
+      url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.id,
       productInfo: null,
       address: '坂田星河wrold'
     }
@@ -95,7 +95,7 @@ export default {
   methods: {
     // 返回
     backtrackPage () {
-      this.$router.go(-1)
+      (this.to === undefined) ? this.$router.go(-1) : this.$router.push({ path: this.to })
     },
     // 复制
     copyUrl () {

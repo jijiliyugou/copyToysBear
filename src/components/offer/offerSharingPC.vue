@@ -3,7 +3,7 @@
     <div class="topLayout">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-image fit="contain" src="~@/assets/images/imgError.jpg" lazy>
+          <el-image fit="contain" :src="productInfo && productInfo.companyLogo" lazy>
                     <div
                       slot="placeholder"
                       class="image-slot"
@@ -30,7 +30,7 @@
                     </div>
                   </el-image>
         </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
          <el-col :span="6" style="display:flex;justify-content:flex-end">
            <el-popover
           placement="bottom"
@@ -61,7 +61,7 @@
           <div class="right"></div>
         </div>
         <div class="dates">
-          <p class="dateIconBox"><i class="dateIcon"></i>2020-10-10</p>
+          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
           <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </el-card>
@@ -192,7 +192,7 @@
 export default {
   data () {
     return {
-      url: 'https://www.toysbear.com/#/',
+      url: window.location.href,
       keyword: '',
       productInfo: null,
       categoryNumber: null,
@@ -249,7 +249,11 @@ export default {
     },
     // 查看联系方式
     toContact () {
-      this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id } })
+      if (this.productInfo.companyId) {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id, companyId: this.productInfo.companyId } })
+      } else {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id, companyId: (this.productInfo.companyId || 123) } })
+      }
     },
     // 下载
     downloadDocument (document) {

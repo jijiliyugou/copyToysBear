@@ -4,7 +4,7 @@
     <div class="topLayout">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-image fit="contain" src="~@/assets/images/imgError.jpg" lazy>
+          <el-image fit="contain" :src="productInfo && productInfo.companyLogo" lazy>
                     <div
                       slot="placeholder"
                       class="image-slot"
@@ -31,14 +31,14 @@
                     </div>
                   </el-image>
         </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">玩具厂分享</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
         <el-col :span="6" style="display:flex;justify-content:flex-end">
           <el-popover
           placement="bottom"
           title="复制链接地址"
           trigger="click">
           <div style="display:flex;align-items:center;">
-            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height: 30px;" disabled>https://www.toysbear.com/#/</div><el-button size="small" @click="copyUrl">复制</el-button>
+            <div id="copyUrl" style="height:30px;border:1px solid #DCDFE6;line-height: 30px;" disabled>{{url}}</div><el-button size="small" @click="copyUrl">复制</el-button>
           </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
@@ -63,7 +63,7 @@
         </div>
         <div class="dates">
           <p class="dateIconBox"><i class="dateIcon"></i>2020-10-10</p>
-          <a href="#" class="lookInfo">查看联系方式></a>
+          <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </el-card>
     </div>
@@ -118,6 +118,7 @@ export default {
   },
   data () {
     return {
+      url: window.location.href.split('/#/')[0] + '/#/offerSharingPC?id=' + this.$route.params.pid,
       isShowSourceDetail: false,
       activeIndex: 0,
       hoverActive: false,
@@ -177,6 +178,14 @@ export default {
     },
     changeIsDetail () {
       this.$emit('changeIsDetail', false)
+    },
+    // 查看联系方式
+    toContact () {
+      if (this.productInfo.companyId) {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.params.pid, companyId: this.productInfo.companyId } })
+      } else {
+        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.params.pid, companyId: (this.productInfo.companyId || 123) } })
+      }
     }
   },
   created () {
@@ -289,6 +298,7 @@ export default {
       }
       .lookInfo{
           color: #165af7;
+          cursor: pointer;
           &:hover{
             text-decoration: underline;
           }
