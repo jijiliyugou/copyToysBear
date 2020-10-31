@@ -1064,8 +1064,8 @@
          <h3 class="infoListTitle" style="background-color: #fff;">我的产品</h3>
         <div class="myProductSearch">
           <div class="inputBox">
-            <el-input v-model="myProductSearchValue" clearable placeholder="请输入搜索内容"></el-input>
-            <el-button type="primary" round>搜索</el-button>
+            <el-input v-model="myProductSearchValue" @keyup.native.enter="myProductSearchEvent" clearable placeholder="请输入搜索内容"></el-input>
+            <el-button type="primary" @click="myProductSearchEvent" round>搜索</el-button>
           </div>
         </div>
         <div class="myProductSearchTotalCountBox"><p></p><p class="myTotalCount"><span>{{sampleSelectionTotalCount}}</span>条产品</p> <p class="more"><i @click="checkMoreEvent" class="checkCube" v-show="isCheckCube"></i><i @click="checkMoreEvent" class="checkList"  v-show="!isCheckCube"></i></p></div>
@@ -4084,7 +4084,6 @@ export default {
         this.showAddSampleTXT = '我也是有底线的'
         return false
       }
-      console.log(123,this.sampleSelectionTotalCount,this.sampleSelectionPageSize)
       this.showAddSampleTXT = '加载中...'
       let res
       switch (this.showSampleSelection) {
@@ -4140,8 +4139,19 @@ export default {
           val === 'myProduct'
             ? this.mySampleSelectionCurrentPage
             : this.sampleSelectionCurrentPage,
-        pageSize: this.sampleSelectionPageSize
+        pageSize: this.sampleSelectionPageSize,
+        keyword: this.myProductSearchValue,
       })
+    },
+    // 搜索我的产品
+    async myProductSearchEvent () {
+      const res = await this.getSampleSelectionList ('myProduct')
+      if (res.data.result.code === 200) {
+        this.sampleSelectionList = res.data.result.item.items
+        this.sampleSelectionTotalCount = res.data.result.item.totalCount
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
     },
     // 打开 历史择样|择样排行|我的产品 列表
     async openSampleList (val) {
