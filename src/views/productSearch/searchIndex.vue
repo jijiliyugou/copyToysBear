@@ -423,7 +423,7 @@ export default {
         } else {
           this.totalCount = 0
         }
-        $('#app').animate({ scrollTop: 0 }) // 滚到顶部
+        $('body').animate({ scrollTop: 0 }) // 滚到顶部
         this.loading = false
       } catch (error) {
         this.loading = false
