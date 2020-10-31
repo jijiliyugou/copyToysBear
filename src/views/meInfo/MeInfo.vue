@@ -2526,7 +2526,7 @@ export default {
       activeAddSample: false,
       sampleSelectionCurrentPage: 0,
       mySampleSelectionCurrentPage: 1,
-      sampleSelectionPageSize: 30,
+      sampleSelectionPageSize: 20,
       sampleSelectionList: [],
       sampleSelectionTotalCount: 0,
       currentCodeList: [],
@@ -4080,6 +4080,11 @@ export default {
     // 下拉加载更多
     async addSampleSelectionList () {
       this.activeAddSample = true
+      if(this.sampleSelectionTotalCount <= this.sampleSelectionPageSize) {
+        this.showAddSampleTXT = '我也是有底线的'
+        return false
+      }
+      console.log(123,this.sampleSelectionTotalCount,this.sampleSelectionPageSize)
       this.showAddSampleTXT = '加载中...'
       let res
       switch (this.showSampleSelection) {
