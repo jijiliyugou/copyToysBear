@@ -491,11 +491,16 @@ export default {
       padding: 0 0.24rem;
     }
     .textContent {
+      display: flex;
+      flex-direction:column;
+      justify-content: space-around;
+      padding:10px 0;
       .top{
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        height: 1.066667rem;
+        align-items: flex-start;
+        min-height: 1.066667rem;
+        font-size: 0.266667rem;
         p{
           flex: 1;
         }
@@ -504,7 +509,6 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
       color: #626262;
       font-size: 0.266667rem;
       .dateIconBox{
