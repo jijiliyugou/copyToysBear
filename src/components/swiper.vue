@@ -28,7 +28,7 @@
               出厂货号：{{ item.fa_no }}
             </div>
             <p class="item-price">
-              价格：
+              参考单价：
               <span>{{
                 item.cu_de + (item.price === 0 ? "???" : item.price.toFixed(2))
               }}</span>

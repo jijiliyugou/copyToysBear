@@ -89,7 +89,7 @@
 export default {
   data () {
     return {
-      url: window.location.href.split('/#/')[0] + '/#/offerSharingPC?id=' + this.$route.params.id,
+      url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.id,
       productInfo: null,
       address: '坂田星河wrold'
     }

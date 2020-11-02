@@ -34,7 +34,7 @@
       </el-form>
     </div>
     <div class="tableContent">
-      <el-table :data="allCateList" style="width: 100%">
+      <el-table :data="allCateList" ref="cateListRef" style="width: 100%">
         <el-table-tree-column
           treeKey="id"
           parentKey="parentID"

@@ -40,14 +40,12 @@
             >
               <el-option
                 v-for="(item, index) in [
-                  { value: '', label: '全部' },
-                  { value: '0', label: '未审核' },
-                  { value: '1', label: '已审核' },
-                  { value: '2', label: '拒绝' }
+                  { itemCode: '', itemText: '全部' },
+                  ...userAuditTypeList
                 ]"
                 :key="index"
-                :label="item.label"
-                :value="item.value"
+                :label="item.itemText"
+                :value="item.itemCode"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -643,7 +641,7 @@
               :on-preview="handlePicEmployeePreview"
               :http-request="successUpload"
               :file-list="editImages"
-              accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
+              accept=".jpg,.jpeg,.png,.ico,.bmp,.JPG,.JPEG,.PNG,.ICO,.BMP"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -738,15 +736,44 @@
           width="80"
         >
           <template slot-scope="scope">
-            <el-avatar
+            <el-image
               shape="square"
-              style="background-color: #165af7"
-              :size="50"
+              style="background-color: #165af7;width:50px;height:50px;color:#fff;"
               :src="scope.row.userImage"
               :key="scope.row.userImage"
+              fit="cover"
             >
-              {{ scope.row.linkman }}
-            </el-avatar>
+              <div
+                  slot="error"
+                  class="image-slot"
+                  style="width:100%;height:100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  padding:0 5px;
+                  text-align:center;">
+                <span style="display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  overflow: hidden;
+                  text-overflow: clip;
+                  -webkit-box-orient: vertical;">{{ scope.row.linkman }}</span>
+                </div>
+                <div
+                  slot="placeholder"
+                  class="image-slot"
+                  style="width:100%;height:100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  padding:0 5px;
+                  text-align:center;">
+                <span style="display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  overflow: hidden;
+                  text-overflow: clip;
+                  -webkit-box-orient: vertical;">{{ scope.row.linkman }}</span>
+                </div>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column
@@ -1075,6 +1102,7 @@ export default {
           // }
         ]
       },
+      userAuditTypeList: [],
       yearMonthDayList: [],
       clientTypeList: [],
       file: null,
@@ -1537,6 +1565,9 @@ export default {
           case 'ExecutionWay':
             this.yearMonthDayList = res.data.result.item
             break
+          case 'userAuditType':
+            this.userAuditTypeList = res.data.result.item
+            break
         }
       }
     },
@@ -1722,6 +1753,7 @@ export default {
     this.getClientList()
     this.getClientTypeList('CompanyType')
     this.getClientTypeList('ExecutionWay')
+    this.getClientTypeList('userAuditType')
     document.oncontextmenu = () => {
       this.isShowAttrsList = false
       return false

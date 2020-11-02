@@ -61,7 +61,7 @@
           <div class="right"></div>
         </div>
         <div class="dates">
-          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
+          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo && productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
           <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </el-card>
@@ -78,7 +78,7 @@
         <h4 class="title el-icon-search"><span class="titleText">分类搜索</span></h4>
         <el-select v-model="categoryNumber" placeholder="请输入或选择"  @change="handleChange" clearable filterable>
           <el-option
-            v-for="item in [{categoryName: '全部', categoryNumber: ''}, ...categoryList]"
+            v-for="item in categoryList"
             :key="item.value"
             :label="item.categoryName"
             :value="item.categoryNumber">
@@ -192,7 +192,7 @@
 export default {
   data () {
     return {
-      url: window.location.href,
+      url: window.location.href.replace(/offerSharingPC/gi, 'offerSharing'),
       keyword: '',
       productInfo: null,
       categoryNumber: null,
@@ -346,7 +346,7 @@ export default {
       }
       const res = await this.$http.post('/api/ProductOfferDetailPage', fd)
       if (res.data.result.code === 200) {
-        this.dataList = [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
+        this.dataList = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)

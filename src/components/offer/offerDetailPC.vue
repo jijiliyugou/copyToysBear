@@ -62,7 +62,7 @@
           <div class="right"></div>
         </div>
         <div class="dates">
-          <p class="dateIconBox"><i class="dateIcon"></i>2020-10-10</p>
+          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo && productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
           <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </el-card>
@@ -118,7 +118,7 @@ export default {
   },
   data () {
     return {
-      url: window.location.href.split('/#/')[0] + '/#/offerSharingPC?id=' + this.$route.params.pid,
+      url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.pid,
       isShowSourceDetail: false,
       activeIndex: 0,
       hoverActive: false,

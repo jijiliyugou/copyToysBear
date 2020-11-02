@@ -103,7 +103,7 @@
             }}
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="底价" width="100">
+        <el-table-column prop="price" label="参考单价" width="100">
           <template slot-scope="scope">
             <span style="color:#f56c6c">
               {{ scope.row.price ? scope.row.cu_de + scope.row.price.toFixed(2) : '???' }}
