@@ -535,7 +535,7 @@ export default {
 @deep: ~">>>";
 .productSearchIndex {
   position: relative;
-  min-height: 757px;
+  min-height: 765px;
   .searchTops {
     width: 100%;
     text-align: center;

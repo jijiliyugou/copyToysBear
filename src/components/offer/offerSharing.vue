@@ -60,12 +60,12 @@
           </p>
           <p>
             联系人：<span class="content">{{
-            productInfo && productInfo.linkman
+            productInfo && productInfo.linkman || "小竹熊为您服务咯"
           }}</span>
           </p>
         </div>
         <div class="dates">
-          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
+          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo && productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
           <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </div>
@@ -179,7 +179,7 @@
             </p>
           </div>
           </div>
-          <div class="createDate"><i class="dateIcon"></i> 2020-10-10</div>
+          <div class="createDate"><i class="dateIcon"></i>{{ item && item.createdOn && item.createdOn.split('T')[0] }}</div>
         </el-card>
       </div>
       <div class="squareItems" v-show="!isList">
@@ -571,7 +571,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin: 0 auto;
-      padding: 0.133333rem 0px;
+      padding-bottom: 0.133333rem;
       border-bottom: 1px solid #ebeef5;
       .cates {
         display: flex;

@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height:757px;">
+  <div style="min-height:765px;">
     <bsTop></bsTop>
     <el-card class="wrap">
       <ul class="myInfo" v-if="meInfo">

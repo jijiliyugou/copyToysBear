@@ -58,8 +58,9 @@
           }}</span>
           </p>
         </div>
-        <div class="lookInfo">
-          <a @click="toContact">查看联系方式></a>
+        <div class="dates">
+          <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo && productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
+          <a @click="toContact" class="lookInfo">查看联系方式></a>
         </div>
       </div>
     </el-card>
@@ -241,19 +242,34 @@ export default {
           flex: 1;
         }
       }
-      .lookInfo{
-        border-top: 1px solid #eee;
+      .dates{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      color: #626262;
+      font-size: 0.266667rem;
+      .dateIconBox{
         display: flex;
-        justify-content: flex-end;
         align-items: center;
-        height: 0.826667rem;
-        a{
+        .dateIcon{
+        width: 0.266667rem;
+        height: 0.266667rem;
+        margin-right: 0.066667rem;
+        border-radius: 50%;
+        overflow: hidden;
+        background:url('~@/assets/images/报价分享时间.png') no-repeat center;
+        background-size: contain;
+        }
+      }
+      .lookInfo{
           color: #165af7;
+          cursor: pointer;
           &:hover{
             text-decoration: underline;
           }
         }
-      }
+    }
     }
   }
   .line{

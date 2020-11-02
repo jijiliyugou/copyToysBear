@@ -7,6 +7,7 @@ const ReportReview = () => import('@/views/systemManage/reportReview.vue')
 const AppVersion = () => import('@/views/systemManage/appVersion.vue')
 const ErrorLog = () => import('@/views/systemManage/errorLog.vue')
 const SMSMan = () => import('@/views/systemManage/SMSMan.vue')
+const CateAllocation = () => import('@/views/systemManage/cateAllocation.vue')
 
 export default [
   {
@@ -53,5 +54,10 @@ export default [
     path: '/SMSMan',
     name: 'SMSMan',
     component: SMSMan
+  },
+  {
+    path: '/cateAllocation',
+    name: 'cateAllocation',
+    component: CateAllocation
   }
 ]

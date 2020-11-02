@@ -16,9 +16,7 @@
               productDetail.imglist &&
                 productDetail.imglist.map(
                   val => val && val.imgUrl.replace(/_MiddlePic/, '_Photo')
-                )
-            "
-          >
+                )">
             <div slot="placeholder" class="image-slot">
               <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
             </div>

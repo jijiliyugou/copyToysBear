@@ -1,5 +1,5 @@
 <template>
-  <div style="position:relative;min-height:757px;">
+  <div style="position:relative;min-height:765px;">
     <bsTop></bsTop>
     <!-- 搜索 -->
     <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">

@@ -85,6 +85,7 @@
 
 <script>
 export default {
+  props: ['parentUrl'],
   data () {
     return {
       url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.id,
@@ -95,7 +96,7 @@ export default {
   methods: {
     // 返回
     backtrackPage () {
-      (this.to === undefined) ? this.$router.go(-1) : this.$router.push({ path: this.to })
+      this.$router.go(-2)
     },
     // 复制
     copyUrl () {
@@ -147,6 +148,11 @@ export default {
         name: 'offerContact',
         params: { id: this.$route.params.id }
       })
+    } else {
+      this.$router.push({
+        name: 'offerContactPC',
+        params: { id: this.$route.params.id }
+      })
     }
   },
   watch: {
@@ -155,6 +161,11 @@ export default {
       if (val <= 1024) {
         this.$router.push({
           name: 'offerContact',
+          params: { id: this.$route.params.id }
+        })
+      } else {
+        this.$router.push({
+          name: 'offerContactPC',
           params: { id: this.$route.params.id }
         })
       }

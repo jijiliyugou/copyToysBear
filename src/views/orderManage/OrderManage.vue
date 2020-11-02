@@ -212,7 +212,7 @@ export default {
 <style lang="less">
 .orderManWrap {
   position: relative;
-  min-height: 757px;
+  min-height: 765px;
   .searchBox {
     max-width: 1200px;
 min-width: 800px;
