@@ -251,7 +251,7 @@
                   height: 100%;
                   display: flex;
                   align-items: center;
-                  justify-content: left;
+                  justify-content: center;
                   white-space: nowrap;
                 "
               >
@@ -456,8 +456,9 @@
             <el-button @click="clientDialog = false">取消</el-button>
           </template>
           <template v-else-if="dialogTitle === '审核'">
-            <el-button type="primary" @click="byAudit(1)">审核通过</el-button>
-            <el-button @click="byAudit(2)" type="danger">审核不通过</el-button>
+            <template v-for="(item, i) in userAuditTypeList">
+              <el-button :type="btnTypes[item.itemCode]" @click="byAudit(item.itemCode)" :key="i" v-if="item.itemCode !== '0'">{{item.itemText}}</el-button>
+            </template>
           </template>
           <template v-else-if="dialogTitle === '用户编辑'">
             <el-button type="primary" @click="handlerEdit"><i :class="{'el-icon-loading':isShowLoading}"></i> 保存</el-button>
@@ -956,6 +957,7 @@ export default {
   components: { bsTop, BMapComponent },
   data () {
     return {
+      btnTypes: ['', 'primary', 'danger', 'success', 'info', 'warning'],
       isShowLoading: false,
       isShowAttrsList: false,
       attrsList: [],
