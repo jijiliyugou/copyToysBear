@@ -1,6 +1,9 @@
 <template>
-  <div style="min-height:755px;">
+  <el-container>
+    <el-header style="padding:0;">
     <bsTop></bsTop>
+  </el-header>
+  <el-main style="padding:20px 0;overflow:visible;">
     <productSearchTop parentEl="searchIndex"></productSearchTop>
     <ul class="hotSearch">
       <li style="minWidth:60px;">热门搜搜：</li>
@@ -40,15 +43,20 @@
         ></swiper>
       </div>
     </div>
-  </div>
+  </el-main>
+  <el-footer style="padding:0;" height="172px">
+    <bsFooter></bsFooter>
+  </el-footer>
+  </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
 import productSearchTop from '@/components/productSearchTop'
 import swiper from '@/components/swiper'
+import bsFooter from '@/components/Footer'
 export default {
-  components: { bsTop, productSearchTop, swiper },
+  components: { bsTop, productSearchTop, swiper, bsFooter },
   data () {
     return {
       hotWords: [],
@@ -115,7 +123,7 @@ export default {
 }
 .hotSearch {
   max-width: 1200px;
-  min-width: 800px;
+  min-width: 900px;
   margin:0 auto;
   display: flex;
   justify-content: center;
@@ -138,8 +146,8 @@ export default {
 }
 .lunbo {
   max-width: 1200px;
-  min-width: 800px;
-  margin: 200px auto 10px auto;
+  min-width: 900px;
+  margin: 100px auto 10px auto;
   padding: 10px;
   box-sizing: border-box;
   box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);

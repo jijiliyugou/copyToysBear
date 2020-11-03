@@ -12,7 +12,7 @@
     <Footer
     style="width:100%;overflow: visible;"
       v-cloak
-      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('/offer') && !$route.path.includes('/cateAllocation')"
+      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('/offer') && !$route.path.includes('/cateAllocation') && !$route.path.includes('/productSearch')"
     ></Footer>
   </div>
 </template>

@@ -45,7 +45,8 @@
           node-key="id"
           :props="props"
           @check="handleCheckChangeOne"
-          :render-content="renderContent">
+          :render-content="renderContent"
+          draggable>
         </el-tree>
           <!-- default-expand-all -->
       </div>
@@ -55,6 +56,7 @@
           <!-- <el-button type="danger" @click="resetCheckedTwo">重置</el-button> -->
         </div>
         <el-tree
+        draggable
           :data="companyCategoryList"
           ref="treeTwo"
            :filter-node-method="filterNodeTwo"
@@ -67,11 +69,12 @@
           :check-strictly="true"
           expand-on-click-node>
           <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span style="display:flex;align-items:center;">{{ node.label }}<em v-if="data.categoryID"> ===> <el-tag size="small">{{ data.categoryName }}</el-tag></em></span>
+            <span style="display:flex;align-items:center;">{{ node.label}}<em style="margin-left:5px;" v-if="data.categoryID">===> <el-tag size="small">{{ data.categoryName }}</el-tag></em></span>
             <span>
               <el-popconfirm title="确定要重置已分配好的分类吗？" :ref="'myPopconfirm' + data.id" @onConfirm="subEditCate(null,data.id)">
                 <el-button
                 @click.stop="removes('myPopconfirm' + data.id)"
+                :disabled="!data.categoryName && !data.categoryID"
                 type="danger"
                 plain
                 size="mini"
@@ -205,12 +208,14 @@ export default {
     },
     // 获取小竹熊产品类目列表
     async getProductCategoryList () {
+      this.$store.commit('updateAppLoading', true)
       const res = await this.$http.post('/api/ProductCategoryList', {})
       if (res.data.result.code === 200) {
         this.myCategoryList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
       }
+      this.$store.commit('updateAppLoading', false)
     },
     // 选择展厅分类
     changeSelect () {

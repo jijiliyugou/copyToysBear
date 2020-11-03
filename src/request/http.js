@@ -55,6 +55,7 @@ myAxios.install = function (Vue) {
         !config.url.includes('UpdateMessageMemberActivate') &&
         !config.url.includes('MessageAcceptPage') &&
         !config.url.includes('GeSendPush') &&
+        !config.url.includes('OrgCompanyList') &&
         !config.url.includes('UpdateWithdrawMessage')
       ) {
         $Store.commit('updateAppLoading', true)
@@ -106,6 +107,7 @@ myAxios.install = function (Vue) {
         !res.config.url.includes('CreateLogRecord') &&
         !res.config.url.includes('UserConfirm') &&
         !res.config.url.includes('ProductCategoryList') &&
+        !res.config.url.includes('OrgCompanyList') &&
         !res.config.url.includes('SampleOrderTotal')
       ) {
         $Store.commit('updateAppLoading', false)
@@ -136,7 +138,17 @@ myAxios.install = function (Vue) {
             break
           default:
             Message.closeAll()
-            $Store.commit('updateAppLoading', false)
+            if (
+              // 不需要loading的请求
+              !error.response.config.url.includes('GetHotWord') &&
+              !error.response.config.url.includes('CreateLogRecord') &&
+              !error.response.config.url.includes('UserConfirm') &&
+              !error.response.config.url.includes('ProductCategoryList') &&
+              !error.response.config.url.includes('OrgCompanyList') &&
+              !error.response.config.url.includes('SampleOrderTotal')
+            ) {
+              $Store.commit('updateAppLoading', false)
+            }
             createLogRecord({ Message: '接口' + error.response.config.url + '，报' + error.response.status + '，' + error.response.statusText, LogType: 2, Title: '请求失败', Url: error.response.config.url, Parameters: error.response.config.data })
             Message.error(`请求失败${error.response.statusText},${error.response.status}，请联系管理员`)
             break
