@@ -10,8 +10,9 @@
     <router-view v-cloak />
 
     <Footer
+    style="width:100%;overflow: visible;"
       v-cloak
-      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('/offer')"
+      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('/offer') && !$route.path.includes('/cateAllocation')"
     ></Footer>
   </div>
 </template>
@@ -70,11 +71,6 @@ export default {
 @deep: ~">>>";
 [v-cloak] {
   display: none;
-}
-#app {
-  height: 100%;
-  width: 100%;
-  position: relative;
 }
 @{deep} .el-loading-spinner .circular {
   width: 100px;

@@ -60,7 +60,7 @@
               >编辑</el-button
             >
             <el-popconfirm
-              title="确定要删除此角色吗？"
+              title="确定要删除这条系统参数吗？"
               @onConfirm="handleDelete(scope.row)"
             >
               <el-button size="mini" slot="reference" type="danger"

@@ -1,24 +1,35 @@
 <template>
-  <div style="position: relative; min-height: 765px">
+<el-container>
+  <el-header style="padding:0;">
     <bsTop></bsTop>
+  </el-header>
+  <el-main style="padding:20px 0;overflow:visible;">
     <div class="custom-tree-container">
       <div class="submitTree">
         <div class="left">小竹熊分类：</div>
         <div class="right">
           <div class="selectExc">
-            展厅分类：<el-select v-model="value" clearable placeholder="请选择展厅分类">
+            展厅分类：<el-select style="width:200px;" @change="changeSelect" v-model="value" clearable placeholder="请选择展厅分类">
             <el-option
               v-for="item in companyList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.id"
+              :label="item.companyName"
+              :value="item.companyNumber">
             </el-option>
           </el-select>
           </div>
-        <el-button type="primary">保存</el-button>
+          <div>
+            <el-button type="primary" :disabled="isSelectCate()" @click="subEditCate" style="marginRight:10px;">保存</el-button>
+            <el-popconfirm title="确定要重置该展厅下的全部分类吗？" @onConfirm="clearCateAll()">
+              <el-button type="danger" slot="reference" :disabled="!value" :loading="isClearCate">
+                全部重置
+              </el-button>
+            </el-popconfirm>
+          </div>
         </div>
       </div>
-      <div class="block">
+      <div class="blockBox">
+        <div class="block">
         <div style="display:flex;justify-content:space-between;">
           <el-input placeholder="输入关键字进行过滤" prefix-icon="el-icon-search" clearable v-model="filterTextOne"></el-input>
           <!-- <el-button type="danger" @click="resetCheckedOne">重置</el-button> -->
@@ -44,7 +55,7 @@
           <!-- <el-button type="danger" @click="resetCheckedTwo">重置</el-button> -->
         </div>
         <el-tree
-          :data="dataTwo"
+          :data="companyCategoryList"
           ref="treeTwo"
            :filter-node-method="filterNodeTwo"
           show-checkbox
@@ -56,9 +67,9 @@
           :check-strictly="true"
           expand-on-click-node>
           <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>{{ node.label }}</span>
+            <span style="display:flex;align-items:center;">{{ node.label }}<em v-if="data.categoryID"> ===> <el-tag size="small">{{ data.categoryName }}</el-tag></em></span>
             <span>
-              <el-popconfirm title="确定要重置已分配好的分类吗？" :ref="'myPopconfirm' + data.id" @onConfirm="remove(data)">
+              <el-popconfirm title="确定要重置已分配好的分类吗？" :ref="'myPopconfirm' + data.id" @onConfirm="subEditCate(null,data.id)">
                 <el-button
                 @click.stop="removes('myPopconfirm' + data.id)"
                 type="danger"
@@ -72,18 +83,28 @@
           </span>
         </el-tree>
       </div>
+      </div>
     </div>
-  </div>
+  </el-main>
+  <el-footer style="padding:0;" height="172px">
+    <bsFooter></bsFooter>
+  </el-footer>
+</el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
+import bsFooter from '@/components/Footer'
 export default {
-  components: { bsTop },
+  components: { bsTop, bsFooter },
   data () {
     return {
+      resetCount: 0,
+      startCount: 0,
+      isClearCate: false,
       removeName: null,
       myCategoryList: null, // 小竹熊类目
+      companyCategoryList: null, // 其他展厅类目
       companyList: null,
       filterTextOne: null,
       filterTextTwo: null,
@@ -108,50 +129,76 @@ export default {
         label: 'name',
         value: 'id'
       },
-      dataTwo: [{
-        id: 11,
-        name: '一级 金刚芭比',
-        children: [{
-          id: 44,
-          name: '二级 金刚芭比',
-          children: [{
-            id: 99,
-            name: '三级 金刚芭比1'
-          }, {
-            id: 1010,
-            name: '三级 金刚芭比2'
-          }]
-        }]
-      }, {
-        id: 22,
-        name: '一级 电动玩具',
-        children: [{
-          id: 55,
-          name: '二级 电动玩具1'
-        }, {
-          id: 66,
-          name: '二级 电动玩具2'
-        }]
-      }, {
-        id: 33,
-        name: '一级 奥特曼',
-        children: [{
-          id: 77,
-          name: '二级 奥特曼1'
-        }, {
-          id: 88,
-          name: '二级 奥特曼2'
-        }]
-      }],
       id: 1000
     }
   },
   methods: {
+    // 全部清空
+    async clearCateAll () {
+      if (!this.companyCategoryList || this.companyCategoryList.length === 0) {
+        this.$message.error('该展厅没有分类')
+        return false
+      }
+      this.isClearCate = true
+      this.resetCount = 0
+      this.startCount = 0
+      await this.recursionClear(this.companyCategoryList)
+      this.$refs.treeOne.setCheckedKeys([])
+      this.$refs.treeTwo.setCheckedKeys([])
+      this.getSynchrCategoryList()
+      this.$message.closeAll()
+      const isCount = (this.startCount - this.resetCount)
+      if (isCount) this.$message.error('重置成功' + this.resetCount + '条，失败' + isCount + '条')
+      else this.$message.success('全部重置成功')
+      this.isClearCate = false
+    },
+    // 递归发送清空请求
+    async recursionClear (list) {
+      if (list instanceof Array && list.length) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].categoryID || list[i].categoryName) {
+            this.startCount++
+            await this.recursionClear(list[i].children)
+            const res = await this.sendHttp({ categoryName: null, categoryID: null, id: list[i].id })
+            if (res.data.result.code === 200) this.resetCount++
+          }
+        }
+      }
+    },
+    // 发送请求
+    async sendHttp (fd) {
+      return await this.$http.post('/api/UpdateSynchrCategory', fd)
+    },
+    // 提交
+    async subEditCate (flag, id) {
+      const fd = {
+        categoryName: (flag ? this.$refs.treeOne.getCheckedNodes()[0].name : flag),
+        categoryID: (flag ? this.$refs.treeOne.getCheckedNodes()[0].id : flag),
+        id: id || this.$refs.treeTwo.getCheckedKeys()[0]
+      }
+      const res = await this.sendHttp(fd)
+      if (res.data.result.code === 200) {
+        this.$refs.treeOne.setCheckedKeys([])
+        this.$refs.treeTwo.setCheckedKeys([])
+        this.getSynchrCategoryList()
+      } else {
+        this.$message.closeAll()
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 验证是否选中
+    isSelectCate () {
+      if ((this.$refs.treeOne && this.$refs.treeOne.getCheckedKeys().length > 0) && (this.$refs.treeTwo && this.$refs.treeTwo.getCheckedKeys().length > 0)) {
+        return false
+      } else {
+        return true
+      }
+    },
     // 获取展厅列表
     async getOrgCompanyList () {
-      const res = await this.$http.post('/api/OrgCompanyList', { oppositeRole: 'Exhibition' })
+      const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
       if (res.data.result.code === 200) {
-        this.companyList = res.data.result.item.items
+        this.companyList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -161,6 +208,20 @@ export default {
       const res = await this.$http.post('/api/ProductCategoryList', {})
       if (res.data.result.code === 200) {
         this.myCategoryList = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 选择展厅分类
+    changeSelect () {
+      this.getSynchrCategoryList()
+      this.$refs.treeTwo.setCheckedKeys([])
+    },
+    // 获取小竹熊产品类目列表
+    async getSynchrCategoryList () {
+      const res = await this.$http.post('/api/synchrCategoryList', { hallNumer: this.value })
+      if (res.data.result.code === 200) {
+        this.companyCategoryList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -186,15 +247,18 @@ export default {
     //   this.$refs.treeTwo.setCheckedKeys([])
     // },
     treeNodeClick () {
-      this.removeName && this.$refs[this.removeName].cancel()
+      this.removeName && this.$refs[this.removeName] && this.$refs[this.removeName].cancel()
     },
     removes (name) {
-      this.removeName && this.$refs[this.removeName].cancel()
+      this.removeName && this.$refs[this.removeName] && this.$refs[this.removeName].cancel()
       this.removeName = name
     },
     // 删除按钮
-    remove (data) {
-      console.log(data)
+    async remove (data) {
+      data.categoryID = null
+      data.categoryName = null
+      const res = await this.$http.post('/api/UpdateSynchrCategory', data)
+      console.log(res)
       // const parent = node.parent
       // const children = parent.data.children || parent.data
       // const index = children.findIndex(d => d.id === data.id)
@@ -234,19 +298,12 @@ export default {
 <style scoped lang='less'>
 @deep: ~">>>";
 .custom-tree-container {
-    width:1200px;
-    margin:50px auto;
+    max-width:1200px;
     min-width: 900px;
-    position: relative;
-    flex: 1;
-    display: flex;
-    align-items: top;
-    justify-content: space-evenly;
+    box-sizing: border-box;
+    margin:0 auto;
     font-size: 14px;
     .submitTree{
-      position: absolute;
-      right: 0;
-      top: -50px;
       height: 50px;
       width: 100%;
       background-color: #fff;
@@ -262,10 +319,14 @@ export default {
         justify-content: space-between;
       }
     }
-    .block{
+    .blockBox{
+      display: flex;
+      justify-content: space-between;
+      .block{
       flex: 1;
       border: 1px solid #eff2f6;
       padding-bottom: 10px;
+      }
     }
   }
   @{deep} .custom-tree-node {

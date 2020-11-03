@@ -68,9 +68,11 @@ export default {
   flex-direction: column;
   background-color: #909090;
   padding: 20px 0;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 900px;
   .footerBox{
     width: 100%;
-    min-width: 800px;
     margin:0 auto;
     p {
     margin: 10px 0;
