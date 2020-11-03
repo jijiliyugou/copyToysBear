@@ -141,13 +141,9 @@
         </el-table-column>
         <el-table-column prop="audit_state" label="审核状态" align="center">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.audit_state === '1'" type="success"
-              >已审核</el-tag
-            >
-            <el-tag v-else-if="scope.row.audit_state === '2'" type="danger"
-              >拒绝</el-tag
-            >
-            <el-tag v-else>未审核</el-tag>
+            <template v-for="(item, i) in userAuditTypeList">
+              <el-tag :key="i" v-if="scope.row.audit_state === item.itemCode" :type="btnTypes[item.itemCode]">{{item.itemText}}</el-tag>
+            </template>
           </template>
         </el-table-column>
         <el-table-column
@@ -957,7 +953,7 @@ export default {
   components: { bsTop, BMapComponent },
   data () {
     return {
-      btnTypes: ['', 'primary', 'danger', 'success', 'info', 'warning'],
+      btnTypes: ['primary', 'success', 'danger', 'warning', 'info'],
       isShowLoading: false,
       isShowAttrsList: false,
       attrsList: [],
