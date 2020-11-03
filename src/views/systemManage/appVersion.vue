@@ -1,8 +1,11 @@
 <template>
-  <div style="position:relative;min-height:765px;">
-    <bsTop></bsTop>
+  <el-container>
+    <el-header style="padding:0;">
+      <bsTop></bsTop>
+    </el-header>
+    <el-main style="padding:0;overflow:visible;">
     <!-- 搜索 -->
-    <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">
+    <div style="maxWidth:1200px;minWidth:900px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="关键字查询">
@@ -58,7 +61,7 @@
             {{ scope.row.createdOn && scope.row.createdOn.replace(/T/g, " ") }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
               style="margin-right:10px;"
@@ -150,13 +153,18 @@
         </center>
       </el-form>
     </el-dialog>
-  </div>
+  </el-main>
+    <el-footer style="padding:0;" height="172px">
+      <bsFooter></bsFooter>
+    </el-footer>
+     </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
+import bsFooter from '@/components/Footer'
 export default {
-  components: { bsTop },
+  components: { bsTop, bsFooter },
   data () {
     return {
       isUpLoad: false,

@@ -1,6 +1,9 @@
 <template>
-  <div style="min-height:765px;">
-    <bsTop></bsTop>
+  <el-container>
+    <el-header style="padding:0;">
+      <bsTop></bsTop>
+    </el-header>
+    <el-main style="padding:0;overflow:visible;">
     <el-card class="wrap">
       <ul class="myInfo" v-if="meInfo">
         <li class="logo">
@@ -246,13 +249,18 @@
         >
       </center>
     </el-dialog>
-  </div>
+  </el-main>
+    <el-footer style="padding:0;" height="172px">
+      <bsFooter></bsFooter>
+    </el-footer>
+     </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
+import bsFooter from '@/components/Footer'
 export default {
-  components: { bsTop },
+  components: { bsTop, bsFooter },
   data () {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -577,7 +585,7 @@ export default {
 @deep: ~">>>";
 .wrap {
   max-width: 1200px;
-  min-width: 800px;
+  min-width: 900px;
   margin: 0 auto;
   .myInfo {
     display: flex;

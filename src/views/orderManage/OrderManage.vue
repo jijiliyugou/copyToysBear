@@ -1,7 +1,10 @@
 <template>
-  <div class="orderManWrap">
-    <bsTop></bsTop>
-    <div class="searchBox">
+    <el-container class="orderManWrap">
+      <el-header style="padding:0;">
+        <bsTop></bsTop>
+      </el-header>
+    <el-main style="padding:0;overflow:visible;">
+      <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
@@ -109,14 +112,20 @@
         </center>
       </div>
     </div>
-  </div>
+    </el-main>
+    <el-footer style="padding:0;" height="172px">
+      <bsFooter></bsFooter>
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop.vue'
+import bsFooter from '@/components/Footer'
 export default {
   components: {
-    bsTop
+    bsTop,
+    bsFooter
   },
   data () {
     return {
@@ -212,10 +221,9 @@ export default {
 <style lang="less">
 .orderManWrap {
   position: relative;
-  min-height: 765px;
   .searchBox {
     max-width: 1200px;
-min-width: 800px;
+    min-width: 900px;
     margin: 0 auto;
     padding: 50px 0;
     box-sizing: border-box;

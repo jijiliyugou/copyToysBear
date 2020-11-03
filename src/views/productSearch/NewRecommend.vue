@@ -1,8 +1,10 @@
 <template>
-  <div style="position:relative;min-height:765px;">
-    <bsTop></bsTop>
-
-   <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">
+  <el-container class="productSearchIndex">
+    <el-header style="padding:0;">
+      <bsTop></bsTop>
+    </el-header>
+    <el-main style="padding:0;overflow:visible;">
+      <div style="maxWidth:1200px;minWidth:900px;margin:0 auto;">
       <!-- 搜索头部 -->
     <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
@@ -124,13 +126,18 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-  </div>
+    </el-main>
+    <el-footer style="padding:0;" height="172px">
+      <bsFooter></bsFooter>
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
+import bsFooter from '@/components/Footer'
 export default {
-  components: { bsTop },
+  components: { bsTop, bsFooter },
   data () {
     return {
       editNewProd: {

@@ -1,6 +1,9 @@
 <template>
-  <div class="meInfo">
+<el-container class="meInfo">
+  <el-header style="padding:0;">
     <bsTop></bsTop>
+  </el-header>
+  <el-main style="padding:0;overflow:visible;">
     <div class="content">
       <li class="info">
         <router-view
@@ -2467,10 +2470,15 @@
         <BMapComponent :addr="companyAddr"></BMapComponent>
       </div>
     </el-dialog>
-  </div>
+  </el-main>
+    <el-footer style="padding:0;" height="172px">
+    <bsFooter></bsFooter>
+  </el-footer>
+  </el-container>
 </template>
 <script>
 import bsTop from '@/components/BsTop.vue'
+import bsFooter from '@/components/Footer'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import Recorder from 'recorder-core/recorder.mp3.min'
 import BMapComponent from '@/components/map.vue'
@@ -2479,7 +2487,7 @@ export default {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   components: {
-    bsTop, BMapComponent
+    bsTop, BMapComponent, bsFooter
   },
   data () {
     return {
@@ -4847,7 +4855,7 @@ export default {
     flex-wrap: wrap;
     box-sizing: border-box;
     max-width: 1200px;
-min-width: 800px;
+    min-width: 900px;
     margin: 0 auto;
     &:after {
       content: "";

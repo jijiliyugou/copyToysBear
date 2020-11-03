@@ -1,7 +1,10 @@
 <template>
-  <div style="position: relative; min-height: 765px">
-    <bsTop></bsTop>
-    <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">
+  <el-container style="padding:0;minWidth:1024px;overflow:visible;">
+    <el-header style="padding:0;minWidth:1024px;overflow:visible;">
+      <bsTop></bsTop>
+    </el-header>
+    <el-main style="padding:0;minWidth:1024px;overflow:visible;">
+    <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;overflow:visible;">
       <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="关键字查询" size="mini">
@@ -943,14 +946,19 @@
         </center> -->
       </el-dialog>
     </el-dialog>
-  </div>
+  </el-main>
+    <el-footer style="padding:0;" height="172px">
+      <bsFooter></bsFooter>
+    </el-footer>
+     </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
+import bsFooter from '@/components/Footer'
 import BMapComponent from '@/components/attrsMap.vue'
 export default {
-  components: { bsTop, BMapComponent },
+  components: { bsTop, bsFooter, BMapComponent },
   data () {
     return {
       btnTypes: ['primary', 'success', 'danger', 'warning', 'info'],

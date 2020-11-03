@@ -4,7 +4,8 @@
     <bsTop></bsTop>
   </el-header>
   <el-main style="padding:20px 0;overflow:visible;">
-    <productSearchTop parentEl="searchIndex"></productSearchTop>
+    <div class="myWrap">
+      <productSearchTop parentEl="searchIndex"></productSearchTop>
     <ul class="hotSearch">
       <li style="minWidth:60px;">热门搜搜：</li>
       <div class="item">
@@ -42,6 +43,7 @@
           :isShow="isShow"
         ></swiper>
       </div>
+    </div>
     </div>
   </el-main>
   <el-footer style="padding:0;" height="172px">
@@ -111,8 +113,10 @@ export default {
 
 <style lang="less" scoped>
 @deep: ~">>>";
-.mySearchBox {
+.myWrap{
   width: 100%;
+  .mySearchBox {
+  width: 1200px;
   text-align: center;
   margin: 30px 0;
   .myCamera {
@@ -120,42 +124,43 @@ export default {
     font-size: 22px;
     cursor: pointer;
   }
-}
-.hotSearch {
-  max-width: 1200px;
-  min-width: 900px;
-  margin:0 auto;
-  display: flex;
-  justify-content: center;
-  li {
-    margin:10px;
-    font-size: 12px;
   }
-  .item{
+  .hotSearch {
+    width: 1200px;
+    min-width: 900px;
+    margin:0 auto;
     display: flex;
-    flex-wrap:wrap;
-    li{
-      margin: 10px;
-      color: #ccc;
+    justify-content: center;
+    li {
+      margin:10px;
+      font-size: 12px;
+    }
+    .item{
+      display: flex;
+      flex-wrap:wrap;
+      li{
+        margin: 10px;
+        color: #ccc;
+        cursor: pointer;
+        &:hover {
+          color: #409eff;
+        }
+      }
+    }
+  }
+  .lunbo {
+    max-width: 1200px;
+    min-width: 900px;
+    margin: 100px auto 10px auto;
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
+    .gengduo {
+      float: right;
       cursor: pointer;
       &:hover {
         color: #409eff;
       }
-    }
-  }
-}
-.lunbo {
-  max-width: 1200px;
-  min-width: 900px;
-  margin: 100px auto 10px auto;
-  padding: 10px;
-  box-sizing: border-box;
-  box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
-  .gengduo {
-    float: right;
-    cursor: pointer;
-    &:hover {
-      color: #409eff;
     }
   }
 }

@@ -1,7 +1,10 @@
 <template>
-  <div class="productSearchIndex">
-    <bsTop></bsTop>
-    <productSearchTop :showColl="true" parentEl="hotRecommend"></productSearchTop>
+<el-container class="productSearchIndex">
+    <el-header style="padding:0;">
+      <bsTop></bsTop>
+    </el-header>
+    <el-main style="padding:0;overflow:visible;">
+      <productSearchTop :showColl="true" parentEl="hotRecommend"></productSearchTop>
     <div class="searchWraps">
       <div class="searchSidebar">
         <h4 class="title el-icon-menu">产品目录</h4>
@@ -189,6 +192,7 @@
                   </ul>
                 </div>
               </li>
+              <div class="buwei"></div>
             </ul>
           <center style="margin:20px auto 0 auto;" v-show="!$store.state.beforeSearchImgPreview">
             <el-pagination
@@ -258,16 +262,21 @@
         >
       </center>
     </el-dialog>
-  </div>
+    </el-main>
+    <el-footer style="padding:0;" height="172px">
+    <bsFooter></bsFooter>
+  </el-footer>
+  </el-container>
 </template>
 
 <script>
 import bsTop from '@/components/BsTop'
+import bsFooter from '@/components/Footer'
 import productSearchTop from '@/components/productSearchTop'
 import productDetail from '@/components/productDetail'
 import { VueCropper } from 'vue-cropper'
 export default {
-  components: { bsTop, productSearchTop, productDetail, VueCropper },
+  components: { bsTop, productSearchTop, productDetail, VueCropper, bsFooter },
   data () {
     return {
       cropperLoading: false,
@@ -514,7 +523,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     max-width: 1200px;
-    min-width: 800px;
+    min-width: 900px;
     margin: 20px auto;
     display: flex;
     .searchSidebar {
@@ -535,7 +544,7 @@ export default {
     }
     .searchContent {
       flex: 1;
-      padding: 0 20px;
+      padding-left: 20px;
       font-weight: 500;
       font-size: 12px;
       .productFilter {
@@ -642,6 +651,18 @@ export default {
         display: flex;
         flex-wrap: wrap;
         font-size: 10px;
+        justify-content:space-between;
+        &::after {
+          content: '';
+          width: 230px;
+          display: block;
+          margin: 5px;
+        }
+        .buwei{
+          content: '';
+          width: 230px;
+          margin: 5px;
+        }
         .productItems {
           width: 230px;
           margin: 5px;

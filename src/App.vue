@@ -8,19 +8,18 @@
     @mousewheel="mousewheel"
   >
     <router-view v-cloak />
-
-    <Footer
-    style="width:100%;overflow: visible;"
+    <!-- <Footer
+    style="width:100%;"
       v-cloak
-      v-if="$route.path  !==  '/404' && !$route.path.includes('/erp') && !$route.path.includes('/offer') && !$route.path.includes('/cateAllocation') && !$route.path.includes('/productSearch')"
-    ></Footer>
+      v-if="$route.path  !==  '/404' && !$route.path.includes('/beforeIndex') && !$route.path.includes('/erp') && !$route.path.includes('/offer') && !$route.path.includes('/cateAllocation') && !$route.path.includes('/productSearch')"
+    ></Footer> -->
   </div>
 </template>
 <script>
 import { getMenuFuc } from '@/router/index'
-import Footer from '@/components/Footer'
+// import Footer from '@/components/Footer'
 export default {
-  components: { Footer },
+  // components: { Footer },
   data () {
     return {
       appHeight: document.documentElement.clientHeight,
