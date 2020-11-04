@@ -1682,8 +1682,8 @@
         v-if="active2 === 5 && $route.path === '/meInfo/findList'"
       >
         <div class="sendGonggao">
-          <el-form :model="ruleForm" ref="refGonggao" class="demo-ruleForm" show-message hide-required-asterisk>
-            <el-form-item prop="GonggaoText" ref="rulesInput" :rules="[{ required: true, message: '公告内容不能为空' }]">
+          <el-form :model="ruleForm" :rules="{ GonggaoText: [{ required: true, message: '公告内容不能为空' }] }" ref="refGonggao" class="demo-ruleForm" show-message hide-required-asterisk>
+            <el-form-item prop="GonggaoText">
               <el-input
                 type="textarea"
                 class="txtWrap"
@@ -3667,6 +3667,9 @@ export default {
       this.active2 = 5
       this.gonggaoType = type
       this.showTypeOptions.showLiaotianType = null
+      this.$nextTick(()=>{
+        this.$refs.refGonggao.clearValidate();
+      })
     },
     // 发布公告
     async sendGonggao () {
@@ -3704,6 +3707,7 @@ export default {
           })
           if (result.data.result.code === 200) {
             this.$message.success('发布公告成功')
+            // this.$refs.refGonggao.clearValidate();
             // 重新调用查看公告
             this.$root.eventHub.$emit('UpdateFind')
             this.skipCount = 1
@@ -3762,26 +3766,25 @@ export default {
     // 是否推送公告
     isSelectPush () {
       this.$refs.refGonggao.validate(valid => {
-        console.log(valid)
+        if (valid) {
+          this.$confirm('是否需要推送公告?', '提示', {
+            distinguishCancelAndClose: true,
+            cancelButtonText: '需要推送',
+            confirmButtonText: '不了，谢谢',
+            type: 'warning'
+          }).then(() => {
+              this.sendGonggao()
+            }).catch(action => {
+              if (action === 'cancel') {
+                this.orgListCurrentPage = 1
+                this.getOrgList()
+                this.radio = ''
+                this.checkUserList = []
+                this.selectPush = true
+              }
+            })
+        }
       })
-      // this.$confirm('是否需要推送公告?', '提示', {
-      //   distinguishCancelAndClose: true,
-      //   cancelButtonText: '需要推送',
-      //   confirmButtonText: '不了，谢谢',
-      //   type: 'warning'
-      // })
-      //   .then(() => {
-      //     this.sendGonggao()
-      //   })
-      //   .catch(action => {
-      //     if (action === 'cancel') {
-      //       this.orgListCurrentPage = 1
-      //       this.getOrgList()
-      //       this.radio = ''
-      //       this.checkUserList = []
-      //       this.selectPush = true
-      //     }
-      //   })
     },
     // 放大预览
     handlePictureCardPreview (file) {
@@ -4793,7 +4796,6 @@ export default {
         : this.gonggaoType === 'Purchase'
           ? '请输入采购公告内容'
           : '请输入供应公告内容';
-      this.$refs.refGonggao.clearValidate();
     },
     uploadAccept () {
       return (
