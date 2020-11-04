@@ -35,7 +35,7 @@
         <el-form-item label="公司类型">
           <el-select
           clearable
-            v-model="searchForm.clientType"
+            v-model="searchForm.companyType"
             placeholder="请选择"
             style="width: 90%;"
           >
@@ -44,6 +44,20 @@
               :key="i"
               :label="item.itemText"
               :value="item.itemCode"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否安装">
+          <el-select
+          clearable
+            v-model="searchForm.isInstall"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="(item, i) in [{label: '已安装', value: true}, {label: '未安装', value: false}]"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -116,7 +130,8 @@ export default {
       searchForm: {
         keyword: '',
         hallNumber: '',
-        clientType: ''
+        companyType: '',
+        isInstall: false
       }
     }
   },
@@ -153,9 +168,10 @@ export default {
       const fd = {
         keyword: this.searchForm.keyword,
         hallNumber: this.searchForm.hallNumber,
-        clientType: this.searchForm.clientType,
-        pageIndex: (this.currentPage - 1),
-        pageSize: this.pageSize
+        companyType: this.searchForm.companyType,
+        skipCount: this.currentPage,
+        isInstall: this.searchForm.isInstall,
+        maxResultCount: this.pageSize
       }
       for (const key in fd) {
         if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
@@ -205,5 +221,17 @@ export default {
 }
 .tableContent {
   padding: 20px 0;
+}
+.demo-form-inline{
+  .el-form-item{
+    @{deep} .el-form-item__content{
+      width: 150px;
+    }
+    &:last-of-type{
+      @{deep} .el-form-item__content{
+      width: 70px;
+    }
+    }
+  }
 }
 </style>

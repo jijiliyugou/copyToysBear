@@ -1319,7 +1319,6 @@ export default {
             this.addEmployeeForm.password = this.$md5(
               'LitterBear' + this.addEmployeeForm.password
             )
-            console.log(this.addEmployeeForm)
             const res = await this.$http.post(
               '/api/CreateOrgPersonnel',
               this.addEmployeeForm
