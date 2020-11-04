@@ -133,7 +133,7 @@
           class="listItem"
           v-for="(item, i) in productList"
           :key="i"
-          @click.stop.native="productDetail(item.productNumber)"
+          @click.stop.native="productDetail(item.id)"
         >
           <div class="contentBox">
             <div class="left">
@@ -173,8 +173,13 @@
               体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
             </p>
             <p class="productPrice">
-              报价：<span class="price">{{
+              出厂价：<span class="price">{{
                 item.cu_de + item.unitPrice.toFixed(2)
+              }}</span>
+            </p>
+            <p class="productPrice">
+              报价：<span class="price">{{
+                item.cu_de + item.offerAmount.toFixed(2)
               }}</span>
             </p>
           </div>
@@ -220,8 +225,13 @@
               出厂货号：<span>{{ item.fa_no }}</span>
             </p>
             <p class="productPrice">
-              报价：<span class="price">{{
+              出厂价：<span class="price">{{
                 item.cu_de + item.unitPrice.toFixed(2)
+              }}</span>
+            </p>
+            <p class="productPrice">
+              报价：<span class="price">{{
+                item.cu_de + item.offerAmount.toFixed(2)
               }}</span>
             </p>
           </div>

@@ -127,7 +127,7 @@
                 class="productItems"
                 v-for="(item, i) in dataList"
                 :key="i"
-                @click="productDetail(item.productNumber)"
+                @click="productDetail(item.id)"
               >
                 <div class="img">
                   <el-image fit="contain" :src="item.imageUrl">
@@ -173,7 +173,10 @@
                       体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
                     </li>
                     <li>
-                      报价：<span class="price">{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
+                      出厂价：<span class="price" v-if="$_.isNumber(item.unitPrice)">{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
+                    </li>
+                    <li>
+                      报价：<span class="price" v-if="$_.isNumber(item.offerAmount)">{{item.cu_de + (item.offerAmount.toFixed(2))}}</span>
                     </li>
                   </ul>
                 </div>

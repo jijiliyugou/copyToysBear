@@ -153,7 +153,7 @@ export default {
     // 获取产品明细
     async getProductByNumber () {
       const res = await this.$http.post('/api/GetProductByProductNumber', {
-        productNumber: this.$route.params.id
+        id: this.$route.params.id
       })
       if (res.data.result.code === 200) {
         this.productDetail = res.data.result.item.bearProduct
