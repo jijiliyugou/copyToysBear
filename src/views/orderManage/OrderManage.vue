@@ -106,6 +106,7 @@
             :page-sizes="[10, 20, 30, 50]"
             :total="totalPage"
             :page-size="pageSize"
+            :current-page.sync="currentPage"
             @current-change="currentChange"
             @size-change="handleSizeChange"
           ></el-pagination>

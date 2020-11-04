@@ -195,6 +195,7 @@
           :page-sizes="[10, 20, 30, 50]"
           :total="totalCount"
           :page-size="pageSize"
+          :current-page.sync="currentPage"
           @size-change="handleSizeChange"
           @current-change="currentChange"
         ></el-pagination>
@@ -859,6 +860,7 @@
           :page-sizes="[10, 20, 30, 50]"
           :page-size="employeeMan.pageSize"
           :total="employeeMan.totalCount"
+          :current-page.sync="employeeMan.currentPage"
           @current-change="employeeManCurrentChange"
           @size-change="employeeManSizeChange"
         ></el-pagination>
@@ -1533,7 +1535,6 @@ export default {
     },
     search () {
       this.currentPage = 1
-      this.pageSize = 10
       this.getClientList()
     },
     // 获取客户管理列表

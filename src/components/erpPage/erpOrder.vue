@@ -78,6 +78,7 @@
               next-text="下一页"
               :total="totalCount"
               :page-size="pageSize"
+              :current-page.sync="currentPage"
               :page-sizes="[6, 9, 15, 30]"
               @current-change="currentChange"
               @size-change="handleSizeChange"

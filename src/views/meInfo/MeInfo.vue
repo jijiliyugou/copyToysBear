@@ -1682,10 +1682,8 @@
         v-if="active2 === 5 && $route.path === '/meInfo/findList'"
       >
         <div class="sendGonggao">
-          <el-form :model="ruleForm" ref="refGonggao" class="demo-ruleForm">
-            <el-form-item
-              :rules="[{ required: true, message: '公告内容不能为空' }]"
-            >
+          <el-form :model="ruleForm" ref="refGonggao" class="demo-ruleForm" show-message hide-required-asterisk>
+            <el-form-item prop="GonggaoText" ref="rulesInput" :rules="[{ required: true, message: '公告内容不能为空' }]">
               <el-input
                 type="textarea"
                 class="txtWrap"
@@ -2400,28 +2398,28 @@
       top="50px"
     >
       <el-radio-group class="myRadios" v-model="radio" @change="changeRadios">
-        <el-radio label="all">
+        <el-radio label="all" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Supplier' || $store.state.userInfo.commparnyList[0].companyType === 'Exhibition' || $store.state.userInfo.commparnyList[0].companyType === 'Sales'">
           <el-avatar
             :size="30"
             :src="require('@/assets/images/供应商.png')"
           ></el-avatar
           >平台所有人
         </el-radio>
-        <el-radio label="Exhibition" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Admin'">
+        <!-- <el-radio label="Exhibition" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Admin'">
           <el-avatar
             :size="30"
             :src="require('@/assets/images/公司.png')"
           ></el-avatar
           >所有展厅联系人
-        </el-radio>
-        <el-radio label="Sales" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Supplier' || $store.state.userInfo.commparnyList[0].companyType === 'Admin'">
+        </el-radio> -->
+        <el-radio label="Sales" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Supplier'">
           <el-avatar
             :size="30"
             :src="require('@/assets/images/公司.png')"
           ></el-avatar
           >所有公司联系人
         </el-radio>
-        <el-radio label="Supplier"  v-show="$store.state.userInfo.commparnyList[0].companyType === 'Exhibition' || $store.state.userInfo.commparnyList[0].companyType === 'Admin'">
+        <el-radio label="Supplier"  v-show="$store.state.userInfo.commparnyList[0].companyType === 'Exhibition' || $store.state.userInfo.commparnyList[0].companyType === 'Sales'">
           <el-avatar
             :size="30"
             :src="require('@/assets/images/公司.png')"
@@ -3763,24 +3761,27 @@ export default {
     },
     // 是否推送公告
     isSelectPush () {
-      this.$confirm('是否需要推送公告?', '提示', {
-        distinguishCancelAndClose: true,
-        cancelButtonText: '需要推送',
-        confirmButtonText: '不了，谢谢',
-        type: 'warning'
+      this.$refs.refGonggao.validate(valid => {
+        console.log(valid)
       })
-        .then(() => {
-          this.sendGonggao()
-        })
-        .catch(action => {
-          if (action === 'cancel') {
-            this.orgListCurrentPage = 1
-            this.getOrgList()
-            this.radio = ''
-            this.checkUserList = []
-            this.selectPush = true
-          }
-        })
+      // this.$confirm('是否需要推送公告?', '提示', {
+      //   distinguishCancelAndClose: true,
+      //   cancelButtonText: '需要推送',
+      //   confirmButtonText: '不了，谢谢',
+      //   type: 'warning'
+      // })
+      //   .then(() => {
+      //     this.sendGonggao()
+      //   })
+      //   .catch(action => {
+      //     if (action === 'cancel') {
+      //       this.orgListCurrentPage = 1
+      //       this.getOrgList()
+      //       this.radio = ''
+      //       this.checkUserList = []
+      //       this.selectPush = true
+      //     }
+      //   })
     },
     // 放大预览
     handlePictureCardPreview (file) {
@@ -4791,7 +4792,8 @@ export default {
         ? '请输入普通公告内容'
         : this.gonggaoType === 'Purchase'
           ? '请输入采购公告内容'
-          : '请输入供应公告内容'
+          : '请输入供应公告内容';
+      this.$refs.refGonggao.clearValidate();
     },
     uploadAccept () {
       return (
@@ -7385,8 +7387,14 @@ export default {
   background-color: #fff;
   box-sizing: border-box;
   padding: 10px 5px;
+  box-sizing: border-box;
   .txtWrap {
-    padding: 0 0 20px 0;
+    padding: 0;
+    @{deep} .el-input__count{
+      bottom: -5px;
+      line-height: normal;
+      padding: 0 5px;
+    }
   }
   .gonggaoImgList {
     .imgsItem {

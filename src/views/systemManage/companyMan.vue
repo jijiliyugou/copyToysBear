@@ -80,10 +80,12 @@
       </el-table>
       <center style="margin-top:20px;">
          <el-pagination
+         ref="pageRef"
           layout="total, sizes, prev, pager, next, jumper"
           background
           :page-sizes="[10, 20, 30, 50]"
           :page-size="pageSize"
+          :current-page.sync="currentPage"
           :total="totalCount"
           @current-change="currentChange"
           @size-change="handleSizeChange"
@@ -106,7 +108,7 @@ export default {
   data () {
     return {
       totalCount: 0,
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 10,
       tableData: [],
       hallList: [],
@@ -121,7 +123,7 @@ export default {
   methods: {
     // 列表查询
     search () {
-      this.currentPage = 0
+      this.currentPage = 1
       this.getLittleBearInstall()
     },
     // 获取公司类型
@@ -140,6 +142,8 @@ export default {
       const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
       if (res.data.result.code === 200) {
         this.hallList = res.data.result.item
+        this.searchForm.hallNumber = this.hallList[0].companyNumber
+        this.getLittleBearInstall()
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -150,7 +154,7 @@ export default {
         keyword: this.searchForm.keyword,
         hallNumber: this.searchForm.hallNumber,
         clientType: this.searchForm.clientType,
-        pageIndex: this.currentPage,
+        pageIndex: (this.currentPage - 1),
         pageSize: this.pageSize
       }
       for (const key in fd) {
@@ -186,7 +190,6 @@ export default {
   mounted () {
     this.getOrgCompanyList()
     this.getClientTypeList()
-    this.getLittleBearInstall()
   },
   created () {}
 }

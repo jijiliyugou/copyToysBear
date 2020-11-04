@@ -90,17 +90,17 @@
               <el-input placeholder="请输入搜索内容" size="mini" @keyup.enter.native="search" clearable v-model="keyword" class="input-with-select">
                 <el-button slot="append" size="mini" icon="el-icon-search" @click="search"></el-button>
               </el-input>
-              <el-button type="primary" plain size="mini" @click="priceSort(1)">
-                价格
-                <i class="el-icon-d-caret" v-show="isPriceSort === 0"></i>
-                <i class="el-icon-caret-bottom" v-show="isPriceSort === 1"></i>
-                <i class="el-icon-caret-top" v-show="isPriceSort === 2"></i>
-              </el-button>
               <el-button type="primary" plain size="mini" @click="hotSort(3)">
                 热门
                 <i class="el-icon-d-caret" v-show="isHotSort === 0"></i>
                 <i class="el-icon-caret-bottom" v-show="isHotSort === 1"></i>
                 <i class="el-icon-caret-top" v-show="isHotSort === 2"></i>
+              </el-button>
+              <el-button type="primary" plain size="mini" @click="priceSort(1)">
+                价格
+                <i class="el-icon-d-caret" v-show="isPriceSort === 0"></i>
+                <i class="el-icon-caret-bottom" v-show="isPriceSort === 1"></i>
+                <i class="el-icon-caret-top" v-show="isPriceSort === 2"></i>
               </el-button>
               <el-button type="primary" plain size="mini" @click="dateSort(2)">
                 时间
@@ -186,6 +186,7 @@
                 :total="totalCount"
                 :page-size="pageSize"
                 :page-sizes="[6, 9, 15, 30]"
+                :current-page.sync="currentPage"
                 @current-change="changePage"
                 @size-change="handleSizeChange"
               ></el-pagination>

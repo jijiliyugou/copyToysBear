@@ -94,6 +94,7 @@
               background
               :total="totalCount"
               :page-size="pageSize"
+              :current-page.sync="currentPage"
               @current-change="handleCurrentChange"
               @size-change="handleSizeChange"
             ></el-pagination>

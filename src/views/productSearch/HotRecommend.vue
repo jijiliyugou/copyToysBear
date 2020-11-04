@@ -201,6 +201,7 @@
               background
               :total="totalCount"
               :page-size="pageSize"
+              :current-page.sync="currentPage"
               @current-change="changePage"
               @size-change="handleSizeChange"
             ></el-pagination>
