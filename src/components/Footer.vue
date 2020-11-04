@@ -97,7 +97,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    margin: 10px;
     div {
       margin: 0 20px;
       cursor: pointer;

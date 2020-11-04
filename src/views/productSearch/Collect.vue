@@ -150,7 +150,7 @@
     </div>
     </div>
     </el-main>
-    <el-footer style="padding:0;" height="172px">
+    <el-footer style="padding:0;" height="162px">
       <bsFooter></bsFooter>
     </el-footer>
   </el-container>
