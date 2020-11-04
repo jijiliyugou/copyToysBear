@@ -249,11 +249,7 @@ export default {
     },
     // 查看联系方式
     toContact () {
-      if (this.productInfo.companyId) {
-        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id, companyNumber: this.productInfo.companyNumber } })
-      } else {
-        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id, companyNumber: (this.productInfo.companyNumber || 123) } })
-      }
+      this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id } })
     },
     // 下载
     downloadDocument (document) {

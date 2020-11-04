@@ -32,12 +32,12 @@ export default [
     component: OfferDetailPC
   },
   {
-    path: '/offerContact/:id/:companyNumber',
+    path: '/offerContact/:id',
     name: 'offerContact',
     component: OfferContact
   },
   {
-    path: '/offerContactPC/:id/:companyNumber',
+    path: '/offerContactPC/:id',
     name: 'offerContactPC',
     component: OfferContactPC
   }

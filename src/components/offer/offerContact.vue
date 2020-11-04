@@ -53,19 +53,19 @@
       </div>
     </div>
     <el-card class="box-card">
-      <div class="text-item">公司名称：<span>竹熊玩具厂</span></div>
+      <div class="text-item">公司名称：<span>{{ companyInfo && companyInfo.companyName }}</span></div>
       <div class="text-item addr" @click="openMap">
         <div class="left">
-          地<em style="opacity: 0">地区</em>区：<span>民乐科技大厦</span>
+          地<em style="opacity: 0">地区</em>区：<span>{{ companyInfo && companyInfo.address }}</span>
         </div>
         <div class="right"></div>
       </div>
-      <div class="text-item">产品数量：<span>888只</span></div>
+      <div class="text-item">产品数量：<span>{{ companyInfo && companyInfo.productCount }}</span></div>
       <div class="text-item lianxi">
         我要联系：<el-popover
           placement="bottom"
           trigger="click"
-          content="13838389438"
+          :content="companyInfo && (companyInfo.phoneNumber || companyInfo.telephoneNumber)"
         >
           <el-button
             slot="reference"
@@ -133,14 +133,15 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
+        this.getCompanyInfo()
       } else {
         this.$message.error(res.data.result.msg)
       }
     },
     // 获取联系方式
-    async getContact () {
-      const res = await this.$http.post('/api/getContact', {
-        hallNumber: this.$route.params.companyNumber
+    async getCompanyInfo () {
+      const res = await this.$http.post('/api/GetCompanyInfo', {
+        hallNumber: this.productInfo.companyNumber
       })
       if (res.data.result.code === 200) {
         this.companyInfo = res.data.result.item
@@ -151,7 +152,6 @@ export default {
   },
   created () {
     this.getProductOfferByNumber()
-    this.getContact()
   },
   mounted () {
     if (this.$store.state.screenWidth <= 1024) {

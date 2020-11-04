@@ -114,11 +114,7 @@ export default {
   methods: {
     // 查看联系方式
     toContact () {
-      if (this.productInfo.companyId) {
-        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.params.pid, companyNumber: this.productInfo.companyNumber } })
-      } else {
-        this.$router.push({ name: 'offerContactPC', params: { id: this.$route.params.pid, companyNumber: (this.productInfo.companyNumber || 123) } })
-      }
+      this.$router.push({ name: 'offerContact', params: { id: this.$route.params.pid } })
     },
     // 返回
     backtrackPage () {
