@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import createPersistedState from 'vuex-persistedstate'
-// import signalRModule from "./signalR.js";
 import globalJson from './Json.js'
 Vue.use(Vuex)
 export default new Vuex.Store({

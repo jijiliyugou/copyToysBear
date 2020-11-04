@@ -143,6 +143,7 @@ export default {
     }
     return {
       ws: null,
+      wsBaseUrl: process.env.NODE_ENV === 'production' ? 'wss://impush.toysbear.com/ws?UserId=' : 'ws://139.9.71.135:8090/ws?UserId=',
       lang: 'zh-CN',
       qrTimer: null,
       randomCode: null,
@@ -212,9 +213,7 @@ export default {
       } else {
         // 初始化weosocket
         // 正式
-        this.ws = new WebSocket(
-          'wss://impush.toysbear.com/ws?UserId=' + this.randomCode
-        )
+        this.ws = new WebSocket(this.wsBaseUrl + this.randomCode)
         // 测试
         // this.ws = new WebSocket(
         //   'ws://139.9.71.135:8090/ws?UserId=' + this.randomCode
@@ -554,7 +553,6 @@ export default {
   },
   created () {},
   mounted () {
-    this.identifyCode = ''
     this.refreshCode()
   },
   beforeDestroy () {

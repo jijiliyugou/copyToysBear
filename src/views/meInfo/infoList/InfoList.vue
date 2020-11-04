@@ -167,6 +167,7 @@ export default {
   data () {
     return {
       ws: null,
+      wsBaseUrl: process.env.NODE_ENV === 'production' ? ('wss://impush.toysbear.com/ws?UserId=' + this.$store.state.userInfo.userInfo.id) : ('ws://139.9.71.135:8090/ws?UserId=' + this.$store.state.userInfo.userInfo.id),
       lockReturn: false,
       timeout: 280000,
       // timeout: 1000,
@@ -203,11 +204,7 @@ export default {
       } else {
         // 初始化weosocket
         // 正式
-        this.ws = new WebSocket(
-          'wss://impush.toysbear.com/ws?UserId=' +
-            (this.$store.state.userInfo.userInfo &&
-              this.$store.state.userInfo.userInfo.id)
-        )
+        this.ws = new WebSocket(this.wsBaseUrl)
         // 测试
         // this.ws = new WebSocket(
         //   'ws://139.9.71.135:8090/ws?UserId=' + (this.$store.state.userInfo.userInfo && this.$store.state.userInfo.userInfo.id)

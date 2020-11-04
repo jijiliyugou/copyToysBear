@@ -90,6 +90,7 @@ export default {
   data () {
     return {
       url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.id,
+      companyInfo: null,
       productInfo: null,
       address: '坂田星河wrold'
     }
@@ -138,16 +139,28 @@ export default {
       } else {
         this.$message.error(res.data.result.msg)
       }
+    },
+    // 获取联系方式
+    async getContact () {
+      const res = await this.$http.post('/api/getContact', {
+        hallNumber: this.$route.params.companyNumber
+      })
+      if (res.data.result.code === 200) {
+        this.companyInfo = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
     }
   },
   created () {
     this.getProductOfferByNumber()
+    this.getContact()
   },
   mounted () {
     if (this.$store.state.screenWidth <= 1024) {
       this.$router.push({
         name: 'offerContact',
-        params: { id: this.$route.params.id }
+        params: { id: this.$route.params.id, companyNumber: this.$route.params.companyNumber }
       })
     }
   },
@@ -157,7 +170,7 @@ export default {
       if (val <= 1024) {
         this.$router.push({
           name: 'offerContact',
-          params: { id: this.$route.params.id }
+          params: { id: this.$route.params.id, companyNumber: this.$route.params.companyNumber }
         })
       }
     }
