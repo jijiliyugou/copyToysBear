@@ -1,6 +1,6 @@
 <template>
   <div style="background-color:#2468a9;">
-    <el-row style="height:60px;overflow: hidden;maxWidth:1200px;minWidth:900px;margin:0 auto;" :gutter="0">
+    <el-row style="height:60px;overflow: hidden;maxWidth:1200px;minWidth:1024px;margin:0 auto;" :gutter="0">
       <el-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
         <div class="grid-content bg-purple-light grid-content-top">
           <img @click="toHome" style="vertical-align:top;" src="~@/assets/images/bsLogo.png" alt />

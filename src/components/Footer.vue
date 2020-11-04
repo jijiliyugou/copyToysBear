@@ -70,7 +70,7 @@ export default {
   padding: 20px 0;
   box-sizing: border-box;
   width: 100%;
-  min-width: 900px;
+  min-width: 1024px;
   .footerBox{
     width: 100%;
     margin:0 auto;

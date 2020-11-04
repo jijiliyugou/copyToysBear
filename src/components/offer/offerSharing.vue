@@ -116,12 +116,12 @@
         </div>
       </div>
       <div class="filterProduct">
-        <p :class="{'priceFilter': true, 'active': isFilterActive === 0}" @click="sortPrice(0)">产品单价 <i v-show="isPrice === null" style="font-size:0.32rem;" class="iconfont icon-paixu"></i><i v-show="isPrice === true" class="el-icon-arrow-up"></i><i v-show="isPrice === false" class="el-icon-arrow-down"></i></p>
-        <p :class="{'priceFilter': true, 'active': isFilterActive === 1}" @click="sortDate(1)">新增时间  <i v-show="isDate === null" style="font-size:0.32rem;" class="iconfont icon-paixu"></i><i class="el-icon-arrow-up" v-show="isDate"></i><i v-show="isDate===false" class="el-icon-arrow-down"></i></p>
-        <p :class="{'priceFilter': true, 'active': isFilterActive === 2}" @click="sortHot(2)">产品热度  <i v-show="isHot === null" style="font-size:0.32rem;" class="iconfont icon-paixu"></i><i class="el-icon-arrow-up" v-show="isHot"></i><i v-show="isHot===false" class="el-icon-arrow-down"></i></p>
-        <div :class="{'more': true, 'active': isFilterActive === 3}">
-          <i v-show="isList" class="list" @click="checkList(3)"></i>
-          <i v-show="!isList" class="square" @click="checkList(3)"></i>
+        <p :class="{'priceFilter': true, 'active': sortOrder === 1}" @click="sortPrice(1)">产品单价 <i v-show="isPrice === 0" class="iconfont icon-paixu"></i><i v-show="isPrice === 1" class="el-icon-arrow-down"></i><i v-show="isPrice === 2" class="el-icon-arrow-up"></i></p>
+        <p :class="{'priceFilter': true, 'active': sortOrder === 2}" @click="sortDate(2)">新增时间  <i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p>
+        <p :class="{'priceFilter': true, 'active': sortOrder === 3}" @click="sortHot(3)">产品热度  <i v-show="isHot === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isHot === 1"></i><i v-show="isHot === 2" class="el-icon-arrow-up"></i></p>
+        <div class="more">
+          <i v-show="isList" class="list" @click="checkList"></i>
+          <i v-show="!isList" class="square" @click="checkList"></i>
         </div>
       </div>
     </div>
@@ -251,11 +251,12 @@ export default {
       categoryList: [],
       categoryNumber: '',
       totalCount: 0,
-      isFilterActive: null,
       isList: true,
-      isDate: null,
-      isHot: null,
-      isPrice: null
+      isDate: 0,
+      isHot: 0,
+      isPrice: 0,
+      sortOrder: 0,
+      sortType: null
     }
   },
   methods: {
@@ -287,30 +288,35 @@ export default {
     },
     // 查看联系方式
     toContact (e) {
-      this.$router.push({ name: 'offerContactPC', params: { id: this.$route.query.id } })
+      this.$router.push({ name: 'offerContact', params: { id: this.$route.query.id } })
     },
     // 切换列表
-    checkList (number) {
+    checkList () {
       this.isList = !this.isList
-      this.isFilterActive = number
-      // this.isPrice = true
-      // this.isDate = true
-      // this.isHot = true
     },
     // 价格排序
     sortPrice (number) {
-      this.isFilterActive = number
-      this.isPrice = !this.isPrice
+      this.sortOrder = number
+      this.sortType = this.isPrice = this.isPrice === 1 ? 2 : 1
+      this.isHot = this.isDate = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
     },
     // 时间排序
     sortDate (number) {
-      this.isFilterActive = number
-      this.isDate = !this.isDate
+      this.sortOrder = number
+      this.sortType = this.isDate = this.isDate === 1 ? 2 : 1
+      this.isHot = this.isPrice = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
     },
     // 热度排序
     sortHot (number) {
-      this.isFilterActive = number
-      this.isHot = !this.isHot
+      this.sortOrder = number
+      this.sortType = this.isHot = this.isHot === 1 ? 2 : 1
+      this.isDate = this.isPrice = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
     },
     // 下载
     downloadDocument (document) {
@@ -364,10 +370,19 @@ export default {
     },
     // 获取报价信息产品列表
     async getProductOfferDetailPage (flag) {
-      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.categoryNumber, keyword: this.keyword }
-      for (const key in fd) {
-        if (!fd[key]) delete fd[key]
+      const fd = {
+        skipCount: this.currentPage,
+        maxResultCount: this.pageSize,
+        offerNumber: this.$route.query.id,
+        categoryNumber: this.categoryNumber,
+        keyword: this.keyword,
+        sortOrder: this.sortOrder,
+        sortType: this.sortType
       }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
+      }
+      console.log(fd)
       const res = await this.$http.post('/api/ProductOfferDetailPage', fd)
       if (res.data.result.code === 200) {
         this.productList = flag
@@ -431,7 +446,7 @@ export default {
   overflow-x: hidden;
   overflow-y: scroll;
   box-sizing: border-box;
-  font-size: 0.346667rem;
+  font-size: 0.32rem;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -496,7 +511,6 @@ export default {
         justify-content: space-between;
         align-items: flex-start;
         min-height: 1.066667rem;
-        font-size: 0.266667rem;
         p{
           flex: 1;
         }
@@ -506,7 +520,6 @@ export default {
       justify-content: space-between;
       align-items: center;
       color: #626262;
-      font-size: 0.266667rem;
       .dateIconBox{
         display: flex;
         align-items: center;
@@ -532,8 +545,8 @@ export default {
   }
   .keyWordSearch {
     width: 95%;
-    margin: 0.16rem auto;
-    height: 0.906667rem;
+    margin: 0.266667rem auto;
+    height: 0.8rem;
     background: #eceeef;
     border-radius: 0.453333rem;
     display: flex;
@@ -549,7 +562,8 @@ export default {
         background-color: transparent;
         width: 100%;
         border: none;
-        font-size: 0.346667rem;
+        // font-size: 0.346667rem;
+        font-size: 0.32rem;
         text-indent: 0.266667rem;
       }
     }
@@ -557,7 +571,8 @@ export default {
       width: 1.866667rem;
       height: 100%;
       border-radius: 0.5rem;
-      font-size: 0.346667rem;
+      // font-size: 0.346667rem;
+      font-size: 0.32rem;
       background-color: #165AF7;
     }
   }
@@ -572,6 +587,7 @@ export default {
       justify-content: space-between;
       margin: 0 auto;
       padding-bottom: 0.133333rem;
+      // font-size: 0.266667rem;
       border-bottom: 1px solid #ebeef5;
       .cates {
         display: flex;
@@ -579,8 +595,19 @@ export default {
         justify-content: space-between;
         @{deep} .el-input__inner {
           width: 2.666667rem;
+          font-size: 0.266667rem;
           padding-right: 0.4rem;
-          line-height: 0.533333rem;
+          height: 0.666667rem;
+          line-height: 0.666667rem;
+        }
+         @{deep} .el-select__caret {
+          position: relative;
+          &::before, &::after {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+          }
         }
       }
     }
@@ -621,7 +648,7 @@ export default {
       display: flex;
       height: 0.8rem;
       align-items: center;
-      font-size: 0.32rem;
+      font-size: 0.293333rem;
       color: #707070;
       .priceFilter{
         margin-right: 0.533333rem;
@@ -668,6 +695,7 @@ export default {
           .contentBox {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             .left {
             margin-right: 0.133333rem;
             border-radius: 0.133333rem;
@@ -676,8 +704,10 @@ export default {
             align-items:center;
             width: 2rem;
             height: 2rem;
+            // border: 1px solid #000;
             .el-image{
               width: 100%;
+              height: 100%;
               img{
                 width: 100%;
               }
@@ -688,7 +718,9 @@ export default {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            font-size: 0.266667rem;
+            // border: 1px solid #000;
+            // font-size: 0.266667rem;
+            font-size: 0.32rem;
             color: #626262;
               p{
                 padding: 2px 0;
@@ -709,7 +741,7 @@ export default {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            font-size: 0.266667rem;
+            margin-top: 0.133333rem;
             color: #626262;
             .dateIcon {
               display: block;
@@ -748,8 +780,13 @@ export default {
         }
         .bottom{
           padding-bottom: 0.066667rem;
+          color: #626262;
           p {
             padding-top: 0.133333rem;
+            &.productName{
+              color: #000;
+              font-weight: 500;
+            }
             .price{
               color: #f54d35;
               font-weight: 500;
@@ -757,6 +794,19 @@ export default {
           }
         }
       }
+    }
+  }
+}
+
+.el-select-dropdown__wrap {
+    max-height: 3.653333rem;
+    .el-select-dropdown__list {
+    padding: 0.08rem 0;
+    .el-select-dropdown__item{
+      font-size: 0.266667rem;
+      padding: 0 0.266667rem;
+      height: 0.666667rem;
+      line-height: 0.666667rem;
     }
   }
 }

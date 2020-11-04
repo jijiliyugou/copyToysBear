@@ -87,27 +87,35 @@
       </div>
       <div class="searchContent">
         <div class="filterTitle">
-            <div class="keywrodSearch">
               <el-input placeholder="请输入搜索内容" size="mini" @keyup.enter.native="search" clearable v-model="keyword" class="input-with-select">
                 <el-button slot="append" size="mini" icon="el-icon-search" @click="search"></el-button>
               </el-input>
-            </div>
-            <div class="sortSearch">
-              <el-button type="primary" plain size="mini" @click="priceSort">
-                价格排序
-                <i class="el-icon-arrow-down el-icon--right" v-show="!isPriceSort"></i>
-                <i class="el-icon-arrow-up el-icon--right" v-show="isPriceSort"></i>
-                </el-button>
-              <el-button type="primary" plain size="mini" @click="dateSort">
-                时间排序
-                <i class="el-icon-arrow-down el-icon--right" v-show="!isDateSort"></i>
-                <i class="el-icon-arrow-up el-icon--right" v-show="isDateSort"></i>
-                </el-button>
-            </div>
-            <div class="downloads">
-              <el-button type="primary" @click="downloadDocument('PDF')" plain size="mini">下载PDF<i class="el-icon-download el-icon--right"></i></el-button>
-              <el-button type="primary" @click="downloadDocument('Excel')" plain size="mini">下载Excel<i class="el-icon-download el-icon--right"></i></el-button>
-            </div>
+              <el-button type="primary" plain size="mini" @click="priceSort(1)">
+                价格
+                <i class="el-icon-d-caret" v-show="isPriceSort === 0"></i>
+                <i class="el-icon-caret-bottom" v-show="isPriceSort === 1"></i>
+                <i class="el-icon-caret-top" v-show="isPriceSort === 2"></i>
+              </el-button>
+              <el-button type="primary" plain size="mini" @click="hotSort(3)">
+                热门
+                <i class="el-icon-d-caret" v-show="isHotSort === 0"></i>
+                <i class="el-icon-caret-bottom" v-show="isHotSort === 1"></i>
+                <i class="el-icon-caret-top" v-show="isHotSort === 2"></i>
+              </el-button>
+              <el-button type="primary" plain size="mini" @click="dateSort(2)">
+                时间
+                <i class="el-icon-d-caret" v-show="isDateSort === 0"></i>
+                <i class="el-icon-caret-bottom" v-show="isDateSort === 1"></i>
+                <i class="el-icon-caret-top" v-show="isDateSort === 2"></i>
+              </el-button>
+              <el-button type="primary" @click="downloadDocument('PDF')" plain size="mini">
+                下载PDF
+                <i class="el-icon-download el-icon--right"></i>
+              </el-button>
+              <el-button type="primary" @click="downloadDocument('Excel')" plain size="mini">
+                下载Excel
+                <i class="el-icon-download el-icon--right"></i>
+              </el-button>
           <!-- <div class="more">更多筛选</div> -->
         </div>
         <template v-if="!dataList || dataList.length === 0">
@@ -196,8 +204,11 @@ export default {
       keyword: '',
       productInfo: null,
       categoryNumber: null,
-      isDateSort: false,
-      isPriceSort: false,
+      sortOrder: 0,
+      sortType: 0,
+      isDateSort: 0,
+      isHotSort: 0,
+      isPriceSort: 0,
       currentPage: 1,
       pageSize: 6,
       totalCount: 0,
@@ -261,27 +272,28 @@ export default {
       this.getProductOfferDetailPage()
     },
     // 价格排序
-    priceSort () {
-      // 数组排序
-      this.dataList.sort((a, b) => {
-        if (this.isPriceSort) {
-          return a.unitPrice - b.unitPrice
-        } else {
-          return b.unitPrice - a.unitPrice
-        }
-      })
-      this.isPriceSort = !this.isPriceSort
+    priceSort (number) {
+      this.sortOrder = number
+      this.sortType = this.isPriceSort = this.isPriceSort === 1 ? 2 : 1
+      this.isHotSort = this.isDateSort = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
     },
     // // 时间排序
-    dateSort () {
-      this.dataList.sort((a, b) => {
-        if (this.isDateSort) {
-          return Date.parse(a.createdOn) - Date.parse(b.createdOn)
-        } else {
-          return Date.parse(b.createdOn) - Date.parse(a.createdOn)
-        }
-      })
-      this.isDateSort = !this.isDateSort
+    dateSort (number) {
+      this.sortOrder = number
+      this.sortType = this.isDateSort = this.isDateSort === 1 ? 2 : 1
+      this.isHotSort = this.isPriceSort = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
+    },
+    // 热门排序
+    hotSort (number) {
+      this.sortOrder = number
+      this.sortType = this.isHotSort = this.isHotSort === 1 ? 2 : 1
+      this.isDateSort = this.isPriceSort = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
     },
     // 点击分类事件
     handleNodeClick (data) {
@@ -336,9 +348,17 @@ export default {
     },
     // 获取报价信息产品列表
     async getProductOfferDetailPage (flag) {
-      const fd = { skipCount: this.currentPage, maxResultCount: this.pageSize, offerNumber: this.$route.query.id, categoryNumber: this.categoryNumber, keyword: this.keyword }
+      const fd = {
+        skipCount: this.currentPage,
+        maxResultCount: this.pageSize,
+        offerNumber: this.$route.query.id,
+        categoryNumber: this.categoryNumber,
+        keyword: this.keyword,
+        sortOrder: this.sortOrder,
+        sortType: this.sortType
+      }
       for (const key in fd) {
-        if (!fd[key]) delete fd[key]
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
       }
       const res = await this.$http.post('/api/ProductOfferDetailPage', fd)
       if (res.data.result.code === 200) {
@@ -523,21 +543,10 @@ export default {
           border-top: 1px solid #ccc;
           border-bottom: 1px solid #ccc;
           align-items: center;
-          justify-content: space-between;
+          justify-content: space-around;
           box-sizing: border-box;
-          .keywrodSearch{
-            width: 220px;
-            display: flex;
-          }
-          .sortSearch{
-            width: 220px;
-            display: flex;
-            justify-content: center;
-          }
-          .downloads{
-            width: 220px;
-            display: flex;
-            justify-content: flex-end;
+          .input-with-select {
+            margin-right: 10px;
           }
         }
       .productList {

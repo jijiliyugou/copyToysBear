@@ -557,7 +557,7 @@ export default {
   }
   .searchWraps {
     max-width: 1200px;
-    min-width: 900px;
+    min-width: 1024px;
     margin: 20px auto;
     box-sizing: border-box;
     display: flex;

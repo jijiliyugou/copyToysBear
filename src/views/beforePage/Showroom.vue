@@ -75,7 +75,7 @@ export default {
 @deep: ~">>>";
 .showRoom {
   max-width: 1200px;
-min-width: 800px;
+  min-width: 1024px;
   margin: 0 auto;
   .showRoomList {
     margin-top: 5px;

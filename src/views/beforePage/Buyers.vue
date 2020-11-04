@@ -116,7 +116,7 @@ export default {
   .buyersList {
     display: flex;
     max-width: 1200px;
-    min-width: 800px;
+    min-width: 1024px;
     margin: 0 auto;
     justify-content: space-between;
     text-align: justify;

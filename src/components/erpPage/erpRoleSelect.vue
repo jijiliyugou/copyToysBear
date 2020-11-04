@@ -53,8 +53,7 @@ export default {
 
 <style lang="less" scoped>
 ul {
-  max-width: 1200px;
-  min-width: 800px;
+  width: 800px;
   height: 100px;
   display: flex;
   flex-wrap: wrap;

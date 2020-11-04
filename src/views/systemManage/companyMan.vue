@@ -5,7 +5,7 @@
     </el-header>
     <el-main style="padding:0;overflow:visible;">
     <!-- 搜索 -->
-    <div style="maxWidth:1200px;minWidth:900px;margin:0 auto;">
+    <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="关键字查询">
@@ -158,12 +158,15 @@ export default {
           delete fd[key]
         }
       }
-      const res = await this.$http.post('/api/LittleBearInstall  ', fd)
-      console.log(res)
+      const res = await this.$http.post('/api/LittleBearInstall', fd)
       if (res.data.result.code === 200) {
-        this.tableData = res.data.result.item
-        // this.tableData = res.data.result.item.items
+        this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
+      } else {
+        this.tableData = []
+        this.totalCount = 0
+        if (fd.hallNumber) this.$message.error(res.data.result.msg)
+        else this.$message.error('请选择展厅')
       }
     },
     // 切换当前页

@@ -245,7 +245,7 @@ export default {
 <style lang="less" scoped>
 .bsSearchTopBox{
   max-width: 1200px;
-  min-width: 800px;
+  min-width: 1024px;
   margin: 0 auto;
   .bsSearch {
   text-align: center;

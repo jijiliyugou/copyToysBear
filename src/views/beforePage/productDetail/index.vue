@@ -316,7 +316,7 @@ export default {
 @deep: ~">>>";
 .productDetailBox {
   max-width: 1200px;
-min-width: 800px;
+  min-width: 1024px;
   margin: 0 auto;
 }
 .Graphic {

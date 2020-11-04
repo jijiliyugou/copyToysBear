@@ -89,13 +89,14 @@ export default {
     return {
       url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.id,
       productInfo: null,
+      companyInfo: null,
       address: '坂田星河wrold'
     }
   },
   methods: {
     // 返回
     backtrackPage () {
-      this.$router.go(-2)
+      this.$router.go(-1)
     },
     // 复制
     copyUrl () {

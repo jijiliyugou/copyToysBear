@@ -313,26 +313,25 @@ export default {
     }
   }
 }
-  .offerCard{
-    margin: 10px 0;
-    p{
-      padding: 5px 0;
-    }
-  }
 }
 .Graphic {
-  width: 800px;
+  width: 900px;
   margin: 20px auto;
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
   .left {
     width: 400px;
+    height: 400px;
+    display: flex;
+    align-items: center;
     .swiperList {
       width: 100%;
+      height: 100%;
       cursor: pointer;
       @{deep} .el-image {
         width: 100%;
+        height: 100%;
         .errorImg {
           width: 100%;
           height: 100%;
@@ -343,7 +342,7 @@ export default {
   // .right {
     .cententText{
       flex: 1;
-      margin-left: 10px;
+      margin-left: 20px;
       font-size: 16px;
       display: flex;
       flex-direction: column;

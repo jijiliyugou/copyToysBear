@@ -102,14 +102,14 @@ export default {
     height: 50px;
     display: flex;
     max-width: 1200px;
-min-width: 800px;
+    min-width: 1024px;
     margin: 0 auto;
     align-items: center;
   }
 }
 .contactTable {
   max-width: 1200px;
-min-width: 800px;
+  min-width: 1024px;
   margin: 0 auto;
   .companyName {
     padding: 34px 0;

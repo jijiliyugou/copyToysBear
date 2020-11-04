@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <el-row style="maxWidth:1200px;minWidth:900px;margin: 0 auto;">
+    <el-row style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
       <el-col :span="6">
         <div class="grid-content bg-purple grid-content-top">
           <img class="logo" src="~@/assets/images/logo.png" alt />
@@ -91,7 +91,7 @@
         </div>
       </el-col>
     </el-row>
-    <div class="sidebar" style="maxWidth:1200px;minWidth:900px;margin: 0 auto;">
+    <div class="sidebar" style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
       <ul>
         <router-link
           class="li"
@@ -361,13 +361,13 @@ export default {
   .themeColor();
 }
 .banner {
-  min-width: 900px;
+  min-width: 1024px;
   width: 100%;
   overflow: visible;
   .bannerContent {
     max-width: 1200px;
     overflow: visible;
-    min-width: 900px;
+    min-width: 1024px;
     margin: 0 auto;
     height: 50px;
     display: flex;

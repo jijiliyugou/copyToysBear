@@ -79,7 +79,7 @@
       </div> -->
     <div class="centent"  v-if="productDetail">
       <div class="imgBox">
-        <el-image :preview-src-list="imagesList" style="width: 100%;"
+        <el-image :preview-src-list="imagesList" style="width: 100%;height: 100%;"
       :src="productDetail.imageUrl"
       fit="contain"></el-image>
       </div>
@@ -334,8 +334,8 @@ export default {
     position: relative;
     .createDate{
       position: absolute;
-      bottom: 0.266667rem;
-      left: 0.133333rem;
+      bottom: 0.24rem;
+      left: 0.266667rem;
       display: flex;
       color: #707070;
       font-size: 0.293333rem;

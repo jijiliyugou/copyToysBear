@@ -65,9 +65,10 @@
       <div class="text-item">产品数量：<span>{{ companyInfo && companyInfo.productCount }}</span></div>
       <div class="text-item lianxi">
         我要联系：<el-popover
+          style="minWidth:100px;"
           placement="bottom"
           trigger="click"
-          :content="companyInfo && (companyInfo.phoneNumber || companyInfo.telephoneNumber)"
+          :content="(companyInfo && (companyInfo.phoneNumber || companyInfo.telephoneNumber)) || '暂无联系方式'"
         >
           <el-button
             slot="reference"

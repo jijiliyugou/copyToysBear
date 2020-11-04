@@ -523,7 +523,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     max-width: 1200px;
-    min-width: 900px;
+    min-width: 1024px;
     margin: 20px auto;
     display: flex;
     .searchSidebar {

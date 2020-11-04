@@ -123,7 +123,7 @@ export default {
 @deep: ~">>>";
 .box {
   width: 100%;
-  height: 800px;
+  height: 1024px;
   background: #f5f7f9;
   box-shadow: 0px 2px 6px 0px rgba(4, 0, 0, 0.06);
   padding: 40px;

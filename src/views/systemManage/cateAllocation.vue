@@ -304,7 +304,7 @@ export default {
 @deep: ~">>>";
 .custom-tree-container {
     max-width:1200px;
-    min-width: 900px;
+    min-width: 1024px;
     box-sizing: border-box;
     margin:0 auto;
     font-size: 14px;

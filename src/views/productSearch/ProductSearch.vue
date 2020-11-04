@@ -127,7 +127,7 @@ export default {
   }
   .hotSearch {
     width: 1200px;
-    min-width: 900px;
+    min-width: 1024px;
     margin:0 auto;
     display: flex;
     justify-content: center;
@@ -150,7 +150,7 @@ export default {
   }
   .lunbo {
     max-width: 1200px;
-    min-width: 900px;
+    min-width: 1024px;
     margin: 100px auto 10px auto;
     padding: 10px;
     box-sizing: border-box;

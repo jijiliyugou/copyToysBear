@@ -4,7 +4,7 @@
       <bsTop></bsTop>
     </el-header>
     <el-main style="padding:0;overflow:visible;">
-      <div style="maxWidth:1200px;minWidth:900px;margin:0 auto;">
+      <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;">
       <!-- 搜索头部 -->
     <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">

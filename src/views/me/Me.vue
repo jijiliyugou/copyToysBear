@@ -585,7 +585,7 @@ export default {
 @deep: ~">>>";
 .wrap {
   max-width: 1200px;
-  min-width: 900px;
+  min-width: 1024px;
   margin: 0 auto;
   .myInfo {
     display: flex;

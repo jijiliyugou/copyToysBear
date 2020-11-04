@@ -3,7 +3,7 @@
       <el-header style="padding:0;" height="260px">
         <beforeTop class="beforeTop"></beforeTop>
       </el-header>
-      <el-main style="padding:0;min-width: 900px;overflow: visible;">
+      <el-main style="padding:0;min-width: 1024px;overflow: visible;">
         <router-view></router-view>
       </el-main>
       <el-footer style="padding:0;" height="162px">
