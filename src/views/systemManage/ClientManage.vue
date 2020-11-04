@@ -207,7 +207,7 @@
     <el-dialog
       :title="dialogTitle"
       :visible.sync="clientDialog"
-      v-if="clientDialog"
+      destroy-on-close
       lock-scroll
       top="0px"
       class="addClientDialog"
@@ -624,7 +624,7 @@
         top="50px"
         :title="employeeMan.employeeTitle"
         :visible.sync="innerVisible"
-        v-if="innerVisible"
+        destroy-on-close
         append-to-body
       >
         <el-form
@@ -1222,6 +1222,9 @@ export default {
       this.editImages = []
       this.employeeMan.employeeTitle = '员工编辑'
       this.innerVisible = true
+      this.$nextTick(() => {
+        this.$refs.addEmployeeRef.clearValidate()
+      })
       for (const key in this.addEmployeeForm) {
         this.addEmployeeForm[key] = row[key]
       }
@@ -1366,6 +1369,9 @@ export default {
       this.file = null
       this.getCurrentDate()
       this.innerVisible = true
+      this.$nextTick(() => {
+        this.$refs.addEmployeeRef.clearValidate()
+      })
     },
     // 员工管理预览头像
     handlePicEmployeePreview (file, fileList) {
@@ -1417,6 +1423,7 @@ export default {
       } else {
         this.$message.error('审核失败')
       }
+      this.$refs.ClientForm.clearValidate()
       this.clientDialog = false
     },
     // 获取只能搜索地址列表
@@ -1434,6 +1441,9 @@ export default {
     // 打开新增客户面板
     openAddClient () {
       this.clientDialog = true
+      this.$nextTick(() => {
+        this.$refs.ClientForm.clearValidate()
+      })
       this.isShowLoading = false
       this.dialogTitle = '新增客户'
       this.editImages = []
@@ -1524,6 +1534,7 @@ export default {
             this.$message.success('新增客户成功')
             this.andClientIcon = ''
             this.file = null
+            this.$refs.ClientForm.clearValidate()
             this.clientDialog = false
             this.getClientList()
           } else {
@@ -1582,6 +1593,9 @@ export default {
     openByAudit (row) {
       this.dialogTitle = '审核'
       this.clientDialog = true
+      this.$nextTick(() => {
+        this.$refs.ClientForm.clearValidate()
+      })
       for (const key in row) {
         this.addClientForm[key] = row[key]
       }
@@ -1684,6 +1698,9 @@ export default {
       console.log(row)
       this.isShowLoading = false
       this.clientDialog = true
+      this.$nextTick(() => {
+        this.$refs.ClientForm.clearValidate()
+      })
       this.editImages = []
       this.dialogTitle = '用户编辑'
       for (const key in row) {
@@ -1716,6 +1733,7 @@ export default {
           if (res.data.result.code === 200) {
             this.$message.success('编辑客户成功')
             this.isShowLoading = false
+            this.$refs.ClientForm.clearValidate()
             this.clientDialog = false
             this.andClientIcon = ''
             this.file = null
