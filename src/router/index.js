@@ -39,26 +39,24 @@ export async function getMenuFuc () {
 }
 // 拦截
 router.beforeEach(async (to, from, next) => {
-  // if (to.name === 'Login' && to.query.id === 'signOut') {
-  //   await $Store.dispatch('getToken')
-  //   next()
-  // }
+  // 如果没有登录token
   if (!$Store.state.userInfo || !$Store.state.userInfo.accessToken) {
     const res = await getToken()
-    const obj = { accessToken: res }
+    const obj = ((typeof res === 'string') && res.constructor === String) ? { accessToken: res } : null
     $Store.commit('setToken', obj)
-    if (to.path.includes('beforeIndex') || to.path.includes('erp') || to.path.includes('offer')) {
+    if (to.path.includes('/beforeIndex') || to.path.includes('/erp') || to.path.includes('/offer')) {
       next()
     } else {
       return next({ path: '/beforeIndex/login' })
     }
-  } else {
-    if (to.path.includes('beforeIndex') || to.path.includes('erp') || to.path.includes('offer')) {
+  } else { // 如果有登录token
+    if (to.path.includes('/beforeIndex') || to.path.includes('/erp') || to.path.includes('/offer')) {
       next()
     } else {
       if ($Store.state.isLogin) {
         next()
       } else {
+        // 如果有token但是没有经过正规登录
         return next({ path: '/beforeIndex/login' })
       }
     }

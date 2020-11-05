@@ -157,38 +157,6 @@ export default {
   },
   data () {
     return {
-      cates: [
-        {
-          title: '电动玩具',
-          id: 1,
-          bgc: '#2b9b27'
-        },
-        {
-          title: '线控玩具',
-          id: 2,
-          bgc: '#2845e1'
-        },
-        {
-          title: '惯性玩具',
-          id: 3,
-          bgc: '#03035c'
-        },
-        {
-          title: '仿真模型玩具',
-          id: 4,
-          bgc: '#3e0da7'
-        },
-        {
-          title: '过家家玩具',
-          id: 5,
-          bgc: '#e87b17'
-        },
-        {
-          title: '智力玩具',
-          id: 6,
-          bgc: '#e51c23'
-        }
-      ],
       isShow: false,
       currentPage: 1,
       pageSize: 20,
@@ -286,33 +254,6 @@ export default {
 
   .el-carousel__item:nth-child(2n + 1) {
     background-color: #d3dce6;
-  }
-
-  .cates {
-    h3 {
-      padding: 10px 0;
-      span {
-        color: #999;
-        font-size: 12px;
-        margin-left: 10px;
-      }
-    }
-    ul {
-      display: flex;
-      justify-content: space-between;
-      li {
-        width: 120px;
-        height: 80px;
-        background-color: green;
-        color: white;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        cursor: pointer;
-      }
-    }
   }
   .swiperWrap {
     .title {
