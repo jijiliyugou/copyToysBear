@@ -8,7 +8,6 @@ const AppVersion = () => import('@/views/systemManage/appVersion.vue')
 const ErrorLog = () => import('@/views/systemManage/errorLog.vue')
 const SMSMan = () => import('@/views/systemManage/SMSMan.vue')
 const CateAllocation = () => import('@/views/systemManage/cateAllocation.vue')
-const CompanyMan = () => import('@/views/systemManage/companyMan.vue')
 
 export default [
   {
@@ -55,11 +54,6 @@ export default [
     path: '/SMSMan',
     name: 'SMSMan',
     component: SMSMan
-  },
-  {
-    path: '/companyMan',
-    name: 'companyMan',
-    component: CompanyMan
   },
   {
     path: '/cateAllocation',

@@ -302,7 +302,7 @@
             :on-remove="handleRemoveImg"
             :http-request="successUpload"
             :file-list="editImages"
-            accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
+            accept=".jpg,.jpeg,.png,.ico,.bmp,.JPG,.JPEG,.PNG,.ICO,.BMP"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -1496,7 +1496,7 @@ export default {
       ) {
         this.$message.error(
           '上传图片大小不能超过 ' +
-            this.Json.NoticeRestrictions[5].itemCode / 1024 / 1024 +
+            this.$store.state.globalJson.Json.NoticeRestrictions[5].itemCode / 1024 / 1024 +
             'MB'
         )
         fileList.pop()
