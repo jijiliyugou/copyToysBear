@@ -3,24 +3,24 @@ import axios from 'axios'
 import $Store from '@/store'
 import { router } from '@/router'
 import { Message } from 'element-ui'
-const proEnv = require('@/assets/js/config/pro.env') // 生产环境
-const testEnv = require('@/assets/js/config/test.env') // 测试环境
-const devEnv = require('@/assets/js/config/dev.env') // 本地环境
-const env = process.env.NODE_ENV
-let target = ''
-// 默认是本地环境
-switch (env) {
-  case 'production': // 生产环境
-    target = proEnv.hosturl
-    break
-  case 'test': // 测试环境
-    target = testEnv.hosturl
-    break
-  default:
-    // 本地环境
-    target = devEnv.hosturl
-    break
-}
+// const proEnv = require('@/assets/js/config/pro.env') // 生产环境
+// const testEnv = require('@/assets/js/config/test.env') // 测试环境
+// const devEnv = require('@/assets/js/config/dev.env') // 本地环境
+// const env = process.env.NODE_ENV
+// let target = ''
+// // 默认是本地环境
+// switch (env) {
+//   case 'production': // 生产环境
+//     target = proEnv.hosturl
+//     break
+//   case 'test': // 测试环境
+//     target = testEnv.hosturl
+//     break
+//   default:
+//     // 本地环境
+//     target = devEnv.hosturl
+//     break
+// }
 const createLogRecord = async function (obj) {
   if (obj.Url.includes('CreateLogRecord')) {
     Message.closeAll()

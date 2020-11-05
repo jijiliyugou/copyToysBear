@@ -1119,10 +1119,7 @@
                   fit="contain"
                   :src="item.imageUrl"
                   :key="item.id"
-                  :preview-src-list="[
-                    item.imageUrl &&
-                      item.imageUrl.replace(/_SmallPic/, '_Photo')
-                  ]"
+                  :preview-src-list="[item.imageUrl]"
                 >
                   <div slot="placeholder" class="image-slot">
                     <img
@@ -6825,6 +6822,11 @@ export default {
           flex-wrap: wrap;
           align-content: flex-start;
           justify-content: space-evenly;
+          &::after{
+            width: 46%;
+            content: '';
+            display: block;
+          }
           .itemCube{
             width: 46%;
             height: 260px;
@@ -6877,6 +6879,9 @@ export default {
               position: relative;
               .el-image{
                 width: 100%;
+                img{
+                  width: 100%;
+                }
               }
               .date{
                 position: absolute;
