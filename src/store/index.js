@@ -80,6 +80,7 @@ export default new Vuex.Store({
       state.currentComparnyId = null
       state.globalJson.Json = {}
       state.routers = []
+      state.isLogin = null
     }
   },
   actions: {

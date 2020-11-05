@@ -551,7 +551,9 @@ export default {
       }
     }
   },
-  created () {},
+  created () {
+    if (this.$route.query.id === 'signOut') this.$store.commit('removeLoginItems')
+  },
   mounted () {
     this.refreshCode()
   },

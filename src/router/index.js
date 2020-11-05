@@ -39,11 +39,10 @@ export async function getMenuFuc () {
 }
 // 拦截
 router.beforeEach(async (to, from, next) => {
-  if (to.name === 'Login' && to.query.id === 'signOut') {
-    $Store.commit('handlerLogin', false)
-    await $Store.dispatch('getToken')
-    next()
-  }
+  // if (to.name === 'Login' && to.query.id === 'signOut') {
+  //   await $Store.dispatch('getToken')
+  //   next()
+  // }
   if (!$Store.state.userInfo || !$Store.state.userInfo.accessToken) {
     const res = await getToken()
     const obj = { accessToken: res }
@@ -87,7 +86,6 @@ router.beforeEach(async (to, from, next) => {
   //   }
   // }
   // if (to.name === "Login" && to.query.id) {
-  //   $Store.commit("handlerLogin", false);
   //   $Store.commit("removeLoginItems");
   // }
 })

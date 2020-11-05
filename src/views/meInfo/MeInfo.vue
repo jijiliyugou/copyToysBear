@@ -1342,7 +1342,8 @@
             <span style="color:red;">{{ companyListTotalCount }}</span> 个结果
           </center>
           <div class="listItems" v-if="companyListTotalCount" v-infinite-scroll="companyListLoad" infinite-scroll-disabled="companyLoadDisabled">
-            <div
+            <div class="itemsWrap">
+              <div
               class="item"
               v-for="(item, i) in CompanyList"
               :key="i"
@@ -1359,6 +1360,8 @@
               </el-image>
               <p>{{ item.companyName }}</p>
             </div>
+            </div>
+            <center class="inTheEnd" v-if="isInTheEnd">没有更多了呢</center>
           </div>
           <div v-else-if="showSearchCompanyCount" class="searchCompanyNoData">
             <p>暂无搜到联系人</p>
@@ -4784,6 +4787,9 @@ export default {
     noMore () {
       return this.dataList.length >= this.total
     },
+    isInTheEnd () {
+      return this.CompanyList.length >= this.companyListTotalCount
+    },
     disabled () {
       return this.loading || this.noMore
     },
@@ -5120,14 +5126,21 @@ export default {
           }
         }
         .listItems {
-          padding: 0 10px;
           flex: 1;
           box-sizing: border-box;
-          padding: 10px;
           overflow-x: hidden;
           overflow-y: auto;
           &::-webkit-scrollbar {
             display: none;
+          }
+          .itemsWrap{
+            padding: 10px;
+            padding-bottom: 0;
+          }
+          .inTheEnd{
+            height: 40px;
+            line-height: 40px;
+            background-color: #eeeeed;
           }
           .item {
             display: flex;
