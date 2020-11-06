@@ -529,11 +529,12 @@ export default {
     },
     // 打开编辑产品
     handleEdit (row) {
-      for (const key in this.addProductForm) {
-        this.addProductForm[key] = row[key]
-      }
-      this.cateId = null
-      this.addProductForm.id = row.id
+      // for (const key in this.addProductForm) {
+      //   this.addProductForm[key] = row[key]
+      // }
+      // this.cateId = null
+      // this.addProductForm.id = row.id
+      this.addProductForm = row
       this.productDialogOptions.productDialogTitle = '编辑'
       this.productDialogOptions.openProductDialog = true
     },

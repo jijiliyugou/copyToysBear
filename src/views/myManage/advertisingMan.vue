@@ -73,7 +73,7 @@
       </el-form>
     </div>
     <div class="tableContent" v-if="tableData && tableData.length">
-      <el-table :data="tableData" style="width: 100%" ref="collecTable">
+      <el-table :data="tableData" style="width: 100%" ref="collecTable" :default-sort = "{prop: 'createdOn', order: 'descending'}">
         <el-table-column prop="img" label="广告图片">
           <template slot-scope="scope">
             <el-image
@@ -108,7 +108,7 @@
         </el-table-column>
         <el-table-column prop="platform" label="终端"></el-table-column>
         <el-table-column prop="link" label="广告地址"></el-table-column>
-        <el-table-column prop="createdOn" label="时间">
+        <el-table-column prop="createdOn" label="时间" sortable>
           <template slot-scope="scope">
             {{ scope.row.createdOn && scope.row.createdOn.split('T')[0] }}
           </template>
@@ -581,9 +581,9 @@ export default {
   }
 }
 @{deep} .ql-container{
-  min-height: 200px;
+  height: 300px;
   .ql-editor{
-    min-height: 200px;
+    height: 300px;
   }
 }
 @{deep} .el-upload-list__item {
