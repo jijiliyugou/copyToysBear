@@ -40,7 +40,7 @@
           ref="treeOne"
           :filter-node-method="filterNodeOne"
           expand-on-click-node
-          :check-on-click-node="false"
+          check-on-click-node
           :check-strictly="true"
           node-key="id"
           :props="props"

@@ -56,23 +56,19 @@
             <el-image fit="contain" class="myImg" :src="scope.row.img" :preview-src-list="[scope.row.img && scope.row.img.replace(/_MiddlePic/gi, '_Photo')]">
                     <div
                       slot="placeholder"
-                      class="image-slot"
-                      style="width:150px;margin:0 auto;"
+                      class="errorImg"
                     >
                       <img
-                        class="errorImg"
-                        src="~@/assets/images/暂无图片.png"
+                        src="~@/assets/images/imgError.jpg"
                         alt
                       />
                     </div>
                     <div
                       slot="error"
-                      class="image-slot"
-                      style="width:150px;margin:0 auto;"
+                      class="errorImg"
                     >
                       <img
-                        class="errorImg"
-                        src="~@/assets/images/图片加载失败.png"
+                        src="~@/assets/images/imgError.jpg"
                         alt
                       />
                     </div>
@@ -292,6 +288,14 @@ export default {
     width:80px;
     height:80px;
     cursor: pointer;
+    .errorImg{
+      width:80px;
+      height:80px;
+      img {
+        width:100%;
+        height:100%;
+      }
+    }
   }
 }
 </style>
