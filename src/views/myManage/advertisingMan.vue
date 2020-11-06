@@ -92,15 +92,29 @@
           </template>
         </el-table-column>
         <el-table-column prop="adTitle" label="广告标题"></el-table-column>
+        <el-table-column prop="adType" label="广告类型">
+          <template slot-scope="scope">
+            <template v-for="(item, i) in adTypeList">
+              <el-tag :key="i" v-if="scope.row.adType === item.enumValue" :type="btnTypes[item.enumValue]">{{item.enumName}}</el-tag>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column prop="adType" label="广告位置">
+          <template slot-scope="scope">
+            <template v-for="(item, i) in adPositionList">
+              <el-tag :key="i" v-if="scope.row.adPosition === item.enumValue" :type="btnTypes[item.enumValue]" effect="plain">{{item.enumName}}</el-tag>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column prop="platform" label="终端"></el-table-column>
         <el-table-column prop="link" label="广告地址"></el-table-column>
-        <el-table-column prop="platform" label="平台"></el-table-column>
         <el-table-column prop="createdOn" label="时间">
           <template slot-scope="scope">
             {{ scope.row.createdOn && scope.row.createdOn.split('T')[0] }}
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="150px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="openEdit(scope.row)">编辑</el-button>
             <el-popconfirm
@@ -199,6 +213,7 @@
         <el-button type="danger" @click="closeDialog">关闭</el-button>
       </center>
       <el-upload
+      style="width:0;height:0;overflow: hidden;"
       class="uploadQuill"
       action="/api/File/InsertPic"
       :http-request="successUpload"
@@ -246,6 +261,8 @@ export default {
       ['clean'] // remove formatting button
     ]
     return {
+      btnTypes: ['primary', 'success', 'danger', 'warning', 'info'],
+      urlHeader: process.env.NODE_ENV === 'production' ? 'http://img.toysbear.com/' : 'http://139.9.71.135:8087/',
       adTypeList: [],
       editImages: [],
       platFormList: [{ label: 'PC', value: 'PC' }, { label: 'iOS', value: 'iOS' }, { label: 'Android', value: 'Android' }],
@@ -359,7 +376,6 @@ export default {
       for (const key in this.formDatas) {
         this.formDatas[key] = row[key]
       }
-      console.log(this.formDatas, row)
       this.formDatas.img && (this.editImages[0] = { url: this.formDatas.img })
       this.formDatas.id = row.id
       this.showDialog = true
@@ -416,6 +432,7 @@ export default {
         this.$message.error(res.data.result.msg)
       }
     },
+    // 富文本选图
     async changeUploadQuill (file, fileList) {
       if (file.size > this.$store.state.globalJson.Json.NoticeRestrictions[5].itemCode) {
         this.$message.error(
@@ -429,8 +446,9 @@ export default {
       try {
         const res = await this.successUpload(file.raw)
         if (res.data.result.code === 200) {
-          const result = res.data.result.object[0].filePath
+          const result = this.urlHeader + res.data.result.object[0].filePath
           const quill = this.$refs.myQuillEditor.quill
+          console.log(result)
           // 获取光标所在位置
           const pos = quill.selection.savedRange.index
           // 插入图片到光标位置
@@ -439,6 +457,7 @@ export default {
           quill.setSelection(length + 1)
         } else {
           this.$message.error(res.data.result.msg)
+          fileList.pop()
         }
       } catch (error) {
         console.log(error)
