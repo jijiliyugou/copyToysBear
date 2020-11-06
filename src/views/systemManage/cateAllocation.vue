@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="blockBox">
+        <div class="blockBox">
         <div class="block">
         <div style="display:flex;justify-content:space-between;">
           <el-input placeholder="输入关键字进行过滤" prefix-icon="el-icon-search" clearable v-model="filterTextOne"></el-input>
@@ -328,9 +328,13 @@ export default {
       display: flex;
       justify-content: space-between;
       .block{
-      flex: 1;
-      border: 1px solid #eff2f6;
-      padding-bottom: 10px;
+        flex: 1;
+        border: 1px solid #eff2f6;
+        padding-bottom: 10px;
+        .el-tree{
+          max-height: 550px;
+          overflow: auto;
+        }
       }
     }
   }
