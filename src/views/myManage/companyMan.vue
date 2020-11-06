@@ -66,11 +66,28 @@
         </el-form-item>
       </el-form>
     </div>
+    <div class="repeatPhone">
+      <div class="phones">
+        <div class="phonesTitle">重复电话：</div>
+        <div class="phonesList">
+          <el-tag v-for="item in 30" :key="item" @click="searchPhone(17603033452)">17603033452</el-tag>
+        </div>
+      </div>
+      <!-- <div class="statistics">
+        <div class="statisticsTitle">
+          数据统计：
+        </div>
+        <div class="statisticsContent">
+
+        </div>
+      </div> -->
+    </div>
     <!-- 列表 -->
     <div class="tableContent">
       <el-table
         :data="tableData"
         style="width: 100%"
+        :header-cell-style="headerStyle"
       >
         <el-table-column prop="hallName" label="展厅名称"></el-table-column>
         <el-table-column prop="hallNumber" label="展厅编号"></el-table-column>
@@ -81,8 +98,14 @@
            {{ scope.row.linkman?scope.row.linkman:scope.row.linkman1?scope.row.linkman1:scope.row.linkman2}}
           </template>
         </el-table-column>
-        <el-table-column prop="handset" label="联系电话">
-          <template slot-scope="scope">
+        <el-table-column prop="handset" label="联系电话" sortable>
+          <!-- <el-table-column
+          width="200"
+          align="center"
+          prop="handset"
+          label="相同电话：17603033458">
+        </el-table-column> -->
+        <template slot-scope="scope">
            {{ scope.row.handset?scope.row.handset:scope.row.handset1?scope.row.handset1:scope.row.handset2}}
           </template>
         </el-table-column>
@@ -115,6 +138,7 @@
 </template>
 
 <script>
+// 获取重复手机号封装
 import bsTop from '@/components/BsTop'
 import bsFooter from '@/components/Footer'
 export default {
@@ -136,6 +160,21 @@ export default {
     }
   },
   methods: {
+    // 表头类名
+    headerStyle ({ row, column, rowIndex, columnIndex }) {
+      if (rowIndex) {
+        return 'background-color:#1989fa;color:#fff;font-weight:400;'
+      }
+      var list = [
+        { id: 0 }
+      ]
+    },
+    // 点击未安装电话列表
+    searchPhone (phone) {
+      // this.searchForm.keyword = phone
+      // this.search()
+      this.$message.error('这是假数据哦，接口正在开发中......')
+    },
     // 列表查询
     search () {
       this.currentPage = 1
@@ -189,6 +228,10 @@ export default {
         else this.$message.error('请选择展厅')
       }
     },
+    // 表格排序
+    sortMethod (a, b) {
+      return Number(a.handset) - Number(b.handset)
+    },
     // 切换当前页
     currentChange (page) {
       this.currentPage = page
@@ -199,6 +242,53 @@ export default {
       this.pageSize = pageSize
       if (this.currentPage * pageSize > this.totalCount) return false
       this.getLittleBearInstall()
+    },
+    // 初始化饼状图
+    drawLine () {
+      // 基于准备好的dom，初始化echarts实例
+      const myChart = this.$echarts.init(document.querySelector('.statisticsContent'))
+      myChart.on('click', function (params) {
+        console.log(params.data)
+      })
+      // 绘制图表
+      const options = {
+        title: {
+          text: '手机数据统计',
+          subtext: '重复手机统计',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        color: ['#f56c6c', '#5fadff'],
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: ['重复手机号', '正常手机号']
+        },
+        series: [
+          {
+            name: '手机数据统计',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [
+              { value: 100, name: '重复手机号' },
+              { value: 310, name: '正常手机号' }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      }
+
+      myChart.setOption(options)
     }
   },
   watch: {
@@ -206,6 +296,7 @@ export default {
   mounted () {
     this.getOrgCompanyList()
     this.getClientTypeList()
+    // this.drawLine()
   },
   created () {}
 }
@@ -222,6 +313,62 @@ export default {
 .tableContent {
   padding: 20px 0;
 }
+// .repeatPhone{
+//   font-size:14px;
+//   max-height: 300px;
+//   box-sizing: border-box;
+//   color:#909399;
+//   border: 1px solid #ebeef5;
+//   padding: 10px;
+//   display: flex;
+  .phones{
+    max-height: 300px;
+    margin-right: 5px;
+    font-size:14px;
+    display: flex;
+    color:#909399;
+    border: 1px solid #ebeef5;
+    padding: 5px;
+    .phonesTitle{
+      width: 80px;
+      box-sizing: border-box;
+      padding: 5px;
+      color: #000;
+      font-weight: 600;
+    }
+    .phonesList{
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      .el-tag {
+        margin: 5px;
+        cursor: pointer;
+        &:hover{
+          background-color: #409eff;
+          color: #fff;
+        }
+      }
+    }
+  }
+  .statistics{
+    width: 50%;
+    margin-left: 5px;
+    border: 1px solid #ebeef5;
+    padding: 5px;
+    display: flex;
+    .statisticsTitle{
+      min-width: 100px;
+      padding: 5px;
+      color: #000;
+      font-weight: 600;
+    }
+    .statisticsContent{
+      flex: 1;
+    }
+  }
+// }
 .demo-form-inline{
   .el-form-item{
     @{deep} .el-form-item__content{

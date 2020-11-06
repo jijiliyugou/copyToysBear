@@ -13,6 +13,7 @@
     "agora-rtm-sdk": "^1.4.0",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "echarts": "^4.9.0",
     "el-table-infinite-scroll": "^1.0.10",
     "element-tree-grid": "^0.1.4",
     "element-ui": "^2.13.2",

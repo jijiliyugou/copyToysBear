@@ -20,6 +20,9 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 Vue.use(VueQuillEditor)
 Vue.use(VueClipboard)
 Vue.prototype.$setWs = wsConnection

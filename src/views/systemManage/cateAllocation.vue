@@ -65,7 +65,7 @@
           node-key="id"
           @check="handleCheckChangeTwo"
           @node-click="treeNodeClick"
-          :check-on-click-node="false"
+          check-on-click-node
           :check-strictly="true"
           expand-on-click-node>
           <span class="custom-tree-node" slot-scope="{ node, data }">

@@ -56,7 +56,7 @@
         <div class="offerParams">
           <div class="left">
             <p>报价参数：{{ productInfo && productInfo.bidPrice }}</p>
-            <p>报价员：{{ productInfo && productInfo.linkman }}</p>
+            <p>联系人：{{ productInfo && productInfo.linkman }}</p>
           </div>
           <div class="right"></div>
         </div>

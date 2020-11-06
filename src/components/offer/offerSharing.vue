@@ -60,7 +60,7 @@
           </p>
           <p>
             联系人：<span class="content">{{
-            productInfo && productInfo.linkman || "小竹熊为您服务咯"
+            productInfo && productInfo.linkman
           }}</span>
           </p>
         </div>
