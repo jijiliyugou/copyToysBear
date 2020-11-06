@@ -321,7 +321,7 @@ export default {
         // 二维码登录成功获取菜单
         try {
           const re = await this.$http.post('/api/GetUserRoleMenu', {})
-          if (re.data.result.code === 200 && re.data.result.item) {
+          if (re.data.result.code === 200) {
             this.$store.commit('setRouters', re.data.result.item.modulesList)
             await getMenuFuc()
             const Json = {}

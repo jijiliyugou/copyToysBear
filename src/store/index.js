@@ -75,12 +75,11 @@ export default new Vuex.Store({
       state.wsOrderMsg = null
     },
     removeLoginItems (state) {
-      state.token = null
-      state.userInfo = {}
       state.currentComparnyId = null
       state.globalJson.Json = {}
       state.routers = []
       state.isLogin = null
+      this.dispatch('getToken')
     }
   },
   actions: {
