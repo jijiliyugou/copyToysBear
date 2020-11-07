@@ -91,6 +91,8 @@ export default new Vuex.Store({
       if (res.data.result.code === 200) {
         const obj = { accessToken: res.data.result.item }
         commit('setToken', obj)
+      } else {
+        commit('setToken', {})
       }
     }
   },
