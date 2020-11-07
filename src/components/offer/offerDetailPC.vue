@@ -55,11 +55,34 @@
     <div class="offerInfoContent">
       <el-card class="offerCard">
         <div class="offerParams">
-          <div class="left">
-            <p>报价参数：{{ productInfo && productInfo.bidPrice }}</p>
-            <p>报价员：{{ productInfo && productInfo.linkman }}</p>
+         <div class="top">
+            <div class="theme">
+            {{ productInfo && productInfo.title }}
+            </div>
+            <div class="contacts">
+              <p>联系人：<span>{{ productInfo && productInfo.linkman }}</span></p>
+            </div>
           </div>
-          <div class="right"></div>
+          <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
+            <div class="left">
+              <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
+              <p>客户代码：<span>{{ productInfo && productInfo.client_nu }}</span></p>
+              <p>尺码：<span>{{ productInfo && productInfo.size }}</span></p>
+            </div>
+            <div class="middel">
+              <p>币种：<span>{{ productInfo && productInfo.cu_de }}</span></p>
+              <p>利润：<span>{{ productInfo && productInfo.profit }}</span></p>
+              <p>取舍方式：<span>{{ productInfo && productInfo.rejectionMethod }}</span></p>
+            </div>
+            <div class="right">
+              <p>汇率：<span>{{ productInfo && productInfo.exchange }}</span></p>
+              <p>总费用：<span>{{ productInfo && productInfo.totalCost }}</span></p>
+              <p>小数位数：<span>{{ productInfo && productInfo.decimalPlaces }}</span></p>
+            </div>
+          </div>
+          <div class="supplierParams" v-else>
+            <p>报价参数：<span>{{ productInfo && productInfo.bidPrice }}</span></p>
+          </div>
         </div>
         <div class="dates">
           <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo && productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
@@ -274,7 +297,7 @@ export default {
   margin: 0 auto;
   .offerCard{
     margin: 10px 0;
-    .offerParams, .dates{
+    .dates{
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -300,14 +323,44 @@ export default {
         }
     }
     .offerParams{
-      margin-bottom: 40px;
-      .left{
-        flex: 1;
+      margin-bottom: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      .top{
+        display: flex;
+        .theme {
+          width: 50%;
+          padding: 10px;
+          font-weight: 600;
+        }
+        .contacts{
+          padding: 10px;
+          width: 50%;
+          span{
+              color: #c0c4cc;
+            }
+        }
+      }
+      .companyParams{
         display: flex;
         justify-content: space-between;
+        .left,.right,.middel{
+          width: 33.33%;
+          p{
+            padding: 10px;
+            span{
+              color: #c0c4cc;
+            }
+          }
+        }
       }
-      .right{
-        flex: 1;
+      .supplierParams{
+        p {
+          padding: 10px;
+          span{
+              color: #c0c4cc;
+            }
+        }
       }
     }
   }

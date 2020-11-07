@@ -52,17 +52,29 @@
     </div>
     <el-card class="box-card">
       <div class="textContent">
-        <div class="top">
-          <p>
-            报价参数：<span class="content">{{
-            productInfo && productInfo.title
-          }}</span>
-          </p>
-          <p>
-            联系人：<span class="content">{{
-            productInfo && productInfo.linkman
-          }}</span>
-          </p>
+        <div class="offerParams">
+          <div class="theme">
+            {{ productInfo && productInfo.title }}
+          </div>
+          <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
+            <div class="left">
+              <p><em>联 系 人：</em><span>{{ productInfo && productInfo.linkman }}</span></p>
+              <p><em>报价方式：</em><span>{{ productInfo && productInfo.offerMethod }}</span></p>
+              <p><em>客户代码：</em><span>{{ productInfo && productInfo.client_nu }}</span></p>
+              <p><em>币  种：</em><span>{{ productInfo && productInfo.cu_de }}</span></p>
+              <p><em>汇  率：</em><span>{{ productInfo && productInfo.exchange }}</span></p>
+            </div>
+            <div class="right">
+              <p><em>利 润：</em><span>{{ productInfo && productInfo.profit }}</span></p>
+              <p><em>总 费 用：</em><span>{{ productInfo && productInfo.totalCost }}</span></p>
+              <p><em>尺 码：</em><span>{{ productInfo && productInfo.size }}</span></p>
+              <p><em>取舍方式：</em><span>{{ productInfo && productInfo.rejectionMethod }}</span></p>
+              <p><em>小数位数：</em><span>{{ productInfo && productInfo.decimalPlaces }}</span></p>
+            </div>
+          </div>
+          <div class="supplierParams" v-else>
+            <p><em>报价参数：</em><span>{{ productInfo && productInfo.bidPrice }}</span></p>
+          </div>
         </div>
         <div class="dates">
           <p class="dateIconBox"><i class="dateIcon"></i>{{ productInfo && productInfo.createdOn && productInfo.createdOn.split('T')[0] }}</p>
@@ -515,16 +527,44 @@ export default {
       display: flex;
       flex-direction:column;
       justify-content: space-around;
-      padding:10px 0;
-      .top{
+      padding:0.133333rem 0;
+      .offerParams{
+      margin-bottom: 0.133333rem;
+      border-radius: 0.066667rem;
+      border-bottom: 1px solid #ccc;
+        .theme {
+          width: 50%;
+          padding: 10px;
+          font-weight: 600;
+        }
+      .companyParams{
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        min-height: 1.066667rem;
-        p{
-          flex: 1;
+        .left,.right{
+          width: 50%;
+          p{
+            padding: 0.133333rem;
+            display: flex;
+            em{
+              width: 1.6rem;
+              text-align-last: justify;
+              text-align: justify;
+          }
+            span{
+              color: #c0c4cc;
+            }
+          }
         }
       }
+      .supplierParams{
+        p {
+          padding: 0.133333rem;
+          span{
+              color: #c0c4cc;
+            }
+        }
+      }
+    }
       .dates{
       display: flex;
       justify-content: space-between;
