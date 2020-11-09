@@ -1709,9 +1709,19 @@
             :move="moveGonggaoImg"
           >
               <el-col :span="8"  v-for="(value, i) in fileList" :key="i">
-                  <div class="imgItemBox">
+                  <div class="imgItemBox" @mouseenter="itemImgNter(value.uid)" @mouseleave="itemImgLeave">
                     <el-image fit="contain" :src="value.url" :preview-src-list="[value.url]"></el-image>
+                    <div class="itemIcon" v-show="isHoverImgItem ===  value.uid">
+                      <span>
+                        <i @click="opemViewer(value.url)" class="el-icon-zoom-in"/>
+                        <i @click="deleteItemImg(value.uid)" class="el-icon-delete"/>
+                      </span>
+                    </div>
                   </div>
+                  <el-image-viewer
+                    v-if="showViewer"
+                    :on-close="closeViewer"
+                    :url-list="viewerVlaue" />
               </el-col>
               <el-col :span="8">
               <el-upload
@@ -2494,6 +2504,7 @@
   </el-container>
 </template>
 <script>
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 import bsTop from '@/components/BsTop.vue'
 import bsFooter from '@/components/Footer'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
@@ -2505,10 +2516,13 @@ export default {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   components: {
-    bsTop, bsFooter, BMapComponent, draggable
+    bsTop, bsFooter, BMapComponent, draggable, ElImageViewer
   },
   data () {
     return {
+      viewerVlaue: [],
+      showViewer: false,
+      isHoverImgItem: null,
       drag: false,
       isCheckCube: true,
       myProductSearchValue: null,
@@ -4679,8 +4693,35 @@ export default {
       evt.newIndex  // 可以知道拖动后的位置
     },
     moveGonggaoImg(evt, originalEvent) {
+      this.isHoverImgItem = null
       console.log(evt , 'move')
       console.log(originalEvent) //鼠标位置
+    },
+    // 鼠标移入发公告
+    itemImgNter (id) {
+      this.isHoverImgItem = id
+    },
+    // 鼠标移出发公告
+    itemImgLeave () {
+      this.isHoverImgItem = null
+    },
+    // 点击删除图片预览
+    deleteItemImg (id) {
+      this.fileList.forEach((val, i) => {
+        if (val.uid === id) {
+           this.fileList.splice(i, 1)
+        }
+      });
+      console.log(this.fileList)
+    },
+    // 点击打开预览发公告大图
+    opemViewer (value) {
+      this.viewerVlaue = [value]
+      this.showViewer = true
+    },
+    // 点击关闭预览发公告大图
+    closeViewer() {
+      this.showViewer = false
     }
   },
   mounted () {
@@ -7470,6 +7511,29 @@ export default {
           width: 100%;
           height: 0;
           padding-bottom: 100%;
+          position: relative;
+          border-radius: 5px;
+          // border: 1px solid #dfdfdf;
+          overflow: hidden;
+          .itemIcon{
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            span {
+              position: absolute;
+              left:50%;
+              top:50%;
+              transform: translate(-50%,-50%);
+              i{
+                color: #fff;
+                margin: 0 5px;
+                cursor: pointer;
+              }
+            }
+          }
          .el-image {
           width: 100%;
           height: 100%;
@@ -7486,6 +7550,11 @@ export default {
           }
         }
       }
+      @{deep} .el-image-viewer__wrapper{
+            .el-image-viewer__mask {
+              opacity: .1;
+            }
+          }
         .imgsItem {
           width: 100%;
           height: 100%;
