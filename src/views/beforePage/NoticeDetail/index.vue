@@ -31,7 +31,7 @@
                   style="cursor: pointer;"
                   :src="item"
                   :key="i"
-                  @click="uploadImg(item)"
+                  @click="openImg(i)"
                 >
                   <div slot="placeholder" class="image-slot">
                     <img
@@ -52,7 +52,7 @@
             </template>
             <template v-else>
               <el-carousel-item>
-                <el-image fit="contain" src="~@/assets/images/zanwutupian1.png">
+                <el-image fit="contain" src="~@/assets/images/zanwutupian1.png" @click="openImg">
                   <div slot="placeholder" class="image-slot">
                     <img
                       class="errorImg"
@@ -71,6 +71,10 @@
               </el-carousel-item>
             </template>
           </el-carousel>
+          <el-image-viewer
+                    v-if="showViewer"
+                    :on-close="closeViewer"
+                    :url-list="viewerImgList" />
         </div>
         <el-dialog class="el-dialog-div" :visible.sync="dialogImgUpload" :center="true" destroy-on-close>
             <img style="object-fit:contain;width:100%;" :src="imgUrl" alt />
@@ -197,9 +201,14 @@
 </template>
 
 <script>
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 export default {
+  components: { ElImageViewer },
   data () {
     return {
+      isHoverImg: false,
+      showViewer: false,
+      viewerImgList: [],
       dialogImgUpload: false,
       imgUrl: null,
       activeIndex: 0,
@@ -209,13 +218,59 @@ export default {
     }
   },
   methods: {
-    uploadImg (img) {
-      this.imgUrl = img
-      this.dialogImgUpload = true
+    // 点击关闭预览大图
+    closeViewer () {
+      // 移除事件
+      $('.el-image-viewer__btn').unbind('mouseenter')
+      $('.el-image-viewer__btn').unbind('mouseleave')
+      $('.el-image-viewer__img').unbind('mouseleave')
+      $('.el-image-viewer__img').unbind('mouseleave')
+      this.showViewer = false
     },
-    changeIndex (i) {
-      this.activeIndex = i
-      this.imgUrl = this.noticeData.imgList[i]
+    // 点击显示预览大图da
+    openImg (index) {
+      this.showViewer = true
+      const tempImgList = this.noticeData.imgList.map(val => {
+        if (val) return val
+      })
+      const temp = []
+      for (let i = 0; i < index; i++) {
+        temp.push(tempImgList.shift())
+      }
+      this.viewerImgList = tempImgList.concat(temp)
+      this.$nextTick(() => {
+        $('.el-image-viewer__btn').mouseenter(() => {
+          this.isHoverImg = true
+        })
+        $('.el-image-viewer__btn').mouseleave(() => {
+          this.isHoverImg = false
+        })
+      })
+    },
+    // 轮播图轮播
+    changeIndex (index) {
+      this.activeIndex = index
+      if (this.showViewer) {
+        this.$nextTick(() => {
+          $('.el-image-viewer__img').mouseenter((e) => {
+            this.isHoverImg = true
+          })
+          $('.el-image-viewer__img').mouseleave((e) => {
+            this.isHoverImg = false
+          })
+        })
+        console.log(this.isHoverImg)
+        if (!this.isHoverImg) {
+          const tempImgList = this.noticeData.imgList.map(val => {
+            if (val) return val
+          })
+          const temp = []
+          for (let i = 0; i < index; i++) {
+            temp.push(tempImgList.shift())
+          }
+          this.viewerImgList = tempImgList.concat(temp)
+        }
+      }
     },
     leftmove () {
       const _that = this
