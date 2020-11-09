@@ -1710,10 +1710,10 @@
           >
               <el-col :span="8"  v-for="(value, i) in fileList" :key="i">
                   <div class="imgItemBox" @mouseenter="itemImgNter(value.uid)" @mouseleave="itemImgLeave">
-                    <el-image fit="contain" :src="value.url" :preview-src-list="[value.url]"></el-image>
+                    <el-image fit="contain" :src="value.url"></el-image>
                     <div class="itemIcon" v-show="isHoverImgItem ===  value.uid">
                       <span>
-                        <i @click="opemViewer(value.url)" class="el-icon-zoom-in"/>
+                        <i @click="opemViewer(i)" class="el-icon-zoom-in"/>
                         <i @click="deleteItemImg(value.uid)" class="el-icon-delete"/>
                       </span>
                     </div>
@@ -1721,7 +1721,7 @@
                   <el-image-viewer
                     v-if="showViewer"
                     :on-close="closeViewer"
-                    :url-list="viewerVlaue" />
+                    :url-list="viewerImgList" />
               </el-col>
               <el-col :span="8">
               <el-upload
@@ -2520,7 +2520,7 @@ export default {
   },
   data () {
     return {
-      viewerVlaue: [],
+      viewerImgList: [],
       showViewer: false,
       isHoverImgItem: null,
       drag: false,
@@ -4715,9 +4715,17 @@ export default {
       console.log(this.fileList)
     },
     // 点击打开预览发公告大图
-    opemViewer (value) {
-      this.viewerVlaue = [value]
-      this.showViewer = true
+    opemViewer (index) {
+      this.showViewer = true;
+      let tempImgList = this.fileList.map(val=>{
+        if (val && val.url) return val.url
+      })
+      let temp = [];
+      for (let i = 0; i < index; i++) {
+        temp.push(tempImgList.shift());
+      }
+      this.viewerImgList = tempImgList.concat(temp);
+      console.log(this.viewerImgList)
     },
     // 点击关闭预览发公告大图
     closeViewer() {
