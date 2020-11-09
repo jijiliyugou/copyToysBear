@@ -51,6 +51,7 @@
           </el-form-item>
           <el-form-item label="终端查询">
             <el-select
+            @clear="clearSelect"
             size="small"
               clearable
               v-model="formInline.platform"
@@ -95,14 +96,14 @@
         <el-table-column prop="adType" label="广告类型">
           <template slot-scope="scope">
             <template v-for="(item, i) in adTypeList">
-              <el-tag :key="i" v-if="scope.row.adType === item.enumValue" :type="btnTypes[item.enumValue]">{{item.enumName}}</el-tag>
+              <el-tag disable-transitions :key="i" v-if="scope.row.adType === item.enumValue" :type="btnTypes[item.enumValue]">{{item.enumName}}</el-tag>
             </template>
           </template>
         </el-table-column>
         <el-table-column prop="adType" label="广告位置">
           <template slot-scope="scope">
             <template v-for="(item, i) in adPositionList">
-              <el-tag :key="i" v-if="scope.row.adPosition === item.enumValue" :type="btnTypes[item.enumValue]" effect="plain">{{item.enumName}}</el-tag>
+              <el-tag disable-transitions :key="i" v-if="scope.row.adPosition === item.enumValue" :type="btnTypes[item.enumValue]" effect="plain">{{item.enumName}}</el-tag>
             </template>
           </template>
         </el-table-column>
@@ -358,6 +359,10 @@ export default {
     }
   },
   methods: {
+    // 清空终端下拉事件
+    clearSelect () {
+      this.formInline.platform = 'all'
+    },
     // 打开编辑
     openEdit (row) {
       this.formDatas = {

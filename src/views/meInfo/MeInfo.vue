@@ -1696,12 +1696,29 @@
               ></el-input>
             </el-form-item>
           </el-form>
-
           <div class="gonggaoImgList">
-            <el-upload
+            <draggable
+            class="syllable_ul"
+            element="ul"
+            :list="fileList"
+            :options="{group:'id', animation:150}"
+            :no-transition-on-drag="true"
+            @change="changeGonggaoImg"
+            @start="startGonggaoImg"
+            @end="endGonggaoImg"
+            :move="moveGonggaoImg"
+          >
+              <el-col :span="8"  v-for="(value, i) in fileList" :key="i">
+                  <div class="imgItemBox">
+                    <el-image fit="contain" :src="value.url" :preview-src-list="[value.url]"></el-image>
+                  </div>
+              </el-col>
+              <el-col :span="8">
+              <el-upload
               action="#"
               list-type="picture-card"
               :file-list="fileList"
+              :show-file-list="false"
               :limit="imgAndVideoNum"
               :on-change="changeFile"
               class="imgsItem"
@@ -1766,6 +1783,8 @@
                 </span>
               </div>
             </el-upload>
+              </el-col>
+          </draggable>
             <el-dialog :visible.sync="dialogVisibleImg" destroy-on-close>
               <img
                 v-if="dialogVisibleImg"
@@ -2480,15 +2499,17 @@ import bsFooter from '@/components/Footer'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import Recorder from 'recorder-core/recorder.mp3.min'
 import BMapComponent from '@/components/map.vue'
+import draggable from 'vuedraggable'
 export default {
   directives: {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   components: {
-    bsTop, BMapComponent, bsFooter
+    bsTop, bsFooter, BMapComponent, draggable
   },
   data () {
     return {
+      drag: false,
       isCheckCube: true,
       myProductSearchValue: null,
       companyLoadDisabled: true,
@@ -4635,6 +4656,31 @@ export default {
     // 切换我的产品展示格式类型
     checkMoreEvent () {
       this.isCheckCube = !this.isCheckCube
+    },
+    //evt里面有两个值，一个evt.added 和evt.removed  可以分别知道移动元素的ID和删除元素的ID
+    changeGonggaoImg(evt) {
+      console.log(evt , 'change...')
+      // const newVal = this.fileList[evt.moved.oldIndex]
+      // this.fileList[evt.moved.oldIndex] = this.fileList[evt.moved.newIndex]
+      // this.fileList[evt.moved.newIndex] = newVal
+      console.log(this.fileList)
+    },
+    //start ,end ,add,update, sort, remove 得到的都差不多
+    startGonggaoImg(evt) {
+      this.drag = true
+      console.log(evt , 'start...')
+    },
+    endGonggaoImg(evt) {
+      this.drag = true
+      evt.item //可以知道拖动的本身
+      evt.to    // 可以知道拖动的目标列表
+      evt.from  // 可以知道之前的列表
+      evt.oldIndex  // 可以知道拖动前的位置
+      evt.newIndex  // 可以知道拖动后的位置
+    },
+    moveGonggaoImg(evt, originalEvent) {
+      console.log(evt , 'move')
+      console.log(originalEvent) //鼠标位置
     }
   },
   mounted () {
@@ -7417,26 +7463,78 @@ export default {
     }
   }
   .gonggaoImgList {
-    .imgsItem {
-      padding-left: 12px;
-      @{deep} img {
-        width: 102px;
-        height: 102px;
+    .syllable_ul{
+      .el-col {
+        margin-top: 5px;
+        .imgItemBox{
+          width: 100%;
+          height: 0;
+          padding-bottom: 100%;
+         .el-image {
+          width: 100%;
+          height: 100%;
+          padding-bottom: 100%;
+          position: relative;
+          @{deep} img {
+            position: absolute;
+            width:100%;
+            height:100%;
+            top:0;
+            left:0;
+            bottom: 0;
+            right: 0;
+          }
+        }
       }
-      @{deep} video {
-        width: 102px;
-        height: 102px;
+        .imgsItem {
+          width: 100%;
+          height: 100%;
+          @{deep} .el-upload{
+            width: 100%;
+            height:0;
+            padding-bottom:100%;
+            position: relative;
+            .el-icon-plus{
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
+        }
       }
-      &::v-deep li.el-upload-list__item.is-ready {
-        width: 30%;
-        height: 102px;
-      }
-      &::v-deep .el-upload.el-upload--picture-card {
-        width: 102px;
-        height: 102px;
-        line-height: 102px;
-        text-align: center;
-      }
+    //   @{deep} .imgsItem {
+    //   max-width: 124px;
+    //   max-height: 124px;
+    //   box-sizing: border-box;
+    //   border: 1px dashed #c0ccda;
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+    //   overflow: hidden;
+    //   .el-upload {
+    //     border: none;
+    //     width: 100%;
+    //     display: flex;
+    //     align-items: center;
+    //     justify-content: center;
+    //       @{deep} img {
+    //       width: 100%;
+    //       height:100%;
+    //     }
+    //   }
+    //   @{deep} video {
+    //     width: 100%;
+    //     height:100%;
+    //   }
+    // }
+    &:after{
+      content: " ";
+      height: 0;
+      clear: both;
+      display: block;
+      visibility: hidden;
+    }
     }
   }
   .sendGonggaoBtn {
