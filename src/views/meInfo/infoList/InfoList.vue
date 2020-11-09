@@ -300,7 +300,9 @@ export default {
       const res = await this.$http.post('/api/GetOrderMessageCount', {})
       if (res.data.result.code === 200) {
         const list = res.data.result.item.result
+        let allCount = 0
         for (let i = 0; i < list.length; i++) {
+          allCount += list[i].count
           if (list[i].sampleFrom === 'HALL') {
             this.companyType.hall.count = list[i].count
             this.companyType.hall.time = list[i].latesTime
@@ -312,6 +314,7 @@ export default {
             this.companyType.supplier.time = list[i].latesTime
           }
         }
+        this.$emit('orderInfoCount', allCount)
       }
     },
     // 获取消息列表

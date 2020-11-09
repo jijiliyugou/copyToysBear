@@ -15,16 +15,22 @@
           @cancelSendGonggao="active2 = null"
           @showFindLiaotian="showFindLiaotian"
           @showOrderCompanyList="showOrderCompanyList"
+          :findCount="findCount"
+          @orderInfoCount="getOrderInfoCount"
         ></router-view>
         <!-- tabs -->
         <div class="footer">
           <router-link to="infoList" class="li" @click.native="offDetail()">
-            <i class="el-icon-s-comment"></i>
-            <p>消息</p>
+            <el-badge :hidden="allInfoCount < 1" :value="allInfoCount">
+              <i class="el-icon-s-comment"></i>
+              <p>消息</p>
+            </el-badge>
           </router-link>
           <router-link to="findList" class="li" @click.native="offDetail()">
-            <i class="el-icon-s-help"></i>
-            <p>发现</p>
+            <el-badge :hidden="findCount < 1" :value="findCount">
+              <i class="el-icon-s-help"></i>
+              <p>发现</p>
+            </el-badge>
           </router-link>
           <router-link to="newSletter" class="li" @click.native="offDetail()">
             <i class="el-icon-s-custom"></i>
@@ -2520,6 +2526,9 @@ export default {
   },
   data () {
     return {
+      infoCount: 0,
+      findCount: 0,
+      orderInfoCount: 0,
       viewerImgList: [],
       showViewer: false,
       isHoverImgItem: null,
@@ -4730,6 +4739,28 @@ export default {
     // 点击关闭预览发公告大图
     closeViewer() {
       this.showViewer = false
+    },
+    // 获取玩具圈未读条数
+    async getNoticeUnreadTotal () {
+      const res = await this.$http.post('/api/GetNoticeUnreadTotal')
+      if (res.data.result.code === 200) {
+        this.findCount = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 获取全部未读消息条数
+    async getAllMessagesCount () {
+      const res = await this.$http.post('/api/GetAllMessagesCount')
+      if (res.data.result.code === 200) {
+        this.infoCount = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 获取所有订单未读消息
+    getOrderInfoCount (value) {
+     this.orderInfoCount = value
     }
   },
   mounted () {
@@ -4737,6 +4768,8 @@ export default {
     this.getDataList()
     this.login()
     this.$store.commit('clearWsMsg') // 清空已读未读
+    this.getNoticeUnreadTotal()
+    this.getAllMessagesCount()
   },
   async created () {
     document.onclick = () => {
@@ -4870,6 +4903,10 @@ export default {
     }
   },
   computed: {
+    // 计算订单和消息未读的总和
+    allInfoCount () {
+      return this.orderInfoCount + this.infoCount
+    },
     updateLiaotian () {
       return this.signalROptions.showmsg
     },
