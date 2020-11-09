@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="wanjuquanTop">
-      <h4>玩具圈</h4>
+      <h4>玩具圈 <span v-if="findCount" style="color:#f56c6c;">{{findCount}}</span></h4>
       <el-badge :value="8" @click.native="openInfoList">
         <div class="infoList"></div>
       </el-badge>
@@ -187,6 +187,7 @@
 export default {
   data () {
     return {
+      findCount: 0,
       jubaoItem: null,
       jubaoActive: null,
       selectJubaoValue: null,
@@ -229,11 +230,22 @@ export default {
       this.currentPage = 1
       this.getDataList()
     })
+    this.getNoticeUnreadTotal()
   },
   beforeDestroy () {
     this.$root.eventHub.$off('UpdateFind')
   },
   methods: {
+    // 获取玩具圈未读条数
+    async getNoticeUnreadTotal () {
+      const res = await this.$http.post('/api/GetNoticeUnreadTotal')
+      if (res.data.result.code === 200) {
+        console.log(res.data.result)
+        this.findCount = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     show3Active (i) {
       this.showActive === i ? (this.showActive = null) : (this.showActive = i)
     },
