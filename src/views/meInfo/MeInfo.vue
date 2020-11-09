@@ -5069,8 +5069,6 @@ export default {
             justify-content: space-between;
             align-items: center;
           }
-          .subRemark{
-          }
           p {
             padding-bottom: 10px;
           }
