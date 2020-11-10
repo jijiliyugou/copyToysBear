@@ -671,6 +671,7 @@ export default {
           }
         }
         .searchOptions {
+          flex: 1;
           display: flex;
           box-sizing: border-box;
           p {
