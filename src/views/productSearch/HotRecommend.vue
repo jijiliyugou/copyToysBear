@@ -469,9 +469,11 @@ export default {
     }
   },
   mounted () {
+    this.$store.commit('handlerBeforeSearchImgPreview', null)
+    this.$store.commit('handlerHttpTime', null)
+    this.$store.commit('handlerHttpContent', null)
     if (this.$route.params.id) {
       this.productDetail(this.$route.params.id)
-      this.$store.commit('handlerBeforeSearchImgPreview', null)
     } else {
       this.getProduct()
       this.$root.eventHub.$on('toHotRecommend', () => {
@@ -497,9 +499,6 @@ export default {
   beforeDestroy () {
     this.$root.eventHub.$off('toHotRecommend')
     this.$store.commit('handlerhotSearchImg', null)
-    this.$store.commit('handlerBeforeSearchImgPreview', null)
-    this.$store.commit('handlerHttpTime', null)
-    this.$store.commit('handlerHttpContent', null)
   }
 }
 </script>
