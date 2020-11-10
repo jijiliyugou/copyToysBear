@@ -3721,51 +3721,47 @@ export default {
         if (valid) {
           let urls = ''
           let fileType = ''
-          let res = ''
+          let res;
           if (this.fileList && this.fileList.length > 0) {
             const fd = new FormData()
-            // for (const val of this.fileList) {
-            //   fd.append('file', val.raw)
-            //   fd.append (val.name, );
-            // }
-            for (let i = 0; i < this.fileList.length; i++) {
-              fd.append('file', this.fileList[i].raw, this.fileList[i].name)
-              fd.append (this.fileList[i].name, i);
+            for (const val of this.fileList) {
+              fd.append('file', val.raw)
+              fd.append (val.name, );
             }
             fd.append('BusinessType', 'Notice')
-            // res = await this.$http.post('/api/File/InsertPic', fd, {
-            //   headers: { 'Content-Type': 'multipart/form-data' }
-            // })
-            // if (res.data.result.code === 200) {
-            //   urls = res.data.result.object.map(re => re.filePath)
-            // }
-            // fileType = this.fileList[0].raw.type.split('/')[0]
+            res = await this.$http.post('/api/File/InsertPic', fd, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            if (res.data.result.code === 200) {
+              urls = res.data.result.object.map(re => re.filePath)
+            }
+            fileType = this.fileList[0].raw.type.split('/')[0]
           }
-          // const result = await this.$http.post('/api/CreateBearNotice', {
-          //   NoticeTitle: '',
-          //   NoticeType: this.gonggaoType,
-          //   Acceptor: this.userInfo.commparnyList[0].companyType,
-          //   Notice: this.ruleForm.GonggaoText,
-          //   Publisher: this.userInfo.userInfo.id,
-          //   IssuedCompanyID: this.userInfo.commparnyList[0].commparnyId,
-          //   FileAddress: urls && urls.join(','),
-          //   FileType:
-          //     fileType === 'image' ? 'img' : fileType === 'video' ? 'video' : '' // 文件类型 img video
-          // })
-          // if (result.data.result.code === 200) {
-          //   this.$message.success('发布公告成功')
-          //   // 刷新公告列表
-          //   this.$root.eventHub.$emit('UpdateFind')
-          //   this.skipCount = 1
-          //   this.maxResultCount = 10
-          //   this.getDataList()
-          //   this.fileList = []
-          //   this.ruleForm.GonggaoText = ''
-          //   this.gonggaoType = ''
-          //   this.active2 = null
-          // } else {
-          //   this.$message.error(result.data.result.msg)
-          // }
+          const result = await this.$http.post('/api/CreateBearNotice', {
+            NoticeTitle: '',
+            NoticeType: this.gonggaoType,
+            Acceptor: this.userInfo.commparnyList[0].companyType,
+            Notice: this.ruleForm.GonggaoText,
+            Publisher: this.userInfo.userInfo.id,
+            IssuedCompanyID: this.userInfo.commparnyList[0].commparnyId,
+            FileAddress: urls && urls.join(','),
+            FileType:
+              fileType === 'image' ? 'img' : fileType === 'video' ? 'video' : '' // 文件类型 img video
+          })
+          if (result.data.result.code === 200) {
+            this.$message.success('发布公告成功')
+            // 刷新公告列表
+            this.$root.eventHub.$emit('UpdateFind')
+            this.skipCount = 1
+            this.maxResultCount = 10
+            this.getDataList()
+            this.fileList = []
+            this.ruleForm.GonggaoText = ''
+            this.gonggaoType = ''
+            this.active2 = null
+          } else {
+            this.$message.error(result.data.result.msg)
+          }
         }
       })
     },
