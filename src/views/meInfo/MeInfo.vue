@@ -1729,7 +1729,8 @@
                     :on-close="closeViewer"
                     :url-list="viewerImgList" />
               </el-col>
-              <el-col :span="8">
+          </draggable>
+          <el-col :span="8">
               <el-upload
               action="#"
               list-type="picture-card"
@@ -1800,7 +1801,6 @@
               </div>
             </el-upload>
               </el-col>
-          </draggable>
             <el-dialog :visible.sync="dialogVisibleImg" destroy-on-close>
               <img
                 v-if="dialogVisibleImg"
@@ -7547,6 +7547,13 @@ export default {
     }
   }
   .gonggaoImgList {
+    &:after{
+      content: " ";
+      height: 0;
+      clear: both;
+      display: block;
+      visibility: hidden;
+    }
     .syllable_ul{
       .el-col {
         margin-top: 5px;
@@ -7598,9 +7605,12 @@ export default {
               opacity: .1;
             }
           }
-        .imgsItem {
+      }
+    }
+    .imgsItem {
           width: 100%;
           height: 100%;
+          float: left;
           @{deep} .el-upload{
             width: 100%;
             height:0;
@@ -7614,40 +7624,6 @@ export default {
             }
           }
         }
-      }
-    //   @{deep} .imgsItem {
-    //   max-width: 124px;
-    //   max-height: 124px;
-    //   box-sizing: border-box;
-    //   border: 1px dashed #c0ccda;
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: center;
-    //   overflow: hidden;
-    //   .el-upload {
-    //     border: none;
-    //     width: 100%;
-    //     display: flex;
-    //     align-items: center;
-    //     justify-content: center;
-    //       @{deep} img {
-    //       width: 100%;
-    //       height:100%;
-    //     }
-    //   }
-    //   @{deep} video {
-    //     width: 100%;
-    //     height:100%;
-    //   }
-    // }
-    &:after{
-      content: " ";
-      height: 0;
-      clear: both;
-      display: block;
-      visibility: hidden;
-    }
-    }
   }
   .sendGonggaoBtn {
     text-align: center;
