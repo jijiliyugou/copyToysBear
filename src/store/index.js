@@ -6,6 +6,8 @@ import globalJson from './Json.js'
 Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
+    httpTime: 0, // 请求时长
+    httpContent: '', // 请求内容
     screenWidth: document.documentElement.clientWidth, // 屏幕宽度
     wsOrderMsg: null,
     beforeSearchImgPreview: null,
@@ -23,6 +25,12 @@ export default new Vuex.Store({
     currentComparnyId: null
   },
   mutations: {
+    handlerHttpTime (state, value) {
+      state.httpTime = value
+    },
+    handlerHttpContent (state, value) {
+      state.httpContent = value
+    },
     handlerLogin (state, value) {
       state.isLogin = value
     },

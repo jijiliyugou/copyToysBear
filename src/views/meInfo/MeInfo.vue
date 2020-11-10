@@ -3722,48 +3722,50 @@ export default {
           let urls = ''
           let fileType = ''
           let res = ''
-          if (this.$_.size(this.fileList)) {
+          if (this.fileList && this.fileList.length > 0) {
             const fd = new FormData()
-            for (const val of this.fileList) {
-              fd.append('file', val.raw)
+            // for (const val of this.fileList) {
+            //   fd.append('file', val.raw)
+            //   fd.append (val.name, );
+            // }
+            for (let i = 0; i < this.fileList.length; i++) {
+              fd.append('file', this.fileList[i].raw, this.fileList[i].name)
+              fd.append (this.fileList[i].name, i);
             }
             fd.append('BusinessType', 'Notice')
-            res = await this.$http.post('/api/File/InsertPic', fd, {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            })
-            if (res.data.result.code === 200) {
-              urls = res.data.result.object.map(re => re.filePath)
-            }
+            // res = await this.$http.post('/api/File/InsertPic', fd, {
+            //   headers: { 'Content-Type': 'multipart/form-data' }
+            // })
+            // if (res.data.result.code === 200) {
+            //   urls = res.data.result.object.map(re => re.filePath)
+            // }
+            // fileType = this.fileList[0].raw.type.split('/')[0]
           }
-          if (this.fileList.length > 0) {
-            fileType = this.fileList[0].raw.type.split('/')[0]
-          }
-          const result = await this.$http.post('/api/CreateBearNotice', {
-            NoticeTitle: '',
-            NoticeType: this.gonggaoType,
-            Acceptor: this.userInfo.commparnyList[0].companyType,
-            Notice: this.ruleForm.GonggaoText,
-            Publisher: this.userInfo.userInfo.id,
-            IssuedCompanyID: this.userInfo.commparnyList[0].commparnyId,
-            FileAddress: urls && urls.join(','),
-            FileType:
-              fileType === 'image' ? 'img' : fileType === 'video' ? 'video' : '' // 文件类型 img video
-          })
-          if (result.data.result.code === 200) {
-            this.$message.success('发布公告成功')
-            // this.$refs.refGonggao.clearValidate();
-            // 重新调用查看公告
-            this.$root.eventHub.$emit('UpdateFind')
-            this.skipCount = 1
-            this.maxResultCount = 10
-            this.getDataList()
-          } else {
-            this.$message.error(result.data.result.msg)
-          }
-          this.fileList = []
-          this.ruleForm.GonggaoText = ''
-          this.gonggaoType = ''
-          this.active2 = null
+          // const result = await this.$http.post('/api/CreateBearNotice', {
+          //   NoticeTitle: '',
+          //   NoticeType: this.gonggaoType,
+          //   Acceptor: this.userInfo.commparnyList[0].companyType,
+          //   Notice: this.ruleForm.GonggaoText,
+          //   Publisher: this.userInfo.userInfo.id,
+          //   IssuedCompanyID: this.userInfo.commparnyList[0].commparnyId,
+          //   FileAddress: urls && urls.join(','),
+          //   FileType:
+          //     fileType === 'image' ? 'img' : fileType === 'video' ? 'video' : '' // 文件类型 img video
+          // })
+          // if (result.data.result.code === 200) {
+          //   this.$message.success('发布公告成功')
+          //   // 刷新公告列表
+          //   this.$root.eventHub.$emit('UpdateFind')
+          //   this.skipCount = 1
+          //   this.maxResultCount = 10
+          //   this.getDataList()
+          //   this.fileList = []
+          //   this.ruleForm.GonggaoText = ''
+          //   this.gonggaoType = ''
+          //   this.active2 = null
+          // } else {
+          //   this.$message.error(result.data.result.msg)
+          // }
         }
       })
     },
@@ -3771,7 +3773,7 @@ export default {
     guanbiOrder () {
       this.isOrderShow = false
     },
-    // 选择图片
+    // 发公告选择图片
     changeFile (file, fileList) {
       if (fileList[0].raw.type.split(/\//)[0] === 'video') {
         this.imgAndVideoNum = 1
@@ -4686,7 +4688,6 @@ export default {
       // const newVal = this.fileList[evt.moved.oldIndex]
       // this.fileList[evt.moved.oldIndex] = this.fileList[evt.moved.newIndex]
       // this.fileList[evt.moved.newIndex] = newVal
-      console.log(this.fileList)
     },
     //start ,end ,add,update, sort, remove 得到的都差不多
     startGonggaoImg(evt) {

@@ -53,11 +53,11 @@
           <div class="searchOptions">
             <p>
               搜索内容：
-              <span class="colorGreen">{{ $store.state.searchValue }}</span>
+              <span class="colorGreen">{{ $store.state.httpContent }}</span>
             </p>
             <p>
               用时：
-              <span class="colorGreen">{{ httpTime | dataFormat }} </span> 秒
+              <span class="colorGreen">{{ $store.state.httpTime | dataFormat }} </span> 秒
             </p>
           </div>
           <p class="totalCountBox">
@@ -420,7 +420,6 @@ export default {
     async getProduct () {
       this.loading = true
       try {
-        var start = Date.now()
         const fd = {
           name: this.$store.state.searchValue,
           skipCount: this.currentPage,
@@ -430,7 +429,6 @@ export default {
           if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
         }
         const res = await this.$http.post('/api/SearchBearProductPage', fd)
-        this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.dataList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount

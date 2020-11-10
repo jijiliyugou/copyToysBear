@@ -38,11 +38,14 @@ myAxios.install = function (Vue) {
   axios.defaults.timeout = 20000 // 超时时间
   axios.defaults.retry = 1 // 请求次数
   axios.defaults.retryDelay = 1000 // 请求间隙
+  axios.prototype.startDate = 0 // 请求开始时间
+  axios.prototype.endDate = 0 // 请求结束时间
   // 统一设置初始API
   // axios.defaults.baseURL = target;
   // 使用axios请求拦截器统一设置请求头
   axios.interceptors.request.use(
     config => {
+      if (config.url.includes('/SearchBearProductPage') || config.url.includes('/SearchPicture')) axios.startDate = Date.now()
       // 配置不需要loading的请求
       if (
         !config.url.includes('ProductCategoryList') &&
@@ -101,6 +104,26 @@ myAxios.install = function (Vue) {
   // 响应拦截
   axios.interceptors.response.use(
     res => {
+      /** 全局设置请求时长和请求内容 */
+      const myUrl = res.config.url
+      let httpDate
+      switch (myUrl) {
+        case '/api/SearchBearProductPage':
+          axios.endDate = Date.now()
+          // eslint-disable-next-line no-case-declarations
+          const httpTXT = JSON.parse(res.config.data).name || '所有产品'
+          httpDate = axios.endDate - axios.startDate
+          $Store.commit('handlerHttpTime', httpDate)
+          $Store.commit('handlerHttpContent', httpTXT)
+          break
+        case '/api/File/SearchPicture':
+          axios.endDate = Date.now()
+          // eslint-disable-next-line no-case-declarations
+          httpDate = axios.endDate - axios.startDate
+          $Store.commit('handlerHttpTime', httpDate)
+          $Store.commit('handlerHttpContent', '[图片]')
+      }
+
       if (
         // 不需要loading的请求
         !res.config.url.includes('GetHotWord') &&
@@ -124,6 +147,29 @@ myAxios.install = function (Vue) {
     },
     error => {
       if (error.response) {
+        if (error.response.config.url.includes('/SearchBearProductPages') || error.response.config.url.includes('/SearchPicture')) {
+          axios.endDate = Date.now()
+          console.log(axios.endDate - axios.startDate)
+        }
+        /** 全局设置请求时长和请求内容 */
+        const myUrl = error.response.config.url
+        let httpDate
+        switch (myUrl) {
+          case '/api/SearchBearProductPage':
+            axios.endDate = Date.now()
+            // eslint-disable-next-line no-case-declarations
+            const httpTXT = JSON.parse(error.response.config.data).name || '所有产品'
+            httpDate = axios.endDate - axios.startDate
+            $Store.commit('handlerHttpTime', httpDate)
+            $Store.commit('handlerHttpContent', httpTXT)
+            break
+          case '/api/File/SearchPicture':
+            axios.endDate = Date.now()
+            // eslint-disable-next-line no-case-declarations
+            httpDate = axios.endDate - axios.startDate
+            $Store.commit('handlerHttpTime', httpDate)
+            $Store.commit('handlerHttpContent', '[图片]')
+        }
         // 如果请求报404 | 500 | 401 之类的
         console.log('响应失败拦截', error.response)
         switch (error.response.status) {
