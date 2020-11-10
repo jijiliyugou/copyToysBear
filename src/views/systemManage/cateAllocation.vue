@@ -36,6 +36,7 @@
         </div>
         <el-tree
           :data="myCategoryList"
+          accordion
           show-checkbox
           ref="treeOne"
           :filter-node-method="filterNodeOne"
@@ -57,6 +58,7 @@
         </div>
         <el-tree
         draggable
+        accordion
           :data="companyCategoryList"
           ref="treeTwo"
            :filter-node-method="filterNodeTwo"
