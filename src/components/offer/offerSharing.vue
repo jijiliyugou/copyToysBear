@@ -89,48 +89,22 @@
       <el-button type="primary" @click="search" round>搜索</el-button>
     </div>
     <div class="floatSearch">
-      <div class="categoryList">
-        <div class="cates">
-          <!-- 分类：<el-cascader
-            clearable
-            :show-all-levels="false"
-            placeholder="请输入分类"
-            filterable
-            v-model="categoryNumber"
-            size="small"
-            ref="clearSelect"
-            :props="{
-              checkStrictly: true,
-              emitPath: false,
-              label: 'name',
-              value: 'id',
-              children: 'children',
-            }"
-            :options="categoryList"
-            @visible-change="resetSelect"
-            class="myCate"
-            @change="handleChange"
-          ></el-cascader> -->
-          分类：<el-select v-model="categoryNumber" @change="handleChange" placeholder="请输入或选择" clearable filterable>
-          <el-option
-            v-for="item in [{categoryName: '全部', categoryNumber: ''}, ...categoryList]"
-            :key="item.value"
-            :label="item.categoryName"
-            :value="item.categoryNumber">
-          </el-option>
-        </el-select>
-        </div>
-        <div class="total">总数：{{ totalCount }}</div>
-      </div>
       <div class="listTitle">
         <span class="listTitleTXT">报价商品 ({{ totalCount }})</span>
         <div class="downloads">
         </div>
       </div>
       <div class="filterProduct">
-        <p :class="{'priceFilter': true, 'active': sortOrder === 1}" @click="sortPrice(1)">产品单价 <i v-show="isPrice === 0" class="iconfont icon-paixu"></i><i v-show="isPrice === 1" class="el-icon-arrow-down"></i><i v-show="isPrice === 2" class="el-icon-arrow-up"></i></p>
-        <p :class="{'priceFilter': true, 'active': sortOrder === 2}" @click="sortDate(2)">新增时间  <i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p>
-        <p :class="{'priceFilter': true, 'active': sortOrder === 3}" @click="sortHot(3)">产品热度  <i v-show="isHot === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isHot === 1"></i><i v-show="isHot === 2" class="el-icon-arrow-up"></i></p>
+        <!-- <p :class="{'filterItem': true, 'active': sortOrder === 3}" @click="sortHot(3)">热度<i v-show="isHot === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isHot === 1"></i><i v-show="isHot === 2" class="el-icon-arrow-up"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 1}" @click="sortPrice(1)">单价<i v-show="isPrice === 0" class="iconfont icon-paixu"></i><i v-show="isPrice === 1" class="el-icon-arrow-down"></i><i v-show="isPrice === 2" class="el-icon-arrow-up"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 2}" @click="sortDate(2)">时间<i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 3}" @click="sortDate(2)">筛选<i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 4}" @click="sortDate(2)">分类<i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p> -->
+        <p :class="{'filterItem': true, 'active': sortOrder === 3}" @click="sortHot(3)">热度<i v-show="isHot === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isHot === 1"></i><i v-show="isHot === 2" class="el-icon-caret-top"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 1}" @click="sortPrice(1)">单价<i v-show="isPrice === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isPrice === 1"></i><i v-show="isPrice === 2" class="el-icon-caret-top"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 2}" @click="sortDate(2)">时间<i v-show="isDate === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-caret-top"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 4}" @click="sortScreen(4)">筛选<i v-show="isScreen === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isScreen === 1"></i><i v-show="isScreen === 2" class="el-icon-caret-top"></i></p>
+        <p :class="{'filterItem': true, 'active': sortOrder === 5}" @click="sortCate(5)">分类<i v-show="isCate === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isCate === 1"></i><i v-show="isCate === 2" class="el-icon-caret-top"></i></p>
         <div class="more">
           <i v-show="isList" class="list" @click="checkList"></i>
           <i v-show="!isList" class="square" @click="checkList"></i>
@@ -256,6 +230,7 @@
         :src="require('@/assets/images/暂无产品.png')"
         fit="contain"
       ></el-image>
+      <footer class="myFooter">来源于：深圳小竹熊科技</footer>
     </div>
   </div>
 </template>
@@ -274,9 +249,11 @@ export default {
       categoryNumber: '',
       totalCount: 0,
       isList: true,
+      isPrice: 0,
       isDate: 0,
       isHot: 0,
-      isPrice: 0,
+      isCate: 0,
+      isScreen: 0,
       sortOrder: 0,
       sortType: null
     }
@@ -316,22 +293,6 @@ export default {
     checkList () {
       this.isList = !this.isList
     },
-    // 价格排序
-    sortPrice (number) {
-      this.sortOrder = number
-      this.sortType = this.isPrice = this.isPrice === 1 ? 2 : 1
-      this.isHot = this.isDate = 0
-      this.currentPage = 1
-      this.getProductOfferDetailPage()
-    },
-    // 时间排序
-    sortDate (number) {
-      this.sortOrder = number
-      this.sortType = this.isDate = this.isDate === 1 ? 2 : 1
-      this.isHot = this.isPrice = 0
-      this.currentPage = 1
-      this.getProductOfferDetailPage()
-    },
     // 热度排序
     sortHot (number) {
       this.sortOrder = number
@@ -339,6 +300,34 @@ export default {
       this.isDate = this.isPrice = 0
       this.currentPage = 1
       this.getProductOfferDetailPage()
+    },
+    // 价格排序
+    sortPrice (number) {
+      this.sortOrder = number
+      this.sortType = this.isPrice = this.isPrice === 1 ? 2 : 1
+      this.isScreen = this.isCate = this.isHot = this.isDate = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
+    },
+    // 时间排序
+    sortDate (number) {
+      this.sortOrder = number
+      this.sortType = this.isDate = this.isDate === 1 ? 2 : 1
+      this.isScreen = this.isCate = this.isHot = this.isPrice = 0
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
+    },
+    // 点击筛选事件
+    sortScreen (number) {
+      this.sortOrder = number
+      this.isScreen = this.isScreen === 1 ? 2 : 1
+      this.isCate = this.isDate = this.isHot = this.isPrice = 0
+    },
+    // 点击分类事件
+    sortCate (number) {
+      this.sortOrder = number
+      this.isCate = this.isCate === 1 ? 2 : 1
+      this.isScreen = this.isDate = this.isHot = this.isPrice = 0
     },
     // 下载
     downloadDocument (document) {
@@ -630,37 +619,6 @@ export default {
     width: 95%;
     margin: 0 auto;
     background-color: #fff;
-    .categoryList {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 0 auto;
-      padding-bottom: 0.133333rem;
-      // font-size: 0.266667rem;
-      border-bottom: 1px solid #ebeef5;
-      .cates {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        @{deep} .el-input__inner {
-          width: 2.666667rem;
-          font-size: 0.266667rem;
-          padding-right: 0.4rem;
-          height: 0.666667rem;
-          line-height: 0.666667rem;
-        }
-         @{deep} .el-select__caret {
-          position: relative;
-          &::before, &::after {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-          }
-        }
-      }
-    }
     .listTitle {
       width: 100%;
       height: 0.933333rem;
@@ -668,7 +626,6 @@ export default {
       align-items: center;
       justify-content: space-between;
       font-weight: 600;
-      border-bottom: 1px solid #ebeef5;
       .listTitleTXT {
         position: relative;
         text-indent: 0.133333rem;
@@ -695,19 +652,18 @@ export default {
     }
     .filterProduct{
       width: 100%;
-      display: flex;
       height: 0.8rem;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       font-size: 0.293333rem;
       color: #707070;
-      .priceFilter{
-        margin-right: 0.533333rem;
-        &:last-of-type {
-          margin-right: 0;
-        }
+      border-bottom: 1px solid #ebeef5;
+      border-top: 1px solid #ebeef5;
+      .filterItem{
+        flex: 1;
       }
       .more{
-        flex: 1;
         display: flex;
         justify-content: flex-end;
         i.list{
@@ -732,7 +688,7 @@ export default {
   }
   .productList {
     width: 95%;
-    margin: 0 auto;
+    margin: 0 auto 0.666667rem auto;
     .listItems {
       .listItem {
         margin-bottom: 0.266667rem;
@@ -844,6 +800,20 @@ export default {
           }
         }
       }
+    }
+    .myFooter{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0.666667rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      background-color: #fff;
+      padding: 0 0.333333rem;
+      box-sizing: border-box;
+      color: #88ca93;
     }
   }
 }
