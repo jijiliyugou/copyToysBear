@@ -360,7 +360,7 @@ export default {
           this.productList = []
           this.$message.error(res.data.result.msg + '，请登录后查看')
         }
-        $('html').animate({ scrollTop: 0 }) // 滚到顶部
+        $('.rootApp').animate({ scrollTop: 0 }) // 回到顶部
       } catch (error) {
         this.totalCount = 0
       }

@@ -1,6 +1,7 @@
 <template>
   <div
     id="app"
+    class="rootApp"
     v-cloak
     v-loading="$store.state.AppLoading"
     element-loading-spinner
@@ -8,11 +9,14 @@
     @mousewheel="mousewheel"
   >
     <router-view v-cloak />
-    <!-- <Footer
-    style="width:100%;"
-      v-cloak
-      v-if="$route.path  !==  '/404' && !$route.path.includes('/beforeIndex') && !$route.path.includes('/erp') && !$route.path.includes('/offer') && !$route.path.includes('/cateAllocation') && !$route.path.includes('/productSearch')"
-    ></Footer> -->
+    <el-backtop target=".rootApp" :bottom="175" :right="100">
+      <div style="display:flex;flexWrap:wrap;alignContent:flex-start;justifyContent:center; alignItems:center;">
+          <i class="el-icon-caret-top" style="marginTop:-5px;"></i>
+          <span style="fontSize:12px;marginTop:-5px;">
+            顶部
+          </span>
+      </div>
+    </el-backtop>
   </div>
 </template>
 <script>

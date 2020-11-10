@@ -16,11 +16,8 @@
             background-color="#2468a9"
             text-color="#fff"
             active-text-color="#ffd04b"
-            :router="true"
-          >
-            <a style="color:#fff;cursor: pointer;" @click="toHome" class="hidden-sm-and-down"
-              >小竹熊首页</a
-            >
+            :router="true">
+            <a style="color:#fff;cursor: pointer;" @click="toHome" class="hidden-md-and-down">小竹熊首页</a>
             <el-menu-item index="/meInfo/infoList">我的消息</el-menu-item>
             <el-menu-item index="/orderManage">订单管理</el-menu-item>
             <template v-for="(item, i) in menuList">
