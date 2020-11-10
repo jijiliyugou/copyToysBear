@@ -25,7 +25,7 @@
           >查看更多</span
         >
       </h5>
-      <div class="zanwuchanpin"></div>
+      <div class="zanwuxinpin"></div>
     </div>
     <div class="lunbo" v-else>
       <h5>

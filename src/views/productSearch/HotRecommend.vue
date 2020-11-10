@@ -45,7 +45,7 @@
           </div>
         </div>-->
          <div class="filterTitle">
-          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.searchValue }}</span> </p> <p>用时： <span class="colorGreen">{{ httpTime | dataFormat }} </span>  秒</p></div>
+          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.httpContent }}</span> </p> <p>用时： <span class="colorGreen">{{ $store.state.httpTime | dataFormat }} </span>  秒</p></div>
           <p class="totalCountBox">总记录共 <span class="count">{{ totalCount }}</span>条</p>
         </div>
         <div>
@@ -400,7 +400,6 @@ export default {
     },
     // 文字搜索
     async getProduct () {
-      var start = Date.now()
       this.loading = true
       try {
         const fd = {
@@ -414,7 +413,6 @@ export default {
           }
         }
         const res = await this.$http.post('/api/HotRecommendPage', fd)
-        this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.dataList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
@@ -475,22 +473,21 @@ export default {
       this.productDetail(this.$route.params.id)
       this.$store.commit('handlerBeforeSearchImgPreview', null)
     } else {
-      if (this.$store.state.imageSearchValue instanceof Array) {
-        this.isDetail = false
-        this.dataList = this.$store.state.imageSearchValue
-        this.totalCount = this.dataList.length
-        this.$store.commit('clearSearch')
-      } else {
-        this.$store.commit('handlerBeforeSearchImgPreview', null)
-        this.getProduct()
-      }
+      this.getProduct()
       this.$root.eventHub.$on('toHotRecommend', () => {
         this.currentPage = 1
         this.totalCount = 0
         this.dataList = []
         this.search = this.$store.state.searchValues
-        this.$store.commit('handlerBeforeSearchImgPreview', null)
-        this.getProduct()
+        if (this.$store.state.hotSearchImg instanceof Array) {
+          this.dataList = this.$store.state.hotSearchImg
+          this.totalCount = this.dataList.length
+          this.$store.commit('clearSearch')
+        } else {
+          this.$store.commit('handlerBeforeSearchImgPreview', null)
+          this.$store.commit('clearSearch')
+          this.getProduct()
+        }
       })
     }
   },
@@ -499,8 +496,10 @@ export default {
   },
   beforeDestroy () {
     this.$root.eventHub.$off('toHotRecommend')
-    this.$store.commit('clearSearch')
+    this.$store.commit('handlerhotSearchImg', null)
     this.$store.commit('handlerBeforeSearchImgPreview', null)
+    this.$store.commit('handlerHttpTime', null)
+    this.$store.commit('handlerHttpContent', null)
   }
 }
 </script>

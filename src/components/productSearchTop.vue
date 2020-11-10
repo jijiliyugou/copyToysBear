@@ -162,9 +162,15 @@ export default {
         const res = await this.$http.post('/api/File/SearchPicture', fd)
         this.cropperCancel()
         if (res.data.result.code === 200) {
-          this.$store.commit('searchValues', res.data.result.object)
+          if (this.parentEl === 'hotRecommend') {
+            this.$store.commit('handlerhotSearchImg', res.data.result.object)
+            this.$root.eventHub.$emit('toHotRecommend')
+          } else {
+            this.$store.commit('searchValues', res.data.result.object)
+            this.$root.eventHub.$emit('toSearchIndex')
+          }
         } else {
-          this.$store.commit('searchValues', null)
+          this.$store.commit('clearSearch')
           this.$message.error(res.data.result.message)
         }
         this.$router.push('/' + this.parentEl)
@@ -189,7 +195,6 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
-      console.log(mime)
       // 转换成file对象
       return new File([u8arr], filename + '.' + mime.split('/')[1], {
         type: mime
@@ -234,7 +239,6 @@ export default {
       } else {
         this.$store.commit('searchValues', [])
       }
-      console.log(this.parentEl)
       this.$router.push({ name: (this.parentEl || 'searchIndex') })
       this.$store.commit('updateAppLoading', false)
     }

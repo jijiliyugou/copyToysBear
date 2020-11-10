@@ -14,7 +14,7 @@
       </div>
       <div class="content">
         <div class="filterTitle">
-          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.beforeSearch.value }}</span> </p> <p>用时： <span class="colorGreen">{{ httpTime | dataFormat }} </span>  秒</p></div>
+          <div class="searchOptions"><p>搜索内容： <span class="colorGreen">{{ $store.state.httpContent }}</span> </p> <p>用时： <span class="colorGreen">{{ $store.state.httpTime | dataFormat }}</span>  秒</p></div>
           <p class="totalCountBox">总记录共 <span class="count">{{ totalCount }}</span>条</p>
         </div>
         <template
@@ -347,26 +347,21 @@ export default {
     // 默认搜索产品
     async getProductList (search) {
       try {
-        var start = Date.now()
         const res = await this.$http.post('/api/SearchBearProductPage', {
           [this.name]: search,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
         })
-        this.httpTime = Date.now() - start
         if (res.data.result.code === 200 && res.data.result.item) {
           this.productList = res.data.result.item.items
           this.totalCount = res.data.result.item.totalCount
-          // this.$store.commit('updateLoading', false)
         } else {
           this.totalCount = 0
           this.productList = []
-          // this.$store.commit('updateLoading', false)
           this.$message.error(res.data.result.msg + '，请登录后查看')
         }
         $('html').animate({ scrollTop: 0 }) // 滚到顶部
       } catch (error) {
-        // this.$store.commit('updateLoading', false)
         this.totalCount = 0
       }
     },
@@ -408,7 +403,7 @@ export default {
     if (this.$store.state.beforeSearchImg) {
       this.productList = this.$store.state.beforeSearchImg
       this.totalCount = this.productList.length
-      this.$store.commit('handlerBeforeSearchImg', '')
+      this.$store.commit('clearSearch')
     } else {
       this.$store.commit('handlerBeforeSearchImgPreview', null)
       this.getProductList(this.search)
@@ -441,6 +436,9 @@ export default {
   beforeDestroy () {
     this.$store.commit('handlerBeforeSearchImgPreview', null)
     this.clearEventHub()
+    this.$store.commit('clearSearch')
+    this.$store.commit('handlerHttpTime', null)
+    this.$store.commit('handlerHttpContent', null)
   }
 }
 </script>
@@ -553,6 +551,7 @@ export default {
           }
         }
         .searchOptions{
+          flex: 1;
           display: flex;
           box-sizing:border-box;
           p{

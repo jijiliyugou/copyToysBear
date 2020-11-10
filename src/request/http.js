@@ -45,7 +45,7 @@ myAxios.install = function (Vue) {
   // 使用axios请求拦截器统一设置请求头
   axios.interceptors.request.use(
     config => {
-      if (config.url.includes('/SearchBearProductPage') || config.url.includes('/SearchPicture')) axios.startDate = Date.now()
+      if (config.url.includes('SearchBearProductPage') || config.url.includes('SearchPicture') || config.url.includes('HotRecommendPage')) axios.startDate = Date.now()
       // 配置不需要loading的请求
       if (
         !config.url.includes('ProductCategoryList') &&
@@ -116,6 +116,14 @@ myAxios.install = function (Vue) {
           $Store.commit('handlerHttpTime', httpDate)
           $Store.commit('handlerHttpContent', httpTXT)
           break
+        case '/api/HotRecommendPage':
+          axios.endDate = Date.now()
+          // eslint-disable-next-line no-case-declarations
+          const httpHotTXT = JSON.parse(res.config.data).name || '所有产品'
+          httpDate = axios.endDate - axios.startDate
+          $Store.commit('handlerHttpTime', httpDate)
+          $Store.commit('handlerHttpContent', httpHotTXT)
+          break
         case '/api/File/SearchPicture':
           axios.endDate = Date.now()
           // eslint-disable-next-line no-case-declarations
@@ -147,10 +155,6 @@ myAxios.install = function (Vue) {
     },
     error => {
       if (error.response) {
-        if (error.response.config.url.includes('/SearchBearProductPages') || error.response.config.url.includes('/SearchPicture')) {
-          axios.endDate = Date.now()
-          console.log(axios.endDate - axios.startDate)
-        }
         /** 全局设置请求时长和请求内容 */
         const myUrl = error.response.config.url
         let httpDate

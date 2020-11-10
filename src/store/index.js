@@ -16,6 +16,7 @@ export default new Vuex.Store({
     isLogin: false,
     beforeSearch: { value: '', type: 'name' },
     beforeSearchImg: null,
+    hotSearchImg: null,
     searchValue: '',
     vueElementLoading: false,
     AppLoading: false,
@@ -40,11 +41,15 @@ export default new Vuex.Store({
     handlerBeforeSearch (state, value) {
       state.beforeSearch = value
     },
+    handlerhotSearchImg (state, value) {
+      state.hotSearchImg = value
+    },
     handlerBeforeSearchImgPreview (state, value) {
       state.beforeSearchImgPreview = value
     },
     handlerBeforeSearchImg (state, value) {
       state.beforeSearchImg = value
+      console.log(state.beforeSearchImg)
     },
     updateAppLoading (state, value) {
       state.AppLoading = value
@@ -57,6 +62,8 @@ export default new Vuex.Store({
     },
     clearSearch (state) {
       state.imageSearchValue = null
+      state.beforeSearchImg = null
+      state.hotSearchImg = null
     },
     setRouters (state, routers) {
       state.routers = routers

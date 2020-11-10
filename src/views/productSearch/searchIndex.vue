@@ -522,8 +522,15 @@ export default {
       this.totalCount = 0
       this.dataList = []
       this.search = this.$store.state.searchValues
-      this.$store.commit('handlerBeforeSearchImgPreview', null)
-      this.getProduct(true)
+      if (this.$store.state.imageSearchValue instanceof Array) {
+        this.dataList = this.$store.state.imageSearchValue
+        this.totalCount = this.dataList.length
+        this.$store.commit('clearSearch')
+      } else {
+        this.$store.commit('handlerBeforeSearchImgPreview', null)
+        this.$store.commit('clearSearch')
+        this.getProduct(true)
+      }
     })
   },
   filters: {
@@ -535,6 +542,8 @@ export default {
     this.$root.eventHub.$off('toSearchIndex')
     this.$store.commit('searchTxtValues', null)
     this.$store.commit('handlerBeforeSearchImgPreview', null)
+    this.$store.commit('handlerHttpTime', null)
+    this.$store.commit('handlerHttpContent', null)
   }
 }
 </script>
