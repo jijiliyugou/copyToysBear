@@ -61,25 +61,23 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="是否重复">
+          <el-select
+            v-model="searchForm.isRepeat"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="(item, i) in [{label: '全部', value: null}, {label: '重复用户', value: true}]"
+              :key="i"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" @click="search">查询</el-button>
         </el-form-item>
       </el-form>
-    </div>
-    <div class="repeatPhone">
-      <div class="phones">
-        <div class="phonesTitle">重复电话：</div>
-        <div class="phonesList">
-          <el-tag v-for="item in 30" :key="item" @click="searchPhone(17603033452)">17603033452</el-tag>
-        </div>
-      </div>
-      <!-- <div class="statistics">
-        <div class="statisticsTitle">
-          数据统计：
-        </div>
-        <div class="statisticsContent">
-        </div>
-      </div> -->
     </div>
     <!-- 列表 -->
     <div class="tableContent">
@@ -154,6 +152,7 @@ export default {
         keyword: '',
         hallNumber: '',
         companyType: '',
+        isRepeat: null,
         isInstall: false
       }
     }
@@ -216,7 +215,11 @@ export default {
           delete fd[key]
         }
       }
-      const res = await this.$http.post('/api/LittleBearInstall', fd)
+      let url = '/api/LittleBearInstall'
+      if (this.searchForm.isRepeat) {
+        url = '/api/LittleBearInstallRepeat'
+      }
+      const res = await this.$http.post(url, fd)
       if (res.data.result.code === 200) {
         this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
@@ -312,45 +315,6 @@ export default {
 .tableContent {
   padding: 20px 0;
 }
-// .repeatPhone{
-//   font-size:14px;
-//   max-height: 300px;
-//   box-sizing: border-box;
-//   color:#909399;
-//   border: 1px solid #ebeef5;
-//   padding: 10px;
-//   display: flex;
-  .phones{
-    max-height: 300px;
-    margin-right: 5px;
-    font-size:14px;
-    display: flex;
-    color:#909399;
-    border: 1px solid #ebeef5;
-    padding: 5px;
-    .phonesTitle{
-      width: 80px;
-      box-sizing: border-box;
-      padding: 5px;
-      color: #000;
-      font-weight: 600;
-    }
-    .phonesList{
-      flex: 1;
-      overflow: auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
-      .el-tag {
-        margin: 5px;
-        cursor: pointer;
-        &:hover{
-          background-color: #409eff;
-          color: #fff;
-        }
-      }
-    }
-  }
   .statistics{
     width: 50%;
     margin-left: 5px;
@@ -371,7 +335,7 @@ export default {
 .demo-form-inline{
   .el-form-item{
     @{deep} .el-form-item__content{
-      width: 150px;
+      width: 130px;
     }
     &:last-of-type{
       @{deep} .el-form-item__content{

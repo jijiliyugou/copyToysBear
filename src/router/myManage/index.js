@@ -3,6 +3,7 @@ const MyProduct = () => import('@/views/myManage/myProduct.vue')
 const ProductMan = () => import('@/views/myManage/productMan.vue')
 const CompanyMan = () => import('@/views/myManage/companyMan.vue')
 const AdvertisingMan = () => import('@/views/myManage/advertisingMan.vue')
+const InfoTemplate = () => import('@/views/myManage/infoTemplate.vue')
 export default [
   {
     path: '/myCustomer',
@@ -23,6 +24,11 @@ export default [
     path: '/advertisingMan',
     name: 'advertisingMan',
     component: AdvertisingMan
+  },
+  {
+    path: '/infoTemplate',
+    name: 'infoTemplate',
+    component: InfoTemplate
   },
   {
     path: '/companyMan',
