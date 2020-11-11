@@ -1940,6 +1940,38 @@
                             <pre>{{ item.content }}</pre></span
                           >
                         </div>
+                        <!-- 分享链接 -->
+                        <div
+                          class="youTextInfo"
+                          v-if="item.messageType === 'Product'">
+                          <div class="msgTypeProduct">
+                            <div class="liaotianerweima">
+                              <template v-if="item.content">
+                                  <vue-qr
+                                    :text="item.content"
+                                    colorDark="#018e37"
+                                    colorLight="#fff"
+                                    :margin="0"
+                                    :size="50"
+                                  ></vue-qr>
+                              </template>
+                              <el-image
+                                v-else
+                                style="width: 50px; height: 50px"
+                                :src="require('@/assets/images/imgError.jpg')">
+                              </el-image>
+                            </div>
+                            <div class="right">
+                              <div class="context">
+                                {{ item.attachment || item.content}}
+                              </div>
+                              <a class="see" :href="item.content" target="_blank"><i class="el-icon-view"></i>查看详情</a>
+                              <div class="copy" @click="copyLink(item.id)"><i class="el-icon-link"></i>复制链接</div>
+                              <a :href="item.content" :id="item.id" target="_blank" style="position:fixed;top:9999px;left:9999px;">{{item.content}}</a>
+                            </div>
+                            <!-- <pre>{{ item.content }}</pre> -->
+                          </div>
+                        </div>
                         <!-- 视频 -->
                         <div
                           class="msgTypeVideo"
@@ -2111,6 +2143,34 @@
                             ><pre>{{ item.content }}</pre></span
                           >
                         </div>
+                        <!-- 分享链接 -->
+                          <div class="msgTypeProduct" v-else-if="item.messageType === 'Product'">
+                            <div class="liaotianerweima">
+                              <template v-if="item.content">
+                                  <vue-qr
+                                    :text="item.content"
+                                    colorDark="#018e37"
+                                    colorLight="#fff"
+                                    :margin="0"
+                                    :size="50"
+                                  ></vue-qr>
+                              </template>
+                              <el-image
+                                v-else
+                                style="width: 50px; height: 50px"
+                                :src="require('@/assets/images/imgError.jpg')">
+                              </el-image>
+                            </div>
+                            <div class="right">
+                              <div class="context">
+                                {{ item.attachment || item.content}}
+                              </div>
+                              <a class="see" :href="item.content" target="_blank"><i class="el-icon-view"></i>查看详情</a>
+                              <div class="copy" @click="copyLink(item.id)"><i class="el-icon-link"></i>复制链接</div>
+                              <a :href="item.content" :id="item.id" target="_blank" style="position:fixed;top:9999px;left:9999px;">{{item.content}}</a>
+                            </div>
+                            <!-- <pre>{{ item.content }}</pre> -->
+                          </div>
                         <!-- 视频 -->
                         <div
                           class="msgTypeVideo"
@@ -2518,15 +2578,17 @@ import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import Recorder from 'recorder-core/recorder.mp3.min'
 import BMapComponent from '@/components/map.vue'
 import draggable from 'vuedraggable'
+import VueQr from 'vue-qr'
 export default {
   directives: {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   components: {
-    bsTop, bsFooter, BMapComponent, draggable, ElImageViewer
+    bsTop, bsFooter, BMapComponent, draggable, ElImageViewer, VueQr
   },
   data () {
     return {
+      showErweimaViewer: false,
       infoCount: 0,
       findCount: 0,
       orderInfoCount: 0,
@@ -2818,6 +2880,9 @@ export default {
         this.$message.error('发送内容不能为空')
         return
       }
+      if (/^http/.test(this.signalROptions.value)) {
+        this.signalROptions.msgType = 'Product'
+      }
       try {
         const res = await this.createMessageAccept()
         this.signalROptions.showmsg.push(res.data.result.item)
@@ -2868,6 +2933,10 @@ export default {
           this.signalROptions.value = null
           this.$message.error('发送内容不能为空')
           return
+        }
+        if (/^http/.test(this.signalROptions.value)) {
+          this.signalROptions.msgType = 'Product'
+          this.signalROptions.attachment = this.signalROptions.value
         }
         try {
           const res = await this.createMessageAccept()
@@ -4759,6 +4828,36 @@ export default {
     // 获取所有订单未读消息
     getOrderInfoCount (value) {
      this.orderInfoCount = value
+    },
+    // 复制聊天窗口链接地址
+    copyLink(id) {
+      var link = document.getElementById(id)
+      var range
+      if (document.body.createTextRange) {
+        range = document.body.createTextRange()
+        range.moveToElementText(link)
+        range.select()
+      } else if (window.getSelection) {
+        var selection = window.getSelection()
+        range = document.createRange()
+        console.log(range.text, range.htmlText);
+        range.selectNodeContents(link)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else {
+        console.warn('none')
+      }
+      document.execCommand('Copy') // 执行浏览器复制命令
+      // console.warn('none')
+      this.$message.success('已复制好，可贴粘。')
+    },
+    // 点击预览二维码大图
+    openErweima () {
+      this.showErweimaViewer = true
+    },
+    // 点击关闭二维码大图
+    closeErweimaViewer () {
+      this.showErweimaViewer = false
     }
   },
   mounted () {
@@ -4805,24 +4904,6 @@ export default {
     )
     this.imgAndVideoNum = Number(this.Json.NoticeRestrictions[4].itemCode)
   },
-  // 聊天窗口滚动到最底部
-  // updated() {
-  //   if (!this.noScrollTop) {
-  //     this.$nextTick(() => {
-  //       $("#liaotianchuangkou")
-  //         .stop()
-  //         .animate(
-  //           {
-  //             scrollTop:
-  //               $("#liaotianchuangkou")[0] &&
-  //               $("#liaotianchuangkou")[0].scrollHeight +
-  //                 $("#liaotianchuangkou")[0].offsetHeight
-  //           },
-  //           500
-  //         );
-  //     });
-  //   }
-  // },
   watch: {
     updateLiaotian (msgList) {
       if (msgList && msgList.length && !this.noScrollTop) {
@@ -6281,6 +6362,82 @@ export default {
                   height: 100%;
                 }
               }
+              .msgTypeProduct{
+                  float: right;
+                  width: 285px;
+                  min-height: 90px;
+                  box-sizing: border-box;
+                  position: relative;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  background: linear-gradient(
+                    #f7f7f7,
+                    #fff
+                  );
+                  box-shadow: 0px 3px 9px 0px rgba(1, 59, 199, 0.2);
+                  border: 1px solid #f7f7f7;
+                  color: #000;
+                  border-radius: 10px;
+                  padding: 5px 10px;
+                  &::after {
+                    clear: both;
+                    content: "";
+                    display: block;
+                    border-bottom: 9px solid transparent;
+                    border-right: 9px solid #f7f7f7;
+                    border-top: 9px solid transparent;
+                    position: absolute;
+                    left: -8px;
+                    top: 15px;
+                    transform: translate(0, -50%);
+                    width: 0;
+                    height: 0;
+                  }
+                  .liaotianerweima {
+                    width: 50px;
+                    height: 50px;
+                    border: 1px solid #dfe6f8;
+                  }
+                  // pre {
+                  //   line-height: 20px;
+                  //   white-space: pre-wrap; /* css3.0 */
+                  //   white-space: -moz-pre-wrap; /* Firefox */
+                  //   white-space: -pre-wrap; /* Opera 4-6 */
+                  //   white-space: -o-pre-wrap; /* Opera 7 */
+                  //   word-wrap: break-word; /* Internet Explorer 5.5+ */
+                  // }
+                  .right {
+                    flex: 1;
+                    position: relative;
+                    box-sizing: border-box;
+                    .context{
+                      width: 200px;
+                      height: 40px;
+                      margin-left: 10px;
+                      display: -webkit-box;
+                      overflow: hidden;
+                      white-space: normal !important;
+                      text-overflow: ellipsis;
+                      word-wrap: break-word;
+                      -webkit-line-clamp: 2;
+                      -webkit-box-orient: vertical
+                    }
+                    .see,.copy {
+                      position: absolute;
+                      bottom: -15px;
+                      font-size: 12px;
+                      color: #165AF7;
+                      cursor: pointer;
+                    }
+                    .see{
+                      right: 90px;
+                    }
+                    .copy{
+                      right: 10px;
+                    }
+                  }
+              }
               .msgTypeImage {
                 max-width: 150px;
                 border: 1px solid #f0eeee;
@@ -6421,6 +6578,17 @@ export default {
               .msgTypeText {
                 word-wrap: break-word;
                 word-break: break-all;
+                background: linear-gradient(
+                    #eafad8,
+                    #ade44d,
+                    #ade44d,
+                    #81c40d
+                  );
+                box-shadow: 0px 3px 9px 0px rgba(1, 59, 199, 0.2);
+                border: 1px solid #ade44d;
+                color: #000;
+                border-radius: 10px;
+                padding: 5px 10px;
                 pre {
                   line-height: 20px;
                   white-space: pre-wrap; /* css3.0 */
@@ -6429,6 +6597,82 @@ export default {
                   white-space: -o-pre-wrap; /* Opera 7 */
                   word-wrap: break-word; /* Internet Explorer 5.5+ */
                 }
+              }
+              .msgTypeProduct{
+                  float: right;
+                  width: 285px;
+                  min-height: 90px;
+                  box-sizing: border-box;
+                  position: relative;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  background: linear-gradient(
+                    #f7f7f7,
+                    #fff
+                  );
+                  box-shadow: 0px 3px 9px 0px rgba(1, 59, 199, 0.2);
+                  border: 1px solid #f7f7f7;
+                  color: #000;
+                  border-radius: 10px;
+                  padding: 5px 10px;
+                  &::after {
+                    content: "";
+                    display: block;
+                    border-bottom: 9px solid transparent;
+                    border-left: 9px solid #f7f7f7;
+                    border-top: 9px solid transparent;
+                    position: absolute;
+                    right: -8px;
+                    top: 15px;
+                    transform: translate(0, -50%);
+                    width: 0;
+                    height: 0;
+                    clear: both;
+                  }
+                  .liaotianerweima {
+                    width: 50px;
+                    height: 50px;
+                    border: 1px solid #dfe6f8;
+                  }
+                  // pre {
+                  //   line-height: 20px;
+                  //   white-space: pre-wrap; /* css3.0 */
+                  //   white-space: -moz-pre-wrap; /* Firefox */
+                  //   white-space: -pre-wrap; /* Opera 4-6 */
+                  //   white-space: -o-pre-wrap; /* Opera 7 */
+                  //   word-wrap: break-word; /* Internet Explorer 5.5+ */
+                  // }
+                  .right {
+                    flex: 1;
+                    position: relative;
+                    box-sizing: border-box;
+                    .context{
+                      width: 200px;
+                      height: 40px;
+                      margin-left: 10px;
+                      display: -webkit-box;
+                      overflow: hidden;
+                      white-space: normal !important;
+                      text-overflow: ellipsis;
+                      word-wrap: break-word;
+                      -webkit-line-clamp: 2;
+                      -webkit-box-orient: vertical
+                    }
+                    .see,.copy {
+                      position: absolute;
+                      bottom: -15px;
+                      font-size: 12px;
+                      color: #165AF7;
+                      cursor: pointer;
+                    }
+                    .see{
+                      right: 90px;
+                    }
+                    .copy{
+                      right: 10px;
+                    }
+                  }
               }
               .msgTypeVideo {
                 width: 285;

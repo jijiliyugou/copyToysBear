@@ -415,6 +415,7 @@ export default {
       let msg
       switch (item.msgType) {
         case 'Text':
+        case 'Product':
           msg = item.content
           break
         case 'Video':
