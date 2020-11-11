@@ -1731,7 +1731,7 @@
                     :url-list="viewerImgList" />
               </el-col>
           </draggable>
-          <el-col :span="8">
+          <el-col class="imgsItemBox" :span="8">
               <el-upload
               action="#"
               list-type="picture-card"
@@ -7796,13 +7796,14 @@ export default {
     .syllable_ul{
       .el-col {
         margin-top: 5px;
+        box-sizing: border-box;
         .imgItemBox{
           width: 100%;
+          box-sizing: border-box;
           height: 0;
           padding-bottom: 100%;
           position: relative;
           border-radius: 5px;
-          // border: 1px solid #dfdfdf;
           overflow: hidden;
           .itemIcon{
             position: absolute;
@@ -7846,14 +7847,16 @@ export default {
           }
       }
     }
-    .imgsItem {
+    .imgsItemBox{
+      margin-top: 5px;
+      .imgsItem {
           width: 100%;
           height: 100%;
           float: left;
           @{deep} .el-upload{
             width: 100%;
-            height:0;
-            padding-bottom:100%;
+            height: 123.98px;
+            line-height: normal;
             position: relative;
             .el-icon-plus{
               position: absolute;
@@ -7863,6 +7866,7 @@ export default {
             }
           }
         }
+    }
   }
   .sendGonggaoBtn {
     text-align: center;
