@@ -2936,7 +2936,6 @@ export default {
         }
         if (/^http/.test(this.signalROptions.value)) {
           this.signalROptions.msgType = 'Product'
-          this.signalROptions.attachment = this.signalROptions.value
         }
         try {
           const res = await this.createMessageAccept()
@@ -6413,7 +6412,6 @@ export default {
                     box-sizing: border-box;
                     .context{
                       width: 200px;
-                      height: 40px;
                       margin-left: 10px;
                       display: -webkit-box;
                       overflow: hidden;
@@ -6425,7 +6423,7 @@ export default {
                     }
                     .see,.copy {
                       position: absolute;
-                      bottom: -15px;
+                      bottom: -20px;
                       font-size: 12px;
                       color: #165AF7;
                       cursor: pointer;
@@ -6649,7 +6647,6 @@ export default {
                     box-sizing: border-box;
                     .context{
                       width: 200px;
-                      height: 40px;
                       margin-left: 10px;
                       display: -webkit-box;
                       overflow: hidden;
@@ -6661,7 +6658,7 @@ export default {
                     }
                     .see,.copy {
                       position: absolute;
-                      bottom: -15px;
+                      bottom: -20px;
                       font-size: 12px;
                       color: #165AF7;
                       cursor: pointer;
