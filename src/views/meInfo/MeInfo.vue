@@ -15,6 +15,7 @@
           @cancelSendGonggao="active2 = null"
           @showFindLiaotian="showFindLiaotian"
           @showOrderCompanyList="showOrderCompanyList"
+          @getNoticeUnreadTotal="getNoticeUnreadTotal"
           :findCount="findCount"
           @orderInfoCount="getOrderInfoCount"
         ></router-view>
@@ -3726,12 +3727,12 @@ export default {
             const fd = new FormData()
             for (const val of this.fileList) {
               fd.append('file', val.raw)
-              fd.append (val.name, );
             }
             fd.append('BusinessType', 'Notice')
             res = await this.$http.post('/api/File/InsertPic', fd, {
               headers: { 'Content-Type': 'multipart/form-data' }
             })
+            console.log(100, res)
             if (res.data.result.code === 200) {
               urls = res.data.result.object.map(re => re.filePath)
             }

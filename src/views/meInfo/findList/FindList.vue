@@ -229,6 +229,7 @@ export default {
     }
   },
   mounted () {
+    this.$emit('getNoticeUnreadTotal')
     this.getDataList()
     this.$root.eventHub.$on('UpdateFind', async () => {
       this.pageSize = 10

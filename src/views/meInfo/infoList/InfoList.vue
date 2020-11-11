@@ -203,12 +203,7 @@ export default {
         this.$message.error('您的浏览器不支持WebSocket')
       } else {
         // 初始化weosocket
-        // 正式
         this.ws = new WebSocket(this.wsBaseUrl)
-        // 测试
-        // this.ws = new WebSocket(
-        //   'ws://139.9.71.135:8090/ws?UserId=' + (this.$store.state.userInfo.userInfo && this.$store.state.userInfo.userInfo.id)
-        // )
         // 监听webSocket连接
         this.ws.onopen = this.websocketonopen
         // 监听webSocket错误信息
@@ -287,6 +282,7 @@ export default {
     // 打开聊天界面
     openLiaotiao (item) {
       this.$emit('showLiaotianr', item)
+      this.getOrderMessageCount()
     },
     // 打开公司订单列表
     openOrder (item) {
