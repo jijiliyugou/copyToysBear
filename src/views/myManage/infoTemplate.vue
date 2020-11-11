@@ -25,7 +25,7 @@
             style="width: 90%;"
           >
             <el-option
-              v-for="(item, i) in [{companyName: '全部', companyNumber: null}, ...hallList]"
+              v-for="(item, i) in [{companyName: '全部', companyNumber: ''}, ...hallList]"
               :key="i"
               :label="item.companyName"
               :value="item.companyNumber"
@@ -180,7 +180,7 @@ export default {
       hallList: [],
       searchForm: {
         keyword: '',
-        hallNumber: null
+        hallNumber: ''
       },
       addRules: {
         templateName: [
