@@ -64,9 +64,9 @@
             </div>
           </div>
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
-            <p><em>联 系 人：</em><span>{{ productInfo && productInfo.linkman }}</span></p>
-            <p><em>报价方式：</em><span>{{ productInfo && productInfo.offerMethod }}</span></p>
-            <p><em>尺 码：</em><span>{{ productInfo && productInfo.size }}</span></p>
+            <p>联系人：<span>{{ productInfo && productInfo.linkman }}</span></p>
+            <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
+            <p>尺 码：<span>{{ productInfo && productInfo.size }}</span></p>
           </div>
           <div class="supplierParams" v-else>
             <p>报价参数：<span>{{ productInfo && productInfo.baseNumber }}</span></p>
@@ -337,11 +337,6 @@ export default {
         p{
           padding: 0.133333rem;
           display: flex;
-          em{
-            width: 1.6rem;
-            text-align-last: justify;
-            text-align: justify;
-        }
           span{
             color: #c0c4cc;
           }
