@@ -55,7 +55,7 @@
       </div>
     </div>
     <el-card class="box-card">
-      <div class="text-item">公司名称：<span>{{ companyInfo && companyInfo.companyName }}</span></div>
+      <div class="text-item">工厂名称：<span>{{ companyInfo && companyInfo.companyName }}</span></div>
       <div class="text-item addr" @click="openMap">
         <div class="left">
           地<em style="opacity: 0">地区</em>区：<span>{{ companyInfo && companyInfo.address }}</span>
@@ -64,20 +64,8 @@
       </div>
       <div class="text-item">产品数量：<span>{{ companyInfo && companyInfo.productCount }}</span></div>
       <div class="text-item lianxi">
-        我要联系：<el-popover
-          style="minWidth:100px;"
-          placement="bottom"
-          trigger="click"
-          :content="(companyInfo && (companyInfo.phoneNumber || companyInfo.telephoneNumber)) || '暂无联系方式'"
-        >
-          <el-button
-            slot="reference"
-            icon="el-icon-phone-outline"
-            type="danger"
-            round
-            >联系电话</el-button
-          >
-        </el-popover>
+        我要联系：
+          <a :href="tel"><i class="el-icon-phone-outline" style="marginRight:5px;"></i> 拨打电话</a>
       </div>
     </el-card>
     <div class="fanhui">
@@ -175,6 +163,11 @@ export default {
         })
       }
     }
+  },
+  computed: {
+    tel () {
+      return 'tel:' + (this.companyInfo ? (this.companyInfo.phoneNumber || this.companyInfo.telephoneNumber) : '')
+    }
   }
 }
 </script>
@@ -271,13 +264,13 @@ export default {
         margin-top: 30px;
         font-size: 20px;
         font-weight: 600;
-        .el-button {
+        a {
         padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 151px;
-        height: 55px;
+        width: 150px;
+        height: 50px;
         border-radius: 28px;
         background: #e60012;
         color: #fff;

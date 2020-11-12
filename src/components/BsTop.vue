@@ -271,7 +271,7 @@ export default {
       }
       this.isShowCropper = true
       this.fileinfo = file
-      // 上传成功后将图片地址赋值给裁剪框显示图片
+      // 选择成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {
         const f = window.URL.createObjectURL(file.raw)
         this.baseImg = this.option.img = f
