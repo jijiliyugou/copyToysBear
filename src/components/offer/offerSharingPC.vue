@@ -65,18 +65,9 @@
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
             <div class="left">
               <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
-              <p>客户代码：<span>{{ productInfo && productInfo.client_nu }}</span></p>
-              <p>尺码：<span>{{ productInfo && productInfo.size }}</span></p>
-            </div>
-            <div class="middel">
-              <p>币种：<span>{{ productInfo && productInfo.cu_de }}</span></p>
-              <p>利润：<span>{{ productInfo && productInfo.profit }}</span></p>
-              <p>取舍方式：<span>{{ productInfo && productInfo.rejectionMethod }}</span></p>
             </div>
             <div class="right">
-              <p>汇率：<span>{{ productInfo && productInfo.exchange }}</span></p>
-              <p>总费用：<span>{{ productInfo && productInfo.totalCost }}</span></p>
-              <p>小数位数：<span>{{ productInfo && productInfo.decimalPlaces }}</span></p>
+              <p>尺码：<span>{{ productInfo && productInfo.size }}</span></p>
             </div>
           </div>
           <div class="supplierParams" v-else>
@@ -195,7 +186,7 @@
                     <li>
                       体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
                     </li>
-                    <li>
+                    <li v-show="productInfo.productOfferType !== 'company'">
                       出厂价：<span class="price" v-if="$_.isNumber(item.unitPrice)">{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
                     </li>
                     <li>
@@ -369,6 +360,7 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
+        document.title = this.productInfo.companyName
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -408,6 +400,9 @@ export default {
     '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
       if (val <= 1024) this.$router.push('/offerSharing?id=' + this.$route.query.id)
     }
+  },
+  beforeDestroy () {
+    document.title = '小竹熊科技'
   }
 }
 </script>
@@ -527,8 +522,8 @@ export default {
       .companyParams{
         display: flex;
         justify-content: space-between;
-        .left,.right,.middel{
-          width: 33.33%;
+        .left,.right{
+          width: 50%;
           p{
             padding: 10px;
             span{

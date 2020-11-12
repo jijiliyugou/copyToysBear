@@ -64,21 +64,9 @@
             </div>
           </div>
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
-            <div class="left">
-              <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
-              <p>客户代码：<span>{{ productInfo && productInfo.client_nu }}</span></p>
-              <p>尺码：<span>{{ productInfo && productInfo.size }}</span></p>
-            </div>
-            <div class="middel">
-              <p>币种：<span>{{ productInfo && productInfo.cu_de }}</span></p>
-              <p>利润：<span>{{ productInfo && productInfo.profit }}</span></p>
-              <p>取舍方式：<span>{{ productInfo && productInfo.rejectionMethod }}</span></p>
-            </div>
-            <div class="right">
-              <p>汇率：<span>{{ productInfo && productInfo.exchange }}</span></p>
-              <p>总费用：<span>{{ productInfo && productInfo.totalCost }}</span></p>
-              <p>小数位数：<span>{{ productInfo && productInfo.decimalPlaces }}</span></p>
-            </div>
+            <p><em>联 系 人：</em><span>{{ productInfo && productInfo.linkman }}</span></p>
+            <p><em>报价方式：</em><span>{{ productInfo && productInfo.offerMethod }}</span></p>
+            <p><em>尺 码：</em><span>{{ productInfo && productInfo.size }}</span></p>
           </div>
           <div class="supplierParams" v-else>
             <p>报价参数：<span>{{ productInfo && productInfo.baseNumber }}</span></p>
@@ -127,7 +115,7 @@
           <p class="textItem">装箱量：{{productDetail.in_en + "/" + productDetail.ou_lo + "(PCS)"}}</p>
           <p class="textItem">体积/材积：{{productDetail.bulk_stere + "(CBM)" + "/" + productDetail.bulk_feet + "(CUFT)"}}</p>
           <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
-          <p class="textItem">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice)">{{productDetail.cu_de + productDetail.unitPrice.toFixed(2)}}</span></p>
+          <p class="textItem">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice) && productInfo.productOfferType !== 'company'">{{productDetail.cu_de + productDetail.unitPrice.toFixed(2)}}</span></p>
           <p class="textItem">报价：<span class="price" v-if="$_.isNumber(productDetail.offerAmount)">{{productDetail.cu_de + productDetail.offerAmount.toFixed(2)}}</span></p>
       </div>
     </div>
@@ -183,6 +171,7 @@ export default {
       const res = await this.$http.post('/api/GetProductOfferByNumber', { offerNumber: this.$route.params.pid })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
+        document.title = this.productInfo.companyName
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -217,6 +206,9 @@ export default {
     '$store.state.screenWidth' (val) { // 监听屏幕宽度变化
       if (val <= 1024) this.$router.push({ name: 'offerDetail', params: { id: this.$route.params.id, pid: this.$route.params.pid } })
     }
+  },
+  beforeDestroy () {
+    document.title = '小竹熊科技'
   }
 }
 </script>
@@ -342,15 +334,16 @@ export default {
         }
       }
       .companyParams{
-        display: flex;
-        justify-content: space-between;
-        .left,.right,.middel{
-          width: 33.33%;
-          p{
-            padding: 10px;
-            span{
-              color: #c0c4cc;
-            }
+        p{
+          padding: 0.133333rem;
+          display: flex;
+          em{
+            width: 1.6rem;
+            text-align-last: justify;
+            text-align: justify;
+        }
+          span{
+            color: #c0c4cc;
           }
         }
       }

@@ -124,6 +124,7 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
+        document.title = this.productInfo.companyName
         this.getCompanyInfo()
       } else {
         this.$message.error(res.data.result.msg)
@@ -168,6 +169,9 @@ export default {
     tel () {
       return 'tel:' + (this.companyInfo ? (this.companyInfo.phoneNumber || this.companyInfo.telephoneNumber) : '')
     }
+  },
+  beforeDestroy () {
+    document.title = '小竹熊科技'
   }
 }
 </script>

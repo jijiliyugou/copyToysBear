@@ -57,20 +57,9 @@
             {{ productInfo && productInfo.title }}
           </div>
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
-            <div class="left">
-              <p><em>联 系 人：</em><span>{{ productInfo && productInfo.linkman }}</span></p>
-              <p><em>报价方式：</em><span>{{ productInfo && productInfo.offerMethod }}</span></p>
-              <p><em>客户代码：</em><span>{{ productInfo && productInfo.client_nu }}</span></p>
-              <p><em>币  种：</em><span>{{ productInfo && productInfo.cu_de }}</span></p>
-              <p><em>汇  率：</em><span>{{ productInfo && productInfo.exchange }}</span></p>
-            </div>
-            <div class="right">
-              <p><em>利 润：</em><span>{{ productInfo && productInfo.profit }}</span></p>
-              <p><em>总 费 用：</em><span>{{ productInfo && productInfo.totalCost }}</span></p>
-              <p><em>尺 码：</em><span>{{ productInfo && productInfo.size }}</span></p>
-              <p><em>取舍方式：</em><span>{{ productInfo && productInfo.rejectionMethod }}</span></p>
-              <p><em>小数位数：</em><span>{{ productInfo && productInfo.decimalPlaces }}</span></p>
-            </div>
+            <p><em>联 系 人：</em><span>{{ productInfo && productInfo.linkman }}</span></p>
+            <p><em>报价方式：</em><span>{{ productInfo && productInfo.offerMethod }}</span></p>
+            <p><em>尺 码：</em><span>{{ productInfo && productInfo.size }}</span></p>
           </div>
           <div class="supplierParams" v-else>
             <p><em>报价参数：</em><span>{{ productInfo && productInfo.baseNumber }}</span></p>
@@ -158,7 +147,7 @@
             <p>
               体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
             </p>
-            <p class="productPrice">
+            <p class="productPrice" v-show="productInfo.productOfferType !== 'company'">
               出厂价：<span class="price">{{
                 item.cu_de + item.unitPrice.toFixed(2)
               }}</span>
@@ -230,7 +219,7 @@
         :src="require('@/assets/images/暂无产品.png')"
         fit="contain"
       ></el-image>
-      <footer class="myFooter">来源于：深圳小竹熊科技</footer>
+      <footer class="myFooter">{{(productInfo && productInfo.companyName) || '小竹熊'}}</footer>
     </div>
   </div>
 </template>
@@ -411,6 +400,7 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
+        document.title = this.productInfo.companyName
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -428,6 +418,9 @@ export default {
     this.getProductCategoryList()
     this.getProductOfferByNumber()
     this.getProductOfferDetailPage()
+  },
+  beforeDestroy () {
+    document.title = '小竹熊科技'
   },
   computed: {
     noMore () {
@@ -527,21 +520,16 @@ export default {
           font-weight: 600;
         }
       .companyParams{
-        display: flex;
-        justify-content: space-between;
-        .left,.right{
-          width: 50%;
-          p{
-            padding: 0.133333rem;
-            display: flex;
-            em{
-              width: 1.6rem;
-              text-align-last: justify;
-              text-align: justify;
-          }
-            span{
-              color: #c0c4cc;
-            }
+        p{
+          padding: 0.133333rem;
+          display: flex;
+          em{
+            width: 1.6rem;
+            text-align-last: justify;
+            text-align: justify;
+        }
+          span{
+            color: #c0c4cc;
           }
         }
       }
