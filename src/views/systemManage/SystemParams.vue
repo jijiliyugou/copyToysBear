@@ -6,12 +6,30 @@
   <el-main>
     <div class="blockBox">
           <!-- 父表格 -->
-        <el-table
+      <div class="tableBox">
+        <div class="searchBox">
+          <el-form :inline="true" :model="searchTableOne" class="demo-form-inline">
+            <el-form-item label="关键字查询">
+              <el-input
+              clearable
+                @keyup.enter.native="search"
+                v-model="searchTableOne.keyword"
+                placeholder="输入关键字"
+                style="width: 100%"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div class="btns">
+            <el-button type="primary">搜索</el-button>
+            <el-button type="primary">新增</el-button>
+          </div>
+        </div>
+      <el-table
       :header-cell-style="{ backgroundColor: '#8bc4ff', color: '#fff' }"
       :header-row-style="{ backgroundColor: '#8bc4ff', color: '#fff' }"
+      highlight-current-row
+      @current-change="handleCurrentChange"
       :data="tableDataOne"
-      style="width: 100%"
-      @row-click="rowClick"
       border
       height="700px"
       class="tableOne"
@@ -41,12 +59,31 @@
         </template>
       </el-table-column>
     </el-table>
+      </div>
       <!-- 子表格 -->
-    <el-table
+      <div class="tableBox">
+        <div class="searchBox">
+          <el-form :inline="true" :model="searchTableOne" class="demo-form-inline">
+            <el-form-item label="关键字查询">
+              <el-input
+              clearable
+                @keyup.enter.native="search"
+                v-model="searchTableOne.keyword"
+                placeholder="输入关键字"
+                style="width: 100%"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <div class="btns">
+            <el-button type="primary">搜索</el-button>
+            <el-button type="primary">新增</el-button>
+          </div>
+        </div>
+        <el-table
         :header-cell-style="{ backgroundColor: '#8bc4ff', color: '#fff' }"
+        :header-row-style="{ backgroundColor: '#8bc4ff', color: '#fff' }"
         class="tableTwo"
         :data="tableDataTwo"
-        style="width: 100%"
         height="700px"
         border>
         <el-table-column
@@ -80,6 +117,7 @@
         </template>
       </el-table-column>
       </el-table>
+      </div>
     </div>
   </el-main>
   <el-footer style="padding:0;" height="162px">
@@ -96,7 +134,10 @@ export default {
   data () {
     return {
       tableDataOne: null,
-      tableDataTwo: null
+      tableDataTwo: null,
+      searchTableOne: {
+        keyword: ''
+      }
     }
   },
   methods: {
@@ -109,7 +150,7 @@ export default {
       console.log(row)
     },
     // 点击父级显示子级
-    rowClick (row) {
+    handleCurrentChange (row) {
       this.getChildrenSysList(row.basisExplainCode)
     },
     // 获取子级系统参数列表
@@ -160,16 +201,23 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .tableOne{
+      .tableBox{
         flex: 1;
-        margin-right: 5px;
-      }
-      .tableTwo{
-        flex: 1;
+        .searchBox{
+          border: 1px solid #ebeef5;
+          display: flex;
+          padding: 10px 5px;
+          justify-content: space-between;
+          .el-form{
+            .el-form-item {
+              margin: 0;
+            }
+          }
+        }
       }
     }
 }
-.gutter{
-  background-color: #8bc4ff;
+@{deep} .el-table th, @{deep} .el-table tr {
+  background-color: transparent;
 }
 </style>

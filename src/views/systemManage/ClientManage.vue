@@ -7,7 +7,8 @@
     <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;overflow:visible;">
       <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="关键字查询" size="mini">
+          <div class="searchItem">
+            <el-form-item label="关键查询：">
             <el-input
             clearable
               @keyup.enter.native="search"
@@ -16,30 +17,12 @@
               style="width: 100%"
             ></el-input>
           </el-form-item>
-          <el-form-item label="类型查询" size="mini">
-            <el-select
-              clearable
-              v-model="formInline.CompanyType"
-              placeholder="请选择"
-              style="width: 90%"
-            >
-              <el-option
-                v-for="item in [
-                  { itemCode: null, itemText: '全部' },
-                  ...clientTypeList,
-                ]"
-                :key="item.itemCode"
-                :label="item.itemText"
-                :value="item.itemCode"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-            <el-form-item label="状态查询" size="mini">
+            <el-form-item label="状态查询：">
             <el-select
               clearable
               v-model="formInline.Audit_state"
               placeholder="请选择"
-              style="width: 90%"
+              style="width: 100%"
             >
               <el-option
                 v-for="(item, index) in [
@@ -52,10 +35,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="时间段搜索" size="mini">
+          <el-form-item>
             <el-date-picker
               v-model="formInline.dateTile"
-              width="100"
+              width="50%"
               value-format="yyyy-MM-ddTHH:mm:ss"
               type="daterange"
               :picker-options="pickerOptions"
@@ -65,14 +48,54 @@
               align="right"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item class="btnList" size="mini">
-            <el-button type="primary" size="small" @click="search"
+          </div>
+          <div class="searchItem">
+            <el-form-item label="类型查询：">
+            <el-select
+              clearable
+              v-model="formInline.CompanyType"
+              placeholder="请选择"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in [
+                  { itemCode: null, itemText: '全部' },
+                  ...clientTypeList,
+                ]"
+                :key="item.itemCode"
+                :label="item.itemText"
+                :value="item.itemCode"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="审核条件：">
+            <el-select
+              clearable
+              v-model="formInline.interiorAudit"
+              placeholder="请选择"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item, index) in [
+                  { itemCode: '', itemText: '全部' },
+                  { itemCode: true, itemText: '是' },
+                  { itemCode: false, itemText: '否' }
+                ]"
+                :key="index"
+                :label="item.itemText"
+                :value="item.itemCode"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="btnList">
+            <el-button type="primary" @click="search"
               >查询</el-button
             >
-            <el-button type="primary" size="small" @click="openAddClient"
+            <el-button type="primary" @click="openAddClient"
               >新增</el-button
             >
           </el-form-item>
+        </div>
       </el-form>
     </div>
     <div class="tableContent">
@@ -149,7 +172,13 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column
+        <el-table-column prop="interiorAudit" label="内部审核" align="center">
+          <template slot-scope="scope">
+              <el-tag v-if="scope.row.interiorAudit" effect="plain">通过</el-tag>
+              <el-tag v-else effect="plain" type='danger'>拒绝</el-tag>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column
           label="新增日期"
           prop="createdOn"
           sortable
@@ -160,7 +189,7 @@
               scope.row.createdOn ? scope.row.createdOn.split(/T/)[0] : ""
             }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="操作" align="center" width="350">
           <template slot-scope="scope">
             <el-button
@@ -1145,6 +1174,7 @@ export default {
         CompanyName: null,
         CompanyType: null,
         Audit_state: '',
+        interiorAudit: '',
         dateTile: null
       },
       clientDialog: false,
@@ -1555,11 +1585,12 @@ export default {
         CompanyName: this.formInline.CompanyName,
         CompanyType: this.formInline.CompanyType,
         Audit_state: this.formInline.Audit_state,
+        interiorAudit: this.formInline.interiorAudit,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
       for (const key in fd) {
-        if (!fd[key]) delete fd[key]
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
       }
       const res = await this.$http.post('/api/CompanyManagementPage', fd)
       if (res.data.result.code === 200) {
@@ -1795,16 +1826,11 @@ export default {
 @deep: ~">>>";
 .searchBox {
   padding-top: 50px;
-  .el-form-item{
-    @{deep} .el-form-item__content{
-      width:110px;
-    }
-  }
-    .btnList {
-    float: right;
-    margin-left: 50px;
-    @{deep} .el-form-item__content{
-      width:130px;
+  .searchItem{
+    display: flex;
+    justify-content: space-between;
+    .el-form-item{
+      flex: 1;
     }
   }
 }
