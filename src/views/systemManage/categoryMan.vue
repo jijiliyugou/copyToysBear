@@ -56,14 +56,10 @@
         ></el-table-column>
         <el-table-column label="级别">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.level === 0 ? '' : scope.row.level === 1 ? 'success' : scope.row.level === 2 ? 'warning' : 'danger'">{{
+            <el-tag :type="scope.row.level === 0 ? '' : 'danger'">{{
               scope.row.level === 0
                 ? "一级类目"
-                : scope.row.level === 1
-                ? "二级类目"
-                : scope.row.level === 2
-                ? "三级类目"
-                : "四级类目"
+                : "二级类目"
             }}</el-tag>
           </template>
         </el-table-column>
@@ -74,7 +70,7 @@
               style="margin-right: 10px"
               type="success"
               @click="openAdd(scope.row, true)"
-              :disabled="scope.row.level === 3"
+              :disabled="scope.row.level === 1"
               >新增子级</el-button
             >
             <el-button

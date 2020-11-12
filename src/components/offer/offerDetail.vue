@@ -67,7 +67,7 @@
             </div>
           </div>
           <div class="supplierParams" v-else>
-            <p><em>报价参数：</em><span>{{ productInfo && productInfo.bidPrice }}</span></p>
+            <p><em>报价参数：</em><span>{{ productInfo && productInfo.baseNumber }}</span></p>
           </div>
         </div>
         <div class="dates">
