@@ -65,7 +65,7 @@
       <div class="text-item">产品数量：<span>{{ companyInfo && companyInfo.productCount }}</span></div>
       <div class="text-item lianxi">
         我要联系：
-          <a :href="tel"><i class="el-icon-phone-outline" style="marginRight:5px;"></i> 拨打电话</a>
+          <a :href="tel">{{ this.companyInfo ? (this.companyInfo.phoneNumber || this.companyInfo.telephoneNumber) : '' }}</a>
       </div>
     </el-card>
     <div class="fanhui">
@@ -268,21 +268,6 @@ export default {
         margin-top: 30px;
         font-size: 20px;
         font-weight: 600;
-        a {
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 150px;
-        height: 50px;
-        border-radius: 28px;
-        background: #e60012;
-        color: #fff;
-        font-size: 20px;
-        @{deep} .el-icon-phone-outline {
-            font-size: 25px;
-        }
-        }
       }
     }
   }

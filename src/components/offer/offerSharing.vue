@@ -7,38 +7,37 @@
   >
   <div class="boxOne">
     <div class="topLayout">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-image fit="contain" style="width:0.533333rem;height:0.533333rem;" :src="productInfo && productInfo.companyLogo" lazy>
-                    <div
-                      slot="placeholder"
-                      class="image-slot"
-                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
-                    >
-                      <img
-                        class="errorImg"
-                        style="width:0.533333rem;height:0.533333rem;"
-                        src="~@/assets/images/imgError.jpg"
-                        alt
-                      />
-                    </div>
-                    <div
-                      slot="error"
-                      class="image-slot"
-                      style="width:0.533333rem;height:0.533333rem; margin: 0 auto"
-                    >
-                      <img
-                        class="errorImg"
-                        style="width:0.533333rem;height:0.533333rem;"
-                        src="~@/assets/images/imgError.jpg"
-                        alt
-                      />
-                    </div>
-                  </el-image>
-        </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
-         <el-col :span="6">
-          <el-popover
+      <div class="left">
+        <el-image fit="contain" :src="productInfo && productInfo.companyLogo" lazy>
+          <div
+            slot="placeholder"
+            class="image-slot"
+          >
+            <img
+              class="errorImg"
+              src="~@/assets/images/imgError.jpg"
+              alt
+            />
+          </div>
+          <div
+            slot="error"
+            class="image-slot"
+          >
+            <img
+              class="errorImg"
+              src="~@/assets/images/imgError.jpg"
+              alt
+            />
+          </div>
+        </el-image>
+      </div>
+      <div class="middel">
+          <van-notice-bar :scrollable="scrollable" :delay="0">
+            {{(productInfo && productInfo.companyName) || '小竹熊'}}的分享
+          </van-notice-bar>
+      </div>
+      <div class="right">
+        <el-popover
           placement="bottom"
           title="复制链接地址"
           trigger="click">
@@ -47,8 +46,7 @@
           </div>
           <el-button class="grid-content bg-purple offterBtn" slot="reference"><i class="offterShare el-icon-share"></i> 分享</el-button>
           </el-popover>
-          </el-col>
-      </el-row>
+      </div>
     </div>
     <el-card class="box-card">
       <div class="textContent">
@@ -57,9 +55,9 @@
             {{ productInfo && productInfo.title }}
           </div>
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
-            <p>联系人：<span>{{ productInfo && productInfo.linkman }}</span></p>
+            <p>联 系 人：<span>{{ productInfo && productInfo.linkman }}</span></p>
             <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
-            <p>尺码：<span>{{ productInfo && productInfo.size }}</span></p>
+            <p>尺<em style="opacity: 0;">尺码</em>码：<span>{{ productInfo && productInfo.size }}</span></p>
           </div>
           <div class="supplierParams" v-else>
             <p>报价参数：<span>{{ productInfo && productInfo.baseNumber }}</span></p>
@@ -147,7 +145,7 @@
             <p>
               体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
             </p>
-            <p class="productPrice" v-show="productInfo.productOfferType !== 'company'">
+            <p class="productPrice" v-show="(productInfo && productInfo.productOfferType) !== 'company'">
               出厂价：<span class="price">{{
                 item.cu_de + item.unitPrice.toFixed(2)
               }}</span>
@@ -228,6 +226,7 @@
 export default {
   data () {
     return {
+      scrollable: false,
       url: window.location.href,
       keyword: null,
       productInfo: null,
@@ -248,6 +247,17 @@ export default {
     }
   },
   methods: {
+    // 判断内容是否超过容器
+    onScrollable () {
+      var containerLength = $('.middel').width()
+      var textLength = ($('.van-notice-bar__content')[0] && $('.van-notice-bar__content')[0].scrollWidth)
+      console.log(textLength, containerLength)
+      if (textLength > containerLength) {
+        this.scrollable = true
+      } else {
+        this.scrollable = false
+      }
+    },
     // 关键字搜索
     search () {
       this.currentPage = 1
@@ -401,6 +411,9 @@ export default {
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
         document.title = this.productInfo.companyName
+        this.$nextTick(() => {
+          this.onScrollable()
+        })
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -460,31 +473,49 @@ export default {
   }
   .topLayout{
   width: 95%;
+  height: 1.066667rem;
   margin: 0 auto;
-  .el-row {
-    height: 0.933333rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .conText{
-      text-align: center;
-      color: #165BF7;
-      font-size: 0.4rem;
-    }
-    .offterBtn{
-      color: #F7BA24;
-      font-size: 0.293333rem;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      cursor: pointer;
-      border: none;
-      .offterShare{
-        font-size: 0.466667rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .left{
+    .el-image{
+      width: 1.066667rem;
+      height: 1.066667rem;
+      img {
+        width: 100%;
+        height: 100%;
       }
     }
+  }
+  .middel{
+    flex: 1;
+    overflow: hidden;
+    text-align: center;
+    @{deep} .van-notice-bar{
+      word-break:keep-all;/* 不换行 */
+      white-space:nowrap;/* 不换行 */
+      display:inline;
+      zoom:1;
+    }
+  }
+  .right {
     .el-popover__reference{
       background-color: transparent;
+    }
+    span{
+      padding: 0;
+      margin: 0;
+      .el-button{
+        color: #F7BA24;
+        font-size: 0.3rem;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        i{
+          font-size: 0.35rem;
+        }
+      }
     }
   }
 }

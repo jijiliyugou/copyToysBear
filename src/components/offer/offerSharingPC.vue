@@ -59,7 +59,7 @@
             {{ productInfo && productInfo.title }}
             </div>
             <div class="contacts">
-              <p>联系人：<span>{{ productInfo && productInfo.linkman }}</span></p>
+              <p>联 系 人：<span>{{ productInfo && productInfo.linkman }}</span></p>
             </div>
           </div>
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
@@ -67,7 +67,7 @@
               <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
             </div>
             <div class="right">
-              <p>尺码：<span>{{ productInfo && productInfo.size }}</span></p>
+              <p>尺<em style="opacity: 0;">尺码</em>码：<span>{{ productInfo && productInfo.size }}</span></p>
             </div>
           </div>
           <div class="supplierParams" v-else>
@@ -186,7 +186,7 @@
                     <li>
                       体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
                     </li>
-                    <li v-show="productInfo.productOfferType !== 'company'">
+                    <li v-show="productInfo && productInfo.productOfferType !== 'company'">
                       出厂价：<span class="price" v-if="$_.isNumber(item.unitPrice)">{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
                     </li>
                     <li>

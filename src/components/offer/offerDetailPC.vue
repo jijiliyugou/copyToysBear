@@ -60,13 +60,16 @@
             {{ productInfo && productInfo.title }}
             </div>
             <div class="contacts">
-              <p>联系人：<span>{{ productInfo && productInfo.linkman }}</span></p>
+              <p>联 系 人：<span>{{ productInfo && productInfo.linkman }}</span></p>
             </div>
           </div>
           <div class="companyParams" v-if="productInfo && productInfo.productOfferType === 'company'">
-            <p>联系人：<span>{{ productInfo && productInfo.linkman }}</span></p>
-            <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
-            <p>尺 码：<span>{{ productInfo && productInfo.size }}</span></p>
+            <div class="left">
+              <p>报价方式：<span>{{ productInfo && productInfo.offerMethod }}</span></p>
+            </div>
+            <div class="right">
+              <p>尺<em style="opacity: 0;">尺码</em>码：<span>{{ productInfo && productInfo.size }}</span></p>
+            </div>
           </div>
           <div class="supplierParams" v-else>
             <p>报价参数：<span>{{ productInfo && productInfo.baseNumber }}</span></p>
@@ -115,7 +118,7 @@
           <p class="textItem">装箱量：{{productDetail.in_en + "/" + productDetail.ou_lo + "(PCS)"}}</p>
           <p class="textItem">体积/材积：{{productDetail.bulk_stere + "(CBM)" + "/" + productDetail.bulk_feet + "(CUFT)"}}</p>
           <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
-          <p class="textItem">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice) && productInfo.productOfferType !== 'company'">{{productDetail.cu_de + productDetail.unitPrice.toFixed(2)}}</span></p>
+          <p class="textItem" v-show="productInfo && productInfo.productOfferType !== 'company'">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice)">{{productDetail.cu_de + productDetail.unitPrice.toFixed(2)}}</span></p>
           <p class="textItem">报价：<span class="price" v-if="$_.isNumber(productDetail.offerAmount)">{{productDetail.cu_de + productDetail.offerAmount.toFixed(2)}}</span></p>
       </div>
     </div>
@@ -334,11 +337,15 @@ export default {
         }
       }
       .companyParams{
-        p{
-          padding: 0.133333rem;
-          display: flex;
-          span{
-            color: #c0c4cc;
+        display: flex;
+        justify-content: space-between;
+        .left,.right{
+          width: 50%;
+          p{
+            padding: 10px;
+            span{
+              color: #c0c4cc;
+            }
           }
         }
       }
