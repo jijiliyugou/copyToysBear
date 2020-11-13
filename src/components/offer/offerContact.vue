@@ -53,7 +53,8 @@
       </div>
     </div>
     <el-card class="box-card">
-      <div class="text-item">工厂名称：<span>{{ companyInfo && companyInfo.companyName }}</span></div>
+      <div class="text-item" v-if="productInfo && productInfo.productOfferType === 'company'">公司名称：<span>{{ companyInfo && companyInfo.companyName }}</span></div>
+      <div class="text-item" v-else>工厂名称：<span>{{ companyInfo && companyInfo.companyName }}</span></div>
       <div class="text-item addr" @click="openMap">
         <div class="left">
           地<em style="opacity: 0">地区</em>区：<span>{{ companyInfo && companyInfo.address }}</span>
@@ -63,7 +64,7 @@
       <div class="text-item">产品数量：<span>{{ companyInfo && companyInfo.productCount }}</span></div>
       <div class="text-item lianxi">
         我要联系：
-          <a :href="tel"><i class="el-icon-phone-outline" style="marginRight:0.066667rem;"></i>拨打电话</a>
+          <a :href="tel">{{ this.companyInfo ? (this.companyInfo.phoneNumber || this.companyInfo.telephoneNumber) : '' }}</a>
       </div>
     </el-card>
     <div class="fanhui">
@@ -273,19 +274,10 @@ export default {
         font-size: 0.266667rem;
         font-weight: 600;
         a {
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.013333rem;
-        height: 0.633333rem;
-        border-radius: 0.373333rem;
-        background: #e60012;
-        color: #fff;
         font-size: 0.266667rem;
-        @{deep} .el-icon-phone-outline {
-            font-size: 0.333333rem;
-        }
+        // @{deep} .el-icon-phone-outline {
+        //     font-size: 0.333333rem;
+        // }
         }
       }
     }

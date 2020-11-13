@@ -17,7 +17,7 @@
               style="width: 100%"
             ></el-input>
           </el-form-item>
-            <el-form-item label="状态查询：">
+            <el-form-item label="审核状态：">
             <el-select
               clearable
               v-model="formInline.Audit_state"
@@ -68,7 +68,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="审核条件：">
+          <el-form-item label="内部审核状态：">
             <el-select
               clearable
               v-model="formInline.interiorAudit"

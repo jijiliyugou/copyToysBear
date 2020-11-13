@@ -117,6 +117,7 @@
         <el-table
         :header-cell-style="{ backgroundColor: '#8bc4ff', color: '#fff' }"
         :header-row-style="{ backgroundColor: '#8bc4ff', color: '#fff' }"
+        empty-text="请选择左边类目"
         class="tableTwo"
         stripe
         :data="tableDataTwo"
@@ -446,7 +447,7 @@ export default {
   },
   created () {
     this.getServiceConfigurationNameList()
-    this.getChildrenSysList()
+    // this.getChildrenSysList()
   },
   mounted () {
   },
