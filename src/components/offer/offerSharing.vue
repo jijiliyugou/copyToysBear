@@ -226,6 +226,8 @@
 export default {
   data () {
     return {
+      textLength: 0,
+      containerLength: 0,
       scrollable: false,
       url: window.location.href,
       keyword: null,
@@ -250,8 +252,10 @@ export default {
     // 判断内容是否超过容器
     onScrollable () {
       var containerLength = $('.middel').width()
-      var textLength = ($('.van-notice-bar__content')[0] && $('.van-notice-bar__content')[0].scrollWidth)
-      console.log(textLength, containerLength)
+      var textLength = ($('.van-notice-bar__wrap')[0] && $('.van-notice-bar__wrap')[0].scrollWidth)
+      console.log(textLength, containerLength, $('.van-notice-bar__wrap'))
+      this.textLength = textLength
+      this.containerLength = containerLength
       if (textLength > containerLength) {
         this.scrollable = true
       } else {
@@ -447,6 +451,14 @@ export default {
     if (this.$store.state.screenWidth > 1024) this.$router.push('/offerSharingPC?id=' + this.$route.query.id)
   },
   watch: {
+    textLength (val) {
+      console.log(val, this.containerLength)
+      if (val > this.containerLength) {
+        this.scrollable = true
+      } else {
+        this.scrollable = false
+      }
+    },
     '$store.state.screenWidth' (val) {
       if (val > 1024) {
         this.$router.push('/offerSharingPC?id=' + this.$route.query.id)
@@ -493,10 +505,10 @@ export default {
     overflow: hidden;
     text-align: center;
     @{deep} .van-notice-bar{
-      word-break:keep-all;/* 不换行 */
-      white-space:nowrap;/* 不换行 */
-      display:inline;
-      zoom:1;
+      .van-notice-bar__wrap{
+        word-break:keep-all;/* 不换行 */
+        white-space:nowrap;/* 不换行 */
+      }
     }
   }
   .right {
