@@ -127,7 +127,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="companyNumber" label="客户编码" width="180">
+        <el-table-column prop="companyNumber" label="客户编码" width="150">
           <template slot-scope="scope">
             <el-link type="primary" @click="openEdit(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px"></i>
@@ -135,47 +135,28 @@
             </el-link>
           </template>
         </el-table-column>
-        <el-table-column prop="companyName" label="公司名称" width="180"></el-table-column>
+        <el-table-column prop="companyName" label="公司名称" width="150"></el-table-column>
         <!-- <el-table-column prop="e_mail" label="邮箱"></el-table-column> -->
         <el-table-column prop="phoneNumber" label="联系电话"></el-table-column>
         <el-table-column prop="companyType" label="公司类型" align="center">
           <template slot-scope="scope">
-            <el-tag
-              v-if="scope.row.companyType === 'Sales'"
-              type="success"
-              effect="plain"
-              >销售公司</el-tag
-            >
-            <el-tag
-              v-else-if="scope.row.companyType === 'Supplier'"
-              type="danger"
-              effect="plain"
-              >供应商</el-tag
-            >
-            <el-tag
-              v-else-if="scope.row.companyType === 'Exhibition'"
-              effect="plain"
-              >展厅</el-tag
-            >
-            <el-tag
-              v-else-if="scope.row.companyType === 'Admin'"
-              type="warning"
-              effect="plain"
-              >管理员</el-tag
-            >
+            <el-link :underline="false" v-if="scope.row.companyType === 'Sales'" type="success">销售公司</el-link>
+            <el-link :underline="false" v-if="scope.row.companyType === 'Exhibition'" type="warning">展厅</el-link>
+            <el-link :underline="false" v-if="scope.row.companyType === 'Supplier'" type="primary">供应商</el-link>
+            <el-link :underline="false" v-if="scope.row.companyType === 'Admin'" type="danger">管理员</el-link>
           </template>
         </el-table-column>
         <el-table-column prop="audit_state" label="审核状态" align="center">
           <template slot-scope="scope">
             <template v-for="(item, i) in userAuditTypeList">
-              <el-tag :key="i" v-if="scope.row.audit_state === item.itemCode" :type="btnTypes[item.itemCode]">{{item.itemText}}</el-tag>
+              <el-tag :key="i" effect="plain" v-if="scope.row.audit_state === item.itemCode" :type="btnTypes[item.itemCode]">{{item.itemText}}</el-tag>
             </template>
           </template>
         </el-table-column>
         <el-table-column prop="interiorAudit" label="内部审核" align="center">
           <template slot-scope="scope">
-              <el-tag v-if="scope.row.interiorAudit" effect="plain">通过</el-tag>
-              <el-tag v-else effect="plain" type='danger'>拒绝</el-tag>
+              <el-tag v-if="scope.row.interiorAudit" type="success">已审核</el-tag>
+              <el-tag v-else type='danger'>未审核</el-tag>
           </template>
         </el-table-column>
         <!-- <el-table-column
@@ -190,8 +171,14 @@
             }}
           </template>
         </el-table-column> -->
-        <el-table-column label="操作" align="center" width="350">
+        <el-table-column label="操作" align="center" width="420">
           <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="warning"
+              @click="openByAudit(scope.row)"
+              >审核</el-button
+            >
             <el-button
               size="mini"
               type="primary"
@@ -201,8 +188,8 @@
             <el-button
               size="mini"
               type="warning"
-              @click="openByAudit(scope.row)"
-              >审核</el-button
+              @click="openNeiByAudit(scope.row)"
+              >内部审核</el-button
             >
             <el-button size="mini" type="success" @click="openAuth(scope.row)"
               >授权</el-button
@@ -253,13 +240,13 @@
       >
         <el-form-item
           label="公司类型"
-          v-if="dialogTitle !== '审核'"
+          v-if="dialogTitle !== '审核' && dialogTitle !== '内部审核'"
           prop="companyType"
         >
           <el-select
             v-model="addClientForm.companyType"
             placeholder="请选择"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
           >
             <el-option
               v-for="(item, i) in clientTypeList"
@@ -292,7 +279,7 @@
             <el-select
               v-model="addClientForm.companyType"
               placeholder="请选择"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             >
               <el-option
                 v-for="(item, i) in clientTypeList"
@@ -306,20 +293,20 @@
         <el-form-item label="公司名称" prop="companyName">
           <el-input
             v-model="addClientForm.companyName"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
           ></el-input>
         </el-form-item>
         <el-form-item label="简称" prop="companyNickName">
           <el-input
             v-model="addClientForm.companyNickName"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
           ></el-input>
         </el-form-item>
         <el-form-item
           label="公司头像"
           style="postion: "
           prop="companyLogo"
-          v-if="dialogTitle !== '审核'"
+          v-if="dialogTitle !== '审核' && dialogTitle !== '内部审核'"
         >
           <el-upload
             :action="baseAPI + '/api/File/InsertPic'"
@@ -356,7 +343,7 @@
             name="address_detail"
             v-model="addClientForm.address"
             @keyup.enter.native="selectMapAttrs($event, false)"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
           ></el-input>
           <div class="housingList" v-show="isShowAttrsList && attrsList.length">
             <div
@@ -377,19 +364,19 @@
           <el-form-item label="手机" prop="phoneNumber">
             <el-input
               v-model.trim="addClientForm.phoneNumber"
-              :disabled="dialogTitle === '审核' || dialogTitle === '用户编辑'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '用户编辑' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
           <el-form-item label="联系人" prop="contactsMan">
             <el-input
               v-model="addClientForm.contactsMan"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="e_mail">
             <el-input
               v-model="addClientForm.e_mail"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
         </div>
@@ -397,20 +384,20 @@
           <el-form-item label="联系电话" prop="telephoneNumber">
             <el-input
               v-model="addClientForm.telephoneNumber"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
 
           <el-form-item label="传真号码" prop="fax">
             <el-input
               v-model="addClientForm.fax"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
           <el-form-item label="qq" prop="qq">
             <el-input
               v-model="addClientForm.qq"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
         </div>
@@ -418,20 +405,20 @@
           <el-form-item label="msn" prop="msn">
             <el-input
               v-model="addClientForm.msn"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
           <el-form-item label="skype" prop="skype">
             <el-input
               v-model="addClientForm.skype"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
           <el-form-item label="公司KeyCode" prop="companyKeyCode">
             <el-input
               type="text"
               v-model="addClientForm.companyKeyCode"
-              :disabled="dialogTitle === '审核'"
+              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             ></el-input>
           </el-form-item>
         </div>
@@ -439,14 +426,14 @@
           <el-input
             type="text"
             v-model="addClientForm.companyAPI"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
           ></el-input>
         </el-form-item>
         <el-form-item label="公司介绍" prop="homepage">
           <el-input
             type="textarea"
             v-model="addClientForm.homepage"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             :maxlength="
               $store.state.globalJson.Json.CompanyRestrictions[1].itemCode
             "
@@ -456,7 +443,7 @@
           <el-input
             type="textarea"
             v-model="addClientForm.remark"
-            :disabled="dialogTitle === '审核'"
+            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
             :maxlength="
               $store.state.globalJson.Json.UserRestrictions[0].itemCode
             "
@@ -488,6 +475,10 @@
             <template v-for="(item, i) in userAuditTypeList">
               <el-button :type="btnTypes[item.itemCode]" @click="byAudit(item.itemCode)" :key="i" v-if="item.itemCode !== '0'">{{item.itemText}}</el-button>
             </template>
+          </template>
+          <template v-else-if="dialogTitle === '内部审核'">
+            <el-button type="primary" @click="neiByAudit(true)">审核通过</el-button>
+            <el-button type="danger" @click="neiByAudit(false)">审核不通过</el-button>
           </template>
           <template v-else-if="dialogTitle === '用户编辑'">
             <el-button type="primary" @click="handlerEdit"><i :class="{'el-icon-loading':isShowLoading}"></i> 保存</el-button>
@@ -1443,14 +1434,26 @@ export default {
     // 审核
     async byAudit (id) {
       this.addClientForm.audit_state = id
-      console.log(this.addClientForm)
       const res = await this.$http.post(
-        '/api/UpdateCompanyStatus', { companyNumber: this.addClientForm.companyNumber, audit_state: id })
+        '/api/UpdateCompanyStatus', { companyNumber: this.addClientForm.companyNumber, audit_state: id, interiorAudit: this.addClientForm.interiorAudit })
       if (res.data.result.code === 200) {
         this.getClientList()
         this.$message.success('审核成功')
       } else {
         this.$message.error('审核失败')
+      }
+      this.$refs.ClientForm.clearValidate()
+      this.clientDialog = false
+    },
+    // 内部审核
+    async neiByAudit (flag) {
+      const res = await this.$http.post(
+        '/api/UpdateCompanyStatus', { companyNumber: this.addClientForm.companyNumber, audit_state: this.addClientForm.audit_state, interiorAudit: flag })
+      if (res.data.result.code === 200) {
+        this.getClientList()
+        this.$message.success('内部审核成功')
+      } else {
+        this.$message.error(res.data.result.msg)
       }
       this.$refs.ClientForm.clearValidate()
       this.clientDialog = false
@@ -1622,6 +1625,23 @@ export default {
     // 打开审核列表
     openByAudit (row) {
       this.dialogTitle = '审核'
+      this.clientDialog = true
+      this.$nextTick(() => {
+        this.$refs.ClientForm.clearValidate()
+      })
+      for (const key in row) {
+        this.addClientForm[key] = row[key]
+      }
+      console.log(this.addClientForm)
+      this.$refs.mapBaiduMap &&
+      this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
+      this.$nextTick(() => {
+        this.isShowAttrsList = false
+      })
+    },
+    // 打开内部审核列表
+    openNeiByAudit (row) {
+      this.dialogTitle = '内部审核'
       this.clientDialog = true
       this.$nextTick(() => {
         this.$refs.ClientForm.clearValidate()
