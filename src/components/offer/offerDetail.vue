@@ -80,7 +80,28 @@
       <div class="imgBox">
         <el-image :preview-src-list="imagesList" style="width: 100%;height: 100%;"
       :src="productDetail.imageUrl"
-      fit="contain"></el-image>
+      fit="contain">
+        <div
+          slot="placeholder"
+          class="image-slot"
+        >
+          <img
+            class="errorImg"
+            src="~@/assets/images/imgError.jpg"
+            alt
+          />
+        </div>
+        <div
+          slot="error"
+          class="image-slot"
+        >
+          <img
+            class="errorImg"
+            src="~@/assets/images/imgError.jpg"
+            alt
+          />
+        </div>
+      </el-image>
       </div>
       <div class="cententText">
         <p class="textItem name">{{productDetail.name}}</p>
@@ -411,6 +432,10 @@ export default {
       align-items: center;
       padding-right: 0.133333rem;
       box-sizing: border-box;
+      img{
+        width: 100%;
+        height: 100%;
+      }
     }
     .cententText{
       color: #707070;
