@@ -124,6 +124,8 @@
 export default {
   data () {
     return {
+      textLength: 0,
+      containerLength: 0,
       scrollable: false,
       url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.pid,
       productDetail: null,
@@ -138,7 +140,9 @@ export default {
     onScrollable () {
       var containerLength = $('.middel').width()
       var textLength = ($('.van-notice-bar__content')[0] && $('.van-notice-bar__content')[0].scrollWidth)
-      console.log(textLength, containerLength)
+      console.log(textLength, containerLength, $('.van-notice-bar__wrap'))
+      this.textLength = textLength
+      this.containerLength = containerLength
       if (textLength > containerLength) {
         this.scrollable = true
       } else {
@@ -209,6 +213,14 @@ export default {
   watch: {
     '$store.state.screenWidth' (val) {
       if (val > 1024) this.$router.push({ name: 'offerDetailPC', params: { id: this.$route.params.id, pid: this.$route.params.pid } })
+    },
+    textLength (val) {
+      console.log(val, this.containerLength)
+      if (val > this.containerLength) {
+        this.scrollable = true
+      } else {
+        this.scrollable = false
+      }
     }
   },
   beforeDestroy () {
