@@ -167,12 +167,6 @@ export default {
         { id: 0 }
       ]
     },
-    // 点击未安装电话列表
-    searchPhone (phone) {
-      // this.searchForm.keyword = phone
-      // this.search()
-      this.$message.error('这是假数据哦，接口正在开发中......')
-    },
     // 列表查询
     search () {
       this.currentPage = 1
