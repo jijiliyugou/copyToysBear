@@ -75,8 +75,6 @@
 export default {
   data () {
     return {
-      textLength: 0,
-      containerLength: 0,
       scrollable: false,
       url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.id,
       productInfo: null,
@@ -88,10 +86,8 @@ export default {
     // 判断内容是否超过容器
     onScrollable () {
       var containerLength = $('.middel').width()
-      var textLength = ($('.van-notice-bar__content')[0] && $('.van-notice-bar__content')[0].scrollWidth)
-      console.log(textLength, containerLength, $('.van-notice-bar__wrap'))
-      this.textLength = textLength
-      this.containerLength = containerLength
+      var textLength = $('.van-notice-bar').width()
+      console.log(textLength, containerLength)
       if (textLength > containerLength) {
         this.scrollable = true
       } else {
@@ -189,14 +185,6 @@ export default {
           params: { id: this.$route.params.id, companyNumber: this.$route.params.companyNumber }
         })
       }
-    },
-    textLength (val) {
-      console.log(val, this.containerLength)
-      if (val > this.containerLength) {
-        this.scrollable = true
-      } else {
-        this.scrollable = false
-      }
     }
   },
   computed: {
@@ -213,54 +201,6 @@ export default {
 <style lang="less" scoped>
 @deep: ~">>>";
 .offerDetailBox {
-   .topLayout{
-  width: 95%;
-  height: 1.066667rem;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  .left{
-    .el-image{
-      width: 1.066667rem;
-      height: 1.066667rem;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-  .middel{
-    flex: 1;
-    overflow: hidden;
-    text-align: center;
-    @{deep} .van-notice-bar{
-      word-break:keep-all;/* 不换行 */
-      white-space:nowrap;/* 不换行 */
-      display:inline;
-      zoom:1;
-    }
-  }
-  .right {
-    .el-popover__reference{
-      background-color: transparent;
-    }
-    span{
-      padding: 0;
-      margin: 0;
-      .el-button{
-        color: #F7BA24;
-        font-size: 0.3rem;
-        padding: 0;
-        border: none;
-        cursor: pointer;
-        i{
-          font-size: 0.35rem;
-        }
-      }
-    }
-  }
-}
   .offerInfo {
     .navBar {
       background: linear-gradient(#fff, #e8e8e8, #e8e8e8, #c5c5c5);
@@ -336,5 +276,53 @@ export default {
         }
     }
   }
+  .topLayout{
+  width: 95%;
+  height: 1.066667rem;
+  font-size: 0.32rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .left{
+    .el-image{
+      width: 1.066667rem;
+      height: 1.066667rem;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .middel{
+    flex: 1;
+    overflow: hidden;
+    text-align: center;
+    @{deep} .van-notice-bar{
+      display: inline-block;
+      word-break:keep-all;/* 不换行 */
+      white-space:nowrap;/* 不换行 */
+    }
+  }
+  .right {
+    .el-popover__reference{
+      background-color: transparent;
+    }
+    span{
+      padding: 0;
+      margin: 0;
+      .el-button{
+        color: #F7BA24;
+        font-size: 0.3rem;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        i{
+          font-size: 0.35rem;
+        }
+      }
+    }
+  }
+}
 }
 </style>
