@@ -1698,7 +1698,7 @@
                 :rows="5"
                 :placeholder="gonggaoTypes"
                 v-model="ruleForm.GonggaoText"
-                :maxlength="Json.NoticeRestrictions[3].itemCode"
+                :maxlength="Json.NoticeRestrictions[2].itemCode"
                 show-word-limit
               ></el-input>
             </el-form-item>
@@ -3791,6 +3791,7 @@ export default {
           let urls = ''
           let fileType = ''
           let res;
+          // let imgFlag = false
           if (this.fileList && this.fileList.length > 0) {
             const fd = new FormData()
             for (const val of this.fileList) {
@@ -3800,12 +3801,20 @@ export default {
             res = await this.$http.post('/api/File/InsertPic', fd, {
               headers: { 'Content-Type': 'multipart/form-data' }
             })
-            console.log(100, res)
             if (res.data.result.code === 200) {
-              urls = res.data.result.object.map(re => re.filePath)
+              urls = res.data.result.object.map(re => {
+                return {
+                  fileAddress: re.filePath,
+                  order: re.orderIndx
+                }
+              })
+            } else {
+              // imgFlag = true
+              this.$message.error(res.data.result.msg)
             }
             fileType = this.fileList[0].raw.type.split('/')[0]
           }
+          // if(imgFlag) return false
           const result = await this.$http.post('/api/CreateBearNotice', {
             NoticeTitle: '',
             NoticeType: this.gonggaoType,
@@ -3813,7 +3822,7 @@ export default {
             Notice: this.ruleForm.GonggaoText,
             Publisher: this.userInfo.userInfo.id,
             IssuedCompanyID: this.userInfo.commparnyList[0].commparnyId,
-            FileAddress: urls && urls.join(','),
+            attachmentList: urls,
             FileType:
               fileType === 'image' ? 'img' : fileType === 'video' ? 'video' : '' // 文件类型 img video
           })
