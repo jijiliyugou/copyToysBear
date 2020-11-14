@@ -68,7 +68,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="内部审核状态：">
+          <el-form-item label="内部审核：">
             <el-select
               clearable
               v-model="formInline.interiorAudit"
@@ -78,8 +78,8 @@
               <el-option
                 v-for="(item, index) in [
                   { itemCode: '', itemText: '全部' },
-                  { itemCode: true, itemText: '是' },
-                  { itemCode: false, itemText: '否' }
+                  { itemCode: 'true', itemText: '是' },
+                  { itemCode: 'false', itemText: '否' }
                 ]"
                 :key="index"
                 :label="item.itemText"
