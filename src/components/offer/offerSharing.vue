@@ -143,7 +143,7 @@
               装箱量：<span>{{item.in_en + "/" + item.ou_lo + "(PCS)"}}</span>
             </p>
             <p>
-              体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
+              体积/材积：<span>{{  item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
             </p>
             <p class="productPrice" v-show="(productInfo && productInfo.productOfferType) !== 'company'">
               出厂价：<span class="price">{{
@@ -702,6 +702,7 @@ export default {
   .productList {
     width: 95%;
     margin: 0 auto 0.666667rem auto;
+    font-size: 0.26rem;
     .listItems {
       .listItem {
         margin-bottom: 0.266667rem;
@@ -723,7 +724,6 @@ export default {
             align-items:center;
             width: 2rem;
             height: 2rem;
-            // border: 1px solid #000;
             .el-image{
               width: 100%;
               height: 100%;
@@ -737,9 +737,6 @@ export default {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            // border: 1px solid #000;
-            // font-size: 0.266667rem;
-            font-size: 0.32rem;
             color: #626262;
               p{
                 padding: 2px 0;

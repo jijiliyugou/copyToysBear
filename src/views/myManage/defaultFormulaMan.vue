@@ -38,38 +38,27 @@
     <!-- 列表 -->
     <div class="tableContent">
       <el-table
-        size="mini"
         :data="tableData"
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="platform" label="终端" width="80"></el-table-column>
-        <el-table-column prop="logType" label="日志类型" width="100" align="center">
-          <template slot-scope="scope">
-           <el-tag :type="scope.row.logType===0?'danger':scope.row.logType===1?'warning':''" effect="plain">{{scope.row.logType===0?'接口闪退':scope.row.logType===1?'接口超时':'请求失败'}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="title" label="日志标题" align="center"></el-table-column>
-        <el-table-column prop="url" label="地址"></el-table-column>
-        <!-- <el-table-column prop="parameters" label="请求参数"></el-table-column> -->
-        <el-table-column prop="message" label="错误信息"></el-table-column>
-        <el-table-column prop="state" label="处理状态" width="80">
-          <template slot-scope="scope">
-           <el-tag :type="scope.row.state?'success':'danger'">{{scope.row.state?'已处理':'未处理'}}</el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="offerMethod" label="报价方式"></el-table-column>
+        <el-table-column prop="cu_deName" label="币种"></el-table-column>
+        <el-table-column prop="exchange" label="汇率"></el-table-column>
+        <el-table-column prop="profit" label="利润"></el-table-column>
+        <el-table-column prop="decimalPlaces" label="小数"></el-table-column>
+        <el-table-column prop="rejectionMethod" label="取舍方式"></el-table-column>
+        <el-table-column prop="size" label="尺码"></el-table-column>
         <el-table-column
           prop="createdOn"
-          label="报错时间"
+          label="创建时间"
           sortable
-          align="center"
         >
           <template slot-scope="scope">
-            {{ scope.row.createdOn && scope.row.createdOn.replace(/T/g, " ") }}
+            {{ scope.row.createdOn && scope.row.createdOn.split("T")[0] }}
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
               style="margin-right:10px;"
@@ -106,7 +95,7 @@
     <!-- <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">
     </div> -->
     <!-- 处理错误日记dialog -->
-    <el-dialog :title="dialogTitle" :visible.sync="showDialog" destroy-on-close width="50%">
+    <el-dialog :title="dialogTitle" :visible.sync="showDialog" v-if="showDialog" width="50%">
       <el-form
         ref="addDefaultFormRef"
         label-width="100px"
@@ -128,24 +117,26 @@
         </el-form-item>
         <div class="inputWrap">
           <div class="left">
-          <el-form-item label="客户代号：" prop="client_nu">
-           <el-input v-model="addDefaultForm.client_nu" clearable></el-input>
-        </el-form-item>
         <el-form-item label="币种：" prop="cu_de">
-          <el-select v-model="addDefaultForm.cu_de" clearable placeholder="请选择">
+          <el-select v-model="addDefaultForm.cu_de" @change="changeSelect" clearable placeholder="请选择">
             <template v-for="item in configList">
               <el-option
               v-if="item.itemText === 'Cu_de'"
               :key="item.id"
               :label="item.itemCode"
-              :value="item.itemCode">
+              :value="item.parameter">
             </el-option>
             </template>
           </el-select>
         </el-form-item>
         <el-form-item label="汇率：" prop="exchange">
-          <el-input v-model.number="addDefaultForm.exchange" maxlength="6"></el-input>
+          <el-input v-model="addDefaultForm.exchange" :maxlength="String(addDefaultForm.exchange).includes('.') ? 7 : 6"></el-input>
         </el-form-item>
+        <el-form-item label="利润：" prop="profit">
+          <el-input v-model.number="addDefaultForm.profit" clearable  maxlength="6"><i slot="append">%</i></el-input>
+        </el-form-item>
+        </div>
+        <div class="right">
         <el-form-item label="小数位数：" prop="decimalPlaces">
           <el-select v-model="addDefaultForm.decimalPlaces" clearable placeholder="请选择">
             <template v-for="item in configList">
@@ -157,14 +148,6 @@
             </el-option>
             </template>
           </el-select>
-        </el-form-item>
-        </div>
-        <div class="right">
-          <el-form-item label="利润：" prop="profit">
-          <el-input v-model.number="addDefaultForm.profit" clearable  maxlength="6"></el-input>
-        </el-form-item>
-        <el-form-item label="总费用：" prop="totalCost">
-          <el-input v-model.number="addDefaultForm.totalCost" clearable  maxlength="6"></el-input>
         </el-form-item>
         <el-form-item label="每车尺码：" prop="size">
           <el-select v-model="addDefaultForm.size" clearable placeholder="请选择">
@@ -213,18 +196,42 @@ import bsFooter from '@/components/Footer'
 export default {
   components: { bsTop, bsFooter },
   data () {
+    const validateLength = (rule, value, callback) => {
+      if (!value) {
+        callback()
+      } else {
+        var reg = /^-?\d{1,5}(?:\.?\d{1,5})?$/ // 小数点左边最高5位，小数点右边最多5位
+        var reg1 = /^\d{1,6}$/
+        if (/^[0-9]+\.?[0-9]*/.test(value)) {
+          if (reg.test(value)) {
+            if (String(value).includes('.')) {
+              callback()
+            } else {
+              if (reg1.test(value)) {
+                callback()
+              } else {
+                callback(new Error('只能输入1-6位数字'))
+              }
+            }
+          } else {
+            callback(new Error('小数点前后最多可1-5位数字'))
+          }
+        } else {
+          callback(new Error('只能输入数字类型'))
+        }
+      }
+    }
     return {
       showDialog: false,
       configList: [],
       dialogTitle: '新增公式',
       addDefaultForm: {
         offerMethod: null,
-        client_nu: null,
         cu_de: null,
+        cu_deName: null,
         exchange: null,
         decimalPlaces: null,
         profit: null,
-        totalCost: null,
         size: null,
         rejectionMethod: null
       },
@@ -236,16 +243,12 @@ export default {
         offerMethod: [
           { required: true, message: '请选择报价方式', trigger: 'change' }
         ],
-        client_nu: [
-          { required: true, message: '请输入客户代号', trigger: 'blur' },
-          { min: 1, max: 200, message: '字数在1-200字内', trigger: 'blur' }
-        ],
         cu_de: [
           { required: true, message: '请选择币种', trigger: 'change' }
         ],
         exchange: [
           { required: true, message: '请输入汇率', trigger: 'blur' },
-          { type: 'number', message: '汇率必须为数字值', trigger: 'blur' }
+          { validator: validateLength, trigger: 'blur' }
         ],
         decimalPlaces: [
           { required: true, message: '请选择小数位数', trigger: 'change' }
@@ -253,10 +256,6 @@ export default {
         profit: [
           { required: true, message: '请输入利润', trigger: 'blur' },
           { type: 'number', message: '利润必须为数字值', trigger: 'blur' }
-        ],
-        totalCost: [
-          { required: true, message: '请输入总费用', trigger: 'blur' },
-          { type: 'number', message: '总费用必须为数字值', trigger: 'blur' }
         ],
         size: [
           { required: true, message: '请选择尺码', trigger: 'change' }
@@ -310,7 +309,6 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.configList = res.data.result.item
-        console.log(this.configList)
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -318,10 +316,10 @@ export default {
     // 列表查询
     search () {
       this.currentPage = 1
-      this.getLogErrorPage()
+      this.getProductOfferFormulaPage()
     },
-    // 获取错误日志列表
-    async getLogErrorPage () {
+    // 获取列表
+    async getProductOfferFormulaPage () {
       const fd = {
         startTime: this.searchForm.dateTile && this.searchForm.dateTile[0],
         endTime: this.searchForm.dateTile && this.searchForm.dateTile[1],
@@ -334,7 +332,7 @@ export default {
           delete fd[key]
         }
       }
-      const res = await this.$http.post('/api/GetLogRecordPage', fd)
+      const res = await this.$http.post('/api/ProductOfferFormulaPage', fd)
       if (res.data.result.code === 200) {
         this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
@@ -343,65 +341,81 @@ export default {
     // 切换当前页
     currentChange (page) {
       this.currentPage = page
-      this.getLogErrorPage()
+      this.getProductOfferFormulaPage()
     },
     // 切换当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
       if (this.currentPage * pageSize > this.totalCount) return false
-      this.getLogErrorPage()
+      this.getProductOfferFormulaPage()
     },
     // 打开新增计算公式模板
     openAdd (row) {
       this.dialogTitle = '新增公式'
-      for (const key in this.addDefaultForm) {
-        this.addDefaultForm[key] = null
+      this.addDefaultForm = {
+        offerMethod: null,
+        cu_de: null,
+        cu_deName: null,
+        exchange: null,
+        decimalPlaces: null,
+        profit: null,
+        size: null,
+        rejectionMethod: null
       }
       this.showDialog = true
     },
     // 打开编辑计算公式模板
     openEdit (row) {
       this.dialogTitle = '编辑公式'
-      console.log(row)
       this.addDefaultForm = row
       this.showDialog = true
     },
     // 提交
     async subDefaultForm () {
       this.$refs.addDefaultFormRef.validate(async valid => {
-        console.log(this.addDefaultForm)
         if (valid) {
           console.log(this.addDefaultForm)
-        // const res = await this.$http.post('/api/UpdateLogRecord', this.addDefaultForm)
-        // if (res.data.result.code === 200) {
-        //   await this.getLogErrorPage()
-        //   this.errorLogDialog = false
-        //   this.$message.success('处理成功')
-        // } else {
-        //   this.$message.error(res.data.result.msg)
-        // }
+          let msg = '新增公式成功'
+          let url = '/api/CreateProductOfferFormula'
+          if (this.dialogTitle === '编辑公式') {
+            msg = '编辑公式成功'
+            url = '/api/UpdateProductOfferFormula'
+          }
+          const res = await this.$http.post(url, this.addDefaultForm)
+          if (res.data.result.code === 200) {
+            await this.getProductOfferFormulaPage()
+            this.showDialog = false
+            this.$message.success(msg)
+          } else {
+            this.$message.error(res.data.result.msg)
+          }
         }
       })
+    },
+    // 选择币别事件
+    changeSelect (val) {
+      const { itemCode } = this.configList.find(item => item.parameter === val)
+      this.addDefaultForm.cu_deName = itemCode
     },
     // 删除
     async handleDelete (row) {
       console.log(row)
-      // const res = await this.$http.post('/api/UpdateBearVesion', {
-      //   isdelete: true,
-      //   id: row.id
-      // })
-      // if (res.data.result.code === 200) {
-      //   this.$message.success('删除成功')
-      //   this.getLogErrorPage()
-      // } else {
-      //   this.$message.error('删除失败,请检查网络！')
-      // }
+      const res = await this.$http.post('/api/DeleteProductOfferFormula', {
+        isdelete: true,
+        id: row.id
+      })
+      if (res.data.result.code === 200) {
+        this.$message.success('删除成功')
+        this.getProductOfferFormulaPage()
+      } else {
+        this.$message.error('删除失败,请检查网络！')
+      }
     }
   },
   watch: {
   },
   mounted () {
-    this.getLogErrorPage()
+    this.getProductOfferFormulaPage()
     this.getSystemConfig('CompanyProductOffer')
   },
   created () {}

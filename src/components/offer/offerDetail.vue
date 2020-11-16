@@ -284,7 +284,7 @@ export default {
       padding: 0 0.24rem;
     }
     .textContent {
-       display: flex;
+      display: flex;
       flex-direction:column;
       justify-content: space-around;
       padding:0.133333rem 0;
@@ -384,14 +384,6 @@ export default {
           margin-right: 0.066667rem;
         }
       }
-      .downloads {
-        .el-button {
-          font-size: 0.16rem;
-          border-radius: 0.266667rem;
-          padding: 0.12rem 0.2rem;
-          border: 0.013333rem solid #b3d8ff;
-        }
-      }
     }
   .backTo{
     font-size: 0.24rem;
@@ -404,6 +396,7 @@ export default {
   .centent{
     padding: 0.133333rem;
     display: flex;
+    font-size: 0.26rem;
     justify-content: space-between;
     align-items: center;
     position: relative;
@@ -413,7 +406,6 @@ export default {
       left: 0.266667rem;
       display: flex;
       color: #707070;
-      font-size: 0.293333rem;
       align-items: center;
       .createDateIcon{
         display: block;
@@ -438,7 +430,6 @@ export default {
     }
     .cententText{
       color: #707070;
-      font-size: 0.293333rem;
       flex: 2;
       .textItem{
         margin-bottom: 0.133333rem;
@@ -449,6 +440,7 @@ export default {
       .name{
         color: #000;
         font-weight: 600;
+        font-size: 0.3rem;
       }
     }
   }

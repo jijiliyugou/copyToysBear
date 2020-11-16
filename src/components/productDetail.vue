@@ -29,15 +29,15 @@
             </div>
           </el-image>
           <i
-                  v-show="productDetail.isFavorite"
-                    class="iconClient iconfont icon-wujiaoxing-"
-                    @click.stop="addCollect(productDetail)"
-                  ></i>
-                  <i
-                  v-show="!productDetail.isFavorite"
-                    class="iconClient iconfont icon-wujiaoxingkong"
-                    @click.stop="addCollect(productDetail)"
-                  ></i>
+            v-show="productDetail.isFavorite"
+              class="iconClient iconfont icon-wujiaoxing-"
+              @click.stop="addCollect(productDetail)"
+            ></i>
+            <i
+            v-show="!productDetail.isFavorite"
+              class="iconClient iconfont icon-wujiaoxingkong"
+              @click.stop="addCollect(productDetail)"
+            ></i>
         </div>
       </div>
       <!-- 产品内容 -->
