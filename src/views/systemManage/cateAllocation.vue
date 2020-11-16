@@ -6,7 +6,7 @@
   <el-main style="padding:20px 0;overflow:visible;">
     <div class="custom-tree-container">
       <div class="submitTree">
-        <div class="left">小竹熊分类：</div>
+        <div class="left">小竹熊 云科技分类：</div>
         <div class="right">
           <div class="selectExc">
             展厅分类：<el-select style="width:200px;" @change="changeSelect" v-model="value" clearable placeholder="请选择展厅分类">
@@ -108,7 +108,7 @@ export default {
       startCount: 0,
       isClearCate: false,
       removeName: null,
-      myCategoryList: null, // 小竹熊类目
+      myCategoryList: null, // 小竹熊 云科技类目
       companyCategoryList: null, // 其他展厅类目
       companyList: null,
       filterTextOne: null,
@@ -208,7 +208,7 @@ export default {
         this.$message.error(res.data.result.msg)
       }
     },
-    // 获取小竹熊产品类目列表
+    // 获取小竹熊 云科技产品类目列表
     async getProductCategoryList () {
       this.$store.commit('updateAppLoading', true)
       const res = await this.$http.post('/api/ProductCategoryList', {})
@@ -224,7 +224,7 @@ export default {
       this.getSynchrCategoryList()
       this.$refs.treeTwo.setCheckedKeys([])
     },
-    // 获取小竹熊产品类目列表
+    // 获取小竹熊 云科技产品类目列表
     async getSynchrCategoryList () {
       const res = await this.$http.post('/api/synchrCategoryList', { hallNumer: this.value })
       if (res.data.result.code === 200) {

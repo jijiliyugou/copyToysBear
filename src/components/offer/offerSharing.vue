@@ -33,7 +33,7 @@
       </div>
       <div class="middel">
           <van-notice-bar :scrollable="scrollable" :delay="1">
-            {{(productInfo && productInfo.companyName) || '小竹熊'}}的分享
+            {{(productInfo && productInfo.companyName) || '小竹熊 云科技'}}的分享
           </van-notice-bar>
       </div>
       <div class="right">
@@ -217,7 +217,7 @@
         :src="require('@/assets/images/暂无产品.png')"
         fit="contain"
       ></el-image>
-      <footer class="myFooter">{{(productInfo && productInfo.companyName) || '小竹熊'}}</footer>
+      <footer class="myFooter">{{(productInfo && productInfo.companyName) || '小竹熊 云科技'}}</footer>
     </div>
   </div>
 </template>
@@ -433,7 +433,7 @@ export default {
     this.getProductOfferDetailPage()
   },
   beforeDestroy () {
-    document.title = '小竹熊科技'
+    document.title = '小竹熊 云科技'
   },
   computed: {
     noMore () {

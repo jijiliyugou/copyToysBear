@@ -28,7 +28,7 @@
       </div>
       <div class="middel">
           <van-notice-bar :scrollable="scrollable" :delay="0">
-            {{(productInfo && productInfo.companyName) || '小竹熊'}}的分享
+            {{(productInfo && productInfo.companyName) || '小竹熊  云科技'}}的分享
           </van-notice-bar>
       </div>
       <div class="right">
@@ -193,7 +193,7 @@ export default {
     }
   },
   beforeDestroy () {
-    document.title = '小竹熊科技'
+    document.title = '小竹熊 云科技'
   }
 }
 </script>

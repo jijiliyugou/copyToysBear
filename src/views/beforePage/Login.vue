@@ -147,7 +147,7 @@ export default {
       lang: 'zh-CN',
       qrTimer: null,
       randomCode: null,
-      qrcodeTitle: '请用小竹熊App扫码登录',
+      qrcodeTitle: '请用小竹熊 云科技App扫码登录',
       show: true,
       showQrCode: false,
       count: '',
@@ -331,7 +331,7 @@ export default {
       if (!this.timer) {
         let count = TIME_COUNT
         this.showQrCode = false
-        this.qrcodeTitle = '请用小竹熊App扫码登录'
+        this.qrcodeTitle = '请用小竹熊 云科技App扫码登录'
         clearInterval(this.qrTimer)
         this.qrTimer = setInterval(() => {
           if (count > 0 && count <= TIME_COUNT) {

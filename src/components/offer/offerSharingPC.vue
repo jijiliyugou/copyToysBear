@@ -30,7 +30,7 @@
                     </div>
                   </el-image>
         </el-col>
-        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊'}}的分享</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple conText">{{(productInfo && productInfo.companyName) || '小竹熊 云科技'}}的分享</div></el-col>
          <el-col :span="6" style="display:flex;justify-content:flex-end">
            <el-popover
           placement="bottom"
@@ -402,7 +402,7 @@ export default {
     }
   },
   beforeDestroy () {
-    document.title = '小竹熊科技'
+    document.title = '小竹熊 云科技'
   }
 }
 </script>

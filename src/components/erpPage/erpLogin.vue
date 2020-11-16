@@ -10,9 +10,9 @@
       <div class="logo">
         <img src="~@/assets/images/logo.png" alt="" />
       </div>
-      <h3>欢迎登录小竹熊</h3>
+      <h3>欢迎登录小竹熊 云科技</h3>
       <p>
-        <span class="topP">小竹熊后台订单处理系统</span>
+        <span class="topP">小竹熊 云科技后台订单处理系统</span>
       </p>
     </div>
     <div class="loginFormBox">
@@ -121,7 +121,7 @@ export default {
       timer: null,
       qrTimer: null,
       showQrCode: false,
-      qrcodeTitle: '请用小竹熊App扫一扫登录',
+      qrcodeTitle: '请用小竹熊 云科技App扫一扫登录',
       options: {
         // 二维码配置
         url: 'https://www.baidu.com',
@@ -232,7 +232,7 @@ export default {
       const TIME_COUNT = 300
       let count = TIME_COUNT
       this.showQrCode = false
-      this.qrcodeTitle = '请用小竹熊App扫一扫登录'
+      this.qrcodeTitle = '请用小竹熊 云科技App扫一扫登录'
       clearInterval(this.qrTimer)
       this.qrTimer = setInterval(() => {
         if (count > 0 && count <= TIME_COUNT) {

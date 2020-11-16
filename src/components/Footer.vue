@@ -7,7 +7,7 @@
       >
       <span>|</span
       ><em @click="$router.push('/beforeIndex/companyInfo/aboutUs')"
-        >关于小竹熊</em
+        >关于小竹熊 云科技</em
       ><span>|</span
       ><em @click="$router.push('/beforeIndex/companyInfo/termsService')"
         >服务条款</em
