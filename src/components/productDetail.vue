@@ -240,6 +240,11 @@ export default {
     }
   },
   methods: {
+    // 扣除积分
+    // async getUpdateIntegral () {
+    //   const res = await this.$http.post('/api/UpdateIntegral', { integraType: 1, productNumber: this.number })
+    //   console.log(res)
+    // },
     // 收藏
     async addCollect (item) {
       const res = await this.$http.post('/api/CreateProductCollection', {
@@ -302,6 +307,7 @@ export default {
     }
   },
   mounted () {
+    // this.getUpdateIntegral()
     this.getProductByNumber()
   }
 }
