@@ -42,6 +42,7 @@
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
+        <el-table-column prop="name" label="模板名称"></el-table-column>
         <el-table-column prop="offerMethod" label="报价方式"></el-table-column>
         <el-table-column prop="cu_deName" label="币种"></el-table-column>
         <el-table-column prop="exchange" label="汇率"></el-table-column>
@@ -103,6 +104,9 @@
         :model="addDefaultForm"
         class="addDialogClass"
       >
+      <el-form-item class="offerMethodClass" label="模板名称：" prop="offerMethod">
+        <el-input placeholder="请输入内容" v-model="addDefaultForm.name" clearable></el-input>
+      </el-form-item>
         <el-form-item class="offerMethodClass" label="报价方式：" prop="offerMethod">
           <el-select v-model="addDefaultForm.offerMethod" clearable placeholder="请选择">
             <template v-for="item in configList">
@@ -226,6 +230,7 @@ export default {
       configList: [],
       dialogTitle: '新增公式',
       addDefaultForm: {
+        name: null,
         offerMethod: null,
         cu_de: null,
         cu_deName: null,
@@ -240,6 +245,10 @@ export default {
       pageSize: 10,
       tableData: [],
       defaultFormRules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 1, max: 200, message: '字数在 1-200 个字符之间', trigger: 'blur' }
+        ],
         offerMethod: [
           { required: true, message: '请选择报价方式', trigger: 'change' }
         ],
@@ -353,6 +362,7 @@ export default {
     openAdd (row) {
       this.dialogTitle = '新增公式'
       this.addDefaultForm = {
+        name: null,
         offerMethod: null,
         cu_de: null,
         cu_deName: null,

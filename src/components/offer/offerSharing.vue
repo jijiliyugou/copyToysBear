@@ -82,21 +82,92 @@
         </div>
       </div>
       <div class="filterProduct">
-        <!-- <p :class="{'filterItem': true, 'active': sortOrder === 3}" @click="sortHot(3)">热度<i v-show="isHot === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isHot === 1"></i><i v-show="isHot === 2" class="el-icon-arrow-up"></i></p>
-        <p :class="{'filterItem': true, 'active': sortOrder === 1}" @click="sortPrice(1)">单价<i v-show="isPrice === 0" class="iconfont icon-paixu"></i><i v-show="isPrice === 1" class="el-icon-arrow-down"></i><i v-show="isPrice === 2" class="el-icon-arrow-up"></i></p>
-        <p :class="{'filterItem': true, 'active': sortOrder === 2}" @click="sortDate(2)">时间<i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p>
-        <p :class="{'filterItem': true, 'active': sortOrder === 3}" @click="sortDate(2)">筛选<i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p>
-        <p :class="{'filterItem': true, 'active': sortOrder === 4}" @click="sortDate(2)">分类<i v-show="isDate === 0" class="iconfont icon-paixu"></i><i class="el-icon-arrow-down" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-arrow-up"></i></p> -->
         <p :class="{'filterItem': true, 'active': sortOrder === 3}" @click="sortHot(3)">热度<i v-show="isHot === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isHot === 1"></i><i v-show="isHot === 2" class="el-icon-caret-top"></i></p>
         <p :class="{'filterItem': true, 'active': sortOrder === 1}" @click="sortPrice(1)">单价<i v-show="isPrice === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isPrice === 1"></i><i v-show="isPrice === 2" class="el-icon-caret-top"></i></p>
         <p :class="{'filterItem': true, 'active': sortOrder === 2}" @click="sortDate(2)">时间<i v-show="isDate === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isDate === 1"></i><i v-show="isDate === 2" class="el-icon-caret-top"></i></p>
-        <p :class="{'filterItem': true, 'active': sortOrder === 4}" @click="sortScreen(4)">筛选<i v-show="isScreen === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isScreen === 1"></i><i v-show="isScreen === 2" class="el-icon-caret-top"></i></p>
-        <p :class="{'filterItem': true, 'active': sortOrder === 5}" @click="sortCate(5)">分类<i v-show="isCate === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isCate === 1"></i><i v-show="isCate === 2" class="el-icon-caret-top"></i></p>
+        <p :class="{'filterItem': true, 'active': isScreen === 1}" @click="sortScreen">筛选<i v-show="isScreen === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isScreen === 1"></i></p>
+        <p :class="{'filterItem': true, 'active': isCate === 1}" @click="sortCate">分类<i v-show="isCate === 0" class="el-icon-d-caret"></i><i class="el-icon-caret-bottom" v-show="isCate === 1"></i></p>
         <div class="more">
           <i v-show="isList" class="list" @click="checkList"></i>
           <i v-show="!isList" class="square" @click="checkList"></i>
         </div>
       </div>
+      <transition name="el-zoom-in-top">
+        <div class="screens transition-box" v-show="isScreen === 1">
+          <div class="contentWrap">
+            <div class="item">
+            <div class="left">
+              <div class="title">价格区间：</div><el-input
+            size="mini"
+              placeholder="最低"
+              cle
+              v-model="packingOptions.minPrice">
+            </el-input><em style="margin:0 0.066667rem;">-</em><el-input
+            size="mini"
+              placeholder="最高"
+              v-model="packingOptions.maxPrice">
+            </el-input>
+            </div>
+            <div class="right">
+              <div class="title">时间区间：</div>
+              <el-select v-model="packingDatetime" @change="getDateList" size="mini" placeholder="全部">
+                <el-option
+                  v-for="(item, i) in dateList"
+                  :key="i"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
+            </div>
+          </div>
+          <div class="packing">
+              <div class="title">包装：</div>
+              <el-select v-model="packingOptions.pa_nu" size="mini" placeholder="全部">
+                <el-option
+                  v-for="item in packingList"
+                  :key="item.value"
+                  :label="item.ch_pa"
+                  :value="item.pa_nu">
+                </el-option>
+            </el-select>
+          </div>
+          <div class="selectImg">
+            <div class="title">图片：</div>
+            <el-radio size="mini" v-model="packingOptions.isUpInsetImg" :label="true">是</el-radio>
+            <el-radio size="mini" v-model="packingOptions.isUpInsetImg" :label="false">否</el-radio>
+          </div>
+          </div>
+          <div class="submitBtnList">
+            <!-- <div class="reset">重置</div> -->
+            <el-button class="reset" type="info" @click="resetPackingOptions">重置</el-button>
+            <el-button class="submit" type="info"  @click="subPackingOptions">确认</el-button>
+          </div>
+      </div>
+      </transition>
+      <transition name="el-zoom-in-top">
+        <div class="category" v-show="isCate === 1">
+          <div class="contentWrap">
+          <div class="leftCate">
+            <ul class="cateItens">
+              <li :class="{item: true, active:isActive === i}" @click="isActive = i;isItemActive = null;categoryChildren = item.children;allCateCount = item;currentCate = item;" v-for="(item, i) in categoryList" :key="i">{{ item.name }}</li>
+            </ul>
+          </div>
+          <div class="rightCate">
+            <p :class="{allCateCount:true, active: isItemActive === null}">{{ currentCate?allCateCount.name + '(' + allCateCount.count + ')':'全部' }}</p>
+            <!-- <p :class="{allCateCount:true, active: isItemActive === null}" v-show="!currentCate">全部</p> -->
+            <ul class="cateItens">
+              <li :class="{item: true, active: isItemActive === i}" @click="isItemActive = i;currentCate = item;" v-for="(item, i) in categoryChildren" :key="i">
+                {{ item.name }}({{ item.count }})
+              </li>
+            </ul>
+          </div>
+          </div>
+          <div class="submitBtnList">
+            <el-button class="reset" type="info" @click="resetCategory">重置</el-button>
+            <el-button class="submit" type="info"  @click="subPackingOptions">确认</el-button>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
     <div class="productList">
@@ -226,6 +297,31 @@
 export default {
   data () {
     return {
+      currentCate: null,
+      allCateCount: 0,
+      isActive: null,
+      isItemActive: null,
+      dateList: [
+        { label: '全部', value: '' },
+        { label: '当天', value: 'today' },
+        { label: '一周', value: 'lastOneWeek' },
+        { label: '一个月', value: 'lastOneMonth' },
+        { label: '三个月', value: 'lastThreeMonth' },
+        { label: '六个月', value: 'lastHalfYear' }
+      ],
+      packingDatetime: null,
+      categoryList: [],
+      categoryChildren: [],
+      packingList: [],
+      packingOptions: {
+        minPrice: null,
+        maxPrice: null,
+        pa_nu: null,
+        isUpInsetImg: null,
+        startTime: null,
+        endTime: null
+      },
+      isShowShaixuan: false,
       scrollable: false,
       url: window.location.href,
       keyword: null,
@@ -233,7 +329,6 @@ export default {
       productList: [],
       currentPage: 1,
       pageSize: 10,
-      categoryList: [],
       categoryNumber: '',
       totalCount: 0,
       isList: true,
@@ -247,6 +342,108 @@ export default {
     }
   },
   methods: {
+    // 获取所有分类
+    async getProductCategoryList () {
+      this.$store.commit('updateAppLoading', true)
+      const res = await this.$http.post('/api/SelectProductCategory', { companyNumber: this.productInfo.companyNumber })
+      if (res.data.result.code === 200) {
+        this.categoryList = res.data.result.item
+        console.log(this.categoryList)
+        // this.categoryChildren = this.categoryList[0].children
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+      this.$store.commit('updateAppLoading', false)
+    },
+    // 重置分类搜索
+    resetCategory () {
+      this.isActive = null
+      this.isItemActive = null
+      this.currentCate = null
+      this.categoryChildren = null
+    },
+    // 高级搜索
+    subPackingOptions () {
+      this.currentPage = 1
+      this.getProductOfferDetailPage()
+      this.isScreen = 0
+      this.isCate = 0
+    },
+    // 重置
+    resetPackingOptions () {
+      this.packingOptions = {
+        minPrice: null,
+        maxPrice: null,
+        pa_nu: null,
+        isUpInsetImg: null,
+        startTime: null,
+        endTime: null
+      }
+      this.packingDatetime = null
+    },
+    // 格式化时间
+    formatTime (param) {
+      const y = param.getFullYear()
+      let m = param.getMonth() + 1
+      let d = param.getDate()
+      m = m < 10 ? ('0' + m) : m
+      d = d < 10 ? ('0' + d) : d
+      return y + '-' + m + '-' + d
+    },
+    getDateList (code) {
+      if (code) {
+        const date = new Date()
+        const endTime = this.formatTime(date)
+        const date1 = Date.parse(date)
+        let start = ''
+        const oneDay = 1000 * 3600 * 24
+
+        switch (code) {
+          // 今天
+          case 'today':
+            start = new Date()
+            break
+          // 最近1周
+          case 'lastOneWeek':
+            start = date1 - oneDay * 7
+            break
+          // 最近1月
+          case 'lastOneMonth':
+            start = new Date()
+            start.setMonth(start.getMonth() - 1)
+            break
+          // 最近3月
+          case 'lastThreeMonth':
+            start = new Date()
+            start.setMonth(start.getMonth() - 3)
+            break
+          // 最近半年
+          case 'lastHalfYear':
+            start = date1 - oneDay * 183
+            break
+        }
+        this.packingOptions.startTime = this.formatTime(new Date(start)) + 'T00:00:00'
+        this.packingOptions.endTime = endTime + 'T23:59:59'
+      } else {
+        this.packingOptions.startTime = null
+        this.packingOptions.endTime = null
+      }
+      console.log(this.packingOptions)
+    },
+    // 获取包装方式list
+    async getProductChpaList () {
+      const fd = {}
+      if (this.productInfo.productOfferType !== 'company') fd.supplierNumber = this.productInfo.companyNumber
+      const res = await this.$http.post('/api/GetProductChpaList', fd)
+      if (res.data.result.code === 200) {
+        this.packingList = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    showShaixuan () {
+      console.log(1)
+    },
     // 判断内容是否超过容器
     onScrollable () {
       var containerLength = $('.middel').width()
@@ -317,20 +514,22 @@ export default {
       this.getProductOfferDetailPage()
     },
     // 点击筛选事件
-    sortScreen (number) {
-      this.sortOrder = number
-      this.isScreen = this.isScreen === 1 ? 2 : 1
-      this.isCate = this.isDate = this.isHot = this.isPrice = 0
+    sortScreen () {
+      this.isCate = 0
+      this.sortOrder = 0
+      this.isScreen = this.isScreen === 1 ? 0 : 1
+      // this.isCate = this.isDate = this.isHot = this.isPrice = 0
     },
     // 点击分类事件
-    sortCate (number) {
-      this.sortOrder = number
-      this.isCate = this.isCate === 1 ? 2 : 1
-      this.isScreen = this.isDate = this.isHot = this.isPrice = 0
-    },
-    // 下载
-    downloadDocument (document) {
-      console.log('下载了' + document)
+    sortCate () {
+      this.isScreen = 0
+      this.isActive = null
+      this.currentCate = null
+      this.categoryChildren = null
+      this.allCateCount = 0
+      this.sortOrder = 0
+      this.isCate = this.isCate === 1 ? 0 : 1
+      // this.isActive = this.isScreen = this.isDate = this.isHot = this.isPrice = 0
     },
     // 下拉加载更多
     load () {
@@ -369,25 +568,17 @@ export default {
         box.style.paddingTop = 0 + 'px'
       }
     },
-    // 获取产品类目列表
-    async getProductCategoryList () {
-      const res = await this.$http.post('/api/GetProductCategoryList', { offerNumber: this.$route.query.id })
-      if (res.data.result.code === 200) {
-        this.categoryList = res.data.result.item
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
-    },
     // 获取报价信息产品列表
     async getProductOfferDetailPage (flag) {
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         offerNumber: this.$route.query.id,
-        categoryNumber: this.categoryNumber,
+        categoryNumber: this.currentCate && this.currentCate.id,
         keyword: this.keyword,
         sortOrder: this.sortOrder,
-        sortType: this.sortType
+        sortType: this.sortType,
+        ...this.packingOptions
       }
       for (const key in fd) {
         if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
@@ -397,7 +588,7 @@ export default {
       if (res.data.result.code === 200) {
         this.productList = flag
           ? this.productList.concat(res.data.result.item.items)
-          : res.data.result.item.items
+          : [...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items, ...res.data.result.item.items]
         this.totalCount = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
@@ -410,6 +601,8 @@ export default {
       })
       if (res.data.result.code === 200) {
         this.productInfo = res.data.result.item
+        this.getProductChpaList()
+        this.getProductCategoryList()
         document.title = this.productInfo.companyName
         this.$nextTick(() => {
           this.onScrollable()
@@ -428,7 +621,6 @@ export default {
     }
   },
   created () {
-    this.getProductCategoryList()
     this.getProductOfferByNumber()
     this.getProductOfferDetailPage()
   },
@@ -470,6 +662,8 @@ export default {
   .boxTwo{
     width: 100%;
     background-color: #fff;
+    position: relative;
+    z-index: 1;
   }
   .topLayout{
   width: 95%;
@@ -629,9 +823,177 @@ export default {
     }
   }
   .floatSearch {
-    width: 95%;
-    margin: 0 auto;
+    width: 100%;
+    // margin: 0 auto;
     background-color: #fff;
+    padding: 0 0.2rem;
+    box-sizing: border-box;
+    position: relative;
+    .screens,.category{
+      position: absolute;
+      width: 100%;
+      font-size: 0.25rem;
+      box-sizing: border-box;
+      left: 0;
+      background-color: #fff;
+      box-shadow: 1px 3px 10px 1px rgba(0, 60, 200, 0.1);
+    }
+    .screens{
+      .contentWrap{
+        padding: 0.366667rem 0.2rem;
+        padding-bottom: 0;
+        .item{
+        display: flex;
+        justify-content: space-between;
+        .left,.right{
+          flex: 1;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-sizing: border-box;
+          .title{
+            flex: 1;
+            white-space:nowrap;
+          }
+        }
+        // .right{
+        //   padding-left: 10px;
+        // }
+        .left{
+          padding-right: 0.133333rem;
+        }
+      }
+      }
+      .packing,.selectImg{
+        display: flex;
+        align-items: center;
+      }
+      .selectImg{
+        margin-top: 0.266667rem;
+        .title{
+          margin-right:0.266667rem;
+        }
+      }
+      .submitBtnList {
+        margin-top: 0.5rem;
+        display: flex;
+        .reset,.submit{
+          flex: 1;
+          text-align: center;
+          padding: 0.2rem;
+          margin: 0;
+          border: none;
+          border-radius: 0;
+          font-size: 0.25rem;
+        }
+        .reset{
+          background-color: #ccc;
+          color: #000;
+        }
+        .submit{
+          background-color: #165af7;
+        }
+      }
+    }
+    .category{
+      .contentWrap{
+        height: 5.333333rem;
+        bottom: -5.333333rem;
+        display: flex;
+        justify-content: space-between;
+      .leftCate{
+        width: 2rem;
+        height: 100%;
+        padding: 0.2rem 0;
+        box-sizing: border-box;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .cateItens{
+          flex: 1;
+          display: flex;
+          flex-wrap: wrap;
+          align-content: flex-start;
+          overflow-x: hidden;
+          overflow-y: scroll;
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE 10+ */
+          &::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+          }
+          .item{
+            width: 100%;
+            padding-bottom: 0.2rem;
+            margin: 0;
+            box-sizing: border-box;
+            background-color: #fff;
+            &:last-of-type{
+              padding: 0;
+            }
+            &.active{
+              color: #165af7;
+            }
+          }
+        }
+      }
+      .rightCate{
+        flex: 1;
+        height: 100%;
+        background-color: #e4f3ff;
+        padding: 0.2rem 0.2rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .allCateCount{
+          padding-bottom: 0.2rem;
+          &.active {
+            color: #165af7;
+          }
+        }
+        .cateItens{
+          width: 100%;
+          display: flex;
+          flex: 1;
+          flex-wrap: wrap;
+          align-content: flex-start;
+          overflow-x: hidden;
+          overflow-y: scroll;
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE 10+ */
+          &::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+          }
+          .item{
+            margin-right: 0.3rem;
+            &.active{
+              color: #165af7;
+            }
+          }
+        }
+      }
+      }
+      .submitBtnList {
+        display: flex;
+        .reset,.submit{
+          flex: 1;
+          text-align: center;
+          padding: 0.2rem;
+          margin: 0;
+          border: none;
+          border-radius: 0;
+          font-size: 0.25rem;
+        }
+        .reset{
+          background-color: #ccc;
+          color: #000;
+        }
+        .submit{
+          background-color: #165af7;
+        }
+      }
+    }
     .listTitle {
       width: 100%;
       height: 0.933333rem;
@@ -652,14 +1014,6 @@ export default {
           background-color: #165af7;
           transform: translate(0, -50%);
           border-radius: 0 0.066667rem 0.066667rem 0;
-        }
-      }
-      .downloads {
-        .el-button {
-          font-size: 0.16rem;
-          border-radius: 0.266667rem;
-          padding: 0.12rem 0.2rem;
-          border: 0.013333rem solid #b3d8ff;
         }
       }
     }
@@ -699,7 +1053,7 @@ export default {
       }
     }
   }
-  .productList {
+    .productList {
     width: 95%;
     margin: 0 auto 0.666667rem auto;
     font-size: 0.26rem;
