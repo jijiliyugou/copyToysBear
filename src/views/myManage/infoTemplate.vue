@@ -48,6 +48,11 @@
         <el-table-column prop="templateNumber" label="模板编号"></el-table-column>
         <el-table-column prop="templateName" label="模板名称"></el-table-column>
         <el-table-column prop="hallName" label="展厅"></el-table-column>
+        <el-table-column prop="messageModel" label="消息类型">
+          <template slot-scope="scope">
+            <el-tag effect="plain">{{ scope.row.messageModel }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="messageTitle" label="推送标题"></el-table-column>
         <el-table-column prop="pushContent" label="推送内容"></el-table-column>
         <el-table-column label="操作" width="150" align="center">
@@ -84,6 +89,7 @@
     <el-dialog
       :title="infoOptions.title"
       :visible.sync="infoOptions.addInfoTemplateDialog"
+      v-if="infoOptions.addInfoTemplateDialog"
       destroy-on-close
       class="infoDialog"
     >
@@ -108,6 +114,15 @@
                 :key="i"
                 :label="item.companyName"
                 :value="item.companyNumber">
+              </el-option>
+              </el-select>
+            </el-form-item>
+          <el-form-item label="消息类型：" prop="messageExt">
+            <el-select v-model="addInfoForm.messageExt" @change="changeMessageExt" placeholder="请选择">
+              <el-option v-for="(item, i) in configList"
+                :key="i"
+                :label="item.itemText"
+                :value="item.itemCode">
               </el-option>
               </el-select>
             </el-form-item>
@@ -162,6 +177,8 @@ export default {
     return {
       addInfoForm: {
         templateNumber: null,
+        messageExt: null,
+        messageModel: null,
         templateName: null,
         hallNumber: null,
         hallName: null,
@@ -173,6 +190,7 @@ export default {
         title: '新增消息模板',
         addInfoTemplateDialog: false
       },
+      configList: [],
       totalCount: 0,
       currentPage: 1,
       pageSize: 10,
@@ -185,6 +203,9 @@ export default {
       addRules: {
         templateName: [
           { required: true, message: '请输入模板名称', trigger: 'blur' }
+        ],
+        messageExt: [
+          { required: true, message: '请选择消息类型', trigger: 'change' }
         ],
         hallNumber: [
           { required: true, message: '请选择展厅', trigger: 'change' }
@@ -199,6 +220,18 @@ export default {
     }
   },
   methods: {
+    // 获取系统配置
+    async getSystemConfig (type) {
+      const res = await this.$http.post('/api/ServiceConfigurationList', {
+        basisParameters: type
+      })
+      if (res.data.result.code === 200) {
+        this.configList = res.data.result.item
+        console.log(this.configList)
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 删除消息模板
     async handlerDelete (row) {
       row.isDelete = true
@@ -222,6 +255,12 @@ export default {
     changeHallNumber (companyNumber) {
       const selectedValue = this.hallList.find(item => item.companyNumber === companyNumber)
       this.addInfoForm.hallName = selectedValue.companyName
+    },
+    // 选择了消息类型
+    changeMessageExt (itemCode) {
+      const selectedValue = this.configList.find(item => item.itemCode === itemCode)
+      this.addInfoForm.messageModel = selectedValue.itemText
+      console.log(this.addInfoForm)
     },
     // 提交新增编辑消息模板
     async subAddInfoTemp () {
@@ -248,6 +287,8 @@ export default {
       this.infoOptions.addInfoTemplateDialog = true
       this.addInfoForm = {
         templateNumber: null,
+        messageExt: null,
+        messageModel: null,
         templateName: null,
         hallNumber: null,
         hallName: null,
@@ -388,6 +429,7 @@ export default {
   },
   mounted () {
     this.getOrgCompanyList()
+    this.getSystemConfig('MessageModel')
     // this.getClientTypeList()
     // this.drawLine()
   },
