@@ -166,6 +166,7 @@
 export default {
   data () {
     return {
+      allCount: 0,
       ws: null,
       wsBaseUrl: process.env.NODE_ENV === 'production' ? ('wss://impush.toysbear.com/ws?UserId=' + this.$store.state.userInfo.userInfo.id) : ('ws://139.9.71.135:8090/ws?UserId=' + this.$store.state.userInfo.userInfo.id),
       lockReturn: false,
@@ -277,6 +278,7 @@ export default {
     },
     // 打开公司排号
     openOrderCompanyList (item) {
+      console.log(item)
       this.$emit('showOrderCompanyList', item)
     },
     // 打开聊天界面
@@ -296,9 +298,8 @@ export default {
       const res = await this.$http.post('/api/GetOrderMessageCount', {})
       if (res.data.result.code === 200) {
         const list = res.data.result.item.result
-        let allCount = 0
         for (let i = 0; i < list.length; i++) {
-          allCount += list[i].count
+          this.allCount += list[i].count
           if (list[i].sampleFrom === 'HALL') {
             this.companyType.hall.count = list[i].count
             this.companyType.hall.time = list[i].latesTime
@@ -310,7 +311,7 @@ export default {
             this.companyType.supplier.time = list[i].latesTime
           }
         }
-        this.$emit('orderInfoCount', allCount)
+        // this.$emit('orderInfoCount', allCount)
       }
     },
     // 获取消息列表
@@ -338,6 +339,9 @@ export default {
       const res = await this.$http.post('/api/GetOrderCompanyList', {})
       if (res.data.result.code === 200) {
         this.orderCompanyList = res.data.result.item.items
+        for (let i = 0; i < this.orderCompanyList.length; i++) {
+          this.allCount += this.orderCompanyList[i].count
+        }
       }
     },
     /*
@@ -453,6 +457,11 @@ export default {
     //   this.getOrderCompanyList();
     //   this.getOrderMessageCount();
     // });
+  },
+  watch: {
+    allCount (val) {
+      if (val) this.$emit('orderInfoCount', val)
+    }
   },
   beforeDestroy () {
     this.ws.close()

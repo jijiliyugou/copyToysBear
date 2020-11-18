@@ -2790,6 +2790,7 @@ export default {
           // text 为消息文本，peerId 是消息发送方 User ID
           // this.$message.success("我收到了点对点");
           console.log('我收到了点对点')
+          this.getAllMessagesCount()
           this.$root.eventHub.$emit('resetData')
           /* 收到点对点消息的处理逻辑 */
         }
@@ -3162,7 +3163,7 @@ export default {
         this.CompanyDetail = []
       }
       this.$root.eventHub.$emit('resetData')
-
+      this.getAllMessagesCount()
       console.log(this.showTypeOptions)
     },
     // 点击公司的立即沟通
@@ -4829,6 +4830,7 @@ export default {
       const res = await this.$http.post('/api/GetAllMessagesCount')
       if (res.data.result.code === 200) {
         this.infoCount = res.data.result.item
+        console.log(this.infoCount)
       } else {
         this.$message.error(res.data.result.msg)
       }
