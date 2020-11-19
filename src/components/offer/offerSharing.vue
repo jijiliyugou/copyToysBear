@@ -1135,6 +1135,7 @@ export default {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      padding-bottom: 0.266667rem;
       .squareItem{
         width: 48%;
         margin-top: 0.24rem;
