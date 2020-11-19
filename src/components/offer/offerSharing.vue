@@ -521,18 +521,16 @@ export default {
     // 点击筛选事件
     sortScreen () {
       this.isCate = 0
-      this.sortOrder = 0
+      // this.sortOrder = 0
       this.isScreen = this.isScreen === 1 ? 0 : 1
       // this.isCate = this.isDate = this.isHot = this.isPrice = 0
     },
     // 点击分类事件
     sortCate () {
       this.isScreen = 0
-      this.isActive = null
-      this.currentCate = null
-      this.categoryChildren = null
-      this.allCateCount = 0
-      this.sortOrder = 0
+      // this.isActive = null
+      // this.allCateCount = 0
+      // this.sortOrder = 0
       this.isCate = this.isCate === 1 ? 0 : 1
       // this.isActive = this.isScreen = this.isDate = this.isHot = this.isPrice = 0
     },
