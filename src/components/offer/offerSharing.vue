@@ -281,6 +281,7 @@
           </div>
         </el-card>
       </div>
+        <center><i :class="{'el-icon-loading':!disabled}"></i>{{ disabled ? '没有更多了...' : '加载中...' }}</center>
       </template>
       <el-image
         v-else
@@ -288,7 +289,11 @@
         :src="require('@/assets/images/暂无产品.png')"
         fit="contain"
       ></el-image>
-      <footer class="myFooter">{{(productInfo && productInfo.companyName) || '小竹熊 云科技'}}</footer>
+      <footer class="myFooter">
+        <span style="flex:1;"></span>
+        <span style="flex:1;"></span>
+        <span style="flex:1;textAlign:right;">{{(productInfo && productInfo.companyName) || '小竹熊 云科技'}}</span>
+      </footer>
     </div>
   </div>
 </template>
@@ -1172,7 +1177,7 @@ export default {
       width: 100%;
       height: 0.666667rem;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
       background-color: #fff;
       padding: 0 0.333333rem;
