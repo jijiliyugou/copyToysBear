@@ -27,7 +27,7 @@
                     :auto-upload="false"
                     v-if="item.linkUrl === '/productSearch'"
                     ref="uploadRef"
-                    accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
+                    accept=".jpg,.jpeg,.png,.ico,.bmp,.JPG,.JPEG,.PNG,.ICO,.BMP"
                     class="upload-demo"
                     :action="baseAPI + '/api/File/SearchPicture'"
                     :headers="headers"
