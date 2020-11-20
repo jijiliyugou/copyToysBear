@@ -218,12 +218,12 @@
             </p>
             <p class="productPrice" v-show="(productInfo && productInfo.productOfferType) !== 'company'">
               出厂价：<span class="price">{{
-                item.cu_de + item.unitPrice.toFixed(2)
+                item.cu_de + item.unitPrice.toFixed((item.decimalPlaces || 2))
               }}</span>
             </p>
             <p class="productPrice">
               报价：<span class="price">{{
-                item.cu_de + item.offerAmount.toFixed(2)
+                item.cu_de + item.offerAmount.toFixed((item.decimalPlaces || 2))
               }}</span>
             </p>
           </div>
@@ -353,7 +353,6 @@ export default {
       const res = await this.$http.post('/api/SelectProductCategory', { companyNumber: this.productInfo.companyNumber })
       if (res.data.result.code === 200) {
         this.categoryList = res.data.result.item
-        console.log(this.categoryList)
         // this.categoryChildren = this.categoryList[0].children
       } else {
         this.$message.error(res.data.result.msg)

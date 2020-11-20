@@ -112,8 +112,8 @@
         <p class="textItem">装箱量：{{productDetail.in_en + "/" + productDetail.ou_lo + "(PCS)"}}</p>
         <p class="textItem">体积/材积：{{productDetail.bulk_stere + "(CBM)" + "/" + productDetail.bulk_feet + "(CUFT)"}}</p>
         <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
-        <p class="textItem" v-show="productInfo && productInfo.productOfferType !== 'company'">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice)">{{productDetail.cu_de + (productDetail.unitPrice && productDetail.unitPrice.toFixed(2))}}</span></p>
-        <p class="textItem">报价：<span class="price" v-if="$_.isNumber(productDetail.offerAmount)">{{productDetail.cu_de + productDetail.offerAmount.toFixed(2)}}</span></p>
+        <p class="textItem" v-show="productInfo && productInfo.productOfferType !== 'company'">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice)">{{productDetail.cu_de + (productDetail.unitPrice && productDetail.unitPrice.toFixed((productDetail.decimalPlaces || 2)))}}</span></p>
+        <p class="textItem">报价：<span class="price" v-if="$_.isNumber(productDetail.offerAmount)">{{productDetail.cu_de + productDetail.offerAmount.toFixed((productDetail.decimalPlaces || 2))}}</span></p>
       </div>
       <p class="createDate"><i class="createDateIcon"></i>{{productInfo && productInfo.createdOn.split('T')[0]}}</p>
     </div>

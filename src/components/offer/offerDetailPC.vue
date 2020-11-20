@@ -8,11 +8,9 @@
                     <div
                       slot="placeholder"
                       class="image-slot"
-                      style="width:80px;height:80px; margin: 0 auto"
                     >
                       <img
                         class="errorImg"
-                        style="width:80px;height:80px;"
                         src="~@/assets/images/imgError.jpg"
                         alt
                       />
@@ -20,11 +18,9 @@
                     <div
                       slot="error"
                       class="image-slot"
-                      style="width:80px;height:80px; margin: 0 auto"
                     >
                       <img
                         class="errorImg"
-                        style="width:80px;height:80px;"
                         src="~@/assets/images/imgError.jpg"
                         alt
                       />
@@ -118,8 +114,8 @@
           <p class="textItem">装箱量：{{productDetail.in_en + "/" + productDetail.ou_lo + "(PCS)"}}</p>
           <p class="textItem">体积/材积：{{productDetail.bulk_stere + "(CBM)" + "/" + productDetail.bulk_feet + "(CUFT)"}}</p>
           <p class="textItem">毛重/净重：{{productDetail.ne_we + "/" + productDetail.gr_we + "(kg)"}}</p>
-          <p class="textItem" v-show="productInfo && productInfo.productOfferType !== 'company'">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice)">{{productDetail.cu_de + productDetail.unitPrice.toFixed(2)}}</span></p>
-          <p class="textItem">报价：<span class="price" v-if="$_.isNumber(productDetail.offerAmount)">{{productDetail.cu_de + productDetail.offerAmount.toFixed(2)}}</span></p>
+          <p class="textItem" v-show="productInfo && productInfo.productOfferType !== 'company'">出厂价：<span class="price" v-if="$_.isNumber(productDetail.unitPrice)">{{productDetail.cu_de + productDetail.unitPrice.toFixed((productDetail.decimalPlaces || 2))}}</span></p>
+          <p class="textItem">报价：<span class="price" v-if="$_.isNumber(productDetail.offerAmount)">{{productDetail.cu_de + productDetail.offerAmount.toFixed((productDetail.decimalPlaces || 2))}}</span></p>
       </div>
     </div>
   </div>
@@ -227,6 +223,16 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .el-col {
+      .el-image{
+        width: 80px;
+        height: 80px;
+        img{
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
     .conText{
       text-align: center;
       color: #165BF7;

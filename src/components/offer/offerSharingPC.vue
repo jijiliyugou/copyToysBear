@@ -7,11 +7,9 @@
                     <div
                       slot="placeholder"
                       class="image-slot"
-                      style="width:80px;height:80px; margin: 0 auto"
                     >
                       <img
                         class="errorImg"
-                        style="width:80px;height:80px;"
                         src="~@/assets/images/imgError.jpg"
                         alt
                       />
@@ -19,11 +17,9 @@
                     <div
                       slot="error"
                       class="image-slot"
-                      style="width:80px;height:80px; margin: 0 auto"
                     >
                       <img
                         class="errorImg"
-                        style="width:80px;height:80px;"
                         src="~@/assets/images/imgError.jpg"
                         alt
                       />
@@ -187,10 +183,10 @@
                       体积/材积：<span>{{ item.bulk_stere + "(CBM)" + "/" + item.bulk_feet + "(CUFT)" }}</span>
                     </li>
                     <li v-show="productInfo && productInfo.productOfferType !== 'company'">
-                      出厂价：<span class="price" v-if="$_.isNumber(item.unitPrice)">{{item.cu_de + (item.unitPrice.toFixed(2))}}</span>
+                      出厂价：<span class="price" v-if="$_.isNumber(item.unitPrice)">{{item.cu_de + item.unitPrice.toFixed((item.decimalPlaces || 2))}}</span>
                     </li>
                     <li>
-                      报价：<span class="price" v-if="$_.isNumber(item.offerAmount)">{{item.cu_de + (item.offerAmount.toFixed(2))}}</span>
+                      报价：<span class="price" v-if="$_.isNumber(item.offerAmount)">{{item.cu_de + item.offerAmount.toFixed((item.decimalPlaces || 2))}}</span>
                     </li>
                   </ul>
                 </div>
@@ -444,6 +440,16 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .el-col {
+      .el-image{
+        width: 80px;
+        height: 80px;
+        img{
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
     .conText{
       text-align: center;
       color: #165BF7;

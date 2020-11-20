@@ -8,11 +8,9 @@
             <div
               slot="placeholder"
               class="image-slot"
-              style="width: 80px; height: 80px; margin: 0 auto"
             >
               <img
                 class="errorImg"
-                style="width: 80px; height: 80px"
                 src="~@/assets/images/imgError.jpg"
                 alt
               />
@@ -20,11 +18,9 @@
             <div
               slot="error"
               class="image-slot"
-              style="width: 80px; height: 80px; margin: 0 auto"
             >
               <img
                 class="errorImg"
-                style="width: 80px; height: 80px"
                 src="~@/assets/images/imgError.jpg"
                 alt
               />
@@ -187,6 +183,16 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      .el-col {
+      .el-image{
+        width: 80px;
+        height: 80px;
+        img{
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
       .conText {
         text-align: center;
         color: #165bf7;
