@@ -78,8 +78,8 @@
       </div> -->
     <div class="centent"  v-if="productDetail">
       <div class="imgBox">
-        <el-image :preview-src-list="imagesList" style="width: 100%;height: 100%;"
-      :src="productDetail.imageUrl"
+      <el-image :preview-src-list="[productDetail && productDetail.imageUrl]" style="width: 100%;height: 100%;"
+      :src="productDetail && productDetail.imageUrl"
       fit="contain">
         <div
           slot="placeholder"
@@ -127,7 +127,6 @@ export default {
       scrollable: false,
       url: window.location.href.split('/#/')[0] + '/#/offerSharing?id=' + this.$route.params.pid,
       productDetail: null,
-      imagesList: [],
       productInfo: null,
       currentPage: 1,
       pageSize: 10
