@@ -168,7 +168,7 @@
               background
               layout="total, sizes, prev, pager, next, jumper"
               :total="totalCount"
-              :page-sizes="[10, 30, 60, 100]"
+              :page-sizes="[12, 20, 40, 60]"
               :page-size="pageSize"
               :current-page.sync="currentPage"
               @current-change="changePage"
@@ -259,7 +259,7 @@ export default {
       isShowCropper: null,
       httpTime: null,
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 12,
       totalCount: 0,
       productList: null, // 产品列表
       categoryList: [],

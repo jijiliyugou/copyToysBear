@@ -197,7 +197,7 @@
           <center style="margin:20px auto 0 auto;" v-show="!$store.state.beforeSearchImgPreview">
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
-              :page-sizes="[10, 20, 30, 60]"
+              :page-sizes="[12, 20, 40, 60]"
               background
               :total="totalCount"
               :page-size="pageSize"
@@ -307,7 +307,7 @@ export default {
       loading: false,
       datailNumber: null,
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 12,
       totalCount: 0,
       dataList: [],
       categoryList: [],

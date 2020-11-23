@@ -217,7 +217,7 @@
                 background
                 :total="totalCount"
                 :page-size="pageSize"
-                :page-sizes="[10, 20, 30, 60]"
+                :page-sizes="[12, 20, 40, 60]"
                 :current-page.sync="currentPage"
                 @current-change="changePage"
                 @size-change="handleSizeChange"
@@ -325,7 +325,7 @@ export default {
       datailNumber: null,
       loading: false,
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 12,
       totalCount: 0,
       dataList: [],
       count: 0,
