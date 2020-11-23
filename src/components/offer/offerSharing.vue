@@ -270,12 +270,12 @@
             </p>
             <p class="productPrice">
               出厂价：<span class="price">{{
-                item.cu_de + item.unitPrice.toFixed(2)
+                item.cu_de + item.unitPrice.toFixed((item.decimalPlaces || 2))
               }}</span>
             </p>
             <p class="productPrice">
               报价：<span class="price">{{
-                item.cu_de + item.offerAmount.toFixed(2)
+                item.cu_de + item.offerAmount.toFixed((item.decimalPlaces || 2))
               }}</span>
             </p>
           </div>
