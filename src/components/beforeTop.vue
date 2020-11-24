@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%;">
-    <div class="banner defaultColor">
+    <div class="banner">
       <div class="bannerContent">
         <div class="left">
           <div class="contactType">
@@ -13,15 +13,13 @@
             </span>
           </div>
         </div>
+        <div class="middle">
+          小竹熊欢迎您
+        </div>
         <div class="right">
           <div class="loginTitle">
             <div class="myLogin" v-if="!isLogin">
-              <span @click="toLogin">用户登录</span>
-              <span
-                style="margin-left:20px;"
-                @click="$message.error('暂无注册功能')"
-                >免费注册</span
-              >
+                <button class="loginBtn" @click="toLogin">登录</button>
             </div>
             <div class="user" v-else>
               <div class="userImage" @click="toMe">
@@ -39,7 +37,25 @@
         </div>
       </div>
     </div>
-    <el-row style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
+    <div class="downloadCode">
+      <div class="downloadContent">
+        <div style="flex:1;">
+          <div class="left" v-show="$route.path === '/beforeIndex/login'">
+           <el-image :src="require('@/assets/images/erpLogo.png')" fit="contain"></el-image>
+           <div class="welcome">
+             欢迎登录
+           </div>
+        </div>
+        </div>
+        <div class="right">
+          <div class="code">
+            <el-image :src="require('@/assets/images/ErWeiMa.png')" fit="contain"></el-image>
+            <p class="text">小竹熊app下载</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <el-row style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
       <el-col :span="6">
         <div class="grid-content bg-purple grid-content-top">
           <img class="logo" src="~@/assets/images/logo.png" alt />
@@ -102,7 +118,7 @@
         >
       </ul>
     </div>
-    <!-- vueCropper 剪裁图片实现-->
+    vueCropper 剪裁图片实现
     <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
       <div class="cropper-content">
         <div class="cropper" style="text-align:center">
@@ -147,16 +163,13 @@
           >确认</el-button
         >
       </center>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
-import { VueCropper } from 'vue-cropper'
+// import { VueCropper } from 'vue-cropper'
 export default {
-  components: {
-    VueCropper: VueCropper
-  },
   data () {
     return {
       baseImg: '',
@@ -354,26 +367,31 @@ export default {
 <style lang="less" scoped>
 @import "~@/assets/css/globalVariable.less";
 @deep: ~">>>";
-.themeColor(@color:@defaultColor) {
-  background: @color;
-}
-.defaultColor {
-  .themeColor();
-}
 .banner {
   min-width: 1024px;
   width: 100%;
   overflow: visible;
+  border-bottom: 1px solid #e6e6e6;
+  border-top: 1px solid #e6e6e6;
   .bannerContent {
     max-width: 1200px;
     overflow: visible;
     min-width: 1024px;
     margin: 0 auto;
-    height: 50px;
+    height: 38px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #fff;
+     color:#797979;
+    .left,.right,.middle{
+      flex:1;
+    }
+    .middle{
+      text-align: center;
+      color: #000;
+      font-weight: 600;
+      font-size: 20px;
+    }
     .left {
       .contactType {
         font-size: 12px;
@@ -383,7 +401,9 @@ export default {
         span {
           display: flex;
           align-items: center;
-          padding: 0 10px;
+          &:last-of-type {
+            margin-left: 50px;
+          }
           i {
             margin-right: 10px;
             &.icon-dianhua {
@@ -402,17 +422,25 @@ export default {
       }
     }
     .right {
+      display: flex;
+      justify-content: flex-end;
       .loginTitle {
         display: flex;
         justify-content: space-between;
         align-items: center;
         .myLogin {
           font-size: 12px;
-          span {
-            color: #fff;
+          .loginBtn{
+            color: #3872f8;
+            border: 1px solid #3872f8;
+            background-color: #fff;
+            padding: 5px 30px;
+            border-radius: 5px;
+            font-size: 12px;
+            outline: none;
             cursor: pointer;
-            &:hover {
-              color: #5bd2f6;
+            &:hover{
+              background-color: #ecf5ff;
             }
           }
         }
@@ -424,16 +452,15 @@ export default {
             cursor: pointer;
             display: flex;
             align-items: center;
-            color: #fff;
             font-size: 14px;
             .el-avatar {
-              background-color: #fff;
+              background-color: rgb(230, 230, 230);
               margin-right: 10px;
-              color: #165af7;
+              color:#797979;
             }
           }
           .tuichu {
-            color: #fff;
+            color:#797979;
             margin-left: 20px;
             font-size: 12px;
             cursor: pointer;
@@ -443,96 +470,155 @@ export default {
     }
   }
 }
-.grid-content-top {
-  height: 110px;
-  display: flex;
-  align-items: center;
-  .logo {
-    width: 110px;
-    height: 110px;
-  }
-  @{deep} input.el-input--suffix, @{deep} input.el-input__inner {
-      border: none;
-    }
-  .top-center {
-    border-radius: 50px;
-    border: 1px solid #ccc;
-    overflow: hidden;
-    height: 40px;
-    width:100%;
+.downloadCode{
+  width: 100%;
+  background-color: #fff;
+  .downloadContent {
+    max-width: 1200px;
+    overflow: visible;
+    min-width: 1024px;
+    height: 120px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 30px 0;
-    /deep/ .el-input-group__append, /deep/ .el-input-group__prepend, /deep/ .el-input {
-      border: none;
+    .left,.right{
+      flex: 1;
     }
-    @{deep} .elInput{
-      border:none;
-      flex:1;
-    }
-    .subSearch{
-      background-color:#165af7;
-      color:#fff;
-      border:none;
-      border-radius: 0;
-      width:100px;
-      display:flex;
-      height:100%;
-      justify-content: center;
+    .left {
+      display: flex;
       align-items: center;
+      .el-image {
+        width: 120px;
+        height: 120px;
+      }
+      .welcome{
+        font-size: 20px;
+        color: #4077f9;
+        margin-left: 50px;
+        position: relative;
+        vertical-align: top;
+        &::before{
+          display: block;
+          position: absolute;
+          content: '';
+          width: 2px;
+          height: 30px;
+          background-color: #4077f9;
+          left: -20px;
+          top: 50%;
+          transform: translate(0, -50%);
+        }
+      }
     }
-    .myCamera {
-      border:none;
-      margin-right: 10px;
-      font-size: 24px;
-      position: relative;
-      .fileInput {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 24px;
-        height: 40px;
-        font-size: 0;
-        padding: 0;
-        cursor: pointer;
-        cursor: pointer;
-        opacity: 0;
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      .code{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .el-image{
+          width: 80px;
+          height: 80px;
+        }
+        .text {
+          font-size: 12px;
+          color: #797979;
+        }
       }
     }
   }
 }
-.erwemas {
-  float: right;
-}
+// .grid-content-top {
+//   height: 110px;
+//   display: flex;
+//   align-items: center;
+//   .logo {
+//     width: 110px;
+//     height: 110px;
+//   }
+//   @{deep} input.el-input--suffix, @{deep} input.el-input__inner {
+//       border: none;
+//     }
+//   .top-center {
+//     border-radius: 50px;
+//     border: 1px solid #ccc;
+//     overflow: hidden;
+//     height: 40px;
+//     width:100%;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     margin: 30px 0;
+//     /deep/ .el-input-group__append, /deep/ .el-input-group__prepend, /deep/ .el-input {
+//       border: none;
+//     }
+//     @{deep} .elInput{
+//       border:none;
+//       flex:1;
+//     }
+//     .subSearch{
+//       background-color:#165af7;
+//       color:#fff;
+//       border:none;
+//       border-radius: 0;
+//       width:100px;
+//       display:flex;
+//       height:100%;
+//       justify-content: center;
+//       align-items: center;
+//     }
+//     .myCamera {
+//       border:none;
+//       margin-right: 10px;
+//       font-size: 24px;
+//       position: relative;
+//       .fileInput {
+//         position: absolute;
+//         left: 0;
+//         top: 0;
+//         width: 24px;
+//         height: 40px;
+//         font-size: 0;
+//         padding: 0;
+//         cursor: pointer;
+//         cursor: pointer;
+//         opacity: 0;
+//       }
+//     }
+//   }
+// }
+// .erwemas {
+//   float: right;
+// }
 
-.sidebar {
-  display: flex;
-  height: 100px;
-  align-items: center;
-  color: #fff;
-  ul {
-    flex: 1;
-    display: flex;
-    .li {
-      margin: 0 30px;
-      padding-bottom: 5px;
-      border-bottom: 2px solid transparent;
-      &:first-of-type {
-        margin-left: 0;
-      }
-    }
-    .router-link-active {
-      color: #165af7;
-      border-bottom-color: #165af7;
-    }
-  }
-}
-// 截图
-.cropper-content {
-  .cropper {
-    width: auto;
-    height: 500px;
-  }
-}
+// .sidebar {
+//   display: flex;
+//   height: 100px;
+//   align-items: center;
+//   color: #fff;
+//   ul {
+//     flex: 1;
+//     display: flex;
+//     .li {
+//       margin: 0 30px;
+//       padding-bottom: 5px;
+//       border-bottom: 2px solid transparent;
+//       &:first-of-type {
+//         margin-left: 0;
+//       }
+//     }
+//     .router-link-active {
+//       color: #165af7;
+//       border-bottom-color: #165af7;
+//     }
+//   }
+// }
+// // 截图
+// .cropper-content {
+//   .cropper {
+//     width: auto;
+//     height: 500px;
+//   }
+// }
 </style>

@@ -1,443 +1,438 @@
 /* eslint-disable vue/require-v-for-key */
 <template>
   <div class="home">
-    <menuSwiper :dataList="showroomSwiperList"></menuSwiper>
-    <div class="swiperWrap" v-if="list && list.length">
-      <div class="title">
-        <h3>
-          新品推荐
-          <span>显示最新产品</span>
-          <span class="More" @click="$router.push('/beforeIndex/product')">
-            更多
-            <i class="iconfont icon-bofang"></i>
-          </span>
-        </h3>
-      </div>
-      <div class="mySwiper" @mouseenter="boxEnter" @mouseleave="boxleave">
-        <swiper
-          v-cloak
-          :dataList="list"
-          :speed="2"
-          :direction="direction"
-          :isShow="isShow"
-        ></swiper>
-      </div>
-    </div>
-    <!-- 公告 -->
-    <div class="announcement">
-      <ul class="noticeItens">
-        <template v-for="(item, i) in NoticeObj">
-          <li
-            class="items"
-            :key="i"
-            v-if="item.children && item.children.length  !==  0"
-          >
-            <div class="title">
-              <h3>
-                {{ item.title }}
-                <span class="More" @click="$router.push(item.path)">
-                  更多
-                  <i class="iconfont icon-bofang"></i>
-                </span>
-              </h3>
+    <div class="homeBox">
+      <div class="searchBox">
+        <div class="searchImg"></div>
+        <div class="inputBox">
+            <el-input
+              placeholder="请输入关键词/图片搜索"
+              v-model="searchValue">
+            </el-input>
+            <div class="iconBox">
+              <div class="uploadIcon">
+                <i class="iconfont icon-tupian">
+                  <input
+                    type="file"
+                    ref="uploadRef"
+                    @change="changeUpload"
+                    class="fileInput"
+                    accept=".jpg,.jpeg,.png,.ico,.bmp,.JPG,.JPEG,.PNG,.ICO,.BMP"
+                  />
+                </i>
+              </div>
+              <button class="searchBtn" @click="toProductSearch">搜索</button>
             </div>
-            <ol class="myOl">
-              <li
-                v-for="Notice in item.children"
-                :key="Notice.bearNotice.id"
-                @click="
-                  $router.push({
-                    name: 'noticeDetail',
-                    params: { id: Notice.bearNotice.noticeNumber }
-                  })
-                "
-              >
-                <span class="title">公告：{{ Notice.bearNotice.notice }}</span>
-                <span class="date">
-                  <template v-if="Notice.bearNotice.publishDate">
-                    {{
-                      Notice.bearNotice.publishDate.replace(/t[\s\S]+/gi, " ")
-                    }}
-                  </template>
-                  <a>查看</a>
-                </span>
-              </li>
-            </ol>
-          </li>
-        </template>
-        <template v-for="item in (3-NoticeObj.length%3)">
-          <div class="buwei" v-if="NoticeObj.length%3 > 0" :key="item"></div>
-        </template>
-      </ul>
-    </div>
-    <div class="recommend">
-      <div class="title">
-        <h3>
-          推荐采购商
-          <span class="More" @click="$router.push('/beforeIndex/buyers')">
-            更多
-            <i class="iconfont icon-bofang"></i>
-          </span>
-        </h3>
+        </div>
+        <button class="advanced" @click="isAdvanced = !isAdvanced">高级搜索</button>
       </div>
-      <ol>
-        <li
-          v-for="item in RecommendedSales"
-          @click="
-            $router.push({
-              name: 'companyDetail',
-              params: { id: item.companyNumber }
-            })
-          "
-          :key="item.id"
+      <div class="keywords" v-show="isAdvanced">
+        <span @click="keywordActive = i" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in keywordList" :key="i">{{ item }}</span>
+      </div>
+      <transition name="el-zoom-in-top">
+      <div class="searchAdvanced" v-show="!isAdvanced">
+        <div class="box">
+          <div class="left">
+            <div class="item">
+              出厂货号：<el-input size="mini" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
+            </div>
+            <div class="item">
+              玩具尺寸：<el-input size="mini" placeholder="长"></el-input><em>-</em><el-input size="mini" placeholder="宽"></el-input><em>-</em><el-input size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+            </div>
+            <div class="item">
+              外包装箱：<el-input size="mini" placeholder="长"></el-input><em>-</em><el-input size="mini" placeholder="宽"></el-input><em>-</em><el-input size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+            </div>
+            <div class="item">
+              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
+              <el-option
+                v-for="item in packingList"
+                :key="item.value"
+                  :label="item.ch_pa"
+                  :value="item.pa_nu">
+              </el-option>
+            </el-select>
+            <div class="unit"></div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="item">
+              产品名称：<el-input size="mini" v-model="packingOptions.name" placeholder="请输入产品名称"></el-input><div class="unit"></div>
+            </div>
+            <div class="item">
+              价格区间：<el-input size="mini" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" placeholder="最高"></el-input><div class="unit"></div>
+            </div>
+            <div class="item">
+              时间区间：<el-select v-model="packingDatetime" size="mini" placeholder="请选择">
+              <el-option
+                v-for="item in dateList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <div class="unit"></div>
+            </div>
+            <div class="item">
+              图<span style="opacity: 0;">图片</span>片：
+              <div style="flex:1;marginLeft:10px;">
+                <el-radio v-model="packingOptions.radio" label="1">是</el-radio>
+                <el-radio v-model="packingOptions.radio" label="2">否</el-radio>
+              </div>
+              <div class="unit"></div>
+            </div>
+          </div>
+        </div>
+        <div class="btnList">
+          <el-button round style="backgroundColor:#dddddd;width:100px;">重置</el-button>
+          <el-button type="primary" style="marginLeft:40px;width:100px;" round>确定</el-button>
+        </div>
+      </div>
+      </transition>
+    </div>
+    <!-- vueCropper 剪裁图片实现 -->
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
+      <div class="cropper-content">
+        <div class="cropper" style="text-align:center">
+          <vueCropper
+            ref="cropper"
+            :img="option.img"
+            :outputSize="option.outputSize"
+            :outputType="option.outputType"
+            :autoCropWidth="option.autoCropWidth"
+            :autoCropHeight="option.autoCropHeight"
+            :canScale='option.canScale'
+            :info="option.info"
+            :full="option.full"
+            :canMove="option.canMove"
+            :canMoveBox="option.canMoveBox"
+            :original="option.original"
+            :autoCrop="option.autoCrop"
+            :fixed="option.fixed"
+            :fixedNumber="option.fixedNumber"
+            :centerBox="option.centerBox"
+            :infoTrue="option.infoTrue"
+            :fixedBox="option.fixedBox"
+            :mode="option.mode"
+          ></vueCropper>
+        </div>
+      </div>
+      <center slot="footer" class="dialog-footer">
+        <el-button type="info" @click="cropperCancel">取 消</el-button>
+        <el-button
+          type="primary"
+          class="el-icon-refresh-left"
+          @click="$refs.cropper.rotateLeft()"
+          >左 旋 转</el-button
         >
-          <el-image fit="contain" :src="item.companyLogo">
-            <div slot="placeholder" class="image-slot">
-              <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
-            </div>
-            <div slot="error" class="image-slot">
-              <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
-            </div>
-          </el-image>
-          <p>{{ item.companyName }}</p>
-        </li>
-        <li class="Placeholder"></li>
-        <li class="Placeholder"></li>
-        <li class="Placeholder"></li>
-      </ol>
-    </div>
-    <div class="recommend">
-      <div class="title">
-        <h3>
-          推荐供应商
-          <span class="More" @click="$router.push('/beforeIndex/supplier')">
-            更多
-            <i class="iconfont icon-bofang"></i>
-          </span>
-        </h3>
-      </div>
-      <ol>
-        <li
-          v-for="item in RecommendedSupply"
-          @click="
-            $router.push({
-              name: 'companyDetail',
-              params: { id: item.companyNumber }
-            })
-          "
-          :key="item.id"
+        <el-button
+          type="primary"
+          class="el-icon-refresh-right"
+          @click="$refs.cropper.rotateRight()"
+          >右 旋 转</el-button
         >
-          <el-image fit="contain" :src="item.companyLogo">
-            <div slot="placeholder" class="image-slot">
-              <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
-            </div>
-            <div slot="error" class="image-slot">
-              <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
-            </div>
-          </el-image>
-          <p>{{ item.companyName }}</p>
-        </li>
-        <li class="Placeholder"></li>
-        <li class="Placeholder"></li>
-        <li class="Placeholder"></li>
-      </ol>
-    </div>
+        <el-button type="success" @click="onCubeImg" :loading="loading"
+          >确认</el-button
+        >
+      </center>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import swiper from '@/components/beforeSwiper'
-import menuSwiper from '@/components/menuSwiper'
+import { VueCropper } from 'vue-cropper'
 export default {
-  name: 'Home',
   components: {
-    swiper,
-    menuSwiper
+    VueCropper
   },
   data () {
     return {
-      isShow: false,
-      currentPage: 1,
-      pageSize: 20,
-      direction: 'left',
-      list: [],
-      showroomSwiperList: [],
-      NoticeObj: [
-        {
-          title: '供应商公告',
-          path: '/beforeIndex/purchaseInfo',
-          children: null
-        },
-        { title: '展厅公告', path: '/beforeIndex/exhibition', children: null },
-        { title: '公司公告', path: '/beforeIndex/findSamInfo', children: null }
+      packingList: [],
+      dateList: [
+        { label: '全部', value: '' },
+        { label: '当天', value: 'today' },
+        { label: '一周', value: 'lastOneWeek' },
+        { label: '一个月', value: 'lastOneMonth' },
+        { label: '三个月', value: 'lastThreeMonth' },
+        { label: '六个月', value: 'lastHalfYear' }
       ],
-      RecommendedSales: [], // 展厅
-      RecommendedSupply: [] // 供应商
+      packingDatetime: null,
+      packingOptions: {
+        radio: '1',
+        minPrice: null,
+        fa_no: null,
+        maxPrice: null,
+        pa_nu: null,
+        isUpInsetImg: null,
+        startTime: null,
+        endTime: null
+      },
+      isAdvanced: true,
+      loading: false,
+      isShowCropper: false,
+      dialogVisible: false,
+      baseImg: null,
+      fileinfo: null,
+      searchValue: '',
+      keywordList: ['芭比娃娃', '积木', '电动车', '积木是', '积是木', '啊积木', '泡泡机'],
+      keywordActive: 0,
+      // 裁剪组件的基础配置option
+      option: {
+        img: '', // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        full: false, // 是否输出原图比例的截图
+        outputSize: 0.8, // 裁剪生成图片的质量
+        outputType: 'jpeg', // 裁剪生成图片的格式
+        canScale: false, // 图片是否允许滚轮缩放
+        autoCrop: true, // 是否默认生成截图框
+        autoCropWidth: 1000, // 默认生成截图框宽度
+        autoCropHeight: 500, // 默认生成截图框高度
+        fixedBox: false, // 固定截图框大小 不允许改变
+        fixed: false, // 是否开启截图框宽高固定比例
+        fixedNumber: [2, 1], // 截图框的宽高比例
+        canMove: true, // 图片是否可移动
+        canMoveBox: true, // 截图框能否拖动
+        original: false, // 上传图片按照原始比例渲染
+        centerBox: true, // 截图框是否被限制在图片里面
+        infoTrue: false // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+      }
     }
   },
   methods: {
-    // 获取所有 展厅 供应商 公司
-    async getAll (skipCount, maxResultCount, companyType) {
-      const res = await this.$http.post('/api/CompanyManagementPage ', {
-        skipCount,
-        maxResultCount,
-        companyType
-      })
+    toProductSearch () {
+      this.$root.eventHub.$emit('searchBeforeProduct')
+      this.$router.push({ name: 'Product' })
+    },
+    // 获取包装方式list
+    async getProductChpaList () {
+      const fd = {}
+      const res = await this.$http.post('/api/GetProductChpaList', fd)
       if (res.data.result.code === 200) {
-        return res.data.result.item.items
+        this.packingList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
       }
     },
-    // 获取新品推荐
-    async getNewArrivalsPage () {
-      const res = await this.$http.post('/api/GetNewArrivalsPage', {
-        skipCount: this.currentPage,
-        maxResultCount: this.pageSize,
-        AuditStatus: 0
-      })
-      if (res.data.result.code === 200) {
-        this.list = res.data.result.item.items
-      } else {
-        this.$message.error(res.data.result.msg)
+    // 选择图片搜索
+    changeUpload (e) {
+      this.fileinfo = e.target.files[0]
+      const isLt5M = this.fileinfo.size / 1024 / 1024 < 3
+      if (!isLt5M) {
+        this.$message.error('上传文件大小不能超过 3MB!')
+        this.option.img = ''
+        this.$refs.uploadRef.value = ''
+        return false
       }
-    },
-    // 获取公告
-    async getNoticeList (currentPage, pageSize, type) {
-      const res = await this.$http.post('/api/BearNoticePage', {
-        skipCount: currentPage,
-        maxResultCount: pageSize,
-        noticeType: type
+      this.isShowCropper = true
+
+      // 上传成功后将图片地址赋值给裁剪框显示图片
+      this.$nextTick(() => {
+        const f = window.URL.createObjectURL(this.fileinfo)
+        this.baseImg = this.option.img = f
+        this.dialogVisible = true
       })
-      if (res.data.result.code === 200) {
-        return res.data.result.item.result.items
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
     },
-    boxEnter () {
-      this.isShow = true
+    // 确定裁剪图片
+    onCubeImg () {
+      this.loading = true
+      this.$store.commit('handlerBeforeSearch', { value: '', type: 'name' })
+      // 获取cropper的截图的 数据
+      this.$refs.cropper.getCropBlob(async file => {
+        const urlPreView = URL.createObjectURL(file)
+        this.option.img = urlPreView
+        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.baseImg })
+        // 上传
+        const companyNumber = this.$store.state.userInfo.commparnyList
+          ? this.$store.state.userInfo.commparnyList[0].companyNumber
+          : 'Tourist'
+        const fd = new FormData()
+        fd.append('companynumber', companyNumber)
+        fd.append('file', file)
+        try {
+          const res = await this.$http.post('/api/File/SearchPicture', fd)
+          if (res.data.result.code === 200) {
+            this.cropperCancel()
+            this.$store.commit('handlerBeforeSearchImg', res.data.result.object)
+          } else {
+            this.cropperCancel()
+            this.$store.commit('handlerBeforeSearchImg', null)
+            this.$message.error(res.data.result.message)
+          }
+          this.$router.push('/beforeIndex/product')
+        } catch (error) {
+          this.cropperCancel()
+        }
+      })
     },
-    boxleave () {
-      this.isShow = false
+    // 取消裁剪
+    cropperCancel () {
+      this.$refs.cropper.clearCrop()
+      this.isShowCropper = false
+      this.loading = false
+      this.option.img = ''
+      this.$refs.uploadRef && (this.$refs.uploadRef.value = '')
     }
   },
-  created () {},
-  async mounted () {
-    this.getNewArrivalsPage() // 新品推荐
-    this.showroomSwiperList = await this.getAll(1, 8, 'Exhibition') // 获取展厅轮播
-    this.RecommendedSales = await this.getAll(1, 12, 'Sales') // 推荐公司
-    this.RecommendedSupply = await this.getAll(1, 12, 'Supplier') // 获取推荐供应商
-    this.NoticeObj[0].children = await this.getNoticeList(1, 8, 'Supply') // 获取供应商公告
-    this.NoticeObj[1].children = await this.getNoticeList(1, 8, 'Purchase') // 获取展厅公告
-    this.NoticeObj[2].children = await this.getNoticeList(1, 8, 'Ordinary') // 获取公司公告
-  }
+  created () {
+    this.getProductChpaList()
+  },
+  mounted () {}
 }
 </script>
 <style lang="less" scoped>
-.home {
-  max-width: 1200px;
-  min-width: 1024px;
-  margin: 0 auto;
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 150px;
-    margin: 0;
-  }
-
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-
-  .el-carousel__item:nth-child(2n + 1) {
-    background-color: #d3dce6;
-  }
-  .swiperWrap {
-    .title {
-      h3 {
-        padding: 20px 0;
-        span {
-          color: #999;
-          font-size: 12px;
-          margin-left: 10px;
-          &.More {
-            color: #999;
-            font-size: 12px;
-            float: right;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            i {
-              margin-left: 5px;
-            }
-            &:hover {
-              color: #165af7;
-            }
-          }
+@deep: ~">>>";
+  .home {
+    flex: 1;
+    .homeBox{
+      max-width: 1200px;
+      margin: 0 auto;
+      height: calc(100%);
+      .searchBox{
+        width: 700px;
+        margin: 0 auto;
+        position: relative;
+        padding-top: 71px;
+        display: flex;
+        .searchImg {
+          position: absolute;
+          left: 5px;
+          top: 0;
+          width: 230px;
+          height: 80px;
+          background: url('~@/assets/images/searchTopBg.png') no-repeat;
+          z-index: 1;
         }
-      }
-    }
-    .mySwiper {
-      border: 1px solid #ccc;
-    }
-  }
-  .announcement {
-    margin: 20px 0;
-    .noticeItens {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      &:after{
-        content: '';
-        width: 390px;
-      }
-      .buwei{
-        content: '';
-        width: 390px;
-      }
-      li.items {
-        width: 390px;
-        font-size: 14px;
-        box-sizing: border-box;
-        .title {
-          h3 {
-            padding: 10px;
-            .More {
-              color: #999;
-              font-size: 12px;
-              float: right;
+          .inputBox{
+            border-radius: 10px;
+            border: 1px solid #789ffa;
+            position: relative;
+            display: flex;
+            width: 619px;
+            align-items: center;
+            @{deep} .el-input{
+              input {
+                border: none;
+                border-radius: 10px;
+              }
+            }
+            .iconBox{
               display: flex;
               align-items: center;
-              font-weight: normal;
-              cursor: pointer;
-              i {
-                margin-left: 5px;
+              justify-content: center;
+              .uploadIcon{
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background-color: #3872f8;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                cursor: pointer;
+                .iconfont {
+                  font-size: 10px;
+                  .fileInput {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 30px;
+                    height: 30px;
+                    font-size: 0;
+                    padding: 0;
+                    cursor: pointer;
+                    opacity: 0;
+                  }
+                }
               }
-              &:hover {
-                color: #165af7;
-              }
-            }
-          }
-        }
-        ol.myOl {
-          border: 1px solid #ccc;
-          li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-            cursor: pointer;
-            &:last-child {
-              border-bottom: none;
-            }
-            .title {
-              flex: 1;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-            .date {
-              padding: 5px;
-              width: 105px;
-              font-size: 12px;
-              a {
+            .searchBtn{
                 margin-left: 10px;
-                color: #2845e1;
+                background-color: #3872f8;
+                border: 1px solid #3872f8;
+                border-radius: 9px;
+                color: #fff;
+                width: 96px;
+                height: 40px;
+                outline: none;
                 cursor: pointer;
               }
             }
-            &:hover {
-              background-color: #e4f3ff;
-              color: #2845e1;
-              a,
-              .title {
-                color: #2845e1;
+          }
+          .advanced{
+              margin-left: 10px;
+              background-color: #fff;
+              border: 1px solid #3872f8;
+              font-weight: 600;
+              border-radius: 9px;
+              color: #3872f8;
+              width: 96px;
+              height: 40px;
+              outline: none;
+              cursor: pointer;
+            }
+        }
+      .keywords{
+          width: 700px;
+          margin: 0 auto;
+          font-size: 14px;
+          .item {
+            display: inline-block;
+            padding-right: 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            &.active{
+              color: red;
+            }
+          }
+      }
+      .searchAdvanced{
+        width: 700px;
+        margin: 0 auto;
+        font-size: 14px;
+        padding-top: 20px;
+        .box{
+          display: flex;
+          border-bottom: 2px solid #f0f5ff;
+          .left,.right {
+            flex: 1;
+            .item {
+              margin-bottom: 20px;
+              padding: 0 20px;
+              box-sizing: border-box;
+              display: flex;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              align-items: center;
+              @{deep} .el-input{
+                flex: 1;
+                input{
+                  border-radius: 28px;
+                }
+              }
+              em{
+                padding: 0 5px;
+              }
+              .unit{
+                margin-left: 5px;
+                width: 30px;
+                color: red;
               }
             }
           }
         }
-      }
-    }
-  }
-  .recommend {
-    .title {
-      h3 {
-        padding: 20px 0;
-        .More {
-          color: #999;
-          font-size: 12px;
-          float: right;
+        .btnList{
+          margin-top: 20px;
           display: flex;
+          justify-content: center;
           align-items: center;
-          font-weight: normal;
-          cursor: pointer;
-          i {
-            margin-left: 5px;
-          }
-          &:hover {
-            color: #165af7;
-          }
         }
-      }
-    }
-    ol {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      font-size: 12px;
-      color: #999;
-      &::after {
-        content: "";
-        width: 180px;
-      }
-      li {
-        width: 180px;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 0.2em;
-        box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
-        margin-bottom: 20px;
-        /deep/ .el-image {
-          width: 180px;
-          height: 180px;
-          /deep/ img {
-            width: 180px;
-            height: 180px;
-            transition: all 1s;
-          }
-        }
-        p {
-          padding: 20px 0;
-          height: 16px;
-          box-shadow: inset 0 2px 3px -1px #e0e0e0;
-        }
-        &:hover {
-          box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.2);
-          /deep/ .el-image {
-            /deep/ img {
-              -webkit-transform: scale(1.1);
-              -moz-transform: scale(1.1);
-              -ms-transform: scale(1.1);
-              transform: scale(1.1);
-            }
-          }
-        }
-      }
-      .Placeholder {
-        width: 180px;
-        margin-bottom: 20px;
-        opacity: 0;
-        cursor: default;
       }
     }
   }
-  h3 {
-    font-weight: 600;
-    padding: 10px 0;
+// 截图
+.cropper-content {
+  .cropper {
+    width: auto;
+    height: 500px;
   }
 }
 </style>

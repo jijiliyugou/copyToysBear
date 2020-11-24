@@ -1,42 +1,68 @@
 <template>
-  <div class="login">
-    <div class="formBox">
+  <div class="login" style="min-height: 395px;">
+    <div class="miaddle">
+      <img class="logoImg" src="~@/assets/images/toysbao.jpg" alt />
+      <div class="form">
         <el-tabs v-model="activeName" class="loginFormLaout">
-          <el-tab-pane label="扫码登录" name="erweima">
-            <div class="qrcode">
-              <vue-qr
-                :text="options.url"
-                :logoSrc="options.icon + '?cache'"
-                colorDark="#018e37"
-                colorLight="#fff"
-                :margin="0"
-                :size="260"
-              ></vue-qr>
-              <div class="refresh" v-show="showQrCode">
-                <div class="refreshIcon" @click="getQrCodeUrl">
-                  <i class="el-icon-refresh"></i>
+          <el-tab-pane label="密码登录" name="pass">
+            <el-form
+              label-width="80px"
+              :model="loginForm"
+              ref="loginForm"
+              :rules="loginRules"
+            >
+              <el-form-item label="用户名" prop="username">
+                <el-input
+                  v-model="loginForm.username"
+                  placeholder="请输入用户名"
+                  @keyup.enter.native="handleLogin"
+                  auto-complete="off"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="密 码" prop="password">
+                <el-input
+                  v-model="loginForm.password"
+                  show-password
+                  type="password"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="验证码" prop="verifycode">
+                <div class="countDownBox">
+                  <el-input
+                    v-model="loginForm.verifycode"
+                    class="verifycode"
+                    @keyup.enter.native="handleLogin"
+                  ></el-input>
+                  <div @click="refreshCode" class="identifybox">
+                    <s-identify :identifyCode="identifyCode"></s-identify>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <p class="qrText">
-              {{ qrcodeTitle }}
-            </p>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  v-show="activeName  !==  'erweima'"
+                  style="width:320px;backgroundColor:#165af7;"
+                  @click="handleLogin"
+                  >登录</el-button
+                >
+              </el-form-item>
+            </el-form>
           </el-tab-pane>
           <el-tab-pane label="短信登录" name="mobile">
+            <div style="padding:0 20px 0 0;">
               <el-form
+                label-width="80px"
                 :model="loginForm"
                 ref="mobileRef"
-                class="smsLogin"
                 :rules="mobileRules"
               >
-                <el-form-item prop="username">
-                  <el-input prefix-icon="el-icon-mobile-phone" placeholder="请输入手机号" v-model="loginForm.username"></el-input>
+                <el-form-item label="手机号" prop="username">
+                  <el-input v-model="loginForm.username"></el-input>
                 </el-form-item>
-                <el-form-item prop="verifycode">
+                <el-form-item label="验证码" prop="verifycode">
                   <div class="countDownBox">
                     <el-input
-                     placeholder="请输入验证码"
-                    prefix-icon="el-icon-lock"
                       v-model="loginForm.verifycode"
                       class="verifycode"
                       @keyup.enter.native="handleCodeLogin"
@@ -51,21 +77,47 @@
                   <el-button
                     type="primary"
                     v-show="activeName  !==  'erweima'"
+                    style="width:100%;backgroundColor:#165af7;"
                     @click="handleCodeLogin"
-                    >登录</el-button>
+                    >登录</el-button
+                  >
                 </el-form-item>
               </el-form>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="扫码登录" name="erweima">
+            <div class="qrcode">
+              <vue-qr
+                :text="options.url"
+                :logoSrc="options.icon + '?cache'"
+                colorDark="#018e37"
+                colorLight="#fff"
+                :margin="20"
+                :size="300"
+              ></vue-qr>
+              <div class="refresh" v-show="showQrCode">
+                <div class="refreshIcon" @click="getQrCodeUrl">
+                  <i class="el-icon-refresh"></i>
+                </div>
+              </div>
+            </div>
+            <p style="font-size:14px;color:#165af7;text-align:center;">
+              {{ qrcodeTitle }}
+            </p>
           </el-tab-pane>
         </el-tabs>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
+import SIdentify from '@/components/sIdentify.vue'
 import VueQr from 'vue-qr'
 import { getMenuFuc } from '@/router/index'
 export default {
   components: {
+    SIdentify,
     VueQr
   },
   data () {
@@ -100,7 +152,7 @@ export default {
       showQrCode: false,
       count: '',
       timer: null,
-      activeName: 'erweima',
+      activeName: 'pass',
       search: '',
       options: {
         // 二维码配置
@@ -504,7 +556,6 @@ export default {
   },
   mounted () {
     this.refreshCode()
-    this.getQrCodeUrl()
   },
   beforeDestroy () {
     clearInterval(this.timer)
@@ -515,55 +566,32 @@ export default {
 
 <style lang="less" scoped>
 @deep: ~">>>";
-.login {
-  flex: 1;
-  background: url('~@/assets/images/展厅.jpg') no-repeat center;
-  background-size:cover;
-  position: relative;
+.login,
+.content {
+  height: 100%;
+  max-width: 1200px;
+  min-width: 1024px;
+  margin: 0 auto;
 }
-.formBox {
-  width: 400px;
-  height: 400px;
-  background-color: #fff;
-  border-radius: 10px;
-  position: absolute;
-  left: 60%;
-  top: 50%;
-  padding: 20px;
-  box-sizing: border-box;
-  transform: translate(0, -50%);
-  @{deep} .el-tabs__nav{
-    width: 100%;
-    display: flex;
-    border: none;
-    margin-bottom: 10px;
-    .el-tabs__active-bar{
-      opacity: 0;
-    }
-    .el-tabs__item{
-      margin: 0;
-      text-align: center;
-      flex: 1;
-      border-right: 1px solid #e4e7ed;
-      &:last-of-type {
-        border:none;
-      }
+.miaddle {
+  height: 500px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  .logoImg {
+    width: 500px;
+    border-radius: 20px;
+    -webkit-box-shadow: 3px 3px 10px #666;
+    -moz-box-shadow: 3px 3px 10px #666;
+    box-shadow: 3px 3px 10px #666;
+  }
+  .form {
+    width: 400px;
+    height: 400px;
+    @{deep} .el-form-item.is-required {
+      margin: 30px 0;
     }
   }
-  // .logoImg {
-  //   width: 500px;
-  //   border-radius: 20px;
-  //   -webkit-box-shadow: 3px 3px 10px #666;
-  //   -moz-box-shadow: 3px 3px 10px #666;
-  //   box-shadow: 3px 3px 10px #666;
-  // }
-  // .form {
-  //   width: 400px;
-  //   height: 400px;
-  //   @{deep} .el-form-item.is-required {
-  //     margin: 30px 0;
-  //   }
-  // }
 }
 
 .identifybox {
@@ -576,38 +604,8 @@ export default {
 .verifycode {
   flex: 1;
 }
-.smsLogin{
-  @{deep} .el-input{
-    border-radius: 25px;
-    input{
-      height: 50px;
-      font-size: 16px;
-      padding: 0 10px 0 40px;
-      border: none;
-    }
-    .el-input__icon{
-      position: relative;
-      &::before{
-        left:0px;
-        position: absolute;
-        height: 100%;
-        line-height:50px;
-        font-size: 25px;
-        color: #4a85fd;
-      }
-      &::after {
-        content: '';
-        width: 2px;
-        height:25px;
-        display: block;
-        position: absolute;
-        background-color: #dcdfe6;
-        right: -5px;
-        top: 50%;
-        transform: translate(0,-50%);
-      }
-    }
-  }
+
+.loginFormLaout {
   .countDownBox {
     display: flex;
     justify-content: space-between;
@@ -615,32 +613,17 @@ export default {
       display: flex;
       color: #fff;
       width: 120px;
-      height: 48px;
-      border-radius: 25px;
+      height: 38px;
       margin-left: 10px;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      background-color: #4a85fd;
+      background-color: #165af7;
     }
   }
-  .el-button {
-    width: 100%;
-    height: 50px;
-    margin: 0 auto;
-    background-color: #4a85fd;
-    border-radius: 25px;
-  }
-  @{deep} .el-form-item {
-    margin: 40px 0;
-    border-bottom: 2px solid #dcdfe6;
-    &:last-of-type {
-      border: none;
-    }
-    .el-form-item__label {
-      height: 50px;
-      line-height: 50px;
-      padding: 0;
+  .Copyright {
+    span {
+      margin: 2px;
     }
   }
 }
@@ -648,8 +631,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 260px;
-  height: 260px;
+  width: 300px;
+  height: 300px;
   margin: 0 auto;
   position: relative;
   .refresh {
@@ -672,11 +655,5 @@ export default {
       font-size: 50px;
     }
   }
-}
-.qrText {
-  padding: 20px;
-  font-size:14px;
-  color:#4a85fd;
-  text-align:center;
 }
 </style>
