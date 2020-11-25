@@ -206,14 +206,7 @@ export default {
     },
     // 查看詳情
     toProductDetail (item) {
-      if (!item.productNumber) {
-        this.$message.error('该产品没有产品编号')
-        return false
-      }
-      this.$router.push({
-        name: 'ProductDetail',
-        params: { id: item.productNumber }
-      })
+      this.$emit('showProductDetail', item)
     },
     // 文字搜索产品
     async getProductList () {
@@ -221,6 +214,9 @@ export default {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         ...this.packingOptions
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
       }
       // const fd = {
       //   skipCount: this.currentPage,

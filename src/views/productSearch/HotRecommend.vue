@@ -382,8 +382,11 @@ export default {
       console.log(data)
     },
     // 回退事件
-    changeIsDetail (val) {
-      this.isDetail = val
+    changeIsDetail (productDetail) {
+      this.isDetail = false
+      this.dataList.forEach(item => {
+        if (item.productNumber === this.datailNumber) item.isFavorite = productDetail.isFavorite
+      })
     },
     // 显示产品详情
     productDetail (productNumber) {

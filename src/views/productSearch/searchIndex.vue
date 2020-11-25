@@ -455,12 +455,11 @@ export default {
       }
     },
     // 回退事件
-    changeIsDetail (val) {
-      this.isDetail = val
-      if (!this.dataList || this.dataList.length < 1) {
-        this.currentPage = 1
-        this.getProduct()
-      }
+    changeIsDetail (productDetail) {
+      this.isDetail = false
+      this.dataList.forEach(item => {
+        if (item.productNumber === this.datailNumber) item.isFavorite = productDetail.isFavorite
+      })
     },
     // 修改产品当前页
     changePage (page) {

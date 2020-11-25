@@ -5,6 +5,7 @@
         @back="changeIsDetail"
         content="产品详情"
       ></el-page-header>
+      <span class="backtrack" @click="changeIsDetail"><i class="backtrackIcon iconfont icon-fanhui"></i> 返回</span>
     </div>
     <div class="Graphic" v-if="productDetail">
       <div class="left">
@@ -261,10 +262,9 @@ export default {
       }
     },
     async getProductByNumber () {
-      const id = this.number
-      console.log(id)
+      console.log(this.number)
       const res = await this.$http.post('/api/BearProductByNumber', {
-        productNumber: id
+        productNumber: this.number
       })
       if (res.data.result.code === 200) {
         this.productDetail = res.data.result.item
@@ -274,7 +274,7 @@ export default {
       }
     },
     changeIsDetail () {
-      this.$emit('changeIsDetail', false)
+      this.$emit('changeIsDetail', this.productDetail)
     },
     // 打开来源详情
     async openSourceDetail (item) {
@@ -323,8 +323,21 @@ export default {
   border-bottom: 1px solid #ccc;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   @{deep} .el-page-header__left:hover {
     color: #409eff;
+  }
+  .backtrack{
+    font-weight: normal;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    &:hover {
+      color: #409eff;
+    }
+    i{
+      margin-right: 10px;
+    }
   }
 }
 .Graphic {

@@ -1,7 +1,7 @@
 /* eslint-disable vue/require-v-for-key */
 <template>
   <div class="home">
-    <div class="homeBox">
+    <div class="homeBox" v-show="!isProductDetail">
       <div class="searchBox">
         <div class="searchImg"></div>
         <div class="inputBox">
@@ -29,7 +29,7 @@
       </div>
       <!-- 关键字 -->
       <div class="keywords" v-show="isAdvanced">
-        热词搜索： <span @click="handlerHotKey(i, item.productName)" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in hotWords" :key="i"> {{ item.productName }}</span>
+        <em>热词搜索：</em> <span @click="handlerHotKey(i, item.productName)" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in hotWords" :key="i"> {{ item.productName }}</span>
       </div>
       <!-- 高级搜索 -->
       <!-- <transition name="el-zoom-in-top"> -->
@@ -90,8 +90,11 @@
       <!-- </transition> -->
       <!-- 产品列表 -->
       <!-- <transition name="el-zoom-in-top"> -->
-      <productList v-show="isSearch" ref="childrenProduct" @handlerCubeImgEvent="handlerCubeImgEvent" :packingOptions="packingOptions" style="margin:50px 0" />
+      <productList v-show="isSearch" ref="childrenProduct" @showProductDetail="showProductDetail" @handlerCubeImgEvent="handlerCubeImgEvent" :packingOptions="packingOptions" style="margin:50px 0" />
       <!-- </transition> -->
+    </div>
+    <div class="productDetailBox" v-if="isProductDetail">
+      <productDetail @changeIsDetail="changeIsDetail" :number="productNumber" />
     </div>
     <!-- vueCropper 剪裁图片实现 -->
     <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
@@ -144,14 +147,18 @@
 
 <script>
 import { VueCropper } from 'vue-cropper'
-import productList from '../../components/productList'
+import productList from '@/components/productList'
+import productDetail from '@/components/productDetail'
 export default {
   components: {
     VueCropper,
-    productList
+    productList,
+    productDetail
   },
   data () {
     return {
+      productNumber: null,
+      isProductDetail: false,
       isSearch: false,
       packingList: [],
       dateList: [
@@ -211,6 +218,22 @@ export default {
     }
   },
   methods: {
+    changeIsDetail (productDetail) {
+      this.isProductDetail = false
+      this.$refs.childrenProduct.productList.forEach(item => {
+        if (item.productNumber === this.productNumber) item.isFavorite = productDetail.isFavorite
+      })
+    },
+    // 打開產品詳情
+    showProductDetail (item) {
+      if (!item.productNumber) {
+        this.$message.error('该产品没有产品编号')
+      } else {
+        this.productNumber = item.productNumber
+        this.isProductDetail = true
+      }
+    },
+    // 點擊熱詞搜索
     handlerHotKey (i, name) {
       this.keywordActive = i
       this.packingOptions.name = name
@@ -387,10 +410,15 @@ export default {
 @deep: ~">>>";
   .home {
     flex: 1;
-    .homeBox{
+    .productDetailBox{
       max-width: 1200px;
       margin: 0 auto;
       height: calc(100%);
+    }
+    .homeBox{
+      max-width: 1200px;
+      margin: 0 auto;
+      // height: calc(100%);
       position: relative;
       .searchBox{
         width: 700px;
@@ -480,6 +508,10 @@ export default {
           width: 700px;
           margin: 0 auto;
           font-size: 14px;
+          em {
+            display: inline-block;
+            margin-top: 10px;
+          }
           .item {
             display: inline-block;
             padding-right: 20px;
