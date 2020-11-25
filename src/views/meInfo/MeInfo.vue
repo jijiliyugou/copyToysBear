@@ -2573,7 +2573,7 @@
 <script>
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 import bsTop from '@/components/BsTop.vue'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import Recorder from 'recorder-core/recorder.mp3.min'
 import BMapComponent from '@/components/map.vue'

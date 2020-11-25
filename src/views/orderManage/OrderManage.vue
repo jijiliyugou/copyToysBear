@@ -122,7 +122,7 @@
 
 <script>
 import bsTop from '@/components/BsTop.vue'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 export default {
   components: {
     bsTop,

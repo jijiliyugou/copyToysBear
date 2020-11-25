@@ -288,7 +288,7 @@
 
 <script>
 import bsTop from '@/components/BsTop'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 import productSearchTop from '@/components/productSearchTop'
 import productDetail from '@/components/productDetail'
 import { VueCropper } from 'vue-cropper'

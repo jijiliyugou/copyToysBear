@@ -977,7 +977,7 @@
 
 <script>
 import bsTop from '@/components/BsTop'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 import BMapComponent from '@/components/attrsMap.vue'
 export default {
   components: { bsTop, bsFooter, BMapComponent },

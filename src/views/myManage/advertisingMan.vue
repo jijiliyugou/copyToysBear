@@ -237,7 +237,7 @@
 
 <script>
 import bsTop from '@/components/BsTop'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 export default {
   components: { bsTop, bsFooter },
   data () {

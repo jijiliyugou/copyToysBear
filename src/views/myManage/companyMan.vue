@@ -137,7 +137,7 @@
 <script>
 // 获取重复手机号封装
 import bsTop from '@/components/BsTop'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 export default {
   components: { bsTop, bsFooter },
   data () {

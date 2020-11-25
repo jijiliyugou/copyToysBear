@@ -56,7 +56,7 @@
 import bsTop from '@/components/BsTop'
 import productSearchTop from '@/components/productSearchTop'
 import swiper from '@/components/swiper'
-import bsFooter from '@/components/Footer'
+import bsFooter from '@/components/oldFooter'
 export default {
   components: { bsTop, productSearchTop, swiper, bsFooter },
   data () {
