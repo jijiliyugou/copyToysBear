@@ -180,8 +180,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalCount: 0,
-      productList: null,
-      packingOptions: this.$store.state.beforeSearch
+      productList: null
     }
   },
   methods: {
@@ -210,10 +209,11 @@ export default {
     },
     // 文字搜索产品
     async getProductList () {
+      console.log(this.beforeSearch)
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
-        ...this.packingOptions
+        ...this.beforeSearch
       }
       for (const key in fd) {
         if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
@@ -256,7 +256,8 @@ export default {
   mounted () {
   },
   computed: {
-    ...mapState(['beforeSearchImg'])
+    ...mapState(['beforeSearchImg']),
+    ...mapState(['beforeSearch'])
   },
   filters: {
     dataFormat (value) {

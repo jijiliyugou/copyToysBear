@@ -243,7 +243,7 @@ export default {
     handlerHotKey (i, name) {
       this.keywordActive = i
       this.packingOptions.name = name
-      this.subSearch()
+      this.subSearch(true)
     },
     // 二次圖搜
     handlerCubeImgEvent (img) {
@@ -251,7 +251,8 @@ export default {
       this.option.img = img
     },
     // 提交搜索
-    subSearch () {
+    subSearch (flag) {
+      if (flag !== true) this.keywordActive = null
       this.$store.commit('handlerBeforeSearchImg', null)
       this.$store.commit('handlerBeforeSearchImgPreview', null)
       this.$store.commit('handlerBeforeSearch', this.packingOptions)

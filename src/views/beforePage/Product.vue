@@ -97,7 +97,7 @@
       <!-- </transition> -->
       <!-- 产品列表 -->
       <!-- <transition name="el-zoom-in-top"> -->
-      <productList v-show="!isProductDetail" ref="childrenProduct" @showProductDetail="showProductDetail" @handlerCubeImgEvent="handlerCubeImgEvent" :packingOptions="packingOptions" style="margin:50px 0" />
+      <productList v-show="!isProductDetail" ref="childrenProduct" @showProductDetail="showProductDetail" @handlerCubeImgEvent="handlerCubeImgEvent" style="margin:50px 0" />
       <div class="productDetailBox" v-if="isProductDetail">
         <productDetail @changeIsDetail="changeIsDetail" :number="productNumber" />
       </div>
@@ -176,22 +176,7 @@ export default {
         { label: '六个月', value: 'lastHalfYear' }
       ],
       packingDatetime: null,
-      packingOptions: {
-        name: null,
-        minPrice: null,
-        maxPrice: null,
-        fa_no: null,
-        pa_nu: null,
-        pr_le: null,
-        pr_wi: null,
-        pr_hi: null,
-        ou_le: null,
-        ou_wi: null,
-        ou_hi: null,
-        isUpInsetImg: true,
-        startTime: null,
-        endTime: null
-      },
+      packingOptions: this.$store.state.beforeSearch,
       isAdvanced: true,
       loading: false,
       isShowCropper: false,
@@ -244,7 +229,7 @@ export default {
     handlerHotKey (i, name) {
       this.keywordActive = i
       this.packingOptions.name = name
-      this.subSearch()
+      this.subSearch(true)
     },
     // 二次圖搜
     handlerCubeImgEvent (img) {
@@ -252,7 +237,8 @@ export default {
       this.option.img = img
     },
     // 提交搜索
-    subSearch () {
+    subSearch (flag) {
+      if (flag !== true) this.keywordActive = null
       this.$refs.childrenProduct.currentPage = 1
       this.$store.commit('handlerBeforeSearchImgPreview', null)
       this.$store.commit('handlerBeforeSearchImg', null)
@@ -278,6 +264,7 @@ export default {
         startTime: null,
         endTime: null
       }
+      this.$store.commit('handlerBeforeSearch', this.packingOptions)
     },
     // 格式化时间
     formatTime (param) {
