@@ -9,7 +9,7 @@
     @mousewheel="mousewheel"
   >
     <router-view v-cloak />
-    <el-backtop target=".rootApp" :bottom="175" :right="100">
+    <el-backtop target=".rootApp" :bottom="50" :right="150">
       <div style="display:flex;flexWrap:wrap;alignContent:flex-start;justifyContent:center; alignItems:center;">
           <i class="el-icon-caret-top" style="marginTop:-5px;"></i>
           <span style="fontSize:12px;marginTop:-5px;">

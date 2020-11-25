@@ -6,8 +6,9 @@
         <div class="searchImg"></div>
         <div class="inputBox">
             <el-input
+              clearable
               placeholder="请输入关键词/图片搜索"
-              v-model="searchValue">
+              v-model="packingOptions.name">
             </el-input>
             <div class="iconBox">
               <div class="uploadIcon">
@@ -21,15 +22,17 @@
                   />
                 </i>
               </div>
-              <button class="searchBtn" @click="toProductSearch">搜索</button>
+              <button class="searchBtn" @click="subSearch">搜索</button>
             </div>
         </div>
         <button class="advanced" @click="isAdvanced = !isAdvanced">高级搜索</button>
       </div>
+      <!-- 关键字 -->
       <div class="keywords" v-show="isAdvanced">
-        <span @click="keywordActive = i" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in keywordList" :key="i">{{ item }}</span>
+        热词搜索： <span @click="handlerHotKey(i, item.productName)" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in hotWords" :key="i"> {{ item.productName }}</span>
       </div>
-      <transition name="el-zoom-in-top">
+      <!-- 高级搜索 -->
+      <!-- <transition name="el-zoom-in-top"> -->
       <div class="searchAdvanced" v-show="!isAdvanced">
         <div class="box">
           <div class="left">
@@ -37,32 +40,26 @@
               出厂货号：<el-input size="mini" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
             </div>
             <div class="item">
-              玩具尺寸：<el-input size="mini" placeholder="长"></el-input><em>-</em><el-input size="mini" placeholder="宽"></el-input><em>-</em><el-input size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+              玩具尺寸：<el-input size="mini" v-model="packingOptions.pr_le" placeholder="长"></el-input><em>-</em><el-input v-model="packingOptions.pr_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input v-model="packingOptions.pr_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
             </div>
             <div class="item">
-              外包装箱：<el-input size="mini" placeholder="长"></el-input><em>-</em><el-input size="mini" placeholder="宽"></el-input><em>-</em><el-input size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+              外包装箱：<el-input size="mini" v-model="packingOptions.ou_le" placeholder="长"></el-input><em>-</em><el-input v-model="packingOptions.ou_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input v-model="packingOptions.ou_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
             </div>
             <div class="item">
-              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in packingList"
-                :key="item.value"
-                  :label="item.ch_pa"
-                  :value="item.pa_nu">
-              </el-option>
-            </el-select>
-            <div class="unit"></div>
+              图<span style="opacity: 0;">图片</span>片：
+              <div style="flex:1;marginLeft:10px;">
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="true">是</el-radio>
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="false">否</el-radio>
+              </div>
+              <div class="unit"></div>
             </div>
           </div>
           <div class="right">
             <div class="item">
-              产品名称：<el-input size="mini" v-model="packingOptions.name" placeholder="请输入产品名称"></el-input><div class="unit"></div>
-            </div>
-            <div class="item">
               价格区间：<el-input size="mini" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" placeholder="最高"></el-input><div class="unit"></div>
             </div>
             <div class="item">
-              时间区间：<el-select v-model="packingDatetime" size="mini" placeholder="请选择">
+              时间区间：<el-select v-model="packingDatetime" @change="getDateList" size="mini" placeholder="请选择">
               <el-option
                 v-for="item in dateList"
                 :key="item.value"
@@ -73,21 +70,28 @@
             <div class="unit"></div>
             </div>
             <div class="item">
-              图<span style="opacity: 0;">图片</span>片：
-              <div style="flex:1;marginLeft:10px;">
-                <el-radio v-model="packingOptions.radio" label="1">是</el-radio>
-                <el-radio v-model="packingOptions.radio" label="2">否</el-radio>
-              </div>
-              <div class="unit"></div>
+              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
+              <el-option
+                v-for="(item, i) in packingList"
+                :key="i"
+                :label="item.ch_pa"
+                :value="item.pa_nu">
+              </el-option>
+            </el-select>
+            <div class="unit"></div>
             </div>
           </div>
         </div>
         <div class="btnList">
-          <el-button round style="backgroundColor:#dddddd;width:100px;">重置</el-button>
-          <el-button type="primary" style="marginLeft:40px;width:100px;" round>确定</el-button>
+          <el-button round style="backgroundColor:#dddddd;width:100px;" @click="resetOptions">重置</el-button>
+          <el-button round type="primary" style="marginLeft:40px;width:100px;" @click="subSearch">确定</el-button>
         </div>
       </div>
-      </transition>
+      <!-- </transition> -->
+      <!-- 产品列表 -->
+      <!-- <transition name="el-zoom-in-top"> -->
+      <productList v-show="isSearch" ref="childrenProduct" @handlerCubeImgEvent="handlerCubeImgEvent" :packingOptions="packingOptions" style="margin:50px 0" />
+      <!-- </transition> -->
     </div>
     <!-- vueCropper 剪裁图片实现 -->
     <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
@@ -140,12 +144,15 @@
 
 <script>
 import { VueCropper } from 'vue-cropper'
+import productList from '../../components/productList'
 export default {
   components: {
-    VueCropper
+    VueCropper,
+    productList
   },
   data () {
     return {
+      isSearch: false,
       packingList: [],
       dateList: [
         { label: '全部', value: '' },
@@ -157,12 +164,18 @@ export default {
       ],
       packingDatetime: null,
       packingOptions: {
-        radio: '1',
+        name: null,
         minPrice: null,
-        fa_no: null,
         maxPrice: null,
+        fa_no: null,
         pa_nu: null,
-        isUpInsetImg: null,
+        pr_le: null,
+        pr_wi: null,
+        pr_hi: null,
+        ou_le: null,
+        ou_wi: null,
+        ou_hi: null,
+        isUpInsetImg: true,
         startTime: null,
         endTime: null
       },
@@ -173,8 +186,8 @@ export default {
       baseImg: null,
       fileinfo: null,
       searchValue: '',
-      keywordList: ['芭比娃娃', '积木', '电动车', '积木是', '积是木', '啊积木', '泡泡机'],
-      keywordActive: 0,
+      hotWords: [],
+      keywordActive: null,
       // 裁剪组件的基础配置option
       option: {
         img: '', // 裁剪图片的地址
@@ -198,9 +211,92 @@ export default {
     }
   },
   methods: {
-    toProductSearch () {
-      this.$root.eventHub.$emit('searchBeforeProduct')
-      this.$router.push({ name: 'Product' })
+    handlerHotKey (i, name) {
+      this.keywordActive = i
+      this.packingOptions.name = name
+      this.subSearch()
+    },
+    // 二次圖搜
+    handlerCubeImgEvent (img) {
+      this.isShowCropper = true
+      this.option.img = img
+    },
+    // 提交搜索
+    subSearch () {
+      this.$refs.childrenProduct.currentPage = 1
+      this.$store.commit('handlerBeforeSearchImgPreview', null)
+      this.isSearch = true
+      this.$refs.childrenProduct.getProductList()
+    },
+    // 重置选项
+    resetOptions () {
+      this.packingDatetime = null
+      this.packingOptions = {
+        name: null,
+        minPrice: null,
+        maxPrice: null,
+        fa_no: null,
+        pa_nu: null,
+        pr_le: null,
+        pr_wi: null,
+        pr_hi: null,
+        ou_le: null,
+        ou_wi: null,
+        ou_hi: null,
+        isUpInsetImg: true,
+        startTime: null,
+        endTime: null
+      }
+    },
+    // 格式化时间
+    formatTime (param) {
+      const y = param.getFullYear()
+      let m = param.getMonth() + 1
+      let d = param.getDate()
+      m = m < 10 ? ('0' + m) : m
+      d = d < 10 ? ('0' + d) : d
+      return y + '-' + m + '-' + d
+    },
+    // 选择时间
+    getDateList (code) {
+      if (code) {
+        const date = new Date()
+        const endTime = this.formatTime(date)
+        const date1 = Date.parse(date)
+        let start = ''
+        const oneDay = 1000 * 3600 * 24
+
+        switch (code) {
+          // 今天
+          case 'today':
+            start = new Date()
+            break
+          // 最近1周
+          case 'lastOneWeek':
+            start = date1 - oneDay * 7
+            break
+          // 最近1月
+          case 'lastOneMonth':
+            start = new Date()
+            start.setMonth(start.getMonth() - 1)
+            break
+          // 最近3月
+          case 'lastThreeMonth':
+            start = new Date()
+            start.setMonth(start.getMonth() - 3)
+            break
+          // 最近半年
+          case 'lastHalfYear':
+            start = date1 - oneDay * 183
+            break
+        }
+        this.packingOptions.startTime = this.formatTime(new Date(start)) + 'T00:00:00'
+        this.packingOptions.endTime = endTime + 'T23:59:59'
+      } else {
+        this.packingOptions.startTime = null
+        this.packingOptions.endTime = null
+      }
+      console.log(this.packingOptions)
     },
     // 获取包装方式list
     async getProductChpaList () {
@@ -210,6 +306,15 @@ export default {
         this.packingList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
+      }
+    },
+    // 获取搜索热词
+    async getHotWord () {
+      const res = await this.$http.post('/api/GetHotWord', {})
+      if (res.data.result.code === 200) {
+        this.hotWords = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.item.message)
       }
     },
     // 选择图片搜索
@@ -234,7 +339,6 @@ export default {
     // 确定裁剪图片
     onCubeImg () {
       this.loading = true
-      this.$store.commit('handlerBeforeSearch', { value: '', type: 'name' })
       // 获取cropper的截图的 数据
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
@@ -257,7 +361,7 @@ export default {
             this.$store.commit('handlerBeforeSearchImg', null)
             this.$message.error(res.data.result.message)
           }
-          this.$router.push('/beforeIndex/product')
+          this.isSearch = true
         } catch (error) {
           this.cropperCancel()
         }
@@ -274,6 +378,7 @@ export default {
   },
   created () {
     this.getProductChpaList()
+    this.getHotWord()
   },
   mounted () {}
 }
@@ -286,6 +391,7 @@ export default {
       max-width: 1200px;
       margin: 0 auto;
       height: calc(100%);
+      position: relative;
       .searchBox{
         width: 700px;
         margin: 0 auto;
@@ -378,18 +484,27 @@ export default {
             display: inline-block;
             padding-right: 20px;
             margin-top: 10px;
+            color: #aaa;
             cursor: pointer;
+            &:hover{
+              color: #409eff;
+            }
             &.active{
               color: red;
             }
           }
       }
       .searchAdvanced{
-        width: 700px;
-        margin: 0 auto;
+        width: 100%;
         font-size: 14px;
-        padding-top: 20px;
+        padding: 20px 0;
+        z-index: 1;
+        left: 0;
+        background-color: #fff;
+        // box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
         .box{
+          width: 700px;
+          margin: 0 auto;
           display: flex;
           border-bottom: 2px solid #f0f5ff;
           .left,.right {
