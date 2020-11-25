@@ -1,13 +1,16 @@
-/* eslint-disable vue/require-v-for-key */
 <template>
   <div class="home">
     <div class="homeBox">
       <div class="searchBox">
-        <div class="searchImg"></div>
-        <div class="inputBox">
+        <div class="left">
+          <img class="logo" src="~@/assets/images/logo.png" alt />
+        </div>
+        <div class="middle">
+          <div class="inputBox">
             <el-input
+              clearable
               placeholder="请输入关键词/图片搜索"
-              v-model="searchValue">
+              v-model="packingOptions.name">
             </el-input>
             <div class="iconBox">
               <div class="uploadIcon">
@@ -21,17 +24,22 @@
                   />
                 </i>
               </div>
-              <button class="searchBtn" @click="toProductSearch">搜索</button>
+              <button class="searchBtn" @click="subSearch">搜索</button>
             </div>
         </div>
         <button class="advanced" @click="isAdvanced = !isAdvanced">高级搜索</button>
+        </div>
+        <div class="right">
+          <img src="~@/assets/images/ErWeiMa.png" alt />
+          <p>小竹熊APP下載</p>
+        </div>
       </div>
       <!-- 关键字 -->
       <div class="keywords" v-show="isAdvanced">
-        <span @click="keywordActive = i" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in keywordList" :key="i">{{ item }}</span>
+        <em>热词搜索：</em> <span @click="handlerHotKey(i, item.productName)" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in hotWords" :key="i"> {{ item.productName }}</span>
       </div>
       <!-- 高级搜索 -->
-      <transition name="el-zoom-in-top">
+      <!-- <transition name="el-zoom-in-top"> -->
       <div class="searchAdvanced" v-show="!isAdvanced">
         <div class="box">
           <div class="left">
@@ -39,27 +47,21 @@
               出厂货号：<el-input size="mini" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
             </div>
             <div class="item">
-              玩具尺寸：<el-input size="mini" placeholder="长"></el-input><em>-</em><el-input size="mini" placeholder="宽"></el-input><em>-</em><el-input size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+              玩具尺寸：<el-input size="mini" v-model="packingOptions.pr_le" placeholder="长"></el-input><em>-</em><el-input v-model="packingOptions.pr_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input v-model="packingOptions.pr_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
             </div>
             <div class="item">
-              外包装箱：<el-input size="mini" placeholder="长"></el-input><em>-</em><el-input size="mini" placeholder="宽"></el-input><em>-</em><el-input size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+              外包装箱：<el-input size="mini" v-model="packingOptions.ou_le" placeholder="长"></el-input><em>-</em><el-input v-model="packingOptions.ou_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input v-model="packingOptions.ou_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
             </div>
             <div class="item">
-              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in packingList"
-                :key="item.value"
-                  :label="item.ch_pa"
-                  :value="item.pa_nu">
-              </el-option>
-            </el-select>
-            <div class="unit"></div>
+              图<span style="opacity: 0;">图片</span>片：
+              <div style="flex:1;marginLeft:10px;">
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="true">是</el-radio>
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="false">否</el-radio>
+              </div>
+              <div class="unit"></div>
             </div>
           </div>
           <div class="right">
-            <div class="item">
-              产品名称：<el-input size="mini" v-model="packingOptions.name" placeholder="请输入产品名称"></el-input><div class="unit"></div>
-            </div>
             <div class="item">
               价格区间：<el-input size="mini" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" placeholder="最高"></el-input><div class="unit"></div>
             </div>
@@ -75,23 +77,31 @@
             <div class="unit"></div>
             </div>
             <div class="item">
-              图<span style="opacity: 0;">图片</span>片：
-              <div style="flex:1;marginLeft:10px;">
-                <el-radio v-model="packingOptions.isUpInsetImg" :label="true">是</el-radio>
-                <el-radio v-model="packingOptions.isUpInsetImg" :label="false">否</el-radio>
-              </div>
-              <div class="unit"></div>
+              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
+              <el-option
+                v-for="(item, i) in packingList"
+                :key="i"
+                :label="item.ch_pa"
+                :value="item.pa_nu">
+              </el-option>
+            </el-select>
+            <div class="unit"></div>
             </div>
           </div>
         </div>
         <div class="btnList">
           <el-button round style="backgroundColor:#dddddd;width:100px;" @click="resetOptions">重置</el-button>
-          <el-button type="primary" style="marginLeft:40px;width:100px;" round>确定</el-button>
+          <el-button round type="primary" style="marginLeft:40px;width:100px;" @click="subSearch">确定</el-button>
         </div>
       </div>
-      </transition>
+      <!-- </transition> -->
       <!-- 产品列表 -->
-      <productList style="marginTop:50px" />
+      <!-- <transition name="el-zoom-in-top"> -->
+      <productList v-show="!isProductDetail" ref="childrenProduct" @showProductDetail="showProductDetail" @handlerCubeImgEvent="handlerCubeImgEvent" :packingOptions="packingOptions" style="margin:50px 0" />
+      <div class="productDetailBox" v-if="isProductDetail">
+        <productDetail @changeIsDetail="changeIsDetail" :number="productNumber" />
+      </div>
+      <!-- </transition> -->
     </div>
     <!-- vueCropper 剪裁图片实现 -->
     <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
@@ -144,14 +154,18 @@
 
 <script>
 import { VueCropper } from 'vue-cropper'
-import productList from '../../components/productList'
+import productList from '@/components/productList'
+import productDetail from '@/components/productDetail'
 export default {
   components: {
     VueCropper,
-    productList
+    productList,
+    productDetail
   },
   data () {
     return {
+      productNumber: null,
+      isProductDetail: false,
       packingList: [],
       dateList: [
         { label: '全部', value: '' },
@@ -163,10 +177,17 @@ export default {
       ],
       packingDatetime: null,
       packingOptions: {
+        name: null,
         minPrice: null,
         maxPrice: null,
         fa_no: null,
         pa_nu: null,
+        pr_le: null,
+        pr_wi: null,
+        pr_hi: null,
+        ou_le: null,
+        ou_wi: null,
+        ou_hi: null,
         isUpInsetImg: true,
         startTime: null,
         endTime: null
@@ -178,8 +199,8 @@ export default {
       baseImg: null,
       fileinfo: null,
       searchValue: '',
-      keywordList: ['芭比娃娃', '积木', '电动车', '积木是', '积是木', '啊积木', '泡泡机'],
-      keywordActive: 0,
+      hotWords: [],
+      keywordActive: null,
       // 裁剪组件的基础配置option
       option: {
         img: '', // 裁剪图片的地址
@@ -203,13 +224,56 @@ export default {
     }
   },
   methods: {
+    // 詳情返回事件
+    changeIsDetail (productDetail) {
+      this.isProductDetail = false
+      this.$refs.childrenProduct.productList.forEach(item => {
+        if (item.productNumber === this.productNumber) item.isFavorite = productDetail.isFavorite
+      })
+    },
+    // 打開產品詳情
+    showProductDetail (item) {
+      if (!item.productNumber) {
+        this.$message.error('该产品没有产品编号')
+      } else {
+        this.productNumber = item.productNumber
+        this.isProductDetail = true
+      }
+    },
+    // 點擊熱詞搜索
+    handlerHotKey (i, name) {
+      this.keywordActive = i
+      this.packingOptions.name = name
+      this.subSearch()
+    },
+    // 二次圖搜
+    handlerCubeImgEvent (img) {
+      this.isShowCropper = true
+      this.option.img = img
+    },
+    // 提交搜索
+    subSearch () {
+      this.$refs.childrenProduct.currentPage = 1
+      this.$store.commit('handlerBeforeSearchImgPreview', null)
+      this.$store.commit('handlerBeforeSearchImg', null)
+      this.$refs.childrenProduct.getProductList()
+      this.isProductDetail = false
+    },
     // 重置选项
     resetOptions () {
+      this.packingDatetime = null
       this.packingOptions = {
+        name: null,
         minPrice: null,
         maxPrice: null,
         fa_no: null,
         pa_nu: null,
+        pr_le: null,
+        pr_wi: null,
+        pr_hi: null,
+        ou_le: null,
+        ou_wi: null,
+        ou_hi: null,
         isUpInsetImg: true,
         startTime: null,
         endTime: null
@@ -265,10 +329,6 @@ export default {
       }
       console.log(this.packingOptions)
     },
-    toProductSearch () {
-      this.$root.eventHub.$emit('searchBeforeProduct')
-      this.$router.push({ name: 'Product' })
-    },
     // 获取包装方式list
     async getProductChpaList () {
       const fd = {}
@@ -277,6 +337,15 @@ export default {
         this.packingList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
+      }
+    },
+    // 获取搜索热词
+    async getHotWord () {
+      const res = await this.$http.post('/api/GetHotWord', {})
+      if (res.data.result.code === 200) {
+        this.hotWords = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.item.message)
       }
     },
     // 选择图片搜索
@@ -301,7 +370,6 @@ export default {
     // 确定裁剪图片
     onCubeImg () {
       this.loading = true
-      this.$store.commit('handlerBeforeSearch', { value: '', type: 'name' })
       // 获取cropper的截图的 数据
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
@@ -324,7 +392,6 @@ export default {
             this.$store.commit('handlerBeforeSearchImg', null)
             this.$message.error(res.data.result.message)
           }
-          this.$router.push('/beforeIndex/product')
         } catch (error) {
           this.cropperCancel()
         }
@@ -341,6 +408,7 @@ export default {
   },
   created () {
     this.getProductChpaList()
+    this.getHotWord()
   },
   mounted () {}
 }
@@ -349,114 +417,158 @@ export default {
 @deep: ~">>>";
   .home {
     flex: 1;
-    .homeBox{
+    .productDetailBox{
       max-width: 1200px;
       margin: 0 auto;
       height: calc(100%);
+    }
+    .homeBox{
+      max-width: 1200px;
+      margin: 0 auto;
+      // height: calc(100%);
+      position: relative;
       .searchBox{
-        width: 700px;
-        margin: 0 auto;
-        position: relative;
-        padding-top: 71px;
         display: flex;
-        .searchImg {
-          position: absolute;
-          left: 5px;
-          top: 0;
-          width: 230px;
-          height: 80px;
-          background: url('~@/assets/images/searchTopBg.png') no-repeat;
-          z-index: 1;
-        }
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 20px;
+        .middle{
+          width: 700px;
+          margin: 0 auto;
+          position: relative;
+          display: flex;
+          .searchImg {
+            position: absolute;
+            left: 5px;
+            top: 0;
+            width: 230px;
+            height: 80px;
+            background: url('~@/assets/images/searchTopBg.png') no-repeat;
+            z-index: 1;
+          }
           .inputBox{
-            border-radius: 10px;
-            border: 1px solid #789ffa;
-            position: relative;
-            display: flex;
-            width: 619px;
-            align-items: center;
-            @{deep} .el-input{
-              input {
-                border: none;
-                border-radius: 10px;
-              }
-            }
-            .iconBox{
+              border-radius: 10px;
+              border: 1px solid #789ffa;
+              position: relative;
               display: flex;
+              width: 619px;
               align-items: center;
-              justify-content: center;
-              .uploadIcon{
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                background-color: #3872f8;
-                color: #fff;
+              @{deep} .el-input{
+                input {
+                  border: none;
+                  border-radius: 10px;
+                }
+              }
+              .iconBox{
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                position: relative;
-                cursor: pointer;
-                .iconfont {
-                  font-size: 10px;
-                  .fileInput {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 30px;
-                    height: 30px;
-                    font-size: 0;
-                    padding: 0;
-                    cursor: pointer;
-                    opacity: 0;
+                .uploadIcon{
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  background-color: #3872f8;
+                  color: #fff;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  position: relative;
+                  cursor: pointer;
+                  .iconfont {
+                    font-size: 10px;
+                    .fileInput {
+                      position: absolute;
+                      left: 0;
+                      top: 0;
+                      width: 30px;
+                      height: 30px;
+                      font-size: 0;
+                      padding: 0;
+                      cursor: pointer;
+                      opacity: 0;
+                    }
                   }
                 }
+              .searchBtn{
+                  margin-left: 10px;
+                  background-color: #3872f8;
+                  border: 1px solid #3872f8;
+                  border-radius: 9px;
+                  color: #fff;
+                  width: 96px;
+                  height: 40px;
+                  outline: none;
+                  cursor: pointer;
+                }
               }
-            .searchBtn{
+          }
+          .advanced{
                 margin-left: 10px;
-                background-color: #3872f8;
+                background-color: #fff;
                 border: 1px solid #3872f8;
+                font-weight: 600;
                 border-radius: 9px;
-                color: #fff;
+                color: #3872f8;
                 width: 96px;
                 height: 40px;
                 outline: none;
                 cursor: pointer;
-              }
-            }
           }
-          .advanced{
-              margin-left: 10px;
-              background-color: #fff;
-              border: 1px solid #3872f8;
-              font-weight: 600;
-              border-radius: 9px;
-              color: #3872f8;
-              width: 96px;
-              height: 40px;
-              outline: none;
-              cursor: pointer;
-            }
         }
+        .left, .right{
+          width: 100px;
+          height: 100px;
+          .logo{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .right{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-evenly;
+          font-size: 12px;
+          color: #aaa;
+          img{
+            width: 80px;
+            height: 80px;
+          }
+        }
+      }
       .keywords{
           width: 700px;
           margin: 0 auto;
           font-size: 14px;
+          em {
+            display: inline-block;
+            margin-top: 10px;
+          }
           .item {
             display: inline-block;
             padding-right: 20px;
             margin-top: 10px;
+            color: #aaa;
             cursor: pointer;
+            &:hover{
+              color: #409eff;
+            }
             &.active{
               color: red;
             }
           }
       }
       .searchAdvanced{
-        width: 700px;
-        margin: 0 auto;
+        width: 100%;
         font-size: 14px;
-        padding-top: 20px;
+        padding: 20px 0;
+        z-index: 1;
+        left: 0;
+        background-color: #fff;
+        // box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
         .box{
+          width: 700px;
+          margin: 0 auto;
           display: flex;
           border-bottom: 2px solid #f0f5ff;
           .left,.right {

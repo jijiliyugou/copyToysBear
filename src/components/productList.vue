@@ -175,13 +175,13 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  props: ['packingOptions'],
   data () {
     return {
       currentPage: 1,
       pageSize: 10,
       totalCount: 0,
-      productList: null
+      productList: null,
+      packingOptions: this.$store.state.beforeSearch
     }
   },
   methods: {
@@ -250,6 +250,8 @@ export default {
     }
   },
   created () {
+    if (this.$store.state.beforeSearchImg) this.productList = this.$store.state.beforeSearchImg
+    else this.getProductList()
   },
   mounted () {
   },

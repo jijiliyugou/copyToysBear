@@ -63,7 +63,6 @@
       小竹熊 云科技是一款连接贸易公司、供应厂商、实体展厅三个角色直接的即时互通软件。
       解决日常繁琐工作、实时消息等问题，汇聚“订单、通知、产品”于一体的APP。
     </p>
-    <el-button icon="el-icon-caret-top" @click="toTop" circle></el-button>
   </div>
 </template>
 

@@ -66,9 +66,9 @@ export default {
 </script>
 <style scoped lang="less">
 .box {
+  width: 100%;
   .topLaout {
     background: linear-gradient(#f5f5f5, #fff, #cfcfcf);
-
     .navBar {
       height: 50px;
       max-width: 1200px;

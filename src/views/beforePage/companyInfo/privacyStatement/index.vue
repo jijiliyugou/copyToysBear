@@ -10,7 +10,6 @@
       width="100%"
       height="100%"
     ></iframe>
-    <el-button icon="el-icon-caret-top" @click="toTop" circle></el-button>
   </div>
 </template>
 

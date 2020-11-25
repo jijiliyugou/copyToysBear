@@ -45,7 +45,6 @@
         v-if="noticeData"
       ></BMapComponent>
     </footer>
-    <el-button icon="el-icon-caret-top" @click="toTop" circle></el-button>
   </div>
 </template>
 

@@ -1,7 +1,25 @@
 /* eslint-disable vue/require-v-for-key */
 <template>
   <div class="home">
-    <div class="homeBox" v-show="!isProductDetail">
+    <div class="homeBox">
+      <div class="downloadCode">
+      <div class="downloadContent">
+        <div style="flex:1;">
+          <div class="left" v-show="$route.path === '/beforeIndex/login'">
+           <el-image :src="require('@/assets/images/erpLogo.png')" fit="contain"></el-image>
+           <div class="welcome">
+             欢迎登录
+           </div>
+        </div>
+        </div>
+        <div class="right">
+          <div class="code">
+            <el-image :src="require('@/assets/images/ErWeiMa.png')" fit="contain"></el-image>
+            <p class="text">小竹熊app下载</p>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="searchBox">
         <div class="searchImg"></div>
         <div class="inputBox">
@@ -87,14 +105,6 @@
           <el-button round type="primary" style="marginLeft:40px;width:100px;" @click="subSearch">确定</el-button>
         </div>
       </div>
-      <!-- </transition> -->
-      <!-- 产品列表 -->
-      <!-- <transition name="el-zoom-in-top"> -->
-      <productList v-show="isSearch" ref="childrenProduct" @showProductDetail="showProductDetail" @handlerCubeImgEvent="handlerCubeImgEvent" :packingOptions="packingOptions" style="margin:50px 0" />
-      <!-- </transition> -->
-    </div>
-    <div class="productDetailBox" v-if="isProductDetail">
-      <productDetail @changeIsDetail="changeIsDetail" :number="productNumber" />
     </div>
     <!-- vueCropper 剪裁图片实现 -->
     <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
@@ -147,19 +157,14 @@
 
 <script>
 import { VueCropper } from 'vue-cropper'
-import productList from '@/components/productList'
-import productDetail from '@/components/productDetail'
 export default {
   components: {
-    VueCropper,
-    productList,
-    productDetail
+    VueCropper
   },
   data () {
     return {
       productNumber: null,
       isProductDetail: false,
-      isSearch: false,
       packingList: [],
       dateList: [
         { label: '全部', value: '' },
@@ -218,6 +223,7 @@ export default {
     }
   },
   methods: {
+    // 詳情返回事件
     changeIsDetail (productDetail) {
       this.isProductDetail = false
       this.$refs.childrenProduct.productList.forEach(item => {
@@ -246,10 +252,10 @@ export default {
     },
     // 提交搜索
     subSearch () {
-      this.$refs.childrenProduct.currentPage = 1
+      this.$store.commit('handlerBeforeSearchImg', null)
       this.$store.commit('handlerBeforeSearchImgPreview', null)
-      this.isSearch = true
-      this.$refs.childrenProduct.getProductList()
+      this.$store.commit('handlerBeforeSearch', this.packingOptions)
+      this.$router.push('/beforeIndex/product')
     },
     // 重置选项
     resetOptions () {
@@ -270,6 +276,7 @@ export default {
         startTime: null,
         endTime: null
       }
+      this.$store.commit('handlerBeforeSearch', this.packingOptions)
     },
     // 格式化时间
     formatTime (param) {
@@ -351,7 +358,6 @@ export default {
         return false
       }
       this.isShowCropper = true
-
       // 上传成功后将图片地址赋值给裁剪框显示图片
       this.$nextTick(() => {
         const f = window.URL.createObjectURL(this.fileinfo)
@@ -379,12 +385,12 @@ export default {
           if (res.data.result.code === 200) {
             this.cropperCancel()
             this.$store.commit('handlerBeforeSearchImg', res.data.result.object)
+            this.$router.push('/beforeIndex/product')
           } else {
             this.cropperCancel()
             this.$store.commit('handlerBeforeSearchImg', null)
             this.$message.error(res.data.result.message)
           }
-          this.isSearch = true
         } catch (error) {
           this.cropperCancel()
         }
@@ -420,9 +426,69 @@ export default {
       margin: 0 auto;
       // height: calc(100%);
       position: relative;
+      .downloadCode{
+        width: 100%;
+        background-color: #fff;
+        .downloadContent {
+          max-width: 1200px;
+          overflow: visible;
+          min-width: 1024px;
+          height: 120px;
+          margin: 0 auto;
+          display: flex;
+          .left,.right{
+            flex: 1;
+          }
+          .left {
+            display: flex;
+            align-items: center;
+            .el-image {
+              width: 120px;
+              height: 120px;
+            }
+            .welcome{
+              font-size: 20px;
+              color: #4077f9;
+              margin-left: 50px;
+              position: relative;
+              vertical-align: top;
+              &::before{
+                display: block;
+                position: absolute;
+                content: '';
+                width: 2px;
+                height: 30px;
+                background-color: #4077f9;
+                left: -20px;
+                top: 50%;
+                transform: translate(0, -50%);
+              }
+            }
+          }
+          .right {
+            display: flex;
+            justify-content: flex-end;
+            .code{
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              .el-image{
+                width: 80px;
+                height: 80px;
+              }
+              .text {
+                font-size: 12px;
+                color: #797979;
+              }
+            }
+          }
+        }
+      }
       .searchBox{
         width: 700px;
         margin: 0 auto;
+        margin-top: 50px;
         position: relative;
         padding-top: 71px;
         display: flex;

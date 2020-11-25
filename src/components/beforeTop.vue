@@ -37,24 +37,6 @@
         </div>
       </div>
     </div>
-    <div class="downloadCode">
-      <div class="downloadContent">
-        <div style="flex:1;">
-          <div class="left" v-show="$route.path === '/beforeIndex/login'">
-           <el-image :src="require('@/assets/images/erpLogo.png')" fit="contain"></el-image>
-           <div class="welcome">
-             欢迎登录
-           </div>
-        </div>
-        </div>
-        <div class="right">
-          <div class="code">
-            <el-image :src="require('@/assets/images/ErWeiMa.png')" fit="contain"></el-image>
-            <p class="text">小竹熊app下载</p>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- <el-row style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
       <el-col :span="6">
         <div class="grid-content bg-purple grid-content-top">
@@ -344,7 +326,7 @@ export default {
     },
     // 联系客服
     toQQ () {
-      window.open('https://shang.qq.com//email/stop/email_stop.html', '_blank')
+      window.open('tencent://message/?uin=3300802838&Site=Sambow&Menu=yes', '_blank')
     }
   },
   computed: {
@@ -470,65 +452,7 @@ export default {
     }
   }
 }
-.downloadCode{
-  width: 100%;
-  background-color: #fff;
-  .downloadContent {
-    max-width: 1200px;
-    overflow: visible;
-    min-width: 1024px;
-    height: 120px;
-    margin: 0 auto;
-    display: flex;
-    .left,.right{
-      flex: 1;
-    }
-    .left {
-      display: flex;
-      align-items: center;
-      .el-image {
-        width: 120px;
-        height: 120px;
-      }
-      .welcome{
-        font-size: 20px;
-        color: #4077f9;
-        margin-left: 50px;
-        position: relative;
-        vertical-align: top;
-        &::before{
-          display: block;
-          position: absolute;
-          content: '';
-          width: 2px;
-          height: 30px;
-          background-color: #4077f9;
-          left: -20px;
-          top: 50%;
-          transform: translate(0, -50%);
-        }
-      }
-    }
-    .right {
-      display: flex;
-      justify-content: flex-end;
-      .code{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        .el-image{
-          width: 80px;
-          height: 80px;
-        }
-        .text {
-          font-size: 12px;
-          color: #797979;
-        }
-      }
-    }
-  }
-}
+
 // .grid-content-top {
 //   height: 110px;
 //   display: flex;

@@ -14,7 +14,7 @@ export default new Vuex.Store({
     wsId: '',
     wsMsg: null,
     isLogin: false,
-    beforeSearch: { value: '', type: 'name' },
+    beforeSearch: null,
     beforeSearchImg: null,
     hotSearchImg: null,
     searchValue: '',
@@ -49,7 +49,6 @@ export default new Vuex.Store({
     },
     handlerBeforeSearchImg (state, value) {
       state.beforeSearchImg = value
-      console.log(state.beforeSearchImg)
     },
     updateAppLoading (state, value) {
       state.AppLoading = value
