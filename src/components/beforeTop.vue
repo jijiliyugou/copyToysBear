@@ -23,7 +23,6 @@
             </div>
             <div class="user" v-else>
               <div class="userImage" @click="toMe">
-                <!-- "large", "medium", "small" -->
                 <el-avatar
                   icon="el-icon-user-solid"
                   @error="errorHandler"
@@ -37,120 +36,10 @@
         </div>
       </div>
     </div>
-    <!-- <el-row style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
-      <el-col :span="6">
-        <div class="grid-content bg-purple grid-content-top">
-          <img class="logo" src="~@/assets/images/logo.png" alt />
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="grid-content bg-purple-light grid-content-top">
-          <div class="top-center">
-            <el-input
-              placeholder="查询云平台产品，支持图片搜索"
-              clearable
-              class="input-with-select elInput"
-              v-model="$store.state.beforeSearch.value"
-              @keyup.enter.native="toProductSearch"
-            >
-              <el-select
-                v-model="$store.state.beforeSearch.type"
-                slot="prepend"
-                style="width: 100px;text-align:center"
-              >
-                <el-option label="产品名称" value="name"></el-option>
-                <el-option label="产品编号" value="productNumber"></el-option>
-                <el-option label="用户电话" value="mobile"></el-option>
-              </el-select>
-            </el-input>
-            <i class="el-input__icon el-icon-camera-solid myCamera">
-              <input
-                type="file"
-                ref="uploadRef"
-                @change="changeUpload"
-                class="fileInput"
-                accept=".jpg, .jpeg, .png, .ico, .bmp, .JPG, .JPEG, .PNG, .ICO, .BMP"
-              />
-            </i>
-            <el-button
-            class="subSearch"
-              @click="toProductSearch"
-              icon="el-icon-search"
-              >搜索</el-button
-            >
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content bg-purple grid-content-top erwemas">
-          <div class="erwema">
-            <img src="~@/assets/images/xiazaiApp.png" alt />
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-    <div class="sidebar" style="maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
-      <ul>
-        <router-link
-          class="li"
-          v-for="(item, i) in menuList"
-          :key="i"
-          :to="item.url"
-          >{{ item.name }}</router-link
-        >
-      </ul>
-    </div>
-    vueCropper 剪裁图片实现
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
-      <div class="cropper-content">
-        <div class="cropper" style="text-align:center">
-          <vueCropper
-            ref="cropper"
-            :img="option.img"
-            :outputSize="option.outputSize"
-            :outputType="option.outputType"
-            :autoCropWidth="option.autoCropWidth"
-            :autoCropHeight="option.autoCropHeight"
-            :canScale='option.canScale'
-            :info="option.info"
-            :full="option.full"
-            :canMove="option.canMove"
-            :canMoveBox="option.canMoveBox"
-            :original="option.original"
-            :autoCrop="option.autoCrop"
-            :fixed="option.fixed"
-            :fixedNumber="option.fixedNumber"
-            :centerBox="option.centerBox"
-            :infoTrue="option.infoTrue"
-            :fixedBox="option.fixedBox"
-            :mode="option.mode"
-          ></vueCropper>
-        </div>
-      </div>
-      <center slot="footer" class="dialog-footer">
-        <el-button type="info" @click="cropperCancel">取 消</el-button>
-        <el-button
-          type="primary"
-          class="el-icon-refresh-left"
-          @click="$refs.cropper.rotateLeft()"
-          >左 旋 转</el-button
-        >
-        <el-button
-          type="primary"
-          class="el-icon-refresh-right"
-          @click="$refs.cropper.rotateRight()"
-          >右 旋 转</el-button
-        >
-        <el-button type="success" @click="onCubeImg" :loading="loading"
-          >确认</el-button
-        >
-      </center>
-    </el-dialog> -->
   </div>
 </template>
 
 <script>
-// import { VueCropper } from 'vue-cropper'
 export default {
   data () {
     return {

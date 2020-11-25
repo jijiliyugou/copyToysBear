@@ -39,7 +39,6 @@
         <em>热词搜索：</em> <span @click="handlerHotKey(i, item.productName)" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in hotWords" :key="i"> {{ item.productName }}</span>
       </div>
       <!-- 高级搜索 -->
-      <!-- <transition name="el-zoom-in-top"> -->
       <div class="searchAdvanced" v-show="!isAdvanced">
         <div class="box">
           <div class="left">
@@ -94,14 +93,11 @@
           <el-button round type="primary" style="marginLeft:40px;width:100px;" @click="subSearch">确定</el-button>
         </div>
       </div>
-      <!-- </transition> -->
       <!-- 产品列表 -->
-      <!-- <transition name="el-zoom-in-top"> -->
       <productList v-show="!isProductDetail" ref="childrenProduct" @showProductDetail="showProductDetail" @handlerCubeImgEvent="handlerCubeImgEvent" style="margin:50px 0" />
       <div class="productDetailBox" v-if="isProductDetail">
         <productDetail @changeIsDetail="changeIsDetail" :number="productNumber" />
       </div>
-      <!-- </transition> -->
     </div>
     <!-- vueCropper 剪裁图片实现 -->
     <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>

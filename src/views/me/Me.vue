@@ -41,7 +41,6 @@
           </p>
           <p>
             <span class="title">邮箱地址：</span>
-            <!-- <input v-model="meInfo.e_mail" /> -->
             <el-input
               type="email"
               placeholder="请输入邮箱"
@@ -53,7 +52,6 @@
           </p>
           <p>
             <span class="title">电话号码：</span>
-            <!-- <input v-model="meInfo.phoneNumber" /> -->
             <el-input
               type="number"
               placeholder="请输入电话号码"
@@ -82,19 +80,6 @@
         <p class="title">员工管理</p>
         <div class="employList">
           <li class="listItem" v-for="(item, i) in meInfo.personnels" :key="i">
-          <!-- <li class="listItem" v-for="item in meInfo.personnels" :key="item.id"> -->
-            <!-- <el-avatar
-              style="backgroundColor:#165af7;color:white;"
-              @click.native="openAddEmploee(1, item)"
-              v-if="item.userImage"
-              :size="30"
-              :src="item.userImage"
-              :key="item.userImage"
-              @error="errorHandler"
-            >
-              {{ item.linkman }}
-              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
-            </el-avatar>-->
             <el-image
               @click.native="openAddEmploee(1, item)"
               :src="item.userImage"

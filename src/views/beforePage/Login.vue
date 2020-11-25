@@ -24,20 +24,20 @@
           </el-tab-pane>
           <el-tab-pane label="短信登录" name="mobile">
               <el-form
-                :model="loginForm"
+                :model="loginforms"
                 ref="mobileRef"
                 class="smsLogin"
                 :rules="mobileRules"
               >
                 <el-form-item prop="username">
-                  <el-input prefix-icon="el-icon-mobile-phone" placeholder="请输入手机号" v-model="loginForm.username"></el-input>
+                  <el-input prefix-icon="el-icon-mobile-phone" placeholder="请输入手机号" v-model="loginforms.username"></el-input>
                 </el-form-item>
                 <el-form-item prop="verifycode">
                   <div class="countDownBox">
                     <el-input
-                     placeholder="请输入验证码"
-                    prefix-icon="el-icon-lock"
-                      v-model="loginForm.verifycode"
+                      placeholder="请输入验证码"
+                      prefix-icon="el-icon-lock"
+                      v-model="loginforms.verifycode"
                       class="verifycode"
                       @keyup.enter.native="handleCodeLogin"
                     ></el-input>
@@ -69,26 +69,6 @@ export default {
     VueQr
   },
   data () {
-    // 用户名自定义验证规则
-    const validateUsername = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
-    }
-    // 验证码自定义验证规则
-    const validateVerifycode = (rule, value, callback) => {
-      const newVal = value.toLowerCase()
-      const identifyStr = this.identifyCode.toLowerCase()
-      if (newVal === '') {
-        callback(new Error('请输入验证码'))
-      } else if (newVal !== identifyStr) {
-        callback(new Error('验证码不正确!'))
-      } else {
-        callback()
-      }
-    }
     return {
       ws: null,
       wsBaseUrl: process.env.NODE_ENV === 'production' ? 'wss://impush.toysbear.com/ws?UserId=' : 'ws://139.9.71.135:8090/ws?UserId=',
@@ -107,25 +87,12 @@ export default {
         url: '地址',
         icon: require('@/assets/images/logo.png')
       },
-      loginForm: {
-        username: '',
-        password: '',
-        verifycode: ''
+      loginforms: {
+        username: null,
+        verifycode: null
       },
-      identifyCodes: '1234567890ABCDEFGHIGKLMNoPQRSTUVWXYZ',
-      identifyCode: '',
-      loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, message: '密码长度最少为6位', trigger: 'blur' }
-        ],
-        verifycode: [
-          { required: true, trigger: 'blur', validator: validateVerifycode }
-        ]
-      },
+      // identifyCodes: '',
+      // identifyCode: '',
       mobileRules: {
         username: [
           {
@@ -139,8 +106,7 @@ export default {
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { min: 4, message: '验证码长度最少为4位', trigger: 'blur' }
         ]
-      },
-      passwordType: 'password'
+      }
     }
   },
   watch: {
@@ -294,22 +260,17 @@ export default {
         }, 1000)
       }
     },
-    // 切换验证码
-    refreshCode () {
-      this.identifyCode = ''
-      this.makeCode(this.identifyCodes, 4)
-    },
     // 生成随机数
     randomNum (min, max) {
       max = max + 1
       return Math.floor(Math.random() * (max - min) + min)
     },
     // 随机生成验证码字符串
-    makeCode (data, len) {
-      for (let i = 0; i < len; i++) {
-        this.identifyCode += data[this.randomNum(0, data.length - 1)]
-      }
-    },
+    // makeCode (data, len) {
+    //   for (let i = 0; i < len; i++) {
+    //     this.identifyCode += data[this.randomNum(0, data.length - 1)]
+    //   }
+    // },
     /**
      * 等待几秒后执行
      * @param {number} s 等待时间，单位秒
@@ -321,90 +282,15 @@ export default {
         }, 1000 * s)
       })
     },
-    // 密码点击登入按钮
-    handleLogin () {
-      this.$refs.loginForm.validate(async valid => {
-        if (valid) {
-          // 发送登录请求
-          const res = await this.$http.post('/api/Authenticate', {
-            userAccountOrUserMobile: this.loginForm.username,
-            password: this.$md5('LitterBear' + this.loginForm.password),
-            platForm: 'PC',
-            loginType: 'Password'
-          })
-          if (res.data.result.isLogin && res.data.result.commparnyList) {
-            if (res.data.result.commparnyList.length === 1) {
-              // 一个角色
-              this.$store.commit('setToken', res.data.result)
-              this.$store.commit(
-                'setComparnyId',
-                res.data.result.commparnyList[0].commparnyId
-              )
-              await this.waitTime(1)
-              const Json = {}
-              Json.MessageRestriction = await this.getClientTypeList(
-                'MessageRestriction'
-              )
-              Json.UserRestrictions = await this.getClientTypeList(
-                'UserRestrictions'
-              )
-              Json.NoticeRestrictions = await this.getClientTypeList(
-                'NoticeRestrictions'
-              )
-              Json.CompanyRestrictions = await this.getClientTypeList(
-                'CompanyRestrictions'
-              )
-              Json.PlatForm = await this.getClientTypeList('PlatForm')
-              Json.packageManage = await this.getClientTypeList(
-                'packageManage'
-              )
-              this.$store.commit('globalJson/setGlobalJson', Json)
-              // 登录成功获取菜单
-              try {
-                const re = await this.$http.post('/api/GetUserRoleMenu', {})
-                if (re.data.result.code === 200 && re.data.result.item) {
-                  this.$store.commit('handlerLogin', true)
-                  this.$store.commit(
-                    'setRouters',
-                    re.data.result.item.modulesList || []
-                  )
-                  await getMenuFuc()
-                } else {
-                  this.$message.error(re.data.result.msg)
-                  this.$store.commit('removeLoginItems')
-                }
-                this.$router.push({
-                  name: 'InfoList'
-                })
-              } catch (error) {
-                this.$store.commit('updateAppLoading', false)
-                this.$message.error('获取菜单失败，请检查该角色是否有公司类型')
-              }
-            } else if (res.data.result.commparnyList.length > 1) {
-              // 多个角色
-              this.$store.commit('setToken', res.data.result)
-              this.$router.push({
-                name: 'LoginConfirm',
-                params: res.data.result
-              })
-            } else {
-              this.$message.error('您还没有加入公司哦，快来加入公司吧')
-            }
-          } else {
-            this.$message.error(res.data.result.message)
-          }
-        }
-      })
-    },
     // 验证码点击登录
     handleCodeLogin () {
       this.$refs.mobileRef.validate(async valid => {
         if (valid) {
           const res = await this.$http.post('/api/Authenticate', {
-            userAccountOrUserMobile: this.loginForm.username,
+            userAccountOrUserMobile: this.loginforms.username,
             platForm: 'PC',
             loginType: 'VerificationCode',
-            VerificationCode: this.loginForm.verifycode
+            VerificationCode: this.loginforms.verifycode
           })
           if (res.data.result.isLogin) {
             this.$store.commit('setToken', res.data.result)
@@ -469,14 +355,14 @@ export default {
     async getCode () {
       if (
         !/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|8[0-9]|9[89])\d{8}$/.test(
-          this.loginForm.username
+          this.loginforms.username
         )
       ) {
         this.$message.error('请输入手机号')
         return
       }
       const res = await this.$http.post('/api/SendSMS', {
-        PhoneNumber: this.loginForm.username,
+        PhoneNumber: this.loginforms.username,
         MessageType: 'SignIn'
       })
       if (res.data.result.code !== 200) {
@@ -503,7 +389,6 @@ export default {
     if (this.$route.query.id === 'signOut') this.$store.commit('removeLoginItems')
   },
   mounted () {
-    this.refreshCode()
     this.getQrCodeUrl()
   },
   beforeDestroy () {
@@ -550,20 +435,6 @@ export default {
       }
     }
   }
-  // .logoImg {
-  //   width: 500px;
-  //   border-radius: 20px;
-  //   -webkit-box-shadow: 3px 3px 10px #666;
-  //   -moz-box-shadow: 3px 3px 10px #666;
-  //   box-shadow: 3px 3px 10px #666;
-  // }
-  // .form {
-  //   width: 400px;
-  //   height: 400px;
-  //   @{deep} .el-form-item.is-required {
-  //     margin: 30px 0;
-  //   }
-  // }
 }
 
 .identifybox {

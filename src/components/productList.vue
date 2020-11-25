@@ -84,7 +84,6 @@
               <div class="details">
                 <ul>
                   <li>
-                    <!-- 出厂货号：{{ item.fa_no }} -->
                     出厂货号：{{ item.fa_no === 0 ? "???" : item.fa_no }}
                   </li>
                   <li>包装：{{ item.fa_no === 0 ? "???" : item.ch_pa }}</li>
@@ -218,10 +217,6 @@ export default {
       for (const key in fd) {
         if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
       }
-      // const fd = {
-      //   skipCount: this.currentPage,
-      //   maxResultCount: this.pageSize
-      // }
       try {
         const res = await this.$http.post('/api/SearchBearProductPage', fd)
         if (res.data.result.code === 200 && res.data.result.item) {

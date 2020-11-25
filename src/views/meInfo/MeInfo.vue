@@ -2501,13 +2501,6 @@
           ></el-avatar
           >平台所有人
         </el-radio>
-        <!-- <el-radio label="Exhibition" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Admin'">
-          <el-avatar
-            :size="30"
-            :src="require('@/assets/images/公司.png')"
-          ></el-avatar
-          >所有展厅联系人
-        </el-radio> -->
         <el-radio label="Sales" v-show="$store.state.userInfo.commparnyList[0].companyType === 'Supplier'">
           <el-avatar
             :size="30"
