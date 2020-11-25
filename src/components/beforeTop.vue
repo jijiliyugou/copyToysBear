@@ -210,7 +210,6 @@ export default {
     // 确定裁剪图片
     onCubeImg () {
       this.loading = true
-      this.$store.commit('handlerBeforeSearch', { value: '', type: 'name' })
       // 获取cropper的截图的 数据
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
@@ -338,7 +337,6 @@ export default {
     }
   },
   mounted () {
-    this.search = this.$store.state.beforeSearch.value
   }
   // beforeDestroy () {
   //   this.$store.commit('handlerBeforeSearchImgPreview', null)

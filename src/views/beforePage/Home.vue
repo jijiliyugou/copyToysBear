@@ -187,7 +187,7 @@ export default {
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
-        isUpInsetImg: true,
+        isUpInsetImg: null,
         startTime: null,
         endTime: null
       },
