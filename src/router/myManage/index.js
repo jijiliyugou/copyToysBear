@@ -6,6 +6,7 @@ const AdvertisingMan = () => import('@/views/myManage/advertisingMan.vue')
 const InfoTemplate = () => import('@/views/myManage/infoTemplate.vue')
 const DefaultFormulaMan = () => import('@/views/myManage/defaultFormulaMan.vue')
 const BearproductOff = () => import('@/views/myManage/bearproductOff.vue')
+const OffHallMan = () => import('@/views/myManage/offHallMan.vue')
 export default [
   {
     path: '/myCustomer',
@@ -46,5 +47,10 @@ export default [
     path: '/bearproductOff',
     name: 'bearproductOff',
     component: BearproductOff
+  },
+  {
+    path: '/offHallMan',
+    name: 'offHallMan',
+    component: OffHallMan
   }
 ]
