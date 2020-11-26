@@ -9,6 +9,7 @@
           <div class="inputBox">
             <el-input
               clearable
+              @keyup.enter.native="subSearch"
               placeholder="请输入关键词/图片搜索"
               v-model="packingOptions.name">
             </el-input>
@@ -43,13 +44,13 @@
         <div class="box">
           <div class="left">
             <div class="item">
-              出厂货号：<el-input size="mini" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
+              出厂货号：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
             </div>
             <div class="item">
-              玩具尺寸：<el-input size="mini" v-model="packingOptions.pr_le" placeholder="长"></el-input><em>-</em><el-input v-model="packingOptions.pr_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input v-model="packingOptions.pr_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+              玩具尺寸：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.pr_le" placeholder="长"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.pr_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.pr_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
             </div>
             <div class="item">
-              外包装箱：<el-input size="mini" v-model="packingOptions.ou_le" placeholder="长"></el-input><em>-</em><el-input v-model="packingOptions.ou_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input v-model="packingOptions.ou_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
+              外包装箱：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.ou_le" placeholder="长"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.ou_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.ou_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
             </div>
             <div class="item">
               图<span style="opacity: 0;">图片</span>片：
@@ -62,7 +63,7 @@
           </div>
           <div class="right">
             <div class="item">
-              价格区间：<el-input size="mini" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" placeholder="最高"></el-input><div class="unit"></div>
+              价格区间：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" @keyup.enter.native="subSearch" placeholder="最高"></el-input><div class="unit"></div>
             </div>
             <div class="item">
               时间区间：<el-select v-model="packingDatetime" @change="getDateList" size="mini" placeholder="请选择">

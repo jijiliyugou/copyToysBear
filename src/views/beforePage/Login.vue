@@ -23,38 +23,32 @@
             </p>
           </el-tab-pane>
           <el-tab-pane label="短信登录" name="mobile">
-              <el-form
-                :model="loginforms"
-                ref="mobileRef"
-                class="smsLogin"
-                :rules="mobileRules"
-              >
-                <el-form-item prop="username">
-                  <el-input prefix-icon="el-icon-mobile-phone" placeholder="请输入手机号" v-model="loginforms.username"></el-input>
-                </el-form-item>
-                <el-form-item prop="verifycode">
-                  <div class="countDownBox">
-                    <el-input
-                      placeholder="请输入验证码"
-                      prefix-icon="el-icon-lock"
-                      v-model="loginforms.verifycode"
-                      class="verifycode"
-                      @keyup.enter.native="handleCodeLogin"
-                    ></el-input>
-                    <div class="countDown">
-                      <span v-show="show" @click="getCode">获取验证码</span>
-                      <span v-show="!show" class="count">{{ count }} s</span>
-                    </div>
+            <el-form :model="loginforms" ref="mobileRef" class="smsLogin" :rules="mobileRules">
+              <el-form-item prop="username">
+                <el-input prefix-icon="el-icon-mobile-phone" placeholder="请输入手机号" v-model="loginforms.username"></el-input>
+              </el-form-item>
+              <el-form-item prop="verifycode">
+                <div class="countDownBox">
+                  <el-input
+                    placeholder="请输入验证码"
+                    prefix-icon="el-icon-lock"
+                    v-model="loginforms.verifycode"
+                    class="verifycode"
+                    @keyup.enter.native="handleCodeLogin"
+                  ></el-input>
+                  <div class="countDown">
+                    <span v-show="show" @click="getCode">获取验证码</span>
+                    <span v-show="!show" class="count">{{ count }} s</span>
                   </div>
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    v-show="activeName  !==  'erweima'"
-                    @click="handleCodeLogin"
-                    >登录</el-button>
-                </el-form-item>
-              </el-form>
+                </div>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  @click="handleCodeLogin"
+                  >登录</el-button>
+              </el-form-item>
+            </el-form>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -70,6 +64,7 @@ export default {
   },
   data () {
     return {
+      value: null,
       ws: null,
       wsBaseUrl: process.env.NODE_ENV === 'production' ? 'wss://impush.toysbear.com/ws?UserId=' : 'ws://139.9.71.135:8090/ws?UserId=',
       lang: 'zh-CN',
@@ -80,7 +75,7 @@ export default {
       showQrCode: false,
       count: '',
       timer: null,
-      activeName: 'erweima',
+      activeName: 'mobile',
       search: '',
       options: {
         // 二维码配置
@@ -91,8 +86,6 @@ export default {
         username: null,
         verifycode: null
       },
-      // identifyCodes: '',
-      // identifyCode: '',
       mobileRules: {
         username: [
           {
@@ -236,7 +229,6 @@ export default {
       if (res.data.result.code === 200) {
         this.options.url = res.data.result.item.qrCode
         this.randomCode = res.data.result.item.randomCode
-        this.ws && this.ws.close()
         // 开启长连接
         this.initWebSocket()
       }
@@ -333,10 +325,7 @@ export default {
                 this.$message.error(re.data.result.msg)
                 this.$store.commit('removeLoginItems')
               }
-              this.$router.push({
-                name: 'InfoList',
-                params: {}
-              })
+              this.$router.push('/meInfo')
             } else if (res.data.result.commparnyList.length > 1) {
               // 多个角色
               this.$store.commit('setToken', res.data.result)
@@ -389,7 +378,6 @@ export default {
     if (this.$route.query.id === 'signOut') this.$store.commit('removeLoginItems')
   },
   mounted () {
-    this.getQrCodeUrl()
   },
   beforeDestroy () {
     clearInterval(this.timer)
