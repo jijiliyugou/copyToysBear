@@ -315,7 +315,7 @@ export default {
     },
     // 删除下架厂商
     async handleDelete (row) {
-      const res = await this.$http.post('/api/DeleteManufacturer_Off', { productNumber: row.productNumber })
+      const res = await this.$http.post('/api/DeleteManufacturer_Off', { id: row.id })
       if (res.data.result.code === 200) {
         this.$message.success('删除厂商成功')
         this.getManufacturerOffPage()

@@ -190,12 +190,11 @@ export default {
           const re = await this.$http.post('/api/GetUserRoleMenu', {})
           if (re.data.result.code === 200 && re.data.result.item) {
             this.$store.commit('handlerLogin', true)
-            // this.$store.commit(
-            //   'setRouters',
-            //   re.data.result.item.modulesList || []
-            // )
+            this.$store.commit(
+              'setRouters',
+              re.data.result.item.modulesList || []
+            )
             const myRouters = JSON.stringify((re.data.result.item.modulesList || []))
-            localStorage.setItem('Routers', myRouters)
             await getMenuFuc()
             const Json = {}
             Json.MessageRestriction = await this.getClientTypeList(
@@ -212,9 +211,7 @@ export default {
             )
             Json.PlatForm = await this.getClientTypeList('PlatForm')
             this.$store.commit('globalJson/setGlobalJson', Json)
-            this.$router.push({
-              name: 'InfoList'
-            })
+            this.$router.push('/me')
           } else {
             this.$message.error(re.data.result.msg)
             this.$store.commit('removeLoginItems')
@@ -318,18 +315,16 @@ export default {
               const re = await this.$http.post('/api/GetUserRoleMenu', {})
               if (re.data.result.code === 200 && re.data.result.item) {
                 this.$store.commit('handlerLogin', true)
-                // this.$store.commit(
-                //   'setRouters',
-                //   re.data.result.item.modulesList || []
-                // )
-                const myRouters = JSON.stringify((re.data.result.item.modulesList || []))
-                localStorage.setItem('Routers', myRouters)
+                this.$store.commit(
+                  'setRouters',
+                  re.data.result.item.modulesList || []
+                )
                 await getMenuFuc()
               } else {
                 this.$message.error(re.data.result.msg)
                 this.$store.commit('removeLoginItems')
               }
-              this.$router.push('/meInfo')
+              this.$router.push('/me')
             } else if (res.data.result.commparnyList.length > 1) {
               // 多个角色
               this.$store.commit('setToken', res.data.result)
@@ -381,7 +376,6 @@ export default {
   created () {
     if (this.$route.query.id === 'signOut') {
       this.$store.commit('removeLoginItems')
-      localStorage.removeItem('Routers')
     }
   },
   mounted () {

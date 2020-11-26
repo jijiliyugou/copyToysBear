@@ -102,7 +102,7 @@ export default {
             this.$message.error(re.data.result.msg)
             this.$store.commit('removeLoginItems')
           }
-          this.$router.push('/meInfo/infoList')
+          this.$router.push('/me')
           // let token = JSON.stringify(res.data.result);
           // location =
           //   "http://127.0.0.1:8081/#/meInfo/infoList?id=" +token

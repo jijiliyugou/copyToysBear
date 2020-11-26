@@ -33,8 +33,7 @@ export const router = new VueRouter({
   routes: staticRouters
 })
 export async function getMenuFuc () {
-  // const list = $Store.state.routers
-  const list = JSON.parse(localStorage.getItem('Routers'))
+  const list = $Store.state.routers
   const routers = await setMenuTree(list)
   router.addRoutes(routers)
 }

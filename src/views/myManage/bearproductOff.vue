@@ -11,24 +11,30 @@
           <el-input
           clearable
             size="mini"
-            v-model="formInline.name"
+            v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%"
             @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
-        <el-form-item label="类目查询">
-          <el-cascader
-          :show-all-levels="false"
-          filterable
-          size="mini"
-          ref="cateRef"
-          clearable
-          style="width: 90%"
-          v-model="formInline.categoryId"
-          @change="handleChange"
-          :options="[{ name: '全部', id: '' }, ...categoryList]" :props="{label: 'name',value: 'id',children: 'children',checkStrictly: true,emitPath: false}">
-          </el-cascader>
+        <el-form-item label="状态查询">
+          <el-select
+              clearable
+              v-model="formInline.isEntry"
+              placeholder="请选择"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item, index) in [
+                  { value: null, label: '全部' },
+                  { value: true, label: '已审核' },
+                  { value: false, label: '未审核' },
+                ]"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
         </el-form-item>
         <el-form-item label="时间段搜索">
           <el-date-picker
@@ -47,12 +53,12 @@
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" size="mini" @click="search">查询</el-button>
-          <el-button type="primary" size="mini" @click="openAdd">新增产品</el-button>
+          <el-button type="primary" size="mini" @click="subAddProduct(true)">上架</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="tableContent">
-      <el-table :data="productList" style="width: 100%">
+      <el-table :data="productList" ref="multipleTable" style="width: 100%" row-key="id">
         <!-- <el-table-column class="productImg" label="产品图片" prop="img">
           <template slot-scope="scope">
             <el-image class="img" :src="scope.row.img" fit="cover" :preview-src-list="[scope.row.img && scope.row.img.replace(/_MiddlePic/gi, '_Photo')]">
@@ -77,19 +83,23 @@
             </el-image>
           </template>
         </el-table-column> -->
-        <el-table-column prop="hallName" label="展廳"></el-table-column>
+        <el-table-column type="selection" align="center" :selectable="checkSelectable"></el-table-column>
+        <el-table-column prop="hallName" label="展厅名称"></el-table-column>
         <el-table-column prop="pr_na" label="产品名称"></el-table-column>
-        <el-table-column prop="cl_na" label="产品类目"></el-table-column>
-        <el-table-column
-          prop="fa_no"
-          label="出厂货号"
-        ></el-table-column>
-        <el-table-column prop="createdOn" label="发布时间" sortable>
+        <!-- <el-table-column prop="cl_na" label="产品类目"></el-table-column> -->
+        <el-table-column prop="fa_no" label="出厂货号"></el-table-column>
+        <el-table-column prop="isEntry" label="上架状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isEntry">已上架</el-tag>
+            <el-tag type="danger" v-else>未上架</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="off_da" label="下架时间" sortable>
           <template slot-scope="scope">{{
-            scope.row.createdOn.replace(/t/gi, " ")
+            scope.row.off_da && scope.row.off_da.split("T")[0]
           }}</template>
         </el-table-column>
-        <el-table-column prop="remark" label="产品说明"></el-table-column>
+        <el-table-column prop="remark" label="产品备注"></el-table-column>
         <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
@@ -97,7 +107,7 @@
               style="margin-right: 10px"
               type="primary"
               @click="handleEdit(scope.row)"
-              >入库</el-button
+              >明细</el-button
             >
             <el-popconfirm
               title="确定要删除这条菜单吗？"
@@ -124,9 +134,9 @@
       </center>
     </div>
     </div>
-    <!-- 新增产品dialog -->
+    <!-- 上架产品dialog -->
     <el-dialog
-      :title="productDialogOptions.productDialogTitle + '产品'"
+      :title="productDialogOptions.productDialogTitle"
       :visible.sync="productDialogOptions.openProductDialog"
       destroy-on-close
       class="productDialog"
@@ -135,155 +145,98 @@
         :inline="true"
         class="addProductDialog"
         :model="addProductForm"
-        :rules="addProductRules"
         ref="addProductRulesForm"
         label-width="100px"
       >
-          <el-form-item label="产品图片：" prop="img" v-show="productDialogOptions.productDialogTitle === '编辑'">
-            <el-image :src='addProductForm.img' :preview-src-list="[addProductForm.img && addProductForm.img.replace(/_MiddlePic/gi, '_Photo')]"></el-image>
+          <el-form-item class="productName" label="产品名称：" prop="pr_na">
+          <el-input v-model="addProductForm.pr_na" disabled></el-input>
         </el-form-item>
-          <el-form-item class="productName" label="产品名称" prop="name">
-          <el-input v-model="addProductForm.name"></el-input>
-        </el-form-item>
-        <!-- <el-form-item class="productName" label="产品图片" prop="img">
-          <el-upload
-              :action="baseAPI + '/api/File/InsertPic'"
-              list-type="picture-card"
-              ref="upload"
-              :auto-upload="false"
-              :on-preview="handlePicProductPreview"
-              :http-request="successUpload"
-              :limit="7"
-              accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
-            >
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogUpload" destroy-on-close :modal="false">
-              <img width="100%" :src="LogoUrl" alt />
-            </el-dialog>
-        </el-form-item> -->
         <div class="formItems">
           <el-form-item label="出厂货号：" prop="fa_no">
-          <el-input v-model="addProductForm.fa_no"></el-input>
+          <el-input v-model="addProductForm.fa_no" disabled></el-input>
         </el-form-item>
-          <el-form-item label="公司编号：" prop="number" v-show="productDialogOptions.productDialogTitle === '编辑'">
+        <el-form-item label="公司编号：" prop="number">
           <el-input v-model="addProductForm.number" disabled></el-input>
         </el-form-item>
         </div>
        <div class="formItems">
-        <el-form-item  label="产品分类：" prop="categoryNumber">
-          <el-cascader
-          clearable
-          filterable
-          ref="addCateRef"
-          :show-all-levels="false"
-          v-model="addProductForm.categoryNumber"
-          @change="changeCate"
-          :options="categoryList" :props="{label: 'name',value: 'id',children: 'children',checkStrictly: true,emitPath: false}">
-          </el-cascader>
+        <el-form-item  label="产品分类：" prop="cl_nu">
+          <el-input v-model="addProductForm.cl_na" disabled></el-input>
         </el-form-item>
-        <el-form-item label="单价：" class="productCu_de">
-          <el-input v-model="addProductForm.price">
-            <el-select v-model="addProductForm.cu_de" slot="append" placeholder="请选择">
-            <el-option label="美元" value="$"></el-option>
-            <el-option label="人民币" value="￥"></el-option>
-            <el-option label="欧元" value="€"></el-option>
-            <el-option label="英镑" value="￡"></el-option>
-            <el-option label="新加坡元" value="S$"></el-option>
-            <el-option label="日元" value="J￥"></el-option>
-            <el-option label="阿根廷比索" value="ARS$"></el-option>
-            <el-option label="越南盾" value="₫"></el-option>
-            <el-option label="泰铢" value="৴"></el-option>
-            <el-option label="其他" value="¤"></el-option>
-          </el-select>
-          </el-input>
-          </el-form-item>
+        <el-form-item label="单价：">
+          <el-input v-model="addProductForm.fa_pr" disabled></el-input>
+        </el-form-item>
        </div>
         <div class="formItems">
           <div class="formItemSan">
             <el-form-item label="装箱量：">
-              <el-input v-model="addProductForm.in_en"></el-input
+              <el-input v-model="addProductForm.in_en" disabled></el-input
               ><span class="itemX">/</span></el-form-item
             ><el-form-item
-              ><el-input v-model="addProductForm.ou_lo"></el-input
+              ><el-input v-model="addProductForm.ou_lo" disabled></el-input
             ></el-form-item>
           </div>
            <div class="formItems">
              <el-form-item label="包装：">
-            <el-input v-model="addProductForm.ch_pa"></el-input>
+            <el-input v-model="addProductForm.ch_pa" disabled></el-input>
           </el-form-item>
           </div>
         </div>
         <div class="formItems formItemSan">
           <div>
             <el-form-item label="外箱规格：">
-              <el-input v-model="addProductForm.ou_le"></el-input
+              <el-input v-model="addProductForm.ou_le" disabled></el-input
               ><span class="itemX">X</span></el-form-item
             >
             <el-form-item
-              ><el-input v-model="addProductForm.ou_wi"></el-input
+              ><el-input v-model="addProductForm.ou_wi" disabled></el-input
               ><span class="itemX">X</span> </el-form-item
             ><el-form-item
-              ><el-input v-model="addProductForm.ou_hi"></el-input
+              ><el-input v-model="addProductForm.ou_hi" disabled></el-input
             ></el-form-item>
           </div>
           <div>
             <el-form-item label="体积/材积：">
-              <el-input v-model="addProductForm.bulk_stere"></el-input
+              <el-input v-model="addProductForm.bulk_stere" disabled></el-input
               ><span class="itemX">/</span></el-form-item
             ><el-form-item
-              ><el-input v-model="addProductForm.bulk_feet"></el-input>
+              ><el-input v-model="addProductForm.bulk_feet" disabled></el-input>
             </el-form-item>
           </div>
         </div>
         <div class="formItems formItemSan">
           <div>
             <el-form-item label="样品规格：">
-              <el-input v-model="addProductForm.pr_le"></el-input
+              <el-input v-model="addProductForm.pr_le" disabled></el-input
               ><span class="itemX">X</span> </el-form-item
             ><el-form-item>
-              <el-input v-model="addProductForm.pr_wi"></el-input
+              <el-input v-model="addProductForm.pr_wi" disabled></el-input
               ><span class="itemX">X</span> </el-form-item
             ><el-form-item>
-              <el-input v-model="addProductForm.pr_hi"></el-input>
+              <el-input v-model="addProductForm.pr_hi" disabled></el-input>
             </el-form-item>
           </div>
           <div>
             <el-form-item label="毛重/净重：">
-              <el-input v-model="addProductForm.ne_we"></el-input
+              <el-input v-model="addProductForm.ne_we" disabled></el-input
               ><span class="itemX">/</span></el-form-item
             ><el-form-item
-              ><el-input v-model="addProductForm.gr_we"></el-input
+              ><el-input v-model="addProductForm.gr_we" disabled></el-input
             ></el-form-item>
           </div>
         </div>
          <el-form-item class="productName" label="产品说明：">
            <el-input
+           disabled
             type="textarea"
             v-model="addProductForm.remark"
-            :maxlength="
-              $store.state.globalJson.Json.UserRestrictions[0].itemCode
-            "
           ></el-input>
-          <p class="textareaLength">
-            最多可输入
-            <span>{{
-              $store.state.globalJson.Json.UserRestrictions[0].itemCode
-            }}</span
-            >字，当前输入
-            <span>
-              {{ addProductForm.remark ? addProductForm.remark.length : 0 }} </span>，还可输入
-            <span>{{
-              $store.state.globalJson.Json.UserRestrictions[0].itemCode -
-              (addProductForm.remark && addProductForm.remark.length)
-            }}</span>
-          </p>
          </el-form-item>
       </el-form>
       <center>
-        <el-button type="primary" @click="subAddProduct">确认</el-button>
+        <el-button type="primary" :disabled="addProductForm.isEntry" @click="subAddProduct(false)">上 架</el-button>
         <el-button @click="productDialogOptions.openProductDialog = false"
-          >取消</el-button
+          >取 消</el-button
         >
       </center>
     </el-dialog>
@@ -317,39 +270,29 @@ export default {
         dateTile: null
       },
       productDialogOptions: {
-        productDialogTitle: '新增',
+        productDialogTitle: '产品明细',
         openProductDialog: false
       },
       addProductForm: {
-        categoryName: '',
-        categoryNumber: '',
-        supplierId: this.$store.state.currentComparnyId,
-        supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
-        name: '',
-        number: null,
-        price: null,
-        img: '',
-        productNumber: '',
-        companyNumber: '',
-        ch_pa: null,
-        unit: null,
-        cloud_platform_date: null,
-        ma_nu: null,
+        pr_na: null,
         fa_no: null,
-        pr_le: null,
-        pr_wi: null,
-        pr_hi: null,
+        number: null,
+        cl_na: null,
+        fa_pr: null,
         in_en: null,
         ou_lo: null,
+        ch_pa: null,
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
-        cu_de: '￥',
-        remark: '',
+        bulk_stere: null,
+        bulk_feet: null,
+        pr_le: null,
+        pr_wi: null,
+        pr_hi: null,
         ne_we: null,
         gr_we: null,
-        bulk_feet: '',
-        bulk_stere: null
+        remark: null
       },
       pickerOptions: {
         shortcuts: [
@@ -381,24 +324,14 @@ export default {
             }
           }
         ]
-      },
-      addProductRules: {
-        name: [
-          { required: true, message: '请输入产品名称', trigger: 'blur' },
-          {
-            min: 1,
-            max: 20,
-            message: '长度在 1 到 20 个字符',
-            trigger: 'blur'
-          }
-        ],
-        categoryNumber: [
-          { required: true, message: '请输选择类目', trigger: 'blur' }
-        ]
       }
     }
   },
   methods: {
+    // 禁选
+    checkSelectable (row) {
+      return row.maKeyGuid && !row.isEntry
+    },
     // 搜索级联选择
     handleChange (val) {
       this.$refs.cateRef.panel.activePath = []
@@ -441,16 +374,6 @@ export default {
         }
       }
     },
-    // 获取产品分类列表
-    async getProductCategoryList () {
-      const res = await this.$http.post('/api/ProductCategoryList', {})
-      if (res.data.result.code === 200) {
-        this.traverseCateList(res.data.result.item)
-        this.categoryList = res.data.result.item
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
-    },
     // 修改当前页
     currentChange (page) {
       this.currentPage = page
@@ -491,34 +414,9 @@ export default {
         this.$message.error(res.data.result.item.msg)
       }
     },
-    // 编辑产品
-    async updateBearProduct () {
-      const res = await this.$http.post(
-        '/api/UpdateBearProduct',
-        this.addProductForm
-      )
-      if (res.data.result.code === 200) {
-        this.$message.success('编辑产品成功')
-        this.productDialogOptions.openProductDialog = false
-        this.getProductList()
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
-    },
-    // 新增产品
-    async createProduct () {
-      const res = await this.$http.post('/api/CreateBearProduct', this.addProductForm)
-      if (res.data.result.code === 200) {
-        this.$message.success('新增产品成功')
-        this.productDialogOptions.openProductDialog = false
-        this.getProductList()
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
-    },
     // 删除产品
     async handleDelete (row) {
-      const res = await this.$http.post('/api/DeleteProductMessage', { productNumber: row.productNumber })
+      const res = await this.$http.post('/api/DeleteProductBasic_Off', { id: row.id })
       if (res.data.result.code === 200) {
         this.$message.success('删除产品成功')
         this.getProductList()
@@ -528,62 +426,23 @@ export default {
     },
     // 打开编辑产品
     handleEdit (row) {
-      // for (const key in this.addProductForm) {
-      //   this.addProductForm[key] = row[key]
-      // }
-      // this.cateId = null
-      // this.addProductForm.id = row.id
       this.addProductForm = row
-      this.productDialogOptions.productDialogTitle = '编辑'
       this.productDialogOptions.openProductDialog = true
     },
-    // 打开新增产品列表窗口
-    openAdd () {
-      this.addProductForm = {
-        categoryName: '',
-        categoryNumber: '',
-        supplierId: this.$store.state.currentComparnyId,
-        supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
-        name: '',
-        img: '',
-        price: null,
-        number: null,
-        productNumber: null,
-        companyNumber: null,
-        ch_pa: null,
-        cloud_platform_date: null,
-        unit: null,
-        fa_no: null,
-        ma_nu: null,
-        pr_le: null,
-        pr_wi: null,
-        pr_hi: null,
-        in_en: null,
-        ou_lo: null,
-        ou_le: null,
-        ou_wi: null,
-        ne_we: null,
-        gr_we: null,
-        bulk_feet: '',
-        ou_hi: null,
-        remark: '',
-        cu_de: '￥',
-        bulk_stere: null
+    // 确认上架
+    async subAddProduct (flag) {
+      let productIds = [this.addProductForm.id]
+      if (flag) productIds = this.$refs.multipleTable.selection.map(val => val.id)
+      if (productIds.length === 0) {
+        this.$message.error('请选择产品')
+        return false
       }
-      this.productDialogOptions.productDialogTitle = '新增'
-      this.productDialogOptions.openProductDialog = true
-    },
-    // 确认新增产品
-    subAddProduct () {
-      this.$refs.addProductRulesForm.validate((valid) => {
-        if (valid) {
-          if (this.productDialogOptions.productDialogTitle === '新增') {
-            this.createProduct()
-          } else {
-            this.updateBearProduct()
-          }
-        }
-      })
+      const res = await this.$http.post('/api/UpdateProductBasic_Off', { productIds: productIds })
+      if (res.data.result.code === 200) {
+        this.$message.success('上架成功')
+        this.getProductList()
+        this.productDialogOptions.openProductDialog = false
+      } else this.$message.error(res.data.result.msg)
     },
     // 获取一年的时间
     /* 获取过去时间，并传值给现在时间 */
@@ -625,7 +484,6 @@ export default {
     this.getPassYearFormatDate()
   },
   mounted () {
-    this.getProductCategoryList()
     this.getProductList()
   }
 }
