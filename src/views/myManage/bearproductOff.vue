@@ -9,7 +9,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="关键字查询">
           <el-input
-          clearable
+            clearable
             size="mini"
             v-model="formInline.keyword"
             placeholder="输入关键字"
@@ -20,13 +20,14 @@
         <el-form-item label="状态查询">
           <el-select
               clearable
+              size="mini"
               v-model="formInline.isEntry"
               placeholder="请选择"
-              style="width: 100%"
+              style="width: 90%"
             >
               <el-option
                 v-for="(item, index) in [
-                  { value: null, label: '全部' },
+                  { value: '', label: '全部' },
                   { value: true, label: '已审核' },
                   { value: false, label: '未审核' },
                 ]"
@@ -263,10 +264,8 @@ export default {
       pageSize: 10,
       productList: [],
       formInline: {
-        categoryId: '',
-        // 查询角色表单
+        isEntry: '',
         keyword: '',
-        state: null,
         dateTile: null
       },
       productDialogOptions: {

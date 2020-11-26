@@ -27,6 +27,26 @@
             @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
+        <!-- <el-form-item label="状态查询">
+          <el-select
+              clearable
+              size="mini"
+              v-model="formInline.isEntry"
+              placeholder="请选择"
+              style="width: 90%"
+            >
+              <el-option
+                v-for="(item, index) in [
+                  { value: '', label: '全部' },
+                  { value: true, label: '已审核' },
+                  { value: false, label: '未审核' },
+                ]"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+        </el-form-item> -->
         <el-form-item label="下架时间">
           <el-date-picker
           size="mini"
