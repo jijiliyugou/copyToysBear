@@ -190,10 +190,12 @@ export default {
           const re = await this.$http.post('/api/GetUserRoleMenu', {})
           if (re.data.result.code === 200 && re.data.result.item) {
             this.$store.commit('handlerLogin', true)
-            this.$store.commit(
-              'setRouters',
-              re.data.result.item.modulesList || []
-            )
+            // this.$store.commit(
+            //   'setRouters',
+            //   re.data.result.item.modulesList || []
+            // )
+            const myRouters = JSON.stringify((re.data.result.item.modulesList || []))
+            localStorage.setItem('Routers', myRouters)
             await getMenuFuc()
             const Json = {}
             Json.MessageRestriction = await this.getClientTypeList(
@@ -316,10 +318,12 @@ export default {
               const re = await this.$http.post('/api/GetUserRoleMenu', {})
               if (re.data.result.code === 200 && re.data.result.item) {
                 this.$store.commit('handlerLogin', true)
-                this.$store.commit(
-                  'setRouters',
-                  re.data.result.item.modulesList || []
-                )
+                // this.$store.commit(
+                //   'setRouters',
+                //   re.data.result.item.modulesList || []
+                // )
+                const myRouters = JSON.stringify((re.data.result.item.modulesList || []))
+                localStorage.setItem('Routers', myRouters)
                 await getMenuFuc()
               } else {
                 this.$message.error(re.data.result.msg)
@@ -375,7 +379,10 @@ export default {
     }
   },
   created () {
-    if (this.$route.query.id === 'signOut') this.$store.commit('removeLoginItems')
+    if (this.$route.query.id === 'signOut') {
+      this.$store.commit('removeLoginItems')
+      localStorage.removeItem('Routers')
+    }
   },
   mounted () {
   },

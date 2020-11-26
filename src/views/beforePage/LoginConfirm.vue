@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height:395px;maxWidth:1200px;minWidth:1024px;margin: 0 auto;">
+  <div class="confirmBox">
     <ul>
       <li
         @click.prevent="toMeInfo(item)"
@@ -125,23 +125,30 @@ export default {
 
 <style lang="less" scoped>
 @deep: ~">>>";
+.confirmBox {
+  max-width:1200px;
+  min-width:1024px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
 ul {
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
-  margin-top: 100px;
   flex-wrap: wrap;
   &::after {
     content: "";
-    width: 30%;
+    width: 25%;
     box-sizing: border-box;
     padding: 0px 50px;
     margin: 20px;
   }
   li {
     border: 2px solid #e0f0ff;
-    width: 30%;
+    width: 25%;
     height: 100px;
     box-sizing: border-box;
     box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);

@@ -66,7 +66,21 @@ export default {
     await getMenuFuc()
     this.prohibit()
   },
-  mounted () {}
+  mounted () {
+    const storage = window.localStorage
+    let beginTime = 0 // 开始时间
+    let differTime = 0 // 时间差
+    window.onunload = function () {
+      differTime = new Date().getTime() - beginTime
+      if (differTime <= 5) {
+        storage.clear()
+      }
+    }
+
+    window.onbeforeunload = function () {
+      beginTime = new Date().getTime()
+    }
+  }
 }
 </script>
 

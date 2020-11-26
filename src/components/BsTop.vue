@@ -319,9 +319,11 @@ export default {
     }
   },
   mounted () {
-    this.menuList = this.$store.state.routers.map(val => {
-      val.parent.children = val.children
-      return val.parent
+    this.menuList = JSON.parse(localStorage.getItem('Routers')).map(val => {
+      if (val) {
+        val.parent.children = val.children
+        return val.parent
+      }
     })
   },
   computed: {
