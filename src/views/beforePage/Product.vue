@@ -368,6 +368,7 @@ export default {
         fd.append('file', file)
         try {
           const res = await this.$http.post('/api/File/SearchPicture', fd)
+          this.isProductDetail = false
           if (res.data.result.code === 200) {
             this.cropperCancel()
             this.$store.commit('handlerBeforeSearchImg', res.data.result.object)

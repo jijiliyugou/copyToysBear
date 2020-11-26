@@ -7,6 +7,16 @@
     <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="选择展厅">
+          <el-select size="mini" style="width: 90%" v-model="formInline.hallNumber" clearable placeholder="请选择展厅">
+            <el-option
+              v-for="(item, index) in [{companyName: '全部', companyNumber: ''},...hallList]"
+              :key="index"
+              :label="item.companyName"
+              :value="item.companyNumber">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="关键字查询">
           <el-input
           clearable
@@ -17,20 +27,7 @@
             @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
-        <el-form-item label="类目查询">
-          <el-cascader
-          :show-all-levels="false"
-          filterable
-          size="mini"
-          ref="cateRef"
-          clearable
-          style="width: 90%"
-          v-model="formInline.categoryId"
-          @change="handleChange"
-          :options="[{ name: '全部', id: '' }, ...categoryList]" :props="{label: 'name',value: 'id',children: 'children',checkStrictly: true,emitPath: false}">
-          </el-cascader>
-        </el-form-item>
-        <el-form-item label="时间段搜索">
+        <el-form-item label="下架时间">
           <el-date-picker
           size="mini"
           :clearable='false'
@@ -47,7 +44,6 @@
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" size="mini" @click="search">查询</el-button>
-          <el-button type="primary" size="mini" @click="openAdd">新增产品</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -77,35 +73,50 @@
             </el-image>
           </template>
         </el-table-column> -->
-        <el-table-column prop="hallName" label="展廳"></el-table-column>
-        <el-table-column prop="pr_na" label="产品名称"></el-table-column>
-        <el-table-column prop="cl_na" label="产品类目"></el-table-column>
-        <el-table-column
-          prop="fa_no"
-          label="出厂货号"
-        ></el-table-column>
-        <el-table-column prop="createdOn" label="发布时间" sortable>
-          <template slot-scope="scope">{{
-            scope.row.createdOn.replace(/t/gi, " ")
-          }}</template>
+        <el-table-column prop="hallName" label="展厅名称"></el-table-column>
+        <el-table-column prop="ma_na" label="厂商名称"></el-table-column>
+          <el-table-column prop="ma_ph_1" label="厂商电话" sortable>
+            <template slot-scope="scope">
+              {{ scope.row.ma_ph_1 ? scope.row.ma_ph_1 : scope.row.ma_ph_2 ? scope.row.ma_ph_2 : scope.row.ma_ph_3 }}
+            </template>
+          </el-table-column>
+        <el-table-column prop="linkman" label="联系人">
+          <template slot-scope="scope">
+              {{ scope.row.linkman ? scope.row.linkman : scope.row.linkman1 ? scope.row.linkman1 : scope.row.linkman2 }}
+            </template>
         </el-table-column>
-        <el-table-column prop="remark" label="产品说明"></el-table-column>
-        <el-table-column label="操作" align="center" width="150">
+        <el-table-column prop="isExistCompany" label="审核状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isExistCompany === 1" type="success">已审核</el-tag>
+            <el-tag v-else-if="scope.row.isExistCompany === 2" type="danger">已拒绝</el-tag>
+            <el-tag v-else>未审核</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdOn" label="下架时间" sortable>
+          <template slot-scope="scope">
+            {{ scope.row.createdOn.split("T")[0] }}</template>
+        </el-table-column>
+        <el-table-column prop="verifyRemark" label="审核意见"></el-table-column>
+        <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              style="margin-right: 10px"
               type="primary"
               @click="handleEdit(scope.row)"
-              >入库</el-button
-            >
+              >审核</el-button>
+            <el-button
+              :disabled="scope.row.isExistCompany !== 1"
+              size="mini"
+              style="margin-right: 10px"
+              type="success"
+              @click="handleProduct(scope.row)"
+              >上架产品</el-button>
             <el-popconfirm
-              title="确定要删除这条菜单吗？"
+              title="确定要删除这条信息吗？"
               @onConfirm="handleDelete(scope.row)"
             >
-              <el-button size="mini" slot="reference" type="danger"
-                >删除</el-button
-              >
+            <el-button size="mini" slot="reference" type="danger"
+              >删除</el-button>
             </el-popconfirm>
           </template>
         </el-table-column>
@@ -124,168 +135,59 @@
       </center>
     </div>
     </div>
-    <!-- 新增产品dialog -->
+    <!-- 审核dialog -->
     <el-dialog
-      :title="productDialogOptions.productDialogTitle + '产品'"
+      :title="productDialogOptions.productDialogTitle"
       :visible.sync="productDialogOptions.openProductDialog"
       destroy-on-close
       class="productDialog"
     >
-      <el-form
-        :inline="true"
-        class="addProductDialog"
-        :model="addProductForm"
-        :rules="addProductRules"
-        ref="addProductRulesForm"
+    <el-form
+        ref="addVersionForm"
         label-width="100px"
+        :model="hallFormData"
       >
-          <el-form-item label="产品图片：" prop="img" v-show="productDialogOptions.productDialogTitle === '编辑'">
-            <el-image :src='addProductForm.img' :preview-src-list="[addProductForm.img && addProductForm.img.replace(/_MiddlePic/gi, '_Photo')]"></el-image>
+        <el-form-item label="展厅名称" prop="hallName">
+          <el-input v-model="hallFormData.hallName" disabled></el-input>
         </el-form-item>
-          <el-form-item class="productName" label="产品名称" prop="name">
-          <el-input v-model="addProductForm.name"></el-input>
+        <el-form-item label="厂商名称" prop="ma_na">
+           <el-input v-model="hallFormData.ma_na" disabled></el-input>
         </el-form-item>
-        <!-- <el-form-item class="productName" label="产品图片" prop="img">
-          <el-upload
-              :action="baseAPI + '/api/File/InsertPic'"
-              list-type="picture-card"
-              ref="upload"
-              :auto-upload="false"
-              :on-preview="handlePicProductPreview"
-              :http-request="successUpload"
-              :limit="7"
-              accept=".jpg, .jpeg, .png, .ico, .bmp, , .JPG, .JPEG, .PNG, .ICO, .BMP"
-            >
-              <i class="el-icon-plus"></i>
-            </el-upload>
-            <el-dialog :visible.sync="dialogUpload" destroy-on-close :modal="false">
-              <img width="100%" :src="LogoUrl" alt />
-            </el-dialog>
-        </el-form-item> -->
-        <div class="formItems">
-          <el-form-item label="出厂货号：" prop="fa_no">
-          <el-input v-model="addProductForm.fa_no"></el-input>
+        <el-form-item label="厂商电话" prop="ma_ph_1">
+          <div style="display:flex;justify-content: space-between;">
+            <el-input type="textarea" autosize resize="none" v-model="hallFormData.ma_ph_1" disabled></el-input>
+            <el-input style="margin:0 20px;" type="textarea" autosize resize="none" v-model="hallFormData.ma_ph_2" disabled></el-input>
+            <el-input type="textarea" autosize resize="none" v-model="hallFormData.ma_ph_3" disabled></el-input>
+          </div>
         </el-form-item>
-          <el-form-item label="公司编号：" prop="number" v-show="productDialogOptions.productDialogTitle === '编辑'">
-          <el-input v-model="addProductForm.number" disabled></el-input>
+        <el-form-item label="联系人" prop="linkman">
+          <div style="display:flex;justify-content: space-between;">
+            <el-input type="textarea" autosize resize="none" v-model="hallFormData.linkman" disabled></el-input>
+            <el-input style="margin:0 20px;" type="textarea" autosize resize="none" v-model="hallFormData.linkman1" disabled></el-input>
+            <el-input type="textarea" autosize resize="none" v-model="hallFormData.linkman2" disabled></el-input>
+          </div>
         </el-form-item>
-        </div>
-       <div class="formItems">
-        <el-form-item  label="产品分类：" prop="categoryNumber">
-          <el-cascader
-          clearable
-          filterable
-          ref="addCateRef"
-          :show-all-levels="false"
-          v-model="addProductForm.categoryNumber"
-          @change="changeCate"
-          :options="categoryList" :props="{label: 'name',value: 'id',children: 'children',checkStrictly: true,emitPath: false}">
-          </el-cascader>
+        <el-form-item label="下架时间" prop="createdOn">
+          <el-input type="textarea" autosize resize="none" v-model="hallFormData.createdOn" disabled></el-input>
         </el-form-item>
-        <el-form-item label="单价：" class="productCu_de">
-          <el-input v-model="addProductForm.price">
-            <el-select v-model="addProductForm.cu_de" slot="append" placeholder="请选择">
-            <el-option label="美元" value="$"></el-option>
-            <el-option label="人民币" value="￥"></el-option>
-            <el-option label="欧元" value="€"></el-option>
-            <el-option label="英镑" value="￡"></el-option>
-            <el-option label="新加坡元" value="S$"></el-option>
-            <el-option label="日元" value="J￥"></el-option>
-            <el-option label="阿根廷比索" value="ARS$"></el-option>
-            <el-option label="越南盾" value="₫"></el-option>
-            <el-option label="泰铢" value="৴"></el-option>
-            <el-option label="其他" value="¤"></el-option>
-          </el-select>
-          </el-input>
-          </el-form-item>
-       </div>
-        <div class="formItems">
-          <div class="formItemSan">
-            <el-form-item label="装箱量：">
-              <el-input v-model="addProductForm.in_en"></el-input
-              ><span class="itemX">/</span></el-form-item
-            ><el-form-item
-              ><el-input v-model="addProductForm.ou_lo"></el-input
-            ></el-form-item>
-          </div>
-           <div class="formItems">
-             <el-form-item label="包装：">
-            <el-input v-model="addProductForm.ch_pa"></el-input>
-          </el-form-item>
-          </div>
-        </div>
-        <div class="formItems formItemSan">
-          <div>
-            <el-form-item label="外箱规格：">
-              <el-input v-model="addProductForm.ou_le"></el-input
-              ><span class="itemX">X</span></el-form-item
-            >
-            <el-form-item
-              ><el-input v-model="addProductForm.ou_wi"></el-input
-              ><span class="itemX">X</span> </el-form-item
-            ><el-form-item
-              ><el-input v-model="addProductForm.ou_hi"></el-input
-            ></el-form-item>
-          </div>
-          <div>
-            <el-form-item label="体积/材积：">
-              <el-input v-model="addProductForm.bulk_stere"></el-input
-              ><span class="itemX">/</span></el-form-item
-            ><el-form-item
-              ><el-input v-model="addProductForm.bulk_feet"></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="formItems formItemSan">
-          <div>
-            <el-form-item label="样品规格：">
-              <el-input v-model="addProductForm.pr_le"></el-input
-              ><span class="itemX">X</span> </el-form-item
-            ><el-form-item>
-              <el-input v-model="addProductForm.pr_wi"></el-input
-              ><span class="itemX">X</span> </el-form-item
-            ><el-form-item>
-              <el-input v-model="addProductForm.pr_hi"></el-input>
-            </el-form-item>
-          </div>
-          <div>
-            <el-form-item label="毛重/净重：">
-              <el-input v-model="addProductForm.ne_we"></el-input
-              ><span class="itemX">/</span></el-form-item
-            ><el-form-item
-              ><el-input v-model="addProductForm.gr_we"></el-input
-            ></el-form-item>
-          </div>
-        </div>
-         <el-form-item class="productName" label="产品说明：">
-           <el-input
-            type="textarea"
-            v-model="addProductForm.remark"
-            :maxlength="
-              $store.state.globalJson.Json.UserRestrictions[0].itemCode
-            "
-          ></el-input>
-          <p class="textareaLength">
-            最多可输入
-            <span>{{
-              $store.state.globalJson.Json.UserRestrictions[0].itemCode
-            }}</span
-            >字，当前输入
-            <span>
-              {{ addProductForm.remark ? addProductForm.remark.length : 0 }} </span>，还可输入
-            <span>{{
-              $store.state.globalJson.Json.UserRestrictions[0].itemCode -
-              (addProductForm.remark && addProductForm.remark.length)
-            }}</span>
-          </p>
-         </el-form-item>
+        <el-form-item label="审核意见" prop="verifyRemark">
+          <el-input type="textarea" placeholder="请输入审核意见" :rows="3" resize="none" v-model="hallFormData.verifyRemark"></el-input>
+        </el-form-item>
+        <center>
+          <template>
+            <el-button type="primary" @click="subAddProduct(1)">审核通过</el-button>
+            <el-button type="danger" @click="subAddProduct(2)">拒绝</el-button>
+          </template>
+        </center>
       </el-form>
-      <center>
-        <el-button type="primary" @click="subAddProduct">确认</el-button>
-        <el-button @click="productDialogOptions.openProductDialog = false"
-          >取消</el-button
-        >
-      </center>
+    </el-dialog>
+    <!-- 上架产品dialog -->
+    <el-dialog
+      :title="productDialogOptions.shelfTitle"
+      :visible.sync="productDialogOptions.openShelfDialog"
+      destroy-on-close
+      class="productDialog"
+    >
     </el-dialog>
   </el-main>
     <el-footer style="padding:0;" height="162px">
@@ -301,55 +203,35 @@ export default {
   components: { bsTop, bsFooter },
   data () {
     return {
-      cateId: null,
-      dialogUpload: false,
-      LogoUrl: '',
-      categoryList: [],
+      hallFormData: {
+        hallName: null,
+        ma_na: null,
+        ma_ph_1: null,
+        ma_ph_2: null,
+        ma_ph_3: null,
+        linkman: null,
+        linkman1: null,
+        linkman2: null,
+        createdOn: null,
+        verifyRemark: null
+      },
+      hallList: [],
       currentPage: 1,
       totalCount: 0,
       pageSize: 10,
       productList: [],
       formInline: {
-        categoryId: '',
+        hallNumber: '',
         // 查询角色表单
         keyword: '',
         state: null,
         dateTile: null
       },
       productDialogOptions: {
-        productDialogTitle: '新增',
-        openProductDialog: false
-      },
-      addProductForm: {
-        categoryName: '',
-        categoryNumber: '',
-        supplierId: this.$store.state.currentComparnyId,
-        supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
-        name: '',
-        number: null,
-        price: null,
-        img: '',
-        productNumber: '',
-        companyNumber: '',
-        ch_pa: null,
-        unit: null,
-        cloud_platform_date: null,
-        ma_nu: null,
-        fa_no: null,
-        pr_le: null,
-        pr_wi: null,
-        pr_hi: null,
-        in_en: null,
-        ou_lo: null,
-        ou_le: null,
-        ou_wi: null,
-        ou_hi: null,
-        cu_de: '￥',
-        remark: '',
-        ne_we: null,
-        gr_we: null,
-        bulk_feet: '',
-        bulk_stere: null
+        productDialogTitle: '审核',
+        openProductDialog: false,
+        shelfTitle: '上架产品',
+        openShelfDialog: false
       },
       pickerOptions: {
         shortcuts: [
@@ -381,72 +263,15 @@ export default {
             }
           }
         ]
-      },
-      addProductRules: {
-        name: [
-          { required: true, message: '请输入产品名称', trigger: 'blur' },
-          {
-            min: 1,
-            max: 20,
-            message: '长度在 1 到 20 个字符',
-            trigger: 'blur'
-          }
-        ],
-        categoryNumber: [
-          { required: true, message: '请输选择类目', trigger: 'blur' }
-        ]
       }
     }
   },
   methods: {
-    // 搜索级联选择
-    handleChange (val) {
-      this.$refs.cateRef.panel.activePath = []
-      this.$refs.cateRef.panel.syncActivePath()
-      this.$refs.cateRef.dropDownVisible = false
-    },
-    // 级联选择
-    changeCate (id) {
-      id && (this.addProductForm.categoryName = this.$refs.addCateRef.getCheckedNodes()[0].label)
-      this.$refs.addCateRef.panel.activePath = []
-      this.$refs.addCateRef.panel.syncActivePath()
-      this.$refs.addCateRef.dropDownVisible = false
-    },
-    // 上传产品图片
-    async successUpload () {
-      const fd = new FormData()
-      fd.append('BusinessType', 'Logo')
-      fd.append('file', this.file)
-      if (!this.file) {
-        return {
-          data: {
-            result: {
-              code: 400,
-              message: '请选择图片'
-            }
-          }
-        }
-      }
-      return await this.$http.post('/api/File/InsertPic', fd)
-    },
-    // 递归分类
-    traverseCateList (list) {
-      if (list instanceof Array) {
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].children && list[i].children.length === 0) {
-            delete list[i].children
-          } else {
-            this.traverseCateList(list[i].children)
-          }
-        }
-      }
-    },
-    // 获取产品分类列表
-    async getProductCategoryList () {
-      const res = await this.$http.post('/api/ProductCategoryList', {})
+    // 获取展厅列表
+    async getOrgCompanyList () {
+      const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
       if (res.data.result.code === 200) {
-        this.traverseCateList(res.data.result.item)
-        this.categoryList = res.data.result.item
+        this.hallList = res.data.result.item
       } else {
         this.$message.error(res.data.result.msg)
       }
@@ -454,36 +279,33 @@ export default {
     // 修改当前页
     currentChange (page) {
       this.currentPage = page
-      this.getProductList()
+      this.getManufacturerOffPage()
     },
     // 修改当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
       if (this.currentPage * pageSize > this.totalCount) return false
-      this.getProductList()
+      this.getManufacturerOffPage()
     },
+    // 搜索
     search () {
       this.currentPage = 1
-      this.getProductList()
+      this.getManufacturerOffPage()
     },
-    // 新增产品预览头像
-    handlePicProductPreview (file, fileList) {
-      this.LogoUrl = file.url
-    },
-    // 获取产品列表
-    async getProductList () {
+    // 获取下架厂商列表
+    async getManufacturerOffPage () {
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         keyword: this.formInline.keyword,
-        categoryId: this.formInline.categoryId,
+        hallNumber: this.formInline.hallNumber,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
       for (const key in fd) {
         if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
       }
-      const res = await this.$http.post('/api/ProductBasic_OffPage', fd)
+      const res = await this.$http.post('/api/Manufacturer_OffPage', fd)
       if (res.data.result.code === 200) {
         this.productList = res.data.result.item.items || []
         this.totalCount = res.data.result.item.totalCount
@@ -491,99 +313,38 @@ export default {
         this.$message.error(res.data.result.item.msg)
       }
     },
-    // 编辑产品
-    async updateBearProduct () {
-      const res = await this.$http.post(
-        '/api/UpdateBearProduct',
-        this.addProductForm
-      )
-      if (res.data.result.code === 200) {
-        this.$message.success('编辑产品成功')
-        this.productDialogOptions.openProductDialog = false
-        this.getProductList()
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
-    },
-    // 新增产品
-    async createProduct () {
-      const res = await this.$http.post('/api/CreateBearProduct', this.addProductForm)
-      if (res.data.result.code === 200) {
-        this.$message.success('新增产品成功')
-        this.productDialogOptions.openProductDialog = false
-        this.getProductList()
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
-    },
-    // 删除产品
+    // 删除下架厂商
     async handleDelete (row) {
-      const res = await this.$http.post('/api/DeleteProductMessage', { productNumber: row.productNumber })
+      const res = await this.$http.post('/api/DeleteManufacturer_Off', { productNumber: row.productNumber })
       if (res.data.result.code === 200) {
-        this.$message.success('删除产品成功')
-        this.getProductList()
+        this.$message.success('删除厂商成功')
+        this.getManufacturerOffPage()
       } else {
         this.$message.success(res.data.result.msg)
       }
     },
-    // 打开编辑产品
+    // 打开审核厂商
     handleEdit (row) {
-      // for (const key in this.addProductForm) {
-      //   this.addProductForm[key] = row[key]
-      // }
-      // this.cateId = null
-      // this.addProductForm.id = row.id
-      this.addProductForm = row
-      this.productDialogOptions.productDialogTitle = '编辑'
+      console.log(row)
+      this.hallFormData = row
       this.productDialogOptions.openProductDialog = true
     },
-    // 打开新增产品列表窗口
-    openAdd () {
-      this.addProductForm = {
-        categoryName: '',
-        categoryNumber: '',
-        supplierId: this.$store.state.currentComparnyId,
-        supplierNumber: this.$store.state.userInfo.commparnyList[0].companyNumber,
-        name: '',
-        img: '',
-        price: null,
-        number: null,
-        productNumber: null,
-        companyNumber: null,
-        ch_pa: null,
-        cloud_platform_date: null,
-        unit: null,
-        fa_no: null,
-        ma_nu: null,
-        pr_le: null,
-        pr_wi: null,
-        pr_hi: null,
-        in_en: null,
-        ou_lo: null,
-        ou_le: null,
-        ou_wi: null,
-        ne_we: null,
-        gr_we: null,
-        bulk_feet: '',
-        ou_hi: null,
-        remark: '',
-        cu_de: '￥',
-        bulk_stere: null
+    // 打开商家产品
+    handleProduct (row) {
+      console.log(row)
+    },
+    // 提交审核厂商
+    async subAddProduct (flag) {
+      this.hallFormData.isExistCompany = flag
+      console.log(this.hallFormData)
+      const res = await this.$http.post('/api/UpdateManufacturer_Off', this.hallFormData)
+      if (res.data.result.code === 200) {
+        this.getManufacturerOffPage()
+        this.$message.success('审核成功')
+        this.productDialogOptions.openProductDialog = false
+      } else {
+        this.$message.error(res.data.result.msg)
       }
-      this.productDialogOptions.productDialogTitle = '新增'
-      this.productDialogOptions.openProductDialog = true
-    },
-    // 确认新增产品
-    subAddProduct () {
-      this.$refs.addProductRulesForm.validate((valid) => {
-        if (valid) {
-          if (this.productDialogOptions.productDialogTitle === '新增') {
-            this.createProduct()
-          } else {
-            this.updateBearProduct()
-          }
-        }
-      })
     },
     // 获取一年的时间
     /* 获取过去时间，并传值给现在时间 */
@@ -623,10 +384,10 @@ export default {
   },
   created () {
     this.getPassYearFormatDate()
+    this.getOrgCompanyList()
   },
   mounted () {
-    this.getProductCategoryList()
-    this.getProductList()
+    this.getManufacturerOffPage()
   }
 }
 </script>
