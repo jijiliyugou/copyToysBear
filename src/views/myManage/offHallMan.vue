@@ -21,7 +21,7 @@
           <el-input
           clearable
             size="mini"
-            v-model="formInline.name"
+            v-model="formInline.keyword"
             placeholder="输入关键字"
             style="width: 90%"
             @keyup.enter.native="search"
@@ -31,7 +31,7 @@
           <el-select
               clearable
               size="mini"
-              v-model="formInline.isEntry"
+              v-model="formInline.isExistCompany"
               placeholder="请选择"
               style="width: 90%"
             >
@@ -74,7 +74,7 @@
         <el-table-column prop="ma_na" label="厂商名称"></el-table-column>
           <el-table-column prop="ma_ph_1" label="厂商电话" sortable>
             <template slot-scope="scope">
-              {{ scope.row.ma_ph_1 ? scope.row.ma_ph_1 : scope.row.ma_ph_2 ? scope.row.ma_ph_2 : scope.row.ma_ph_3 }}
+              {{ scope.row.handset ? scope.row.handset : scope.row.handset1 ? scope.row.handset1 : scope.row.handset2 }}
             </template>
           </el-table-column>
         <el-table-column prop="linkman" label="联系人">
@@ -91,7 +91,7 @@
         </el-table-column>
         <el-table-column prop="createdOn" label="下架时间" sortable>
           <template slot-scope="scope">
-            {{ scope.row.createdOn.split("T")[0] }}</template>
+            {{ scope.row.off_da && scope.row.off_da.split("T")[0] }}</template>
         </el-table-column>
         <el-table-column prop="verifyRemark" label="审核意见"></el-table-column>
         <el-table-column label="操作" align="center" width="250">
@@ -150,11 +150,11 @@
         <el-form-item label="厂商名称" prop="ma_na">
            <el-input v-model="hallFormData.ma_na" disabled></el-input>
         </el-form-item>
-        <el-form-item label="厂商电话" prop="ma_ph_1">
+        <el-form-item label="厂商电话" prop="handset">
           <div style="display:flex;justify-content: space-between;">
-            <el-input type="textarea" autosize resize="none" v-model="hallFormData.ma_ph_1" disabled></el-input>
-            <el-input style="margin:0 20px;" type="textarea" autosize resize="none" v-model="hallFormData.ma_ph_2" disabled></el-input>
-            <el-input type="textarea" autosize resize="none" v-model="hallFormData.ma_ph_3" disabled></el-input>
+            <el-input type="textarea" autosize resize="none" v-model="hallFormData.handset" disabled></el-input>
+            <el-input style="margin:0 20px;" type="textarea" autosize resize="none" v-model="hallFormData.handset1" disabled></el-input>
+            <el-input type="textarea" autosize resize="none" v-model="hallFormData.handset2" disabled></el-input>
           </div>
         </el-form-item>
         <el-form-item label="联系人" prop="linkman">
@@ -167,8 +167,21 @@
         <el-form-item label="下架时间" prop="createdOn">
           <el-input type="textarea" autosize resize="none" v-model="hallFormData.createdOn" disabled></el-input>
         </el-form-item>
-        <el-form-item label="审核意见" prop="verifyRemark">
-          <el-input type="textarea" placeholder="请输入审核意见" :rows="3" resize="none" v-model="hallFormData.verifyRemark"></el-input>
+        <el-form-item label="拒绝原因" prop="verifyRemark">
+          <!-- hallFormData.verifyRemark -->
+          <el-select
+              clearable
+              v-model="hallFormData.verifyRemark"
+              placeholder="请选择拒绝原因"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item, index) in offAuditTypeList"
+                :key="index"
+                :label="item.itemText"
+                :value="item.itemCode"
+              ></el-option>
+            </el-select>
         </el-form-item>
         <center>
           <template>
@@ -393,6 +406,7 @@ export default {
   components: { bsTop, bsFooter },
   data () {
     return {
+      offAuditTypeList: [],
       addProductForm: {
         pr_na: null,
         fa_no: null,
@@ -485,6 +499,16 @@ export default {
     }
   },
   methods: {
+    // 获取拒绝原因
+    async getClientTypeList (type) {
+      const res = await this.$http.post('/api/ServiceConfigurationList', {
+        basisParameters: 'offAuditType'
+      })
+      if (res.data.result.code === 200) {
+        this.offAuditTypeList = res.data.result.item
+      } else this.$message.error(res.data.result.msg)
+    },
+    // 删除产品
     async handleShelfDelete (row) {
       const res = await this.$http.post('/api/DeleteProductBasic_Off', { id: row.id })
       if (res.data.result.code === 200) {
@@ -582,6 +606,7 @@ export default {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         keyword: this.formInline.keyword,
+        isExistCompany: this.formInline.isExistCompany,
         hallNumber: this.formInline.hallNumber,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
@@ -670,6 +695,7 @@ export default {
   created () {
     this.getPassYearFormatDate()
     this.getOrgCompanyList()
+    this.getClientTypeList()
   },
   mounted () {
     this.getManufacturerOffPage()

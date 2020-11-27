@@ -7,7 +7,8 @@
     <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="关键字查询">
+        <div>
+          <el-form-item label="关键字查询">
           <el-input
             clearable
             size="mini"
@@ -16,6 +17,16 @@
             style="width: 90%"
             @keyup.enter.native="search"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="选择展厅">
+          <el-select size="mini" style="width: 90%" v-model="formInline.hallNumber" clearable placeholder="请选择展厅">
+            <el-option
+              v-for="(item, index) in [{companyName: '全部', companyNumber: ''},...hallList]"
+              :key="index"
+              :label="item.companyName"
+              :value="item.companyNumber">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态查询">
           <el-select
@@ -28,8 +39,8 @@
               <el-option
                 v-for="(item, index) in [
                   { value: '', label: '全部' },
-                  { value: true, label: '已审核' },
-                  { value: false, label: '未审核' },
+                  { value: true, label: '已上架' },
+                  { value: false, label: '未上架' },
                 ]"
                 :key="index"
                 :label="item.label"
@@ -52,6 +63,7 @@
             align="right"
           ></el-date-picker>
         </el-form-item>
+        </div>
         <el-form-item class="btnList">
           <el-button type="primary" size="mini" @click="search">查询</el-button>
           <el-button type="primary" size="mini" @click="subAddProduct(true)">上架</el-button>
@@ -60,34 +72,10 @@
     </div>
     <div class="tableContent">
       <el-table :data="productList" ref="multipleTable" style="width: 100%" row-key="id">
-        <!-- <el-table-column class="productImg" label="产品图片" prop="img">
-          <template slot-scope="scope">
-            <el-image class="img" :src="scope.row.img" fit="cover" :preview-src-list="[scope.row.img && scope.row.img.replace(/_MiddlePic/gi, '_Photo')]">
-              <div
-                slot="placeholder"
-                class="image-slot"
-                style="width: 50px; height: 50px; margin: 0 auto"
-              >
-                <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
-              </div>
-              <div
-                slot="error"
-                class="image-slot"
-                style="width: 50px; height: 50px; margin: 0 auto"
-              >
-                <img
-                  class="errorImg"
-                  src="~@/assets/images/imgError.jpg"
-                  alt
-                />
-              </div>
-            </el-image>
-          </template>
-        </el-table-column> -->
         <el-table-column type="selection" align="center" :selectable="checkSelectable"></el-table-column>
         <el-table-column prop="hallName" label="展厅名称"></el-table-column>
         <el-table-column prop="pr_na" label="产品名称"></el-table-column>
-        <!-- <el-table-column prop="cl_na" label="产品类目"></el-table-column> -->
+        <el-table-column prop="co_nu" label="产品编号"></el-table-column>
         <el-table-column prop="fa_no" label="出厂货号"></el-table-column>
         <el-table-column prop="isEntry" label="上架状态">
           <template slot-scope="scope">
@@ -255,6 +243,7 @@ export default {
   components: { bsTop, bsFooter },
   data () {
     return {
+      hallList: [],
       cateId: null,
       dialogUpload: false,
       LogoUrl: '',
@@ -264,6 +253,7 @@ export default {
       pageSize: 10,
       productList: [],
       formInline: {
+        hallNumber: null,
         isEntry: '',
         keyword: '',
         dateTile: null
@@ -327,6 +317,15 @@ export default {
     }
   },
   methods: {
+    // 获取展厅列表
+    async getOrgCompanyList () {
+      const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
+      if (res.data.result.code === 200) {
+        this.hallList = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 禁选
     checkSelectable (row) {
       return row.maKeyGuid && !row.isEntry
@@ -398,7 +397,8 @@ export default {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
         keyword: this.formInline.keyword,
-        categoryId: this.formInline.categoryId,
+        hallNumber: this.formInline.hallNumber,
+        isEntry: this.formInline.isEntry,
         StartTime: this.formInline.dateTile && this.formInline.dateTile[0],
         EndTime: this.formInline.dateTile && this.formInline.dateTile[1]
       }
@@ -481,6 +481,7 @@ export default {
   },
   created () {
     this.getPassYearFormatDate()
+    this.getOrgCompanyList()
   },
   mounted () {
     this.getProductList()
@@ -491,8 +492,30 @@ export default {
 @deep: ~">>>";
 .searchBox {
   padding-top: 50px;
-  .btnList {
-    float: right;
+  .demo-form-inline{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .el-form-item{
+    @{deep} .el-form-item__content{
+      width: 130px;
+    }
+    &:last-of-type{
+      @{deep} .el-form-item__content{
+        width: 70px;
+      }
+    }
+    &.btnList {
+      float: right;
+      width: 130px;
+      @{deep} .el-form-item__content{
+        display: flex;
+      }
+    }
+  }
+  @{deep} .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+    width: 250px;
   }
 }
 .addProductDialog {

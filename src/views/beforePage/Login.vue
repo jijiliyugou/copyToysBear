@@ -4,7 +4,6 @@
         <el-tabs v-model="activeName" class="loginFormLaout">
           <el-tab-pane label="扫码登录" name="erweima">
             <div class="qrcode">
-              <!-- colorDark="#018e37" -->
               <vue-qr
                 :text="options.url"
                 :logoSrc="options.icon + '?cache'"
@@ -195,7 +194,6 @@ export default {
               'setRouters',
               re.data.result.item.modulesList || []
             )
-            const myRouters = JSON.stringify((re.data.result.item.modulesList || []))
             await getMenuFuc()
             const Json = {}
             Json.MessageRestriction = await this.getClientTypeList(
