@@ -136,6 +136,7 @@
     <el-dialog
       :title="productDialogOptions.productDialogTitle"
       :visible.sync="productDialogOptions.openProductDialog"
+      v-if="productDialogOptions.openProductDialog"
       destroy-on-close
       class="productDialog"
     >
@@ -167,26 +168,30 @@
         <el-form-item label="下架时间" prop="createdOn">
           <el-input type="textarea" autosize resize="none" v-model="hallFormData.createdOn" disabled></el-input>
         </el-form-item>
-        <el-form-item label="拒绝原因" prop="verifyRemark">
-          <!-- hallFormData.verifyRemark -->
-          <el-select
-              clearable
-              v-model="hallFormData.verifyRemark"
-              placeholder="请选择拒绝原因"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="(item, index) in offAuditTypeList"
-                :key="index"
-                :label="item.itemText"
-                :value="item.itemCode"
-              ></el-option>
-            </el-select>
-        </el-form-item>
         <center>
           <template>
             <el-button type="primary" @click="subAddProduct(1)">审核通过</el-button>
-            <el-button type="danger" @click="subAddProduct(2)">拒绝</el-button>
+            <el-popover
+            style="marginLeft:20px;"
+              placement="right"
+              width="150"
+              trigger="click">
+                <el-select
+                clearable
+                @change="changeSelect"
+                v-model="hallFormData.verifyRemark"
+                placeholder="请选择拒绝原因"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="(item, index) in offAuditTypeList"
+                  :key="index"
+                  :label="item.itemText"
+                  :value="item.itemCode"
+                ></el-option>
+              </el-select>
+              <el-button slot="reference" style="width:98px;" type="danger">拒绝</el-button>
+            </el-popover>
           </template>
         </center>
       </el-form>
@@ -499,6 +504,10 @@ export default {
     }
   },
   methods: {
+    // 选择拒绝原因
+    changeSelect (val) {
+      if (val) this.subAddProduct(2)
+    },
     // 获取拒绝原因
     async getClientTypeList (type) {
       const res = await this.$http.post('/api/ServiceConfigurationList', {
