@@ -27,7 +27,7 @@
             @keyup.enter.native="search"
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="状态查询">
+        <el-form-item label="状态查询">
           <el-select
               clearable
               size="mini"
@@ -38,15 +38,16 @@
               <el-option
                 v-for="(item, index) in [
                   { value: '', label: '全部' },
-                  { value: true, label: '已审核' },
-                  { value: false, label: '未审核' },
+                  { value: 0, label: '未审核' },
+                  { value: 1, label: '已审核' },
+                  { value: 2, label: '已拒绝' },
                 ]"
                 :key="index"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="下架时间">
           <el-date-picker
           size="mini"
@@ -69,30 +70,6 @@
     </div>
     <div class="tableContent">
       <el-table :data="productList" style="width: 100%">
-        <!-- <el-table-column class="productImg" label="产品图片" prop="img">
-          <template slot-scope="scope">
-            <el-image class="img" :src="scope.row.img" fit="cover" :preview-src-list="[scope.row.img && scope.row.img.replace(/_MiddlePic/gi, '_Photo')]">
-              <div
-                slot="placeholder"
-                class="image-slot"
-                style="width: 50px; height: 50px; margin: 0 auto"
-              >
-                <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
-              </div>
-              <div
-                slot="error"
-                class="image-slot"
-                style="width: 50px; height: 50px; margin: 0 auto"
-              >
-                <img
-                  class="errorImg"
-                  src="~@/assets/images/imgError.jpg"
-                  alt
-                />
-              </div>
-            </el-image>
-          </template>
-        </el-table-column> -->
         <el-table-column prop="hallName" label="展厅名称"></el-table-column>
         <el-table-column prop="ma_na" label="厂商名称"></el-table-column>
           <el-table-column prop="ma_ph_1" label="厂商电话" sortable>
@@ -206,8 +183,201 @@
       :title="productDialogOptions.shelfTitle"
       :visible.sync="productDialogOptions.openShelfDialog"
       destroy-on-close
+      width="70%"
+      top="60px"
+      class="productDialog">
+      <div v-loading="childrenLoading" element-loading-spinner element-loading-background="rgba(200, 200, 200, 0.5)">
+        <el-table :data="currentHall" style="width: 100%">
+        <el-table-column prop="hallName" label="展厅名称"></el-table-column>
+        <el-table-column prop="ma_na" label="厂商名称"></el-table-column>
+          <el-table-column prop="ma_ph_1" label="厂商电话" sortable>
+            <template slot-scope="scope">
+              {{ scope.row.ma_ph_1 ? scope.row.ma_ph_1 : scope.row.ma_ph_2 ? scope.row.ma_ph_2 : scope.row.ma_ph_3 }}
+            </template>
+          </el-table-column>
+        <el-table-column prop="linkman" label="联系人">
+          <template slot-scope="scope">
+              {{ scope.row.linkman ? scope.row.linkman : scope.row.linkman1 ? scope.row.linkman1 : scope.row.linkman2 }}
+            </template>
+        </el-table-column>
+        <el-table-column prop="isExistCompany" label="审核状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isExistCompany === 1" type="success">已审核</el-tag>
+            <el-tag v-else-if="scope.row.isExistCompany === 2" type="danger">已拒绝</el-tag>
+            <el-tag v-else>未审核</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdOn" label="下架时间" sortable>
+          <template slot-scope="scope">
+            {{ scope.row.createdOn.split("T")[0] }}</template>
+        </el-table-column>
+        <el-table-column prop="verifyRemark" label="审核意见"></el-table-column>
+      </el-table>
+      <el-card class="box-card">
+        <div slot="header" style="display:flex;alignItems:center;justifyContent: space-between;" class="clearfix">
+          <span>产品列表</span>
+          <el-button style="float: right;" @click="theShelf(true)" type="primary">上架</el-button>
+        </div>
+        <!-- 下架产品 -->
+        <el-table :data="childrenProductList" ref="multipleTable" style="width: 100%" row-key="id">
+          <el-table-column type="selection" align="center" :selectable="checkSelectable"></el-table-column>
+          <el-table-column prop="hallName" label="展厅名称"></el-table-column>
+          <el-table-column prop="pr_na" label="产品名称"></el-table-column>
+          <el-table-column prop="fa_no" label="出厂货号"></el-table-column>
+          <el-table-column prop="ma_nu" label="厂商编号"></el-table-column>
+          <el-table-column prop="isEntry" label="上架状态">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.isEntry">已上架</el-tag>
+              <el-tag type="danger" v-else>未上架</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="off_da" label="下架时间" sortable>
+            <template slot-scope="scope">{{
+              scope.row.off_da && scope.row.off_da.split("T")[0]
+            }}</template>
+          </el-table-column>
+          <el-table-column prop="remark" label="产品备注"></el-table-column>
+          <el-table-column label="操作" align="center" width="150">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                style="margin-right: 10px"
+                type="primary"
+                @click="handleShelfEdit(scope.row)"
+                >明细</el-button
+              >
+              <el-popconfirm
+                title="确定要删除这条菜单吗？"
+                @onConfirm="handleShelfDelete(scope.row)"
+              >
+                <el-button size="mini" slot="reference" type="danger"
+                  >删除</el-button
+                >
+              </el-popconfirm>
+            </template>
+          </el-table-column>
+        </el-table>
+        <center style="margin: 20px 0">
+          <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
+            background
+            :page-sizes="[5, 10, 20, 30, 50]"
+            :total="totalCountProduct"
+            :page-size="pageSizeProduct"
+            :current-page.sync="currentPageProduct"
+            @current-change="currentChangeProduct"
+            @size-change="handleSizeChangeProduct"
+          ></el-pagination>
+        </center>
+      </el-card>
+      <!-- 上架产品dialog -->
+    <el-dialog
+      title="产品明细"
+      :visible.sync="productDialogOptions.openShelfProductDialog"
+      destroy-on-close
+      append-to-body
       class="productDialog"
     >
+      <el-form
+        :inline="true"
+        class="addProductDialog"
+        :model="addProductForm"
+        ref="addProductRulesForm"
+        label-width="100px"
+      >
+          <el-form-item class="productName" label="产品名称：" prop="pr_na">
+          <el-input v-model="addProductForm.pr_na" disabled></el-input>
+        </el-form-item>
+        <div class="formItems">
+          <el-form-item label="出厂货号：" prop="fa_no">
+          <el-input v-model="addProductForm.fa_no" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="公司编号：" prop="number">
+          <el-input v-model="addProductForm.number" disabled></el-input>
+        </el-form-item>
+        </div>
+       <div class="formItems">
+        <el-form-item  label="产品分类：" prop="cl_nu">
+          <el-input v-model="addProductForm.cl_na" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="单价：">
+          <el-input v-model="addProductForm.fa_pr" disabled></el-input>
+        </el-form-item>
+       </div>
+        <div class="formItems">
+          <div class="formItemSan">
+            <el-form-item label="装箱量：">
+              <el-input v-model="addProductForm.in_en" disabled></el-input
+              ><span class="itemX">/</span></el-form-item
+            ><el-form-item
+              ><el-input v-model="addProductForm.ou_lo" disabled></el-input
+            ></el-form-item>
+          </div>
+           <div class="formItems">
+             <el-form-item label="包装：">
+            <el-input v-model="addProductForm.ch_pa" disabled></el-input>
+          </el-form-item>
+          </div>
+        </div>
+        <div class="formItems formItemSan">
+          <div>
+            <el-form-item label="外箱规格：">
+              <el-input v-model="addProductForm.ou_le" disabled></el-input
+              ><span class="itemX">X</span></el-form-item
+            >
+            <el-form-item
+              ><el-input v-model="addProductForm.ou_wi" disabled></el-input
+              ><span class="itemX">X</span> </el-form-item
+            ><el-form-item
+              ><el-input v-model="addProductForm.ou_hi" disabled></el-input
+            ></el-form-item>
+          </div>
+          <div>
+            <el-form-item label="体积/材积：">
+              <el-input v-model="addProductForm.bulk_stere" disabled></el-input
+              ><span class="itemX">/</span></el-form-item
+            ><el-form-item
+              ><el-input v-model="addProductForm.bulk_feet" disabled></el-input>
+            </el-form-item>
+          </div>
+        </div>
+        <div class="formItems formItemSan">
+          <div>
+            <el-form-item label="样品规格：">
+              <el-input v-model="addProductForm.pr_le" disabled></el-input
+              ><span class="itemX">X</span> </el-form-item
+            ><el-form-item>
+              <el-input v-model="addProductForm.pr_wi" disabled></el-input
+              ><span class="itemX">X</span> </el-form-item
+            ><el-form-item>
+              <el-input v-model="addProductForm.pr_hi" disabled></el-input>
+            </el-form-item>
+          </div>
+          <div>
+            <el-form-item label="毛重/净重：">
+              <el-input v-model="addProductForm.ne_we" disabled></el-input
+              ><span class="itemX">/</span></el-form-item
+            ><el-form-item
+              ><el-input v-model="addProductForm.gr_we" disabled></el-input
+            ></el-form-item>
+          </div>
+        </div>
+         <el-form-item class="productName" label="产品说明：">
+           <el-input
+           disabled
+            type="textarea"
+            v-model="addProductForm.remark"
+          ></el-input>
+         </el-form-item>
+      </el-form>
+      <center>
+        <el-button type="primary" :disabled="addProductForm.isEntry" @click="theShelf(false)">上 架</el-button>
+        <el-button @click="productDialogOptions.openShelfProductDialog = false"
+          >取 消</el-button
+        >
+      </center>
+    </el-dialog>
+      </div>
     </el-dialog>
   </el-main>
     <el-footer style="padding:0;" height="162px">
@@ -223,6 +393,32 @@ export default {
   components: { bsTop, bsFooter },
   data () {
     return {
+      addProductForm: {
+        pr_na: null,
+        fa_no: null,
+        number: null,
+        cl_na: null,
+        fa_pr: null,
+        in_en: null,
+        ou_lo: null,
+        ch_pa: null,
+        ou_le: null,
+        ou_wi: null,
+        ou_hi: null,
+        bulk_stere: null,
+        bulk_feet: null,
+        pr_le: null,
+        pr_wi: null,
+        pr_hi: null,
+        ne_we: null,
+        gr_we: null,
+        remark: null
+      },
+      childrenLoading: false,
+      childrenProductList: [],
+      totalCountProduct: 0,
+      currentPageProduct: 1,
+      pageSizeProduct: 5,
       hallFormData: {
         hallName: null,
         ma_na: null,
@@ -236,6 +432,7 @@ export default {
         verifyRemark: null
       },
       hallList: [],
+      currentHall: null,
       currentPage: 1,
       totalCount: 0,
       pageSize: 10,
@@ -251,7 +448,8 @@ export default {
         productDialogTitle: '审核',
         openProductDialog: false,
         shelfTitle: '上架产品',
-        openShelfDialog: false
+        openShelfDialog: false,
+        openShelfProductDialog: false
       },
       pickerOptions: {
         shortcuts: [
@@ -287,6 +485,72 @@ export default {
     }
   },
   methods: {
+    async handleShelfDelete (row) {
+      const res = await this.$http.post('/api/DeleteProductBasic_Off', { id: row.id })
+      if (res.data.result.code === 200) {
+        this.$message.success('删除产品成功')
+        this.getChildrenProductList()
+      } else {
+        this.$message.success(res.data.result.msg)
+      }
+    },
+    // 确认上架
+    async theShelf (flag) {
+      let productIds = [this.addProductForm.id]
+      if (flag) productIds = this.$refs.multipleTable.selection.map(val => val.id)
+      if (productIds.length === 0) {
+        this.$message.error('请选择产品')
+        return false
+      }
+      const res = await this.$http.post('/api/UpdateProductBasic_Off', { productIds: productIds })
+      if (res.data.result.code === 200) {
+        this.$message.success('上架成功')
+        this.getChildrenProductList()
+        this.productDialogOptions.openShelfProductDialog = false
+      } else this.$message.error(res.data.result.msg)
+    },
+    // 打开产品明细
+    handleShelfEdit (row) {
+      this.addProductForm = row
+      this.productDialogOptions.openShelfProductDialog = true
+    },
+    // 下架产品分页
+    currentChangeProduct (page) {
+      this.currentPageProduct = page
+      this.getChildrenProductList()
+    },
+    // 禁选
+    checkSelectable (row) {
+      return row.maKeyGuid && !row.isEntry
+    },
+    // 修改当前 页容量
+    handleSizeChangeProduct (pageSize) {
+      this.pageSizeProduct = pageSize
+      if (this.currentPageProduct * pageSize > this.totalCountProduct) return false
+      this.getChildrenProductList()
+    },
+    // 获取产品列表
+    async getChildrenProductList () {
+      this.childrenLoading = true
+      const fd = {
+        skipCount: this.currentPageProduct,
+        maxResultCount: this.pageSizeProduct,
+        hallNumber: this.currentHall[0].hallNumber,
+        ma_nu: this.currentHall[0].ma_nu
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
+      }
+      const res = await this.$http.post('/api/ProductBasic_OffPage', fd)
+      if (res.data.result.code === 200) {
+        this.childrenProductList = res.data.result.item.items || []
+        this.totalCountProduct = res.data.result.item.totalCount
+      } else {
+        this.$message.error(res.data.result.item.msg)
+      }
+      this.childrenLoading = false
+      this.productDialogOptions.openShelfDialog = true
+    },
     // 获取展厅列表
     async getOrgCompanyList () {
       const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
@@ -349,9 +613,10 @@ export default {
       this.hallFormData = row
       this.productDialogOptions.openProductDialog = true
     },
-    // 打开商家产品
+    // 打开上架产品
     handleProduct (row) {
-      console.log(row)
+      this.currentHall = [row]
+      this.getChildrenProductList()
     },
     // 提交审核厂商
     async subAddProduct (flag) {
@@ -417,6 +682,16 @@ export default {
   padding-top: 50px;
   .btnList {
     float: right;
+  }
+  .el-form-item{
+    @{deep} .el-form-item__content{
+      width: 130px;
+    }
+    &:last-of-type{
+      @{deep} .el-form-item__content{
+      width: 70px;
+    }
+    }
   }
 }
 .addProductDialog {

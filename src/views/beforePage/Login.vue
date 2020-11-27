@@ -4,11 +4,12 @@
         <el-tabs v-model="activeName" class="loginFormLaout">
           <el-tab-pane label="扫码登录" name="erweima">
             <div class="qrcode">
+              <!-- colorDark="#018e37" -->
               <vue-qr
                 :text="options.url"
                 :logoSrc="options.icon + '?cache'"
-                colorDark="#018e37"
                 colorLight="#fff"
+                colorDark="#018e37"
                 :margin="0"
                 :size="260"
               ></vue-qr>
@@ -226,6 +227,7 @@ export default {
     async getQrCodeUrl () {
       const res = await this.$http.post('/api/UserRandomCode', {})
       if (res.data.result.code === 200) {
+        // this.options.url = 'https://www.toysbear.com/app_download.html'
         this.options.url = res.data.result.item.qrCode
         this.randomCode = res.data.result.item.randomCode
         // 开启长连接
