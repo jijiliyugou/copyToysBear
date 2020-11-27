@@ -146,7 +146,7 @@
       <div class="left">
         <div class="box-card">
           <div class="clearfix">
-            <span>公司明细</span>
+            <span>厂商明细</span>
             <div>
             <template>
             <el-button type="primary" @click="subAddProduct(1)">审核通过</el-button>
