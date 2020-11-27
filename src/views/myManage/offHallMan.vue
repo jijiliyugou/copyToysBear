@@ -152,7 +152,7 @@
             <el-button type="primary" @click="subAddProduct(1)">审核通过</el-button>
             <el-popover
             style="marginLeft:20px;"
-              placement="right"
+              placement="bottom"
               width="150"
               trigger="click">
                 <el-select
