@@ -190,7 +190,7 @@
                   :value="item.itemCode"
                 ></el-option>
               </el-select>
-              <el-button slot="reference" style="width:98px;" type="danger">拒绝</el-button>
+              <el-button slot="reference" style="width:98px;" type="danger" :loading="offAuditTypeLoading">拒绝</el-button>
             </el-popover>
           </template>
         </center>
@@ -412,6 +412,7 @@ export default {
   data () {
     return {
       offAuditTypeList: [],
+      offAuditTypeLoading: false,
       addProductForm: {
         pr_na: null,
         fa_no: null,
@@ -505,8 +506,12 @@ export default {
   },
   methods: {
     // 选择拒绝原因
-    changeSelect (val) {
-      if (val) this.subAddProduct(2)
+    async changeSelect (val) {
+      if (val) {
+        this.offAuditTypeLoading = true
+        await this.subAddProduct(2)
+        this.offAuditTypeLoading = false
+      }
     },
     // 获取拒绝原因
     async getClientTypeList (type) {
@@ -643,7 +648,6 @@ export default {
     },
     // 打开审核厂商
     handleEdit (row) {
-      console.log(row)
       this.hallFormData = row
       this.productDialogOptions.openProductDialog = true
     },
