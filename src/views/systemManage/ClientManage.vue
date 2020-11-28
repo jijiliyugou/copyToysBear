@@ -138,6 +138,7 @@
         <el-table-column prop="companyName" label="公司名称" ></el-table-column>
         <!-- <el-table-column prop="e_mail" label="邮箱"></el-table-column> -->
         <el-table-column prop="phoneNumber" label="联系电话"></el-table-column>
+        <el-table-column prop="integralTotal" label="积分" align="center"></el-table-column>
         <el-table-column prop="companyType" label="公司类型" align="center">
           <template slot-scope="scope">
             <el-link :underline="false" v-if="scope.row.companyType === 'Sales'" type="success">销售公司</el-link>
@@ -565,10 +566,12 @@
     <el-dialog
       :title="authDialogConfig.title"
       :visible.sync="authDialogConfig.show"
-      destroy-on-close
-      width="30%"
+      v-if="authDialogConfig.show"
+      width="40%"
     >
-      <el-form label-width="100px" :model="authForm">
+      <el-tabs type="border-card" v-model="checkAuth">
+      <el-tab-pane label="权限分配" name="authDistribution">
+        <el-form label-width="100px" :model="authForm">
         <el-form-item label="图文公告数" prop="generalNotice">
           <el-input
             type="number"
@@ -629,6 +632,24 @@
           >
         </el-form-item>
       </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="积分分配" name="integralDistribution">
+        <el-form label-width="100px" :model="authForm">
+          <el-form-item label="积分数：" prop="distribution">
+            <el-input
+              type="number"
+              v-model.number="distribution"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="subDistribution">提 交</el-button>
+            <el-button type="danger" @click="authDialogConfig.show = false"
+              >取 消</el-button
+            >
+          </el-form-item>
+      </el-form>
+      </el-tab-pane>
+    </el-tabs>
     </el-dialog>
     <!-- 员工管理dialog -->
     <el-dialog
@@ -983,6 +1004,9 @@ export default {
   components: { bsTop, bsFooter, BMapComponent },
   data () {
     return {
+      distribution: null,
+      checkAuth: 'authDistribution',
+      currentCompany: null,
       btnTypes: ['primary', 'success', 'danger', 'warning', 'info'],
       isShowLoading: false,
       isShowAttrsList: false,
@@ -1208,6 +1232,17 @@ export default {
     }
   },
   methods: {
+    // 提交积分
+    async subDistribution () {
+      const res = await this.$http.post('/api/UpdateCompanyPoint', { id: this.currentCompany.id, integralTotal: this.distribution })
+      if (res.data.result.code === 200) {
+        this.$message.success('分配成功')
+        this.getClientList()
+        this.authDialogConfig.show = false
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     selectMapAttrs (e, attr) {
       switch (e.type) {
         case 'click':
@@ -1235,6 +1270,8 @@ export default {
       if (res.data.result.code === 200) {
         this.$message.success('删除成功')
         this.getEmployeeList(this.employeeMan.id)
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     // 打开编辑员工
@@ -1685,6 +1722,9 @@ export default {
     },
     // 打开授权面板
     async openAuth (row) {
+      this.currentCompany = row
+      this.distribution = row.integralTotal
+      this.checkAuth = 'authDistribution'
       const res = await this.getCompanyConfigureById(row.id)
       console.log(res)
       try {
