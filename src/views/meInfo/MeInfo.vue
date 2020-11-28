@@ -3109,7 +3109,6 @@ export default {
       // 获取聊天记录
       // let res = await this.getInstantMessageByNumber();
       // if (res.data.result.code === 200) {
-      //   console.log(res.data.result.item.items);
       //   this.signalROptions.showmsg = res.data.result.item.items;
       //   this.chatHistoryTotal = res.data.result.item.totalCount;
       // } else {
@@ -3439,7 +3438,7 @@ export default {
           fromUserID: item.fromUserId
         })
       } catch (error) {
-        console.log(error.response)
+        console.log(error)
       }
     },
     // 删除消息
@@ -3669,7 +3668,6 @@ export default {
       const _that = this
       this.rec.stop(
         function (blob, duration) {
-          console.log('blob', blob)
           // 录音结束时拿到了blob文件对象，可以用FileReader读取出内容，或者用FormData上传
           const api = TestApi
           /** *方式二：使用FormData用multipart/form-data表单上传文件***/
@@ -4658,10 +4656,6 @@ export default {
             res.data.result.item.items
           )
           this.ERPOrderOptions.total = res.data.result.item.totalCount
-          console.log(
-            this.ERPOrderOptions.total,
-            this.ERPOrderOptions.ERPOrderList
-          )
         }
       } else {
         this.orderCurrentPage = 1

@@ -208,7 +208,6 @@ export default {
     },
     // 文字搜索产品
     async getProductList () {
-      console.log(this.beforeSearch)
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,

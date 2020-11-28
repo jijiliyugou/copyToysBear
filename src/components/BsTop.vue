@@ -252,7 +252,6 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
-      console.log(mime)
       // 转换成file对象
       // return new File([u8arr], filename + "." + mime.split("/")[1], {
       //   type: mime

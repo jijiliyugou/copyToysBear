@@ -145,7 +145,6 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n)
       }
-      console.log(mime)
       // 转换成file对象
       return new File([u8arr], filename + '.' + mime.split('/')[1], {
         type: mime
@@ -158,7 +157,6 @@ export default {
       const companyNumber = this.$store.state.userInfo.commparnyList
         ? this.$store.state.userInfo.commparnyList[0].companyNumber
         : 'Tourist'
-      console.log(companyNumber)
       const fd = new FormData()
       fd.append('file', file)
       fd.append('companyNumber', companyNumber)
