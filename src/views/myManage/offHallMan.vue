@@ -93,7 +93,13 @@
           <template slot-scope="scope">
             {{ scope.row.off_da && scope.row.off_da.split("T")[0] }}</template>
         </el-table-column>
-        <el-table-column prop="verifyRemark" label="审核意见"></el-table-column>
+        <el-table-column prop="verifyRemark" label="审核意见">
+          <template slot-scope="scope">
+            <template v-for="(item, i) in offAuditTypeList">
+              <span :key="i" v-if="item.itemCode === scope.row.verifyRemark">{{ item.itemText }}</span>
+            </template>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="250">
           <template slot-scope="scope">
             <el-button
@@ -181,7 +187,7 @@
         :model="hallFormData"
       >
       <div style="display:flex;justify-content: space-between;">
-        <el-form-item label="展厅名称" prop="hallName">
+        <el-form-item label="展厅名称" size="mini" prop="hallName">
           <el-input size="mini" v-model="hallFormData.hallName" disabled></el-input>
         </el-form-item>
         <el-form-item label="下架时间" prop="createdOn">
@@ -215,13 +221,13 @@
           </div>
         </el-form>
         </div>
-        <!-- 下架产品 -->
+        <!-- 下架产品列表 -->
         <div class="box-card" style="padding:5px;box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);box-sizing:border-box;">
           <div class="clearfix" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #aaa;">
             <span>下架产品列表</span>
             <el-button @click="similarTheShelf(true)" type="primary">上架</el-button>
           </div>
-        <el-table :data="offProductList" ref="multipleTable" style="width: 100%" row-key="id" :empty-text="hallFormData.ma_na + '暂无下架产品'">
+        <el-table height="500" border size="small" :data="offProductList" ref="multipleTable" style="width: 100%" row-key="id" :empty-text="hallFormData.ma_na + '暂无下架产品'">
           <el-table-column type="selection" align="center" :selectable="checkSelectable"></el-table-column>
           <el-table-column prop="hallName" label="展厅名称"></el-table-column>
           <el-table-column prop="pr_na" label="产品名称"></el-table-column>
@@ -259,7 +265,7 @@
             :pager-count="5"
             layout="total, sizes, prev, pager, next, jumper"
             background
-            :page-sizes="[5, 10, 20, 30, 50]"
+            :page-sizes="[10, 20, 30, 50]"
             :total="totalCountOffProduct"
             :page-size="pageSizeOffProduct"
             :current-page.sync="currentPageOffProduct"
@@ -272,21 +278,21 @@
       <div class="right">
         <!-- 相似度 -->
         <div class="header">
-          <el-table height="300px" empty-text="没有相似厂商" :data="similarSupplier" style="width: 100%" @row-click="rowClick">
-            <el-table-column prop="client_na" label="厂商名称"></el-table-column>
-            <el-table-column prop="handset" label="移动电话">
+          <el-table height="300" border empty-text="没有相似厂商" :data="similarSupplier" style="width: 100%" @row-click="rowClick">
+            <el-table-column prop="client_na" label="厂商名称" align="center"></el-table-column>
+            <el-table-column prop="handset" label="移动电话" align="center">
               <template slot-scope="scope">
                  {{ scope.row.handset ? scope.row.handset : scope.row.handset1 ? scope.row.handset1 : scope.row.handset2 }}
               </template>
             </el-table-column>
-            <el-table-column prop="ma_ph_1" label="座机">
+            <el-table-column prop="ma_ph_1" label="座机" align="center">
               <template slot-scope="scope">
                  {{ scope.row.ma_ph_1 ? scope.row.ma_ph_1 : scope.row.ma_ph_2 ? scope.row.ma_ph_2 : scope.row.ma_ph_3 }}
               </template>
             </el-table-column>
-            <el-table-column prop="handset_c" label="见客电话"></el-table-column>
+            <el-table-column prop="handset_c" label="见客电话" align="center"></el-table-column>
           </el-table>
-          <center style="margin: 20px 0">
+          <center style="padding: 17px 0">
           <el-pagination
             layout="total, sizes, prev, next"
             background
@@ -301,12 +307,12 @@
         </div>
         <!-- 相似厂商的产品列表 -->
         <div class="footer">
-          <el-table height="400px" :empty-text="emptyText" :data="similarSupplierProducts" style="width: 100%">
+          <el-table height="400" border :empty-text="emptyText" :data="similarSupplierProducts" style="width: 100%">
             <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
             <el-table-column prop="number" label="产品编号" align="center"></el-table-column>
             <el-table-column prop="fa_no" label="出厂货号" align="center"></el-table-column>
           </el-table>
-          <center style="margin: 20px 0">
+          <center style="padding: 17px 0">
           <el-pagination
             layout="total, sizes, prev, next"
             background
@@ -462,7 +468,13 @@
           <template slot-scope="scope">
             {{ scope.row.off_da.split("T")[0] }}</template>
         </el-table-column>
-        <el-table-column prop="verifyRemark" label="审核意见"></el-table-column>
+        <el-table-column prop="verifyRemark" label="审核意见">
+          <template slot-scope="scope">
+            <template v-for="(item, i) in offAuditTypeList">
+              <span :key="i" v-if="item.itemCode === scope.row.verifyRemark">{{ item.itemText }}</span>
+            </template>
+          </template>
+        </el-table-column>
       </el-table>
       <el-card class="box-card">
         <div slot="header" style="display:flex;alignItems:center;justifyContent: space-between;" class="clearfix">
@@ -644,7 +656,7 @@ export default {
   components: { bsTop, bsFooter },
   data () {
     return {
-      emptyText: '请选择厂商',
+      emptyText: '请选择相似厂商',
       similarProductsPageSize: 5,
       similarProductsCurrentPage: 1,
       similarProductsTotalCount: 0,
@@ -654,7 +666,7 @@ export default {
       similarTotalCount: 5,
       similarSupplier: [],
       currentPageOffProduct: 1,
-      pageSizeOffProduct: 5,
+      pageSizeOffProduct: 10,
       totalCountOffProduct: 0,
       offProductList: [],
       offAuditTypeList: [],
@@ -1021,7 +1033,9 @@ export default {
     // 提交审核厂商
     async subAddProduct (flag) {
       this.hallFormData.isExistCompany = flag
-      console.log(this.hallFormData)
+      if (flag === 1) {
+        this.hallFormData.verifyRemark = '审核通过'
+      }
       const res = await this.$http.post('/api/UpdateManufacturer_Off', this.hallFormData)
       if (res.data.result.code === 200) {
         this.getManufacturerOffPage()
@@ -1156,6 +1170,13 @@ export default {
     @{deep} .el-dialog {
       width: 40%;
     }
+    @{deep} &.examine {
+      .el-dialog{
+        .el-dialog__body{
+          padding-top: 0;
+        }
+      }
+    }
   }
 @media screen and (max-width: 1700px) {
   .productDialog {
@@ -1197,8 +1218,8 @@ export default {
     }
     .right{
       width: 40%;
-      display: flex;
-      flex-direction: column;
+      // display: flex;
+      // flex-direction: column;
       margin-left: 5px;
       .header{
         flex: 1;
