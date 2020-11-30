@@ -67,9 +67,7 @@
           </div> -->
           <ul class="productParams">
             <li v-if="$store.state.userInfo && $store.state.userInfo.commparnyList && $store.state.userInfo.commparnyList[0].companyType === 'Sales'">
-              参考单价：<span  class="price">{{productDetail.cu_de +
-              (integralTotal > 0 ?  productDetail.bearProduct.price : '积分查看价格')
-            }}</span>
+              参考单价：<span  :class="{ price : true}">{{ (integralTotal > 0 ?  productDetail.cu_de + productDetail.bearProduct.price : '积分查看价格') }}</span>
             </li>
             <li v-else>
               参考单价：<span  class="price">{{ productDetail.cu_de + productDetail.bearProduct.price.toFixed(2) }}</span>
