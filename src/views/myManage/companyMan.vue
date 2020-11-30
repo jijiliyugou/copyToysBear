@@ -174,9 +174,7 @@ export default {
         keyword: this.searchForm.keyword,
         hallNumber: this.searchForm.hallNumber,
         companyType: this.searchForm.companyType,
-        skipCount: this.currentPage,
-        isInstall: this.searchForm.isInstall,
-        maxResultCount: this.pageSize
+        isInstall: this.searchForm.isInstall
       }
       for (const key in fd) {
         if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
