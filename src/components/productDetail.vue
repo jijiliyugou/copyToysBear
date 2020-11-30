@@ -57,14 +57,6 @@
           <div class="productName">
             <h2>{{ productDetail.bearProduct.name }}</h2>
           </div>
-          <!-- <div class="price">
-            {{ productDetail.cu_de }}
-            <span>{{
-              productDetail.bearProduct.price === 0
-                ? "???"
-                : productDetail.bearProduct.price
-            }}</span>
-          </div> -->
           <ul class="productParams">
             <li v-if="$store.state.userInfo && $store.state.userInfo.commparnyList && $store.state.userInfo.commparnyList[0].companyType === 'Sales'">
               参考单价：<span  :class="{ price : true}">{{ (integralTotal > 0 ?  productDetail.cu_de + productDetail.bearProduct.price : '积分查看价格') }}</span>

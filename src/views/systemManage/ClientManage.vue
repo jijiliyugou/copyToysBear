@@ -419,7 +419,7 @@
             <el-input
               type="text"
               v-model="addClientForm.companyKeyCode"
-              :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
+              disabled
             ></el-input>
           </el-form-item>
         </div>
@@ -427,7 +427,7 @@
           <el-input
             type="text"
             v-model="addClientForm.companyAPI"
-            :disabled="dialogTitle === '审核' || dialogTitle === '内部审核'"
+            disabled
           ></el-input>
         </el-form-item>
         <el-form-item label="公司介绍" prop="homepage">
@@ -1785,7 +1785,6 @@ export default {
     },
     // 打开编辑客户列表
     openEdit (row) {
-      console.log(row)
       this.isShowLoading = false
       this.clientDialog = true
       this.$nextTick(() => {
@@ -1796,6 +1795,7 @@ export default {
       for (const key in row) {
         this.addClientForm[key] = row[key]
       }
+      console.log(this.addClientForm)
       this.$refs.mapBaiduMap &&
       this.$refs.mapBaiduMap.resetMap(this.addClientForm.address)
       row.companyLogo && (this.editImages[0] = { url: row.companyLogo })
