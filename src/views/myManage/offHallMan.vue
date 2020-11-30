@@ -263,7 +263,7 @@
         <center style="margin: 20px 0">
           <el-pagination
             :pager-count="5"
-            layout="total, sizes, prev, pager, next, jumper"
+            layout="total, sizes, prev, pager, next"
             background
             :page-sizes="[10, 20, 30, 50]"
             :total="totalCountOffProduct"
@@ -294,7 +294,7 @@
           </el-table>
           <center style="padding: 17px 0">
           <el-pagination
-            layout="total, sizes, prev, next"
+            layout="total, sizes, prev, pager, next"
             background
             :page-sizes="[5, 10, 20, 30, 50]"
             :total="similarTotalCount"
@@ -314,7 +314,7 @@
           </el-table>
           <center style="padding: 17px 0">
           <el-pagination
-            layout="total, sizes, prev, next"
+            layout="total, sizes, prev, pager, next"
             background
             :page-sizes="[5, 10, 20, 30, 50]"
             :total="similarProductsTotalCount"
