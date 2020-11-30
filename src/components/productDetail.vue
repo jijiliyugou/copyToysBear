@@ -66,12 +66,13 @@
             }}</span>
           </div> -->
           <ul class="productParams">
-            <li>
+            <li v-if="$store.state.userInfo && $store.state.userInfo.commparnyList && $store.state.userInfo.commparnyList[0].companyType === 'Sales'">
               参考单价：<span  class="price">{{productDetail.cu_de +
-              (productDetail.bearProduct.price === 0
-                ? "???"
-                : productDetail.bearProduct.price)
+              (integralTotal > 0 ?  productDetail.bearProduct.price : '积分查看价格')
             }}</span>
+            </li>
+            <li v-else>
+              参考单价：<span  class="price">{{ productDetail.cu_de + productDetail.bearProduct.price.toFixed(2) }}</span>
             </li>
             <li>
               出厂货号：{{
@@ -111,6 +112,18 @@
                     "(CM)"
               }}
             </li>
+            <li>
+                    包装规格：{{
+                      productDetail.bearProduct.fa_no === 0
+                        ? "???"
+                        : productDetail.bearProduct.in_le +
+                          " X " +
+                          productDetail.bearProduct.in_wi +
+                          " X " +
+                          productDetail.bearProduct.in_hi +
+                          "(CM)"
+                    }}
+                  </li>
             <li>
               装箱量：{{
                 productDetail.bearProduct.fa_no === 0
@@ -232,6 +245,7 @@ export default {
   },
   data () {
     return {
+      integralTotal: null,
       isShowSourceDetail: false,
       activeIndex: 0,
       hoverActive: false,
@@ -241,11 +255,15 @@ export default {
     }
   },
   methods: {
-    // 扣除积分
-    // async getUpdateIntegral () {
-    //   const res = await this.$http.post('/api/UpdateIntegral', { integraType: 1, productNumber: this.number })
-    //   console.log(res)
-    // },
+    // 查积分
+    async getIntegralTotal () {
+      const res = await this.$http.post('/api/GetIntegralTotal', {})
+      if (res.data.result.code === 200) {
+        this.integralTotal = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 收藏
     async addCollect (item) {
       const res = await this.$http.post('/api/CreateProductCollection', {
@@ -304,6 +322,9 @@ export default {
     createdOn (val) {
       return val.split('.')[0].replace(/t/gi, ' ')
     }
+  },
+  created () {
+    this.getIntegralTotal()
   },
   mounted () {
     // this.getUpdateIntegral()

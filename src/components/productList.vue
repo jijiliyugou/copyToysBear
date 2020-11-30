@@ -112,6 +112,18 @@
                     }}
                   </li>
                   <li>
+                    包装规格：{{
+                      item.fa_no === 0
+                        ? "???"
+                        : item.in_le +
+                          " X " +
+                          item.in_wi +
+                          " X " +
+                          item.in_hi +
+                          "(CM)"
+                    }}
+                  </li>
+                  <li>
                     装箱量：{{
                       item.fa_no === 0
                         ? "???"
