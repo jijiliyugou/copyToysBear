@@ -260,10 +260,11 @@
             </template>
           </el-table-column>
         </el-table>
-        <center style="margin: 20px 0">
+        <center style="margin: 20px 0;overflow:auto;">
           <el-pagination
+            small
             :pager-count="5"
-            layout="total, sizes, prev, pager, next"
+            layout="total, prev, pager, next, jumper"
             background
             :page-sizes="[10, 20, 30, 50]"
             :total="totalCountOffProduct"
@@ -292,9 +293,10 @@
             </el-table-column>
             <el-table-column prop="handset_c" label="见客电话" align="center"></el-table-column>
           </el-table>
-          <center style="padding: 17px 0">
+          <center style="padding: 17px 0;overflow:auto;">
           <el-pagination
-            layout="total, sizes, prev, pager, next"
+            small
+            layout="total, prev, pager, next, jumper"
             background
             :page-sizes="[5, 10, 20, 30, 50]"
             :total="similarTotalCount"
@@ -312,9 +314,10 @@
             <el-table-column prop="number" label="产品编号" align="center"></el-table-column>
             <el-table-column prop="fa_no" label="出厂货号" align="center"></el-table-column>
           </el-table>
-          <center style="padding: 17px 0">
+          <center style="padding: 17px 0;overflow:auto;">
           <el-pagination
-            layout="total, sizes, prev, pager, next"
+            small
+            layout="total, prev, pager, next, jumper"
             background
             :page-sizes="[5, 10, 20, 30, 50]"
             :total="similarProductsTotalCount"
