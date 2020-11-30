@@ -143,13 +143,17 @@ myAxios.install = function (Vue) {
       ) {
         $Store.commit('updateAppLoading', false)
       }
-      if (res.data.result.code === 401 || res.data.result.code === 403) {
-        Message.closeAll()
-        $Store.commit('updateAppLoading', false)
-        Message.error('登录过期，请重新登录')
-        router.push({
-          path: '/beforeIndex/login?id=signOut'
-        })
+      if (res.config.url.includes('LittleBearInstallDownload') || res.config.url.includes('LittleBearInstallRepeatDownload')) {
+        return res
+      } else {
+        if (res.data.result.code === 401 || res.data.result.code === 403) {
+          Message.closeAll()
+          $Store.commit('updateAppLoading', false)
+          Message.error('登录过期，请重新登录')
+          router.push({
+            path: '/beforeIndex/login?id=signOut'
+          })
+        }
       }
       return res
     },

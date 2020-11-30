@@ -84,7 +84,7 @@
         </div>
         <div class="btnList">
           <el-button size="mini" type="primary" @click="search">查询</el-button>
-          <el-button size="mini" type="primary" @click="exportData">批量导出</el-button>
+          <el-button size="mini" type="primary" @click="exportData">导出</el-button>
         </div>
         </div>
       </el-form>
@@ -168,6 +168,35 @@ export default {
     }
   },
   methods: {
+    // myPlanEdit (type) {
+    //   this.save_type = type
+    //   const datas = {
+    //     keyword: this.searchForm.keyword,
+    //     hallNumber: this.searchForm.hallNumber,
+    //     companyType: this.searchForm.companyType,
+    //     isInstall: this.searchForm.isInstall
+    //   }
+    //   // eslint-disable-next-line camelcase
+    //   const file_type = 'application/msdoc;charset=UTF-8'
+    //   this.$http.post(URL, datas, { responseType: 'arraybuffer' })
+    //     .then(res => {
+    //       const pdfUrl = window.URL.createObjectURL(new Blob([res.data], { type: file_type }))
+    //       let temp = res.headers['content-disposition'].split(';')[1].split('filename=')[1]
+    //       const s = /"/g
+    //       temp = temp.replace(s, '')
+    //       const iconv = require('iconv-lite')
+    //       iconv.skipDecodeWarning = true// 忽略警告
+    //       temp = iconv.decode(temp, 'gbk')
+    //       const link = document.createElement('a')
+    //       link.href = pdfUrl
+    //       link.setAttribute('download', temp)
+    //       document.body.appendChild(link)
+    //       link.click()
+    //       document.body.removeChild(link)
+    //     }).catch(error => {
+    //       console.log(error)
+    //     })
+    // },
     // 批量导出
     async exportData () {
       const fd = {
@@ -185,12 +214,17 @@ export default {
       if (this.searchForm.isRepeat) {
         url = '/api/LittleBearInstallRepeatDownload'
       }
-      const res = await this.$http.post(url, fd)
-      if (res.data.result.code === 200) {
-        this.$message.success('导出成功')
-      } else {
-        this.$message.error(res.data.result.msg)
-      }
+      this.$http.post(url, fd).then(res => {
+        const fileName = '公司管理.xls'
+        // 首先请求接口 返回的数据为res
+        let url
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          url = new Blob([res.result])
+        } else {
+          url = URL.createObjectURL(new Blob([res]))
+        }
+      })
     },
     // 表头类名
     headerStyle ({ row, column, rowIndex, columnIndex }) {
