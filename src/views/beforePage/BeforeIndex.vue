@@ -14,7 +14,7 @@
 
 <script>
 import beforeTop from '@/components/beforeTop'
-import bsFooter from '@/components/footer'
+import bsFooter from '@/components/Footer'
 export default {
   components: {
     beforeTop,

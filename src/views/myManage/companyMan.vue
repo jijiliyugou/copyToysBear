@@ -215,15 +215,21 @@ export default {
         url = '/api/LittleBearInstallRepeatDownload'
       }
       this.$http.post(url, fd).then(res => {
+        console.log(res.data)
         const fileName = '公司管理.xls'
         // 首先请求接口 返回的数据为res
         let url
         if (window.navigator.msSaveOrOpenBlob) {
           // 兼容ie11
-          url = new Blob([res.result])
+          url = new Blob([res.data])
         } else {
-          url = URL.createObjectURL(new Blob([res]))
+          url = URL.createObjectURL(new Blob([res.data]))
         }
+        const a = document.createElement('a')
+        a.style.display = 'none'
+        a.download = fileName
+        a.href = url
+        a.click()
       })
     },
     // 表头类名
