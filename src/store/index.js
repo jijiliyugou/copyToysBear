@@ -6,6 +6,7 @@ import globalJson from './Json.js'
 Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
+    historyNames: [],
     httpTime: 0, // 请求时长
     httpContent: '', // 请求内容
     screenWidth: document.documentElement.clientWidth, // 屏幕宽度
@@ -14,7 +15,22 @@ export default new Vuex.Store({
     wsId: '',
     wsMsg: null,
     isLogin: false,
-    beforeSearch: null,
+    beforeSearch: {
+      name: null,
+      minPrice: null,
+      maxPrice: null,
+      fa_no: null,
+      pa_nu: null,
+      pr_le: null,
+      pr_wi: null,
+      pr_hi: null,
+      ou_le: null,
+      ou_wi: null,
+      ou_hi: null,
+      isUpInsetImg: true,
+      startTime: null,
+      endTime: null
+    },
     beforeSearchImg: null,
     hotSearchImg: null,
     searchValue: '',
@@ -26,6 +42,13 @@ export default new Vuex.Store({
     currentComparnyId: null
   },
   mutations: {
+    handlerBeforeSearchKeyWord (state, value) {
+      state.beforeSearch.name = value
+    },
+    addHistoryNames (state, value) {
+      state.historyNames.unshift(value)
+      if (state.historyNames.length > 6) state.historyNames.pop()
+    },
     handlerHttpTime (state, value) {
       state.httpTime = value
     },

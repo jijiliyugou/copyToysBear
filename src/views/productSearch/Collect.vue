@@ -113,7 +113,7 @@
           label="操作"
           header-align="center"
           align="right"
-          width="170"
+          width="200"
         >
           <template slot-scope="scope">
             <el-button
@@ -127,7 +127,7 @@
               size="mini"
               type="danger"
               @click="handleDelete(scope.row)"
-              >删除</el-button
+              >取消收藏</el-button
             >
           </template>
         </el-table-column>
@@ -251,8 +251,10 @@ export default {
         productNumber: row.productNumber
       })
       if (res.data.result.code === 200) {
-        this.$message.success('删除收藏成功')
+        this.$message.success('取消收藏成功')
         this.getCollectList()
+      } else {
+        this.$message.error(res.data.result.msg)
       }
     },
     // 修改当前页

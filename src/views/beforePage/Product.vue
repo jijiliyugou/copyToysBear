@@ -10,6 +10,7 @@
             <el-input
               clearable
               @keyup.enter.native="subSearch"
+              @input="changeKeyWord"
               placeholder="请输入关键词/图片搜索"
               v-model="packingOptions.name">
             </el-input>
@@ -206,6 +207,10 @@ export default {
     }
   },
   methods: {
+    // 输入关键字事件
+    changeKeyWord (e) {
+      this.$store.commit('handlerBeforeSearchKeyWord', this.packingOptions.name)
+    },
     // 詳情返回事件
     changeIsDetail (productDetail) {
       this.isProductDetail = false

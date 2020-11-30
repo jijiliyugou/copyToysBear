@@ -164,6 +164,17 @@
             <li class="pink"></li>
             <li class="pink"></li>
             <li class="pink"></li>
+            <div class="itemBox" v-show="isShowHistoryName">
+                <el-tooltip v-for="(item, i) in historyNames" :key="i" effect="dark" :content="item" placement="top">
+                  <li class="item" @click="clickHistory(item)">
+                  {{ item }}
+                  </li>
+                </el-tooltip>
+            </div>
+            <div class="historyBox" slot="reference" @click="showHistoryNameE">
+              <div class="historyItem"><i class="el-icon-time"></i></div>
+              <div class="historyItem">查询记录</div>
+            </div>
           </ul>
           <center style="margin:20px;"  v-show="!$store.state.beforeSearchImgPreview">
             <el-pagination
@@ -188,6 +199,8 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      scrollable: false,
+      isShowHistoryName: false,
       currentPage: 1,
       pageSize: 10,
       totalCount: 0,
@@ -195,6 +208,15 @@ export default {
     }
   },
   methods: {
+    clickHistory (value) {
+      this.currentPage = 1
+      this.beforeSearch.name = value
+      this.getProductList()
+    },
+    // 显示
+    showHistoryNameE () {
+      this.isShowHistoryName = !this.isShowHistoryName
+    },
     // 重新切图
     openCubeImg (img) {
       this.$emit('handlerCubeImgEvent', img)
@@ -220,6 +242,10 @@ export default {
     },
     // 文字搜索产品
     async getProductList () {
+      console.log(this.beforeSearch.name)
+      if (this.beforeSearch.name) {
+        this.$store.commit('addHistoryNames', this.beforeSearch.name)
+      }
       const fd = {
         skipCount: this.currentPage,
         maxResultCount: this.pageSize,
@@ -262,6 +288,7 @@ export default {
   mounted () {
   },
   computed: {
+    ...mapState(['historyNames']),
     ...mapState(['beforeSearchImg']),
     ...mapState(['beforeSearch'])
   },
@@ -318,6 +345,7 @@ export default {
     flex: 1;
     font-weight: 500;
     font-size: 12px;
+    position: relative;
     .productFilter {
       display: flex;
       height: 34px;
@@ -446,6 +474,72 @@ export default {
       justify-content: space-between;
       flex-wrap: wrap;
       font-size: 10px;
+      position: relative;
+      .itemBox{
+        position: absolute;
+        bottom: 80px;
+        width: 80px;
+        right: -100px;
+        box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.2);
+        padding-bottom:  5px;
+        text-align: center;
+        &::after{
+          content: '';
+          display: block;
+          position: absolute;
+          bottom: -5px;
+          left: 5px;
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 6px solid #fff;
+        }
+        .item{
+          padding: 5px;
+          cursor: pointer;
+          width: 100%;
+          box-sizing: border-box;
+          border-top: 1px solid #ccc;
+          white-space:nowrap;
+          overflow: hidden;
+          white-space: nowrap;/*不换行*/
+          text-overflow:ellipsis;/*超出部分文字以...显示*/
+          &:first-of-type{
+            border-top: 1px solid transparent;
+          }
+          &:hover{
+            background-color: #eaeefb;
+          }
+        }
+      }
+    .historyBox {
+      position: absolute;
+      bottom: 0px;
+      right: -100px;
+      width: 80px;
+      height: 70px;
+      border-radius: 3px;
+      box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      .historyItem{
+        width: 100%;
+        box-sizing: border-box;
+        padding: 2px 0;
+        display: flex;
+        justify-content: center;
+        &:first-of-type {
+          align-items: flex-end;
+          font-size: 18px;
+        }
+      }
+      cursor: pointer;
+      &:hover{
+        color: #fff;
+        background-color: #3872f8;
+      }
+    }
       .productItems {
         width: 230px;
         margin-top: 20px;
