@@ -303,6 +303,7 @@ export default {
     }
   },
   beforeDestroy () {
+    this.$store.commit('handlerBeforeSearchKeyWord', null)
   }
 }
 </script>

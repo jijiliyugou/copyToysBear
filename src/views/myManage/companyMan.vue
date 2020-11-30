@@ -8,9 +8,12 @@
     <div style="maxWidth:1200px;minWidth:1024px;margin:0 auto;">
       <div class="searchBox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
-        <el-form-item label="关键字查询">
-         <el-input
+        <div style="display:flex;align-items: center;justify-content: space-between;">
+          <div style="display:flex;align-items: center;justify-content: space-between;">
+          <el-form-item label="关键字查询">
+          <el-input
               @keyup.enter.native="search"
+              size="mini"
               clearable
               v-model="searchForm.keyword"
               placeholder="输入关键字"
@@ -22,6 +25,7 @@
           clearable
             v-model="searchForm.hallNumber"
             placeholder="请选择展厅"
+            size="mini"
             style="width: 90%;"
           >
             <el-option
@@ -35,6 +39,7 @@
         <el-form-item label="公司类型">
           <el-select
           clearable
+          size="mini"
             v-model="searchForm.companyType"
             placeholder="请选择"
             style="width: 90%;"
@@ -49,6 +54,7 @@
         </el-form-item>
         <el-form-item label="是否安装">
           <el-select
+          size="mini"
           clearable
             v-model="searchForm.isInstall"
             placeholder="请选择"
@@ -63,6 +69,7 @@
         </el-form-item>
         <el-form-item label="是否重复">
           <el-select
+          size="mini"
             v-model="searchForm.isRepeat"
             placeholder="请选择"
           >
@@ -74,9 +81,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="btnList">
-          <el-button type="primary" @click="search">查询</el-button>
-        </el-form-item>
+        </div>
+        <div class="btnList">
+          <el-button size="mini" type="primary" @click="search">查询</el-button>
+          <el-button size="mini" type="primary" @click="exportData">批量导出</el-button>
+        </div>
+        </div>
       </el-form>
     </div>
     <!-- 列表 -->
@@ -158,6 +168,32 @@ export default {
     }
   },
   methods: {
+    // 批量导出
+    async exportData () {
+      const fd = {
+        keyword: this.searchForm.keyword,
+        hallNumber: this.searchForm.hallNumber,
+        companyType: this.searchForm.companyType,
+        skipCount: this.currentPage,
+        isInstall: this.searchForm.isInstall,
+        maxResultCount: this.pageSize
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
+          delete fd[key]
+        }
+      }
+      let url = '/api/LittleBearInstallDownload'
+      if (this.searchForm.isRepeat) {
+        url = '/api/LittleBearInstallRepeatDownload'
+      }
+      const res = await this.$http.post(url, fd)
+      if (res.data.result.code === 200) {
+        this.$message.success('导出成功')
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 表头类名
     headerStyle ({ row, column, rowIndex, columnIndex }) {
       if (rowIndex) {
@@ -304,6 +340,11 @@ export default {
   padding-top: 50px;
   .btnList {
     float: right;
+  }
+  .el-form{
+    .el-form-item{
+      margin: 0;
+    }
   }
 }
 .tableContent {
