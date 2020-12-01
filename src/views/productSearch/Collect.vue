@@ -30,7 +30,7 @@
         </el-form-item>
         <el-form-item class="btnList">
           <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="primary" @click="batchExport">批量导出</el-button>
+          <!-- <el-button type="primary" @click="batchExport">批量导出</el-button> -->
         </el-form-item>
       </el-form>
     </div>

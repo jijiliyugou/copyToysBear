@@ -382,11 +382,6 @@ export default {
     @{deep} .el-form-item__content{
       width: 130px;
     }
-    &:last-of-type{
-      @{deep} .el-form-item__content{
-      width: 70px;
-    }
-    }
   }
 }
 </style>
