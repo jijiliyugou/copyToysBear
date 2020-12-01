@@ -216,9 +216,11 @@ export default {
     // 显示
     showHistoryNameE () {
       this.isShowHistoryName = !this.isShowHistoryName
+      if (this.historyNames.length === 0) this.isShowHistoryName = false
     },
     // 重新切图
     openCubeImg (img) {
+      console.log(123)
       this.$emit('handlerCubeImgEvent', img)
     },
     // 产品收藏

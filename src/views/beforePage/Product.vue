@@ -363,7 +363,7 @@ export default {
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.baseImg })
+        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.$store.state.beforeSearchImgPreview.baseImg || this.baseImg })
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
           ? this.$store.state.userInfo.commparnyList[0].companyNumber
