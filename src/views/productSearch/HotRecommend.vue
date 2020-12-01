@@ -280,6 +280,7 @@ export default {
   components: { bsTop, productSearchTop, productDetail, VueCropper, bsFooter },
   data () {
     return {
+      categoryNumber: null,
       cropperLoading: false,
       // 裁剪组件的基础配置option
       option: {
@@ -379,7 +380,10 @@ export default {
       }
     },
     handleNodeClick (data) {
-      console.log(data)
+      console.log(data.id)
+      this.currentPage = 1
+      this.categoryNumber = data.id
+      this.getProduct()
     },
     // 回退事件
     changeIsDetail (productDetail) {
@@ -407,6 +411,7 @@ export default {
       try {
         const fd = {
           name: this.$store.state.searchValue,
+          categoryNumber: this.categoryNumber,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
         }
@@ -483,6 +488,7 @@ export default {
         this.currentPage = 1
         this.totalCount = 0
         this.dataList = []
+        this.categoryNumber = null
         this.search = this.$store.state.searchValues
         if (this.$store.state.hotSearchImg instanceof Array) {
           this.dataList = this.$store.state.hotSearchImg

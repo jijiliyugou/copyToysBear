@@ -13,9 +13,12 @@
         <h4 class="title el-icon-menu">产品目录</h4>
         <div class="treeContent">
           <el-tree
+            highlight-current
             :data="categoryList"
+            check-on-click-node
             :props="defaultProps"
             accordion
+            @getCurrentNode="getCurrentNode"
             @node-click="handleNodeClick"
           ></el-tree>
         </div>
@@ -296,6 +299,7 @@ export default {
   components: { bsTop, productSearchTop, productDetail, VueCropper, bsFooter },
   data () {
     return {
+      categoryNumber: null,
       cropperLoading: false,
       // 裁剪组件的基础配置option
       option: {
@@ -410,7 +414,9 @@ export default {
       }
     },
     handleNodeClick (data) {
-      console.log(data)
+      this.currentPage = 1
+      this.categoryNumber = data.id
+      this.getProduct()
     },
     successUpload (response, file, fileList) {
       this.$store.commit('searchValues', response)
@@ -423,7 +429,8 @@ export default {
         const fd = {
           name: this.$store.state.searchValue,
           skipCount: this.currentPage,
-          maxResultCount: this.pageSize
+          maxResultCount: this.pageSize,
+          categoryNumber: this.categoryNumber
         }
         for (const key in fd) {
           if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
@@ -521,6 +528,7 @@ export default {
       this.totalCount = 0
       this.dataList = []
       this.isDetail = false
+      this.categoryNumber = null
       this.search = this.$store.state.searchValues
       if (this.$store.state.imageSearchValue instanceof Array) {
         this.dataList = this.$store.state.imageSearchValue
