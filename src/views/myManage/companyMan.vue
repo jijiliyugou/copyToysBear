@@ -187,7 +187,6 @@ export default {
         url = '/api/LittleBearInstallRepeatDownload'
       }
       this.$http.post(url, fd, { responseType: 'blob' }).then(res => {
-        console.log(res.data)
         const fileName = '公司文档.xls'
         const blob = res.data
         // 首先请求接口 返回的数据为res
@@ -340,7 +339,6 @@ export default {
   mounted () {
     this.getOrgCompanyList()
     this.getClientTypeList()
-    // this.drawLine()
   },
   created () {}
 }
