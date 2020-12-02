@@ -345,6 +345,7 @@ export default {
     // 选择图片搜索
     changeUpload (e) {
       this.fileinfo = e.target.files[0]
+      console.log(this.fileinfo)
       const isLt5M = this.fileinfo.size / 1024 / 1024 < 3
       if (!isLt5M) {
         this.$message.error('上传文件大小不能超过 3MB!')
@@ -352,6 +353,7 @@ export default {
         this.$refs.uploadRef.value = ''
         return false
       }
+      console.log(this.fileinfo)
       this.isShowCropper = true
 
       // 上传成功后将图片地址赋值给裁剪框显示图片
@@ -368,7 +370,8 @@ export default {
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.$store.state.beforeSearchImgPreview.baseImg || this.baseImg })
+        const baseImgs = { img: urlPreView, baseImg: ((this.$store.state.beforeSearchImgPreview && this.$store.state.beforeSearchImgPreview.baseImg) || this.baseImg) }
+        this.$store.commit('handlerBeforeSearchImgPreview', baseImgs)
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
           ? this.$store.state.userInfo.commparnyList[0].companyNumber
