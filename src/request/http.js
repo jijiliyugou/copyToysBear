@@ -48,7 +48,6 @@ myAxios.install = function (Vue) {
       if (config.url.includes('SearchBearProductPage') || config.url.includes('SearchPicture') || config.url.includes('HotRecommendPage')) axios.startDate = Date.now()
       // 配置不需要loading的请求
       if (
-        !config.url.includes('ProductCategoryList') &&
         !config.url.includes('CreateLogRecord') &&
         !config.url.includes('MessageUploadFile') &&
         !config.url.includes('GetInstantMessageByNumber') &&
@@ -137,7 +136,6 @@ myAxios.install = function (Vue) {
         !res.config.url.includes('GetHotWord') &&
         !res.config.url.includes('CreateLogRecord') &&
         !res.config.url.includes('UserConfirm') &&
-        !res.config.url.includes('ProductCategoryList') &&
         !res.config.url.includes('OrgCompanyList') &&
         !res.config.url.includes('SampleOrderTotal')
       ) {
@@ -197,7 +195,6 @@ myAxios.install = function (Vue) {
               !error.response.config.url.includes('GetHotWord') &&
               !error.response.config.url.includes('CreateLogRecord') &&
               !error.response.config.url.includes('UserConfirm') &&
-              !error.response.config.url.includes('ProductCategoryList') &&
               !error.response.config.url.includes('OrgCompanyList') &&
               !error.response.config.url.includes('SampleOrderTotal')
             ) {

@@ -13,45 +13,16 @@
         <h4 class="title el-icon-menu">产品目录</h4>
         <div class="treeContent">
           <el-tree
-            highlight-current
+            :highlight-current="true"
             :data="categoryList"
-            check-on-click-node
+            check-strictly
             :props="defaultProps"
             accordion
-            @getCurrentNode="getCurrentNode"
             @node-click="handleNodeClick"
           ></el-tree>
         </div>
       </div>
       <div class="searchContent">
-        <!-- <div class="productFilter">
-          <el-button size="small" @click="priceSort">
-            价格排序
-            <i class="iconfont icon-xiangshang" style="vertical-align: middle;" v-show="isPriceSort"></i>
-            <i class="iconfont icon-xiangxia" v-show="!isPriceSort" style="vertical-align: middle;"></i>
-          </el-button>
-          <el-button size="small" @click="dateSort">
-            时间排序
-            <i class="iconfont icon-xiangshang" style="vertical-align: middle;" v-show="isDateSort"></i>
-            <i class="iconfont icon-xiangxia" style="vertical-align: middle;" v-show="!isDateSort"></i>
-          </el-button>
-          <div class="priceFilter">
-            <p>价格筛选</p>
-            <el-input class="priceInput"></el-input>
-            <span></span>
-            <el-input class="priceInput"></el-input>
-          </div>
-          <div class="searchBtnBox">
-            <el-button size="small" class="searchBtn">搜索</el-button>
-            <p>
-              总记录共
-              <span class="count">{{ totalCount }}</span>条
-            </p>
-          </div>
-          <div class="more">
-            <i class="iconfont icon-gengduo"></i>
-          </div>
-        </div>-->
         <div class="filterTitle">
           <div class="searchOptions">
             <p>
