@@ -37,17 +37,8 @@
       </el-form>
     </div>
     <div class="tableContent">
-      <el-table :data="allCateList" ref="cateListRef" style="width: 100%">
-        <el-table-tree-column
-          treeKey="id"
-          parentKey="parentID"
-          prop="name"
-          label="分类名称"
-          levelKey="level"
-          file-icon="icon icon-file"
-          :indentSize="50"
-          folder-icon="icon icon-folder"
-        ></el-table-tree-column>
+      <el-table :data="allCateList" ref="cateListRef" :indent="20" style="width: 100%" row-key="id" @row-click="clickTableRow">
+        <el-table-column prop="name" label="分类名称"></el-table-column>
         <el-table-column prop="ename" label="英文名称"></el-table-column>
         <el-table-column
           align="center"
@@ -220,6 +211,14 @@ export default {
     }
   },
   methods: {
+    // 点击行
+    clickTableRow (row) {
+      const $table = this.$refs.cateListRef
+      this.allCateList.map((item) => {
+        if (row.id !== item.id) $table.toggleRowExpansion(item, false)
+      })
+      $table.toggleRowExpansion(row)
+    },
     // 删除类目
     async handleDelete (row) {
       const res = await this.$http.post('/api/DeleteProductCategory', {

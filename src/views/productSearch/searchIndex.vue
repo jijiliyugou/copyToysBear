@@ -13,7 +13,7 @@
         <h4 class="title el-icon-menu">产品目录</h4>
         <div class="treeContent">
           <el-tree
-            :highlight-current="true"
+            highlight-current
             :data="categoryList"
             check-strictly
             :props="defaultProps"
@@ -847,6 +847,9 @@ export default {
       content: "" !important;
       font-size: 16px;
     }
+  }
+ @{deep} .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+    background-color: transparent;
   }
   .myFooter {
     // margin-top: 50px;

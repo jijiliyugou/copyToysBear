@@ -30,7 +30,7 @@
           <router-link to="findList" class="li" @click.native="offDetail()">
             <el-badge :hidden="findCount < 1" :value="findCount">
               <i class="el-icon-s-help"></i>
-              <p>发现</p>
+              <p>玩具圈</p>
             </el-badge>
           </router-link>
           <router-link to="newSletter" class="li" @click.native="offDetail()">
