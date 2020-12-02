@@ -314,7 +314,7 @@ export default {
     }
   },
   created () {
-    this.getIntegralTotal()
+    if (this.$store.state.userInfo.commparnyList[0].companyType === 'Sales') this.getIntegralTotal()
   },
   mounted () {
     // this.getUpdateIntegral()

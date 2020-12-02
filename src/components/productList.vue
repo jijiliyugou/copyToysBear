@@ -220,7 +220,7 @@ export default {
     },
     // 重新切图
     openCubeImg (img) {
-      console.log(123)
+      console.log('重新打开切图')
       this.$emit('handlerCubeImgEvent', img)
     },
     // 产品收藏
