@@ -189,19 +189,18 @@ export default {
       this.$http.post(url, fd, { responseType: 'blob' }).then(res => {
         const fileName = '公司文档.xls'
         const blob = res.data
-        // 首先请求接口 返回的数据为res
-        if ('download' in document.createElement('a')) {
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) { // 兼容IE
+          window.navigator.msSaveOrOpenBlob(blob, fileName)
+        } else { // 兼容Google及fireFox
           const link = document.createElement('a')
           link.style.display = 'none'
           link.download = fileName
           link.href = URL.createObjectURL(blob)
           document.body.appendChild(link)
           link.click()
+          console.log(link.click())
           URL.revokeObjectURL(link.href) // 释放URL 对象
           document.body.removeChild(link)
-        } else {
-          // 兼容ie11
-          navigator.msSaveBlob(blob, fileName)
         }
       })
     },

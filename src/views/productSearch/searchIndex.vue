@@ -117,7 +117,6 @@
                 <div class="details">
                   <ul>
                     <li>
-                      <!-- 出厂货号：{{ item.fa_no }} -->
                       出厂货号：{{ item.fa_no === 0 ? "???" : item.fa_no }}
                     </li>
                     <li>包装：{{ item.fa_no === 0 ? "???" : item.ch_pa }}</li>

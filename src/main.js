@@ -23,6 +23,7 @@ import 'quill/dist/quill.bubble.css' // for bubble theme
 import { NoticeBar } from 'vant'
 // 引入echarts
 import echarts from 'echarts'
+
 Vue.prototype.$echarts = echarts
 Vue.use(VueQuillEditor)
 Vue.use(VueClipboard)
