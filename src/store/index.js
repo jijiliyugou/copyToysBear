@@ -46,8 +46,14 @@ export default new Vuex.Store({
       state.beforeSearch.name = value
     },
     addHistoryNames (state, value) {
-      state.historyNames.unshift(value)
-      if (state.historyNames.length > 6) state.historyNames.pop()
+      const i = state.historyNames.indexOf(value)
+      if (i !== -1) {
+        state.historyNames.splice(i, 1)
+        state.historyNames.unshift(value)
+      } else {
+        state.historyNames.unshift(value)
+        if (state.historyNames.length > 6) state.historyNames.pop()
+      }
     },
     handlerHttpTime (state, value) {
       state.httpTime = value
