@@ -198,7 +198,6 @@ export default {
           link.href = URL.createObjectURL(blob)
           document.body.appendChild(link)
           link.click()
-          console.log(link.click())
           URL.revokeObjectURL(link.href) // 释放URL 对象
           document.body.removeChild(link)
         }

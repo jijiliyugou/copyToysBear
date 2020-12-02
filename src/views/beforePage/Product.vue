@@ -29,7 +29,7 @@
               <button class="searchBtn" @click="subSearch">搜索</button>
             </div>
         </div>
-        <button class="advanced" @click="isAdvanced = !isAdvanced">高级搜索</button>
+        <button class="advanced" @click="showAdvanced">高级搜索</button>
         </div>
         <div class="right">
           <img src="~@/assets/images/ErWeiMa.png" alt />
@@ -207,6 +207,11 @@ export default {
     }
   },
   methods: {
+    // 打开高级搜索
+    showAdvanced () {
+      this.isAdvanced = !this.isAdvanced
+      if (this.packingList.length < 1) this.getProductChpaList()
+    },
     // 输入关键字事件
     changeKeyWord (e) {
       this.$store.commit('handlerBeforeSearchKeyWord', this.packingOptions.name)
@@ -397,7 +402,6 @@ export default {
     }
   },
   created () {
-    this.getProductChpaList()
     this.getHotWord()
   },
   mounted () {}
