@@ -168,7 +168,8 @@
                 <div class="content">
                   <div class="left">
                     <li>
-                      <span class="title">公司名：</span>
+                      <span class="title" v-if="companyType === 'Exhibition'">厂商名称：</span>
+                      <span class="title" v-else>展厅名称：</span>
                       <span class="myText">{{
                         companyData && companyData.companyName
                       }}</span>
@@ -186,7 +187,7 @@
                       }}</span>
                     </li>
                     <li>
-                      <span class="title">QQ号：</span>
+                      <span class="title">QQ：</span>
                       <span class="myText">{{
                         companyData && companyData.qq
                       }}</span>
@@ -212,7 +213,8 @@
                       }}</span>
                     </li>
                     <li>
-                      <span class="title">公司地址：</span>
+                      <span class="title" v-if="companyType === 'Exhibition'">厂商地址：</span>
+                      <span class="title" v-else>展厅地址：</span>
                       <span class="myText">{{
                         companyData && companyData.address
                       }}</span>
@@ -235,6 +237,7 @@ export default {
   },
   data () {
     return {
+      companyType: this.$store.state.userInfo.commparnyList[0].companyType,
       integralTotal: null,
       isShowSourceDetail: false,
       activeIndex: 0,

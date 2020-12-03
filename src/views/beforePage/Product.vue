@@ -162,6 +162,7 @@ export default {
   },
   data () {
     return {
+      twoCubeImg: false,
       productNumber: null,
       isProductDetail: false,
       packingList: [],
@@ -241,6 +242,7 @@ export default {
     // 二次圖搜
     handlerCubeImgEvent (img) {
       this.isShowCropper = true
+      this.twoCubeImg = true
       this.option.img = img
     },
     // 提交搜索
@@ -344,6 +346,7 @@ export default {
     },
     // 选择图片搜索
     changeUpload (e) {
+      this.twoCubeImg = false
       this.fileinfo = e.target.files[0]
       console.log(this.fileinfo)
       const isLt5M = this.fileinfo.size / 1024 / 1024 < 3
@@ -370,7 +373,7 @@ export default {
       this.$refs.cropper.getCropBlob(async file => {
         const urlPreView = URL.createObjectURL(file)
         this.option.img = urlPreView
-        const baseImgs = { img: urlPreView, baseImg: ((this.$store.state.beforeSearchImgPreview && this.$store.state.beforeSearchImgPreview.baseImg) || this.baseImg) }
+        const baseImgs = { img: urlPreView, baseImg: (this.twoCubeImg ? this.$store.state.beforeSearchImgPreview.baseImg : this.baseImg) }
         this.$store.commit('handlerBeforeSearchImgPreview', baseImgs)
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
