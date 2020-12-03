@@ -410,7 +410,7 @@ export default {
       this.loading = true
       try {
         const fd = {
-          name: this.$store.state.searchValue,
+          keyword: this.$store.state.searchValue,
           categoryNumber: this.categoryNumber,
           skipCount: this.currentPage,
           maxResultCount: this.pageSize
