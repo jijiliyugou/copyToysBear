@@ -380,7 +380,6 @@ export default {
       }
     },
     handleNodeClick (data) {
-      console.log(data.id)
       this.currentPage = 1
       this.categoryNumber = data.id
       this.getProduct()

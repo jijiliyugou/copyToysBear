@@ -135,12 +135,14 @@ myAxios.install = function (Vue) {
         // 不需要loading的请求
         !res.config.url.includes('GetHotWord') &&
         !res.config.url.includes('CreateLogRecord') &&
+        !res.config.url.includes('ProductCategoryList') &&
         !res.config.url.includes('UserConfirm') &&
         !res.config.url.includes('OrgCompanyList') &&
         !res.config.url.includes('SampleOrderTotal')
       ) {
         $Store.commit('updateAppLoading', false)
       }
+      // 屏蔽不需要验证code的请求，如下载导出等
       if (res.config.url.includes('LittleBearInstallDownload') || res.config.url.includes('LittleBearInstallRepeatDownload')) {
         return res
       } else {
