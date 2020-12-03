@@ -68,7 +68,7 @@ myAxios.install = function (Vue) {
       return config
     },
     error => {
-      console.log('请求错误拦截', error)
+      // console.log('请求错误拦截', error)
       var config = error.config
       // If config does not exist or the retry option is not set, reject
       if (!config || !axios.defaults.retry) return Promise.reject(error)
@@ -179,7 +179,7 @@ myAxios.install = function (Vue) {
             $Store.commit('handlerHttpContent', '[图片]')
         }
         // 如果请求报404 | 500 | 401 之类的
-        console.log('响应失败拦截', error.response)
+        // console.log('响应失败拦截', error.response)
         switch (error.response.status) {
           case 401:
             Message.closeAll()
