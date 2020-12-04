@@ -51,6 +51,7 @@ myAxios.install = function (Vue) {
         !config.url.includes('CreateLogRecord') &&
         !config.url.includes('MessageUploadFile') &&
         !config.url.includes('GetInstantMessageByNumber') &&
+        !config.url.includes('ProductCategoryList') &&
         !config.url.includes('GetHotWord') &&
         !config.url.includes('UserConfirm') &&
         !config.url.includes('CreateMessageAccept') &&

@@ -412,11 +412,10 @@ export default {
           this.totalCount = 0
         }
         $('.rootApp').animate({ scrollTop: 0 }) // 回到顶部
-        this.loading = false
       } catch (error) {
-        this.loading = false
         this.totalCount = 0
       }
+      this.loading = false
       this.isDetail = false
     },
     // 显示产品详情

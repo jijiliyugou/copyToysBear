@@ -487,6 +487,7 @@ export default {
         this.currentPage = 1
         this.totalCount = 0
         this.dataList = []
+        this.isDetail = false
         this.categoryNumber = null
         this.search = this.$store.state.searchValues
         if (this.$store.state.hotSearchImg instanceof Array) {

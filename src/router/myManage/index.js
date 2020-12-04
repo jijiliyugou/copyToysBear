@@ -7,6 +7,7 @@ const InfoTemplate = () => import('@/views/myManage/infoTemplate.vue')
 const DefaultFormulaMan = () => import('@/views/myManage/defaultFormulaMan.vue')
 const BearproductOff = () => import('@/views/myManage/bearproductOff.vue')
 const OffHallMan = () => import('@/views/myManage/offHallMan.vue')
+const AuthSampleList = () => import('@/views/myManage/authSampleList.vue')
 export default [
   {
     path: '/myCustomer',
@@ -52,5 +53,10 @@ export default [
     path: '/offHallMan',
     name: 'offHallMan',
     component: OffHallMan
+  },
+  {
+    path: '/authSampleList',
+    name: 'authSampleList',
+    component: AuthSampleList
   }
 ]
