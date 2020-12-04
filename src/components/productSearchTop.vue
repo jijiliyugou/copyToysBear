@@ -43,7 +43,7 @@
       >
     </div>
     <!-- vueCropper 剪裁图片实现-->
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" destroy-on-close append-to-body>
+    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" top="0px" destroy-on-close append-to-body>
       <div class="cropper-content">
         <div class="cropper" style="text-align:center">
           <vueCropper
