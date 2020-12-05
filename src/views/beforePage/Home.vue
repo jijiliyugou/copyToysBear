@@ -416,7 +416,7 @@ export default {
         in_le: null,
         in_wi: null,
         in_hi: null,
-        isUpInsetImg: true,
+        isUpInsetImg: null,
         startTime: null,
         endTime: null
       }
