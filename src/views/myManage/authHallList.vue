@@ -39,7 +39,6 @@
         </div>
         <div class="btnList">
           <el-button size="mini" type="primary" @click="search">查询</el-button>
-          <el-button size="mini" type="primary" @click="exportData">导出</el-button>
         </div>
         </div>
       </el-form>
@@ -123,40 +122,6 @@ export default {
     }
   },
   methods: {
-    // 批量导出
-    async exportData () {
-      const fd = {
-        keyword: this.searchForm.keyword,
-        hallNumber: this.searchForm.hallNumber,
-        companyType: this.searchForm.companyType,
-        isInstall: this.searchForm.isInstall
-      }
-      for (const key in fd) {
-        if (fd[key] === null || fd[key] === undefined || fd[key] === '') {
-          delete fd[key]
-        }
-      }
-      let url = '/api/LittleBearInstallDownload'
-      if (this.searchForm.isRepeat) {
-        url = '/api/LittleBearInstallRepeatDownload'
-      }
-      this.$http.post(url, fd, { responseType: 'blob' }).then(res => {
-        const fileName = '公司文档.xls'
-        const blob = res.data
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) { // 兼容IE
-          window.navigator.msSaveOrOpenBlob(blob, fileName)
-        } else { // 兼容Google及fireFox
-          const link = document.createElement('a')
-          link.style.display = 'none'
-          link.download = fileName
-          link.href = URL.createObjectURL(blob)
-          document.body.appendChild(link)
-          link.click()
-          URL.revokeObjectURL(link.href) // 释放URL 对象
-          document.body.removeChild(link)
-        }
-      })
-    },
     // 表头类名
     headerStyle ({ row, column, rowIndex, columnIndex }) {
       if (rowIndex) {

@@ -79,7 +79,7 @@
               }}
             </li>
             <li>
-              样品规格：{{
+              产品规格：{{
                 productDetail.bearProduct.fa_no === 0
                   ? "???"
                   : productDetail.bearProduct.pr_le +

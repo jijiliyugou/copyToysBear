@@ -3,53 +3,70 @@
   <div class="home">
     <div class="homeBox">
       <div class="downloadCode">
-      <div class="downloadContent">
-        <div style="flex:1;">
-          <div class="left" v-show="$route.path === '/beforeIndex/login'">
-           <el-image :src="require('@/assets/images/erpLogo.png')" fit="contain"></el-image>
-           <div class="welcome">
-             欢迎登录
-           </div>
-        </div>
-        </div>
-        <div class="right">
-          <div class="code">
-            <el-image :src="require('@/assets/images/ErWeiMa.png')" fit="contain"></el-image>
-            <p class="text">小竹熊app下载</p>
+        <div class="downloadContent">
+          <div style="flex: 1">
+            <div class="left" v-show="$route.path === '/beforeIndex/login'">
+              <el-image
+                :src="require('@/assets/images/erpLogo.png')"
+                fit="contain"
+              ></el-image>
+              <div class="welcome">欢迎登录</div>
+            </div>
+          </div>
+          <div class="right">
+            <div class="code">
+              <el-image
+                :src="require('@/assets/images/ErWeiMa.png')"
+                fit="contain"
+              ></el-image>
+              <p class="text">小竹熊app下载</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
       <div class="searchBox">
-        <el-image class="searchImg" :src="require('@/assets/images/inputLogo.png')" fit="contain"></el-image>
+        <el-image
+          class="searchImg"
+          :src="require('@/assets/images/inputLogo.png')"
+          fit="contain"
+        ></el-image>
         <h1 class="title">小竹熊云科技</h1>
         <div class="inputBox">
-            <el-input
-              @keyup.enter.native="subSearch"
-              clearable
-              placeholder="请输入关键词/图片搜索"
-              v-model="packingOptions.name">
-            </el-input>
-            <div class="iconBox">
-              <div class="uploadIcon">
-                <i class="iconfont icon-tupian">
-                  <input
-                    type="file"
-                    ref="uploadRef"
-                    @change="changeUpload"
-                    class="fileInput"
-                    accept=".jpg,.jpeg,.png,.ico,.bmp,.JPG,.JPEG,.PNG,.ICO,.BMP"
-                  />
-                </i>
-              </div>
-              <button class="searchBtn" @click="subSearch">搜索</button>
+          <el-input
+            @keyup.enter.native="subSearch"
+            clearable
+            placeholder="请输入关键词/图片搜索"
+            v-model="packingOptions.name"
+          >
+          </el-input>
+          <div class="iconBox">
+            <div class="uploadIcon">
+              <i class="iconfont icon-tupian">
+                <input
+                  type="file"
+                  ref="uploadRef"
+                  @change="changeUpload"
+                  class="fileInput"
+                  accept=".jpg,.jpeg,.png,.ico,.bmp,.JPG,.JPEG,.PNG,.ICO,.BMP"
+                />
+              </i>
             </div>
+            <button class="searchBtn" @click="subSearch">搜索</button>
+          </div>
         </div>
         <button class="advanced" @click="showAdvanced">高级搜索</button>
       </div>
       <!-- 关键字 -->
       <div class="keywords" v-show="isAdvanced">
-        <em>热词搜索：</em> <span @click="handlerHotKey(i, item.productName)" :class="{'item':true, active: keywordActive === i}" v-for="(item, i) in hotWords" :key="i"> {{ item.productName }}</span>
+        <em>热词搜索：</em>
+        <span
+          @click="handlerHotKey(i, item.productName)"
+          :class="{ item: true, active: keywordActive === i }"
+          v-for="(item, i) in hotWords"
+          :key="i"
+        >
+          {{ item.productName }}</span
+        >
       </div>
       <!-- 高级搜索 -->
       <!-- <transition name="el-zoom-in-top"> -->
@@ -57,61 +74,174 @@
         <div class="box">
           <div class="left">
             <div class="item">
-              出厂货号：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
-            </div>
-            <div class="item">
-              玩具尺寸：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.pr_le" placeholder="长"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.pr_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.pr_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
-            </div>
-            <div class="item">
-              外包装箱：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.ou_le" placeholder="长"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.ou_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.ou_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
-            </div>
-            <div class="item">
-              图<span style="opacity: 0;">图片</span>片：
-              <div style="flex:1;marginLeft:10px;">
-                <el-radio v-model="packingOptions.isUpInsetImg" :label="true">是</el-radio>
-                <el-radio v-model="packingOptions.isUpInsetImg" :label="false">否</el-radio>
-              </div>
+              价格区间：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.minPrice"
+                placeholder="最低"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                size="mini"
+                v-model="packingOptions.maxPrice"
+                @keyup.enter.native="subSearch"
+                placeholder="最高"
+              ></el-input>
               <div class="unit"></div>
+            </div>
+            <div class="item">
+              产品规格：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.pr_le"
+                placeholder="长"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.pr_wi"
+                size="mini"
+                placeholder="宽"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.pr_hi"
+                size="mini"
+                placeholder="高"
+              ></el-input>
+              <div class="unit">CM</div>
+            </div>
+            <div class="item">
+              外箱规格：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.ou_le"
+                placeholder="长"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.ou_wi"
+                size="mini"
+                placeholder="宽"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.ou_hi"
+                size="mini"
+                placeholder="高"
+              ></el-input>
+              <div class="unit">CM</div>
+            </div>
+            <div class="item">
+              包装规格：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.in_le"
+                placeholder="长"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.in_wi"
+                size="mini"
+                placeholder="宽"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.in_hi"
+                size="mini"
+                placeholder="高"
+              ></el-input>
+              <div class="unit">CM</div>
             </div>
           </div>
           <div class="right">
             <div class="item">
-              价格区间：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" @keyup.enter.native="subSearch" placeholder="最高"></el-input><div class="unit"></div>
+              出厂货号：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.fa_no"
+                placeholder="请输入货号"
+              ></el-input>
+              <div class="unit"></div>
             </div>
             <div class="item">
-              时间区间：<el-select v-model="packingDatetime" @change="getDateList" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in dateList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <div class="unit"></div>
+              发布日期：<el-select
+                v-model="packingDatetime"
+                @change="getDateList"
+                size="mini"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in dateList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </div>
-            <div class="item">
-              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
-              <el-option
-                v-for="(item, i) in packingList"
-                :key="i"
-                :label="item.ch_pa"
-                :value="item.pa_nu">
-              </el-option>
-            </el-select>
-            <div class="unit"></div>
+            <div class="item baozhuang">
+              包装方式：<el-select
+                v-model="packingOptions.pa_nu"
+                size="mini"
+                placeholder="请选择"
+                popper-class="baozhuang"
+              >
+                <el-option
+                  v-for="(item, i) in packingList"
+                  :key="i"
+                  :label="item.ch_pa"
+                  :value="item.pa_nu"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <div class="item myImg">
+              图<span style="opacity: 0">图片</span>片：
+              <div style="flex: 1; marginleft: 10px">
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="true"
+                  >是</el-radio
+                >
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="false"
+                  >否</el-radio
+                >
+              </div>
+              <div class="unit"></div>
             </div>
           </div>
         </div>
         <div class="btnList">
-          <el-button round style="backgroundColor:#dddddd;width:100px;" @click="resetOptions">重置</el-button>
-          <el-button round type="primary" style="marginLeft:40px;width:100px;" @click="subSearch">确定</el-button>
+          <el-button
+            round
+            style="backgroundcolor: #dddddd; width: 100px"
+            @click="resetOptions"
+            >重置</el-button
+          >
+          <el-button
+            round
+            type="primary"
+            style="marginleft: 40px; width: 100px"
+            @click="subSearch"
+            >确定</el-button
+          >
         </div>
       </div>
     </div>
     <!-- vueCropper 剪裁图片实现 -->
-    <el-dialog title="图片剪裁" :visible.sync="isShowCropper" top="40px" destroy-on-close append-to-body>
+    <el-dialog
+      title="图片剪裁"
+      :visible.sync="isShowCropper"
+      top="40px"
+      destroy-on-close
+      append-to-body
+    >
       <div class="cropper-content">
-        <div class="cropper" style="text-align:center">
+        <div class="cropper" style="text-align: center">
           <vueCropper
             ref="cropper"
             :img="option.img"
@@ -119,7 +249,7 @@
             :outputType="option.outputType"
             :autoCropWidth="option.autoCropWidth"
             :autoCropHeight="option.autoCropHeight"
-            :canScale='option.canScale'
+            :canScale="option.canScale"
             :info="option.info"
             :full="option.full"
             :canMove="option.canMove"
@@ -189,6 +319,9 @@ export default {
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
+        in_le: null,
+        in_wi: null,
+        in_hi: null,
         isUpInsetImg: null,
         startTime: null,
         endTime: null
@@ -233,8 +366,8 @@ export default {
     // 詳情返回事件
     changeIsDetail (productDetail) {
       this.isProductDetail = false
-      this.$refs.childrenProduct.productList.forEach(item => {
-        if (item.productNumber === this.productNumber) item.isFavorite = productDetail.isFavorite
+      this.$refs.childrenProduct.productList.forEach((item) => {
+        if (item.productNumber === this.productNumber) { item.isFavorite = productDetail.isFavorite }
       })
     },
     // 打開產品詳情
@@ -280,6 +413,9 @@ export default {
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
+        in_le: null,
+        in_wi: null,
+        in_hi: null,
         isUpInsetImg: true,
         startTime: null,
         endTime: null
@@ -291,8 +427,8 @@ export default {
       const y = param.getFullYear()
       let m = param.getMonth() + 1
       let d = param.getDate()
-      m = m < 10 ? ('0' + m) : m
-      d = d < 10 ? ('0' + d) : d
+      m = m < 10 ? '0' + m : m
+      d = d < 10 ? '0' + d : d
       return y + '-' + m + '-' + d
     },
     // 选择时间
@@ -328,7 +464,8 @@ export default {
             start = date1 - oneDay * 183
             break
         }
-        this.packingOptions.startTime = this.formatTime(new Date(start)) + 'T00:00:00'
+        this.packingOptions.startTime =
+          this.formatTime(new Date(start)) + 'T00:00:00'
         this.packingOptions.endTime = endTime + 'T23:59:59'
       } else {
         this.packingOptions.startTime = null
@@ -377,10 +514,13 @@ export default {
     onCubeImg () {
       this.loading = true
       // 获取cropper的截图的 数据
-      this.$refs.cropper.getCropBlob(async file => {
+      this.$refs.cropper.getCropBlob(async (file) => {
         const urlPreView = URL.createObjectURL(file)
         this.option.img = urlPreView
-        this.$store.commit('handlerBeforeSearchImgPreview', { img: urlPreView, baseImg: this.baseImg })
+        this.$store.commit('handlerBeforeSearchImgPreview', {
+          img: urlPreView,
+          baseImg: this.baseImg
+        })
         // 上传
         const companyNumber = this.$store.state.userInfo.commparnyList
           ? this.$store.state.userInfo.commparnyList[0].companyNumber
@@ -392,7 +532,10 @@ export default {
           const res = await this.$http.post('/api/File/SearchPicture', fd)
           if (res.data.result.code === 200) {
             this.cropperCancel()
-            this.$store.commit('handlerBeforeSearchImg', res.data.result.object)
+            this.$store.commit(
+              'handlerBeforeSearchImg',
+              res.data.result.object
+            )
             this.$router.push('/beforeIndex/product')
           } else {
             this.cropperCancel()
@@ -421,255 +564,277 @@ export default {
 </script>
 <style lang="less" scoped>
 @deep: ~">>>";
-  .home {
-    flex: 1;
-    .productDetailBox{
-      max-width: 1200px;
-      margin: 0 auto;
-      height: calc(100%);
-    }
-    .homeBox{
-      max-width: 1200px;
-      margin: 0 auto;
-      // height: calc(100%);
-      position: relative;
-      .downloadCode{
-        width: 100%;
-        background-color: #fff;
-        .downloadContent {
-          max-width: 1200px;
-          overflow: visible;
-          min-width: 1024px;
-          height: 120px;
-          margin: 0 auto;
+.home {
+  flex: 1;
+  .productDetailBox {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: calc(100%);
+  }
+  .homeBox {
+    max-width: 1200px;
+    margin: 0 auto;
+    // height: calc(100%);
+    position: relative;
+    .downloadCode {
+      width: 100%;
+      background-color: #fff;
+      .downloadContent {
+        max-width: 1200px;
+        overflow: visible;
+        min-width: 1024px;
+        height: 120px;
+        margin: 0 auto;
+        display: flex;
+        .left,
+        .right {
+          flex: 1;
+        }
+        .left {
           display: flex;
-          .left,.right{
-            flex: 1;
+          align-items: center;
+          .el-image {
+            width: 120px;
+            height: 120px;
           }
-          .left {
+          .welcome {
+            font-size: 20px;
+            color: #4077f9;
+            margin-left: 50px;
+            position: relative;
+            vertical-align: top;
+            &::before {
+              display: block;
+              position: absolute;
+              content: "";
+              width: 2px;
+              height: 30px;
+              background-color: #4077f9;
+              left: -20px;
+              top: 50%;
+              transform: translate(0, -50%);
+            }
+          }
+        }
+        .right {
+          display: flex;
+          justify-content: flex-end;
+          .code {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             .el-image {
-              width: 120px;
-              height: 120px;
+              width: 80px;
+              height: 80px;
             }
-            .welcome{
-              font-size: 20px;
-              color: #4077f9;
-              margin-left: 50px;
-              position: relative;
-              vertical-align: top;
-              &::before{
-                display: block;
-                position: absolute;
-                content: '';
-                width: 2px;
-                height: 30px;
-                background-color: #4077f9;
-                left: -20px;
-                top: 50%;
-                transform: translate(0, -50%);
-              }
-            }
-          }
-          .right {
-            display: flex;
-            justify-content: flex-end;
-            .code{
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              .el-image{
-                width: 80px;
-                height: 80px;
-              }
-              .text {
-                font-size: 12px;
-                color: #797979;
-              }
+            .text {
+              font-size: 12px;
+              color: #797979;
             }
           }
         }
       }
-      .searchBox{
-        width: 668px;
-        margin: 0 auto;
-        margin-top: 50px;
+    }
+    .searchBox {
+      width: 668px;
+      margin: 0 auto;
+      margin-top: 50px;
+      position: relative;
+      padding-top: 71px;
+      display: flex;
+      .searchImg {
+        position: absolute;
+        left: -50px;
+        top: -2px;
+        width: 230px;
+        height: 80px;
+        z-index: 1;
+      }
+      .title {
+        color: #3872f8;
+        position: absolute;
+        font-size: 16px;
+        left: 140px;
+        top: 40px;
+        font-weight: bold;
+      }
+      .inputBox {
+        border-radius: 10px;
+        border: 1px solid #3872f8;
         position: relative;
-        padding-top: 71px;
         display: flex;
-        .searchImg {
-          position: absolute;
-          left: -50px;
-          top: -2px;
-          width: 230px;
-          height: 80px;
-          z-index: 1;
+        width: 548px;
+        height: 52px;
+        box-sizing: border-box;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        font-size: 16px;
+        @{deep} .el-input {
+          input {
+            border: none;
+          }
         }
-        .title{
-          color: #3872F8;
-          position: absolute;
-          font-size: 16px;
-          left: 140px;
-          top: 40px;
-          font-weight: bold;
-        }
-          .inputBox{
-            border-radius: 10px;
-            border: 1px solid #3872F8;
-            position: relative;
+        .iconBox {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-sizing: border-box;
+          .uploadIcon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #3872f8;
+            color: #fff;
             display: flex;
-            width: 548px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            .iconfont {
+              font-size: 10px;
+              .fileInput {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 30px;
+                height: 30px;
+                font-size: 0;
+                padding: 0;
+                cursor: pointer;
+                opacity: 0;
+              }
+            }
+          }
+          .searchBtn {
+            margin: 0;
+            padding: 0;
+            margin-left: 14px;
+            font-size: 16px;
+            background-color: #3872f8;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            width: 107px;
             height: 52px;
             box-sizing: border-box;
-            align-items: center;
-            justify-content: space-between;
-            overflow: hidden;
-            font-size: 16px;
-            @{deep} .el-input{
-              input {
-                border: none;
-              }
-            }
-            .iconBox{
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              box-sizing: border-box;
-              .uploadIcon{
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                background-color: #3872f8;
-                color: #fff;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-                cursor: pointer;
-                .iconfont {
-                  font-size: 10px;
-                  .fileInput {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 30px;
-                    height: 30px;
-                    font-size: 0;
-                    padding: 0;
-                    cursor: pointer;
-                    opacity: 0;
-                  }
-                }
-              }
-            .searchBtn{
-                margin: 0;
-                padding: 0;
-                margin-left: 14px;
-                font-size: 16px;
-                background-color: #3872f8;
-                border: none;
-                border-radius: 10px;
-                color: #fff;
-                width: 107px;
-                height: 52px;
-                box-sizing: border-box;
-                outline: none;
-                cursor: pointer;
-              }
-            }
-          }
-          .advanced{
-              font-size: 16px;
-              margin-left: 13px;
-              background-color: #fff;
-              border: 1px solid #3872f8;
-              font-weight: 600;
-              border-radius: 10px;
-              color: #3872f8;
-              width: 107px;
-              height: 52px;
-              outline: none;
-              cursor: pointer;
-            }
-        }
-      .keywords{
-          width: 668px;
-          margin: 0 auto;
-          font-size: 14px;
-          em {
-            display: inline-block;
-            margin-top: 10px;
-          }
-          .item {
-            display: inline-block;
-            padding-right: 20px;
-            margin-top: 10px;
-            color: #aaa;
+            outline: none;
             cursor: pointer;
-            &:hover{
-              color: #409eff;
+          }
+        }
+      }
+      .advanced {
+        font-size: 16px;
+        margin-left: 13px;
+        background-color: #fff;
+        border: 1px solid #3872f8;
+        font-weight: 600;
+        border-radius: 10px;
+        color: #3872f8;
+        width: 107px;
+        height: 52px;
+        outline: none;
+        cursor: pointer;
+      }
+    }
+    .keywords {
+      width: 668px;
+      margin: 0 auto;
+      font-size: 14px;
+      em {
+        display: inline-block;
+        margin-top: 10px;
+      }
+      .item {
+        display: inline-block;
+        padding-right: 20px;
+        margin-top: 10px;
+        color: #aaa;
+        cursor: pointer;
+        &:hover {
+          color: #409eff;
+        }
+        &.active {
+          color: red;
+        }
+      }
+    }
+    .searchAdvanced {
+      width: 100%;
+      font-size: 14px;
+      padding: 20px 0;
+      z-index: 1;
+      left: 0;
+      background-color: #fff;
+      // box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
+      .box {
+        width: 668px;
+        margin: 0 auto;
+        display: flex;
+        .left,
+        .right {
+          flex: 1;
+          .item {
+            margin-bottom: 20px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            @{deep} .el-input {
+              flex: 1;
+              input {
+                border-radius: 28px;
+              }
             }
-            &.active{
+            em {
+              padding: 0 5px;
+            }
+            .unit {
+              margin-left: 5px;
+              width: 30px;
               color: red;
             }
           }
-      }
-      .searchAdvanced{
-        width: 100%;
-        font-size: 14px;
-        padding: 20px 0;
-        z-index: 1;
-        left: 0;
-        background-color: #fff;
-        // box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
-        .box{
-          width: 700px;
-          margin: 0 auto;
-          display: flex;
-          border-bottom: 2px solid #f0f5ff;
-          .left,.right {
-            flex: 1;
-            .item {
-              margin-bottom: 20px;
-              padding: 0 20px;
-              box-sizing: border-box;
-              display: flex;
-              justify-content: space-between;
-              flex-wrap: wrap;
-              align-items: center;
-              @{deep} .el-input{
-                flex: 1;
-                input{
-                  border-radius: 28px;
-                }
-              }
-              em{
-                padding: 0 5px;
-              }
-              .unit{
-                margin-left: 5px;
-                width: 30px;
-                color: red;
+        }
+        .right {
+          .item {
+            &.myImg {
+              height: 28px;
+              line-height: 28px;
+              .el-radio {
+                font-weight: 700;
               }
             }
           }
         }
-        .btnList{
-          margin-top: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+      }
+      .btnList {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }
+}
 // 截图
 .cropper-content {
   .cropper {
     width: auto;
     height: 500px;
+  }
+}
+.baozhuang{
+  .el-scrollbar{
+    .el-select-dropdown__wrap{
+      .el-scrollbar__view{
+        .el-select-dropdown__item{
+          width: 180px;
+        }
+      }
+    }
   }
 }
 </style>

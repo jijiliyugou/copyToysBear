@@ -45,48 +45,144 @@
         <div class="box">
           <div class="left">
             <div class="item">
-              出厂货号：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.fa_no" placeholder="请输入货号"></el-input><div class="unit"></div>
-            </div>
-            <div class="item">
-              玩具尺寸：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.pr_le" placeholder="长"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.pr_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.pr_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
-            </div>
-            <div class="item">
-              外包装箱：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.ou_le" placeholder="长"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.ou_wi" size="mini" placeholder="宽"></el-input><em>-</em><el-input @keyup.enter.native="subSearch" v-model="packingOptions.ou_hi" size="mini" placeholder="高"></el-input><div class="unit">CM</div>
-            </div>
-            <div class="item">
-              图<span style="opacity: 0;">图片</span>片：
-              <div style="flex:1;marginLeft:10px;">
-                <el-radio v-model="packingOptions.isUpInsetImg" :label="true">是</el-radio>
-                <el-radio v-model="packingOptions.isUpInsetImg" :label="false">否</el-radio>
-              </div>
+              价格区间：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.minPrice"
+                placeholder="最低"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                size="mini"
+                v-model="packingOptions.maxPrice"
+                @keyup.enter.native="subSearch"
+                placeholder="最高"
+              ></el-input>
               <div class="unit"></div>
+            </div>
+            <div class="item">
+              产品规格：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.pr_le"
+                placeholder="长"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.pr_wi"
+                size="mini"
+                placeholder="宽"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.pr_hi"
+                size="mini"
+                placeholder="高"
+              ></el-input>
+              <div class="unit">CM</div>
+            </div>
+            <div class="item">
+              外箱规格：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.ou_le"
+                placeholder="长"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.ou_wi"
+                size="mini"
+                placeholder="宽"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.ou_hi"
+                size="mini"
+                placeholder="高"
+              ></el-input>
+              <div class="unit">CM</div>
+            </div>
+            <div class="item">
+              包装规格：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.in_le"
+                placeholder="长"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.in_wi"
+                size="mini"
+                placeholder="宽"
+              ></el-input
+              ><em>-</em
+              ><el-input
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.in_hi"
+                size="mini"
+                placeholder="高"
+              ></el-input>
+              <div class="unit">CM</div>
             </div>
           </div>
           <div class="right">
             <div class="item">
-              价格区间：<el-input size="mini" @keyup.enter.native="subSearch" v-model="packingOptions.minPrice" placeholder="最低"></el-input><em>-</em><el-input size="mini" v-model="packingOptions.maxPrice" @keyup.enter.native="subSearch" placeholder="最高"></el-input><div class="unit"></div>
+              出厂货号：<el-input
+                size="mini"
+                @keyup.enter.native="subSearch"
+                v-model="packingOptions.fa_no"
+                placeholder="请输入货号"
+              ></el-input>
+              <div class="unit"></div>
             </div>
             <div class="item">
-              时间区间：<el-select v-model="packingDatetime" @change="getDateList" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in dateList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-            <div class="unit"></div>
+              发布日期：<el-select
+                v-model="packingDatetime"
+                @change="getDateList"
+                size="mini"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in dateList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
             </div>
-            <div class="item">
-              包装方式：<el-select v-model="packingOptions.pa_nu" size="mini" placeholder="请选择">
-              <el-option
-                v-for="(item, i) in packingList"
-                :key="i"
-                :label="item.ch_pa"
-                :value="item.pa_nu">
-              </el-option>
-            </el-select>
-            <div class="unit"></div>
+            <div class="item baozhuang">
+              包装方式：<el-select
+                v-model="packingOptions.pa_nu"
+                size="mini"
+                placeholder="请选择"
+                popper-class="baozhuang"
+              >
+                <el-option
+                  v-for="(item, i) in packingList"
+                  :key="i"
+                  :label="item.ch_pa"
+                  :value="item.pa_nu"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <div class="item myImg">
+              图<span style="opacity: 0">图片</span>片：
+              <div style="flex: 1; marginleft: 10px">
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="true"
+                  >是</el-radio
+                >
+                <el-radio v-model="packingOptions.isUpInsetImg" :label="false"
+                  >否</el-radio
+                >
+              </div>
+              <div class="unit"></div>
             </div>
           </div>
         </div>
@@ -269,6 +365,9 @@ export default {
         ou_le: null,
         ou_wi: null,
         ou_hi: null,
+        in_le: null,
+        in_wi: null,
+        in_hi: null,
         isUpInsetImg: null,
         startTime: null,
         endTime: null
@@ -568,38 +667,48 @@ export default {
         left: 0;
         background-color: #fff;
         // box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
-        .box{
-          width: 668px;
-          margin: 0 auto;
-          display: flex;
-          border-bottom: 2px solid #f0f5ff;
-          justify-content: space-between;
-          .left,.right {
-            flex: 1;
-            .item {
-              margin-bottom: 20px;
-              padding: 0 20px;
-              box-sizing: border-box;
-              display: flex;
-              flex-wrap: wrap;
-              align-items: center;
-              @{deep} .el-input{
-                flex: 1;
-                input{
-                  border-radius: 28px;
-                }
+        .box {
+        width: 668px;
+        margin: 0 auto;
+        display: flex;
+        .left,
+        .right {
+          flex: 1;
+          .item {
+            margin-bottom: 20px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            @{deep} .el-input {
+              flex: 1;
+              input {
+                border-radius: 28px;
               }
-              em{
-                padding: 0 5px;
-              }
-              .unit{
-                margin-left: 5px;
-                width: 30px;
-                color: red;
+            }
+            em {
+              padding: 0 5px;
+            }
+            .unit {
+              margin-left: 5px;
+              width: 30px;
+              color: red;
+            }
+          }
+        }
+        .right {
+          .item {
+            &.myImg {
+              height: 28px;
+              line-height: 28px;
+              .el-radio {
+                font-weight: 700;
               }
             }
           }
         }
+      }
         .btnList{
           margin-top: 20px;
           display: flex;
@@ -614,6 +723,17 @@ export default {
   .cropper {
     width: auto;
     height: 500px;
+  }
+}
+.baozhuang{
+  .el-scrollbar{
+    .el-select-dropdown__wrap{
+      .el-scrollbar__view{
+        .el-select-dropdown__item{
+          width: 180px;
+        }
+      }
+    }
   }
 }
 </style>

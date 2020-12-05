@@ -131,7 +131,7 @@
                     </li>
                     <li>包装：{{ item.fa_no === 0 ? "???" : item.ch_pa }}</li>
                     <li>
-                      样品规格：{{
+                      产品规格：{{
                         item.fa_no === 0
                           ? "???"
                           : item.pr_le +
