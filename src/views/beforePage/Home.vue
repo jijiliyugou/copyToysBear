@@ -21,7 +21,8 @@
       </div>
     </div>
       <div class="searchBox">
-        <div class="searchImg"></div>
+        <el-image class="searchImg" :src="require('@/assets/images/inputLogo.png')" fit="contain"></el-image>
+        <h1 class="title">小竹熊云科技</h1>
         <div class="inputBox">
             <el-input
               @keyup.enter.native="subSearch"
@@ -492,7 +493,7 @@ export default {
         }
       }
       .searchBox{
-        width: 700px;
+        width: 668px;
         margin: 0 auto;
         margin-top: 50px;
         position: relative;
@@ -500,33 +501,45 @@ export default {
         display: flex;
         .searchImg {
           position: absolute;
-          left: 5px;
-          top: 0;
+          left: -50px;
+          top: -2px;
           width: 230px;
           height: 80px;
-          background: url('~@/assets/images/searchTopBg.png') no-repeat;
           z-index: 1;
+        }
+        .title{
+          color: #3872F8;
+          position: absolute;
+          font-size: 16px;
+          left: 140px;
+          top: 40px;
+          font-weight: bold;
         }
           .inputBox{
             border-radius: 10px;
-            border: 1px solid #789ffa;
+            border: 1px solid #3872F8;
             position: relative;
             display: flex;
-            width: 619px;
+            width: 548px;
+            height: 52px;
+            box-sizing: border-box;
             align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+            font-size: 16px;
             @{deep} .el-input{
               input {
                 border: none;
-                border-radius: 10px;
               }
             }
             .iconBox{
               display: flex;
               align-items: center;
-              justify-content: center;
+              justify-content: space-between;
+              box-sizing: border-box;
               .uploadIcon{
-                width: 30px;
-                height: 30px;
+                width: 32px;
+                height: 32px;
                 border-radius: 50%;
                 background-color: #3872f8;
                 color: #fff;
@@ -551,33 +564,38 @@ export default {
                 }
               }
             .searchBtn{
-                margin-left: 10px;
+                margin: 0;
+                padding: 0;
+                margin-left: 14px;
+                font-size: 16px;
                 background-color: #3872f8;
-                border: 1px solid #3872f8;
-                border-radius: 9px;
+                border: none;
+                border-radius: 10px;
                 color: #fff;
-                width: 96px;
-                height: 40px;
+                width: 107px;
+                height: 52px;
+                box-sizing: border-box;
                 outline: none;
                 cursor: pointer;
               }
             }
           }
           .advanced{
-              margin-left: 10px;
+              font-size: 16px;
+              margin-left: 13px;
               background-color: #fff;
               border: 1px solid #3872f8;
               font-weight: 600;
-              border-radius: 9px;
+              border-radius: 10px;
               color: #3872f8;
-              width: 96px;
-              height: 40px;
+              width: 107px;
+              height: 52px;
               outline: none;
               cursor: pointer;
             }
         }
       .keywords{
-          width: 700px;
+          width: 668px;
           margin: 0 auto;
           font-size: 14px;
           em {

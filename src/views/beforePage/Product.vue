@@ -430,7 +430,7 @@ export default {
         justify-content: space-between;
         padding-top: 20px;
         .middle{
-          width: 700px;
+          width: 668px;
           margin: 0 auto;
           position: relative;
           display: flex;
@@ -445,11 +445,14 @@ export default {
           }
           .inputBox{
               border-radius: 10px;
-              border: 1px solid #789ffa;
+              border: 1px solid #3872f8;
               position: relative;
               display: flex;
-              width: 619px;
+              width: 548px;
+              height: 52px;
+              box-sizing: border-box;
               align-items: center;
+              font-size: 16px;
               @{deep} .el-input{
                 input {
                   border: none;
@@ -487,27 +490,29 @@ export default {
                   }
                 }
               .searchBtn{
-                  margin-left: 10px;
+                  margin-left: 14px;
                   background-color: #3872f8;
                   border: 1px solid #3872f8;
                   border-radius: 9px;
                   color: #fff;
-                  width: 96px;
-                  height: 40px;
+                  width: 107px;
+                  height: 52px;
                   outline: none;
+                  font-size: 16px;
                   cursor: pointer;
                 }
               }
           }
           .advanced{
-                margin-left: 10px;
+                margin-left: 13px;
                 background-color: #fff;
                 border: 1px solid #3872f8;
                 font-weight: 600;
                 border-radius: 9px;
                 color: #3872f8;
-                width: 96px;
-                height: 40px;
+                width: 107px;
+                height: 52px;
+                font-size: 16px;
                 outline: none;
                 cursor: pointer;
           }
@@ -534,17 +539,17 @@ export default {
         }
       }
       .keywords{
-          width: 700px;
+          width: 668px;
           margin: 0 auto;
           font-size: 14px;
           em {
             display: inline-block;
-            margin-top: 10px;
+            margin-bottom: 10px;
           }
           .item {
             display: inline-block;
             padding-right: 20px;
-            margin-top: 10px;
+            margin-bottom: 10px;
             color: #aaa;
             cursor: pointer;
             &:hover{
@@ -558,16 +563,17 @@ export default {
       .searchAdvanced{
         width: 100%;
         font-size: 14px;
-        padding: 20px 0;
+        padding: 0 0 20px 0;
         z-index: 1;
         left: 0;
         background-color: #fff;
         // box-shadow: 0px 3px 9px 0px rgba(0, 59, 199, 0.1);
         .box{
-          width: 700px;
+          width: 668px;
           margin: 0 auto;
           display: flex;
           border-bottom: 2px solid #f0f5ff;
+          justify-content: space-between;
           .left,.right {
             flex: 1;
             .item {
@@ -575,7 +581,6 @@ export default {
               padding: 0 20px;
               box-sizing: border-box;
               display: flex;
-              justify-content: space-between;
               flex-wrap: wrap;
               align-items: center;
               @{deep} .el-input{
