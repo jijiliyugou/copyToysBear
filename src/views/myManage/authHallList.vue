@@ -20,21 +20,25 @@
               style="width: 90%"
             ></el-input>
         </el-form-item>
-        <el-form-item label="展厅查询">
+        <el-form-item label="状态查询">
           <el-select
-          clearable
-            v-model="searchForm.hallNumber"
-            placeholder="请选择展厅"
-            size="mini"
-            style="width: 90%;"
-          >
-            <el-option
-              v-for="(item, i) in hallList"
-              :key="i"
-              :label="item.companyName"
-              :value="item.companyNumber"
-            ></el-option>
-          </el-select>
+              clearable
+              size="mini"
+              v-model="searchForm.applicationStatus"
+              placeholder="请选择"
+              style="width: 90%"
+            >
+              <el-option
+                v-for="(item, index) in [
+                  { value: '', label: '全部' },
+                  { value: true, label: '已审核' },
+                  { value: false, label: '未审核' },
+                ]"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
         </el-form-item>
         </div>
         <div class="btnList">
@@ -49,30 +53,32 @@
         :data="tableData"
         style="width: 100%"
         :header-cell-style="headerStyle"
+        @row-click="rowClick"
       >
-        <el-table-column prop="hallName" label="展厅名称"></el-table-column>
-        <el-table-column prop="hallNumber" label="展厅编号"></el-table-column>
-        <el-table-column prop="client_na" label="公司名称" width="300"></el-table-column>
-        <el-table-column prop="client_nu" label="公司编号"></el-table-column>
-        <el-table-column prop="linkman" label="联系人">
+        <el-table-column prop="companyName" label="公司名称"></el-table-column>
+        <el-table-column prop="companyNumber" label="公司编号"></el-table-column>
+        <el-table-column prop="sampleNumber" label="择样编号"></el-table-column>
+        <el-table-column prop="phoneNumber" label="联系方式"></el-table-column>
+        <el-table-column prop="applicationStatus" label="审核状态">
           <template slot-scope="scope">
-           {{ scope.row.linkman?scope.row.linkman:scope.row.linkman1?scope.row.linkman1:scope.row.linkman2}}
+            <el-tag v-if="scope.row.applicationStatus" type="success">已审核</el-tag>
+            <el-tag v-else>未审核</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="handset" label="联系电话" sortable>
-          <!-- <el-table-column
-          width="200"
-          align="center"
-          prop="handset"
-          label="相同电话：17603033458">
-        </el-table-column> -->
+        <el-table-column prop="applicantsDateTime" label="申请时间" sortable>
         <template slot-scope="scope">
-           {{ scope.row.handset?scope.row.handset:scope.row.handset1?scope.row.handset1:scope.row.handset2}}
+           {{ scope.row.applicantsDateTime.split('T')[0] }}
           </template>
         </el-table-column>
-        <el-table-column prop="state" label="是否安装" align="right" width="100">
+        <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
-           <el-tag :type="scope.row.isInstall?'success':'danger'">{{scope.row.isInstall?'已安装':'未安装'}}</el-tag>
+           <el-button size="mini" type="primary">明细</el-button>
+           <el-popconfirm
+              style="margin-left:10px;"
+              title="确定要删除这条择样单吗？"
+              @onConfirm="handleSampleDelete(scope.row)">
+              <el-button size="mini" slot="reference" @click.stop type="danger">删除</el-button>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -95,17 +101,184 @@
     <el-footer style="padding:0;" height="162px">
       <bsFooter></bsFooter>
     </el-footer>
+    <!-- 子订单列表dialog -->
+    <el-dialog title="择样订单列表" :visible.sync="sampleListDialog" top="60px" destroy-on-close width="70%">
+      <div class="childSearchBox">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+          <div class="childSearchItem">
+            <el-form-item label="关键字查询">
+          <el-input
+            clearable
+            size="mini"
+            v-model="formInline.keyword"
+            placeholder="输入关键字"
+            style="width: 90%"
+            @keyup.enter.native="search"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="选择展厅">
+          <el-select size="mini" style="width: 90%" v-model="formInline.hallNumber" clearable placeholder="请选择展厅">
+            <el-option
+              v-for="(item, index) in [{companyName: '全部', companyNumber: ''},...hallList]"
+              :key="index"
+              :label="item.companyName"
+              :value="item.companyNumber">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态查询">
+          <el-select
+              clearable
+              size="mini"
+              v-model="formInline.openState"
+              placeholder="请选择"
+              style="width: 90%"
+            >
+              <el-option
+                v-for="(item, index) in [
+                  { value: '', label: '全部' },
+                  { value: true, label: '已审核' },
+                  { value: false, label: '未审核' },
+                ]"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+        </el-form-item>
+          </div>
+        <el-form-item class="btnList">
+          <el-button type="primary" style="margin-left:10px;" size="mini" @click="childSearch">查询</el-button>
+          <el-button type="primary" size="mini" @click="subAuthSample(true)">批量审核</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+        <el-table
+        :data="sampleList"
+        row-key="id"
+        border
+        ref="sampleListTable"
+        style="width: 100%"
+        :header-cell-style="headerStyle"
+      >
+        <el-table-column type="selection" align="center"></el-table-column>
+        <el-table-column prop="imgUrl" label="图片" align="center">
+          <template slot-scope="scope">
+            <el-image class="tableImg" :src="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]">
+              <div slot="error" class="image-slot">
+                <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hallName" label="展厅名称" align="center"></el-table-column>
+        <el-table-column prop="name" label="产品名称" align="center"></el-table-column>
+        <el-table-column prop="productNumber" label="产品编号" align="center"></el-table-column>
+        <el-table-column prop="sampleNumber" label="择样编号" align="center"></el-table-column>
+        <el-table-column prop="fa_no" label="出厂货号" align="center"></el-table-column>
+        <el-table-column prop="createdOn" label="时间" sortable  align="center">
+        <template slot-scope="scope">
+           {{ scope.row.createdOn.split('T')[0] }}
+          </template>
+        </el-table-column>
+        <el-table-column label="审核状态" align="center">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.openState" type="success">已审核</el-tag>
+            <el-tag v-else>未审核</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="200">
+        <template slot-scope="scope">
+           <el-button type="primary" size="mini" @click="openAuthSample(scope.row)">审核</el-button>
+           <el-popconfirm
+           style="margin-left:10px;"
+              title="确定要删除这条择样单吗？"
+              @onConfirm="handleDelete(scope.row)"
+            >
+              <el-button size="mini" slot="reference" type="danger"
+                >删除</el-button
+              >
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+      <center style="margin-top:20px;">
+         <el-pagination
+         ref="pageRef"
+          layout="total, sizes, prev, pager, next, jumper"
+          background
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="samplePageSize"
+          :current-page.sync="sampleCurrentPage"
+          :total="sampleTotal"
+          @current-change="sampleCurrentChange"
+          @size-change="handleSizeChange"
+        ></el-pagination>
+      </center>
+    </el-dialog>
+     <!-- 审核择样dialog -->
+    <el-dialog
+      title="审核"
+      :visible.sync="authSampleDialog"
+      destroy-on-close
+      v-if="authSampleDialog"
+      width="50%"
+    >
+      <el-form
+        :model="currentAuthRow"
+        label-width="100px"
+      >
+        <el-form-item>
+          <el-image class="formImg" :src="currentAuthRow.imgUrl" :preview-src-list="[currentAuthRow.imgUrl]">
+              <div slot="error" class="image-slot">
+                <img class="errorImg" src="~@/assets/images/imgError.jpg" alt />
+              </div>
+          </el-image>
+        </el-form-item>
+        <el-form-item label="展厅名称：">
+          <el-input v-model="currentAuthRow.hallName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="产品名称：">
+          <el-input v-model="currentAuthRow.name" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="产品编号：">
+          <el-input v-model="currentAuthRow.productNumber" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="择样编号：">
+          <el-input v-model="currentAuthRow.sampleNumber" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="出厂货号：">
+          <el-input v-model="currentAuthRow.fa_no" disabled></el-input>
+        </el-form-item>
+      </el-form>
+        <center>
+          <el-button type="primary" @click="subAuthSample(false)">审核</el-button>
+          <el-button @click="authSampleDialog = false">取消</el-button>
+        </center>
+    </el-dialog>
      </el-container>
 </template>
 
 <script>
-// 获取重复手机号封装
 import bsTop from '@/components/BsTop'
 import bsFooter from '@/components/oldFooter'
 export default {
   components: { bsTop, bsFooter },
   data () {
     return {
+      sampleTotal: 0,
+      samplePageSize: 10,
+      sampleCurrentPage: 1,
+      formInline: {
+        keyword: null,
+        hallNumber: '',
+        openState: null
+      },
+      currentAuthRow: {},
+      authSampleDialog: false,
+      currentRow: null,
+      sampleListDialog: false,
+      sampleList: [],
       totalCount: 0,
       currentPage: 1,
       pageSize: 10,
@@ -114,14 +287,57 @@ export default {
       clientTypeList: [],
       searchForm: {
         keyword: '',
-        hallNumber: '',
-        companyType: '',
-        isRepeat: null,
-        isInstall: false
+        applicationStatus: ''
       }
     }
   },
   methods: {
+    // 获取展厅列表
+    async getOrgCompanyList () {
+      const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
+      if (res.data.result.code === 200) {
+        this.hallList = res.data.result.item
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 子列表搜索
+    childSearch () {
+      this.getCompanySamplelistByNumber()
+    },
+    // 审核
+    async subAuthSample (flag) {
+      let ids
+      if (flag) {
+        ids = this.$refs.sampleListTable.selection.map(val => val && val.id)
+      } else {
+        ids = [this.currentAuthRow.id]
+      }
+      console.log(ids)
+      const res = await this.$http.post('/api/AuditCompanySamplelist', { idlist: ids })
+      if (res.data.result.code === 200) {
+        this.$message.success('审核成功')
+        this.getCompanySamplelistByNumber()
+        this.authSampleDialog = false
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
+    // 打开审核择样订单
+    openAuthSample (row) {
+      this.currentAuthRow = row
+      this.authSampleDialog = true
+    },
+    // 删除详情
+    async handleDelete (row) {
+      const res = await this.$http.post('/api/DeleteSamplelistdetail', { id: row.id })
+      if (res.data.result.code === 200) {
+        this.$message.success('删除成功')
+        this.getCompanySamplelistByNumber()
+      } else {
+        this.$message.error(res.data.result.msg)
+      }
+    },
     // 表头类名
     headerStyle ({ row, column, rowIndex, columnIndex }) {
       if (rowIndex) {
@@ -134,38 +350,53 @@ export default {
     // 列表查询
     search () {
       this.currentPage = 1
-      this.getLittleBearInstall()
+      this.getCompanySamplelistPage()
     },
-    // 获取公司类型
-    async getClientTypeList () {
-      const res = await this.$http.post('/api/ServiceConfigurationList', {
-        basisParameters: 'CompanyType'
-      })
+    // 点击了某行
+    rowClick (row) {
+      this.companySamplePage = 1
+      this.sampleTotal = 0
+      this.sampleListDialog = true
+      this.currentRow = row
+      this.getCompanySamplelistByNumber()
+    },
+    // 获取子列表
+    async getCompanySamplelistByNumber () {
+      const fd = {
+        sampleNumber: this.currentRow.sampleNumber,
+        skipCount: this.sampleCurrentPage,
+        maxResultCount: this.samplePageSize,
+        keyword: this.formInline.keyword,
+        hallNumber: this.formInline.hallNumber,
+        openState: this.formInline.openState
+      }
+      for (const key in fd) {
+        if (fd[key] === null || fd[key] === undefined || fd[key] === '') delete fd[key]
+      }
+      const res = await this.$http.post('/api/CompanySamplelistByNumber', fd)
       if (res.data.result.code === 200) {
-        this.clientTypeList = res.data.result.item
+        this.sampleList = res.data.result.item.items
+        this.sampleTotal = res.data.result.item.totalCount
       } else {
         this.$message.error(res.data.result.msg)
       }
     },
-    // 获取展厅列表
-    async getOrgCompanyList () {
-      const res = await this.$http.post('/api/OrgCompanyList', { companyType: 'Exhibition' })
+    // 删除列表某行
+    async handleSampleDelete (row) {
+      const res = await this.$http.post('/api/DeleteCompanySamplelist', { id: row.id })
       if (res.data.result.code === 200) {
-        this.hallList = res.data.result.item
-        this.searchForm.hallNumber = this.hallList[0].companyNumber
-        this.getLittleBearInstall()
+        this.getCompanySamplelistPage()
+        this.$message.success('删除成功')
       } else {
         this.$message.error(res.data.result.msg)
       }
     },
     // 获取列表
-    async getLittleBearInstall   () {
+    async getCompanySamplelistPage () {
       const fd = {
         keyword: this.searchForm.keyword,
-        hallNumber: this.searchForm.hallNumber,
-        companyType: this.searchForm.companyType,
+        applicationStatus: this.searchForm.applicationStatus,
         skipCount: this.currentPage,
-        isInstall: this.searchForm.isInstall,
         maxResultCount: this.pageSize
       }
       for (const key in fd) {
@@ -173,11 +404,7 @@ export default {
           delete fd[key]
         }
       }
-      let url = '/api/LittleBearInstall'
-      if (this.searchForm.isRepeat) {
-        url = '/api/LittleBearInstallRepeat'
-      }
-      const res = await this.$http.post(url, fd)
+      const res = await this.$http.post('/api/CompanySamplelistPage', fd)
       if (res.data.result.code === 200) {
         this.tableData = res.data.result.item.items
         this.totalCount = res.data.result.item.totalCount
@@ -195,67 +422,32 @@ export default {
     // 切换当前页
     currentChange (page) {
       this.currentPage = page
-      this.getLittleBearInstall()
+      this.getCompanySamplelistPage()
     },
     // 切换当前页条数
     handleSizeChange (pageSize) {
       this.pageSize = pageSize
       if (this.currentPage * pageSize > this.totalCount) return false
-      this.getLittleBearInstall()
+      this.getCompanySamplelistPage()
     },
-    // 初始化饼状图
-    drawLine () {
-      // 基于准备好的dom，初始化echarts实例
-      const myChart = this.$echarts.init(document.querySelector('.statisticsContent'))
-      myChart.on('click', function (params) {
-        console.log(params.data)
-      })
-      // 绘制图表
-      const options = {
-        title: {
-          text: '手机数据统计',
-          subtext: '重复手机统计',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        color: ['#f56c6c', '#5fadff'],
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-          data: ['重复手机号', '正常手机号']
-        },
-        series: [
-          {
-            name: '手机数据统计',
-            type: 'pie',
-            radius: '55%',
-            center: ['50%', '60%'],
-            data: [
-              { value: 100, name: '重复手机号' },
-              { value: 310, name: '正常手机号' }
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      }
-
-      myChart.setOption(options)
+    // 切换子列表当前页
+    sampleCurrentChange (page) {
+      this.sampleCurrentPage = page
+      this.getCompanySamplelistByNumber()
+    },
+    // 切换子列表当前页总条数
+    handleSampleSizeChange (pageSize) {
+      this.samplePageSize = pageSize
+      if (this.sampleCurrentPage * pageSize > this.sampleTotal) return false
+      this.getCompanySamplelistByNumber()
     }
   },
   watch: {
   },
   mounted () {
+    // this.getOrgCompanyList()
     this.getOrgCompanyList()
-    this.getClientTypeList()
+    this.getCompanySamplelistPage()
   },
   created () {}
 }
@@ -276,5 +468,35 @@ export default {
 }
 .tableContent {
   padding: 20px 0;
+}
+.tableImg{
+  width: 50px;
+  height: 50px;
+  img{
+    width: 50px;
+    height: 50px;
+  }
+}
+.formImg{
+  width: 100px;
+  height: 100px;
+  img{
+    width: 100px;
+    height: 100px;
+  }
+}
+.childSearchBox{
+  margin: 20px 0;
+  .demo-form-inline{
+    display: flex;
+    justify-content: space-between;
+    .childSearchItem{
+      .el-form-item{
+        @{deep} .el-form-item__content{
+          width: 130px;
+        }
+      }
+    }
+  }
 }
 </style>

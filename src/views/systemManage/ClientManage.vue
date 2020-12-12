@@ -419,17 +419,17 @@
             <el-input
               type="text"
               v-model="addClientForm.companyKeyCode"
-              :disabled="dialogTitle !== '新增客户'"
             ></el-input>
           </el-form-item>
+          <!-- :disabled="dialogTitle !== '新增客户'" -->
         </div>
         <el-form-item label="公司API" prop="api">
           <el-input
             type="text"
             v-model="addClientForm.companyAPI"
-            :disabled="dialogTitle !== '新增客户'"
           ></el-input>
         </el-form-item>
+        <!-- :disabled="dialogTitle !== '新增客户'" -->
         <el-form-item label="公司介绍" prop="homepage">
           <el-input
             type="textarea"
@@ -657,8 +657,7 @@
       :visible.sync="employeeMan.dialog"
       width="70%"
       :close-on-click-modal="true"
-      destroy-on-close
-    >
+      destroy-on-close>
       <!-- 嵌套新增员工 -->
       <el-dialog
         width="50%"
@@ -765,7 +764,7 @@
       </div>
       <el-table
         :data="employeeList"
-        style="width: 100%; min-height: 300px; font-size: 12px"
+        style="width: 100%; font-size: 12px"
         :default-sort="{ prop: 'createdOn', order: 'descending' }"
       >
         <!-- v-loading="$store.state.vueElementLoading"

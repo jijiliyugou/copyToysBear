@@ -59,6 +59,7 @@
             {{ scope.row.createdOn && scope.row.createdOn.split("T")[0] }}
           </template>
         </el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="操作" align="center" width="150">
           <template slot-scope="scope">
             <el-button
@@ -95,7 +96,7 @@
     </div>
     <!-- <div style="maxWidth:1200px;minWidth:800px;margin:0 auto;">
     </div> -->
-    <!-- 处理错误日记dialog -->
+    <!-- 新增报价公式dialog -->
     <el-dialog :title="dialogTitle" :visible.sync="showDialog" v-if="showDialog" width="50%">
       <el-form
         ref="addDefaultFormRef"
@@ -121,7 +122,7 @@
         </el-form-item>
         <div class="inputWrap">
           <div class="left">
-        <el-form-item label="币种：" prop="cu_de">
+          <el-form-item label="币种：" prop="cu_de">
           <el-select v-model="addDefaultForm.cu_de" @change="changeSelect" clearable placeholder="请选择">
             <template v-for="item in configList">
               <el-option
@@ -179,6 +180,14 @@
         </el-form-item>
         </div>
         </div>
+        <el-form-item label="备注：" prop="remark">
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="addDefaultForm.remark">
+          </el-input>
+        </el-form-item>
         <center>
           <template>
             <el-button type="primary" @click="subDefaultForm">提 交</el-button>
@@ -231,6 +240,7 @@ export default {
       dialogTitle: '新增公式',
       addDefaultForm: {
         name: null,
+        remark: null,
         offerMethod: null,
         cu_de: null,
         cu_deName: null,
@@ -363,6 +373,7 @@ export default {
       this.dialogTitle = '新增公式'
       this.addDefaultForm = {
         name: null,
+        remark: null,
         offerMethod: null,
         cu_de: null,
         cu_deName: null,

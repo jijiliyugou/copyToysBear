@@ -8,6 +8,7 @@ const AppVersion = () => import('@/views/systemManage/appVersion.vue')
 const ErrorLog = () => import('@/views/systemManage/errorLog.vue')
 const SMSMan = () => import('@/views/systemManage/SMSMan.vue')
 const CateAllocation = () => import('@/views/systemManage/cateAllocation.vue')
+const TouristMan = () => import('@/views/systemManage/touristMan.vue')
 
 export default [
   {
@@ -59,5 +60,10 @@ export default [
     path: '/cateAllocation',
     name: 'cateAllocation',
     component: CateAllocation
+  },
+  {
+    path: '/touristMan',
+    name: 'touristMan',
+    component: TouristMan
   }
 ]

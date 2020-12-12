@@ -831,7 +831,7 @@ export default {
     .el-select-dropdown__wrap{
       .el-scrollbar__view{
         .el-select-dropdown__item{
-          width: 180px;
+          width: 190px;
         }
       }
     }

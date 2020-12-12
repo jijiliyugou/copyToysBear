@@ -21,7 +21,7 @@
             <el-menu-item index="/meInfo/infoList">我的消息</el-menu-item>
             <el-menu-item index="/orderManage">订单管理</el-menu-item>
             <template v-for="(item, i) in menuList">
-              <el-submenu :index="item.linkUrl" :key="i" v-if="item.children">
+              <el-submenu :index="item.linkUrl" :key="i" v-if="item.children" popper-class="menuItems">
                 <template slot="title">
                   <el-upload
                     :auto-upload="false"
@@ -47,6 +47,7 @@
                   {{ item.name }}
                 </template>
                 <el-menu-item
+                  popper-class="menuItems"
                   v-for="(child, index) in item.children"
                   :index="child.linkUrl"
                   :key="index"
@@ -93,10 +94,10 @@
           active-text-color="#ffd04b"
           router
         >
-          <el-submenu index="4">
+          <el-submenu index="4" popper-class="menuItems">
             <template slot="title">个人中心</template>
             <div class="menuItems">
-              <el-menu-item class="menuItem" index="/me">账号管理</el-menu-item>
+              <el-menu-item index="/me">账号管理</el-menu-item>
               <li class="signOut" @click="SignOut">登出</li>
             </div>
           </el-submenu>
@@ -329,6 +330,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@deep: ~">>>";
 .grid-content-top {
   background-color: #2468a9;
   box-sizing: border-box;

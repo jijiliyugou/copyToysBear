@@ -45,7 +45,6 @@ export default {
 .footer {
   width: 100%;
   background-color: #fbfbfb;
-  border-bottom: 2px solid #bfbfbf;
   box-sizing: border-box;
   font-size: 12px;
   color: #777777;

@@ -79,7 +79,7 @@ export default {
       search: '',
       options: {
         // 二维码配置
-        url: '地址',
+        url: ' ',
         icon: require('@/assets/images/logo.png')
       },
       loginforms: {
@@ -225,7 +225,6 @@ export default {
     async getQrCodeUrl () {
       const res = await this.$http.post('/api/UserRandomCode', {})
       if (res.data.result.code === 200) {
-        // this.options.url = 'https://www.toysbear.com/app_download.html'
         this.options.url = res.data.result.item.qrCode
         this.randomCode = res.data.result.item.randomCode
         // 开启长连接
@@ -391,8 +390,8 @@ export default {
 @deep: ~">>>";
 .login {
   flex: 1;
-  background: url('~@/assets/images/展厅.jpg') no-repeat center;
-  background-size:cover;
+  background: url('~@/assets/images/homeBg.png') no-repeat center;
+  background-size: 100% 100%;
   position: relative;
 }
 .formBox {
@@ -400,6 +399,7 @@ export default {
   height: 400px;
   background-color: #fff;
   border-radius: 10px;
+  box-shadow: 0px 7px 57px rgba(0, 72, 152, 0.2);
   position: absolute;
   left: 60%;
   top: 50%;
